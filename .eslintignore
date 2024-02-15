@@ -1,0 +1,7 @@
+node_modules
+.next
+.vercel
+public
+**/*.svg
+**/*.png
+**/*.md
