@@ -12,7 +12,9 @@ export default function NavbarMenu(props: { toggleCollapse: () => void }) {
       <div className={cn(['mb-4 flex justify-between p-4'])}>
         <Image
           src={'/logo-large.svg'}
+          priority
           alt="Stelo Logo"
+          className={'h-auto w-24'}
           width={100}
           height={30}
         />

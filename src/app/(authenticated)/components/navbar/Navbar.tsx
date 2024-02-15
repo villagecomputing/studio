@@ -31,8 +31,8 @@ export default function Navbar() {
     <div
       className={cn([
         'flex h-full flex-col bg-paleBlueGrey drop-shadow',
-        collapsed ? 'w-16' : 'w-52',
         'transition-all duration-300 ease-in-out',
+        collapsed ? 'w-16' : 'w-52',
       ])}
     >
       {collapsed ? (

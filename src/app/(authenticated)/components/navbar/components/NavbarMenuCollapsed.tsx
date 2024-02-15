@@ -10,7 +10,7 @@ export default function NavbarMenuCollapsed(props: {
   const { toggleCollapse } = props;
   return (
     <>
-      <div className="mt-2 w-full px-3">
+      <div className="mt-2 w-full px-2">
         <div className="flex flex-col gap-2">
           <Image
             className="mx-auto mt-2 h-10 w-10"

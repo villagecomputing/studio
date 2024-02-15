@@ -22,7 +22,7 @@ export default function NavbarMenuItem(props: any) {
       className={cn([
         'text-greyText',
         isActive ? 'text-primary' : '',
-        'h-11 p-0 hover:text-primary',
+        'h-12 p-3 hover:text-primary',
       ])}
     >
       <Link href={route}>
