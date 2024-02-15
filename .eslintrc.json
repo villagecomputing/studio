@@ -1,3 +1,11 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
+  "rules": {
+    "prettier/prettier": "warn",
+    "no-nested-ternary": "warn",
+    "no-useless-escape": "warn",
+    "curly": ["error", "all"],
+    "eqeqeq": ["warn", "always"],
+    "no-empty": ["error", { "allowEmptyCatch": true }]
+  }
 }
