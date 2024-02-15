@@ -6,6 +6,7 @@
     "no-useless-escape": "warn",
     "curly": ["error", "all"],
     "eqeqeq": ["warn", "always"],
-    "no-empty": ["error", { "allowEmptyCatch": true }]
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "no-unused-vars": "error"
   }
 }
