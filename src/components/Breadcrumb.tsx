@@ -21,9 +21,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const paths = usePathname();
   const pathNames = paths.split('/').filter((path) => !!path);
 
-  const separator = customSeparator ? (
-    customSeparator
-  ) : (
+  const separator = customSeparator || (
     <ChevronRightIcon color={colors.slateGray500} size={18} />
   );
 
