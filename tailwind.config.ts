@@ -20,6 +20,7 @@ const config = {
     colors: {
       paleBlueGrey: '#FAFDFF',
       greyText: '#686B72',
+      gridHeaderColor: '#E6E6E7',
     },
     extend: {
       colors: {

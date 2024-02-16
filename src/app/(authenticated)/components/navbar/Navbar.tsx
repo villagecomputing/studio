@@ -30,7 +30,7 @@ export default function Navbar() {
   return (
     <div
       className={cn([
-        'flex h-full flex-col bg-paleBlueGrey drop-shadow',
+        'flex h-full flex-col  bg-paleBlueGrey drop-shadow',
         'transition-all duration-300 ease-in-out',
         collapsed ? 'w-16' : 'w-52',
       ])}

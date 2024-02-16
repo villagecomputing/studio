@@ -1,0 +1,4 @@
+.ag-theme-alpine {
+  --ag-header-background-color: theme(colors.gridHeaderColor);
+  --ag-row-border-width: 0px;
+}
