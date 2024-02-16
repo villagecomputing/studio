@@ -10,7 +10,7 @@ export type NavbarMenuItemProps = {
   Icon: React.ReactNode;
 };
 
-export default function NavbarMenuItem(props: any) {
+export default function NavbarMenuItem(props: NavbarMenuItemProps) {
   const currentRoute = usePathname();
   const { route, name, Icon } = props;
   const isActive = currentRoute === route;
