@@ -65,8 +65,10 @@ export default function DataSetTable<TData>(props: DataSetTableProps<TData>) {
 
   return (
     <DataTable<TData>
+      theme="ag-theme-dataset"
       tableRef={tableRef}
       agGridProps={{
+        domLayout: 'autoHeight',
         rowData: data,
         columnDefs,
       }}
