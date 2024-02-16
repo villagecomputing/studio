@@ -1,4 +1,29 @@
 .ag-theme-alpine {
   --ag-header-background-color: theme(colors.gridHeaderColor);
+}
+.ag-theme-dataset-list {
+  --ag-foreground-color: theme(colors.gridCellTextColor);
+  --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
   --ag-row-border-width: 0px;
+  --ag-odd-row-background-color: theme(colors.white);
+  --ag-row-border-width: 0px;
+  --ag-border-color: theme(colors.gridBorderColor);
+  --ag-border-radius: 12px;
+}
+.ag-theme-dataset-list .ag-header-row {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.ag-theme-dataset {
+  --ag-odd-row-background-color: theme(colors.gridHeaderColor);
+  --ag-border-color: #d2dde5;
+  --ag-cell-border-width: 1px;
+  --ag-header-foreground-color: theme(colors.slateGray700);
+}
+.ag-theme-dataset .ag-header-row {
+  font-style: normal;
+  font-weight: 500px;
+  font-size: 14px;
 }
