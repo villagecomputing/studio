@@ -1,4 +1,5 @@
 import { formatDate } from '@/lib/utils';
+import { GridOptions } from 'ag-grid-community';
 import DataTable from '../components/data-table/DataTable';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
@@ -72,7 +73,7 @@ const DataPage = async () => {
     numberOfRecords: data.numberOfRecords,
     uploadDate: formatDate(data.uploadDate),
   }));
-  const colDef = [
+  const colDef: GridOptions['columnDefs'] = [
     {
       headerName: 'Dataset Name',
       field: 'datasetName',
@@ -103,11 +104,11 @@ const DataPage = async () => {
         <ZeroState />
       ) : (
         <DataTable
-          theme="ag-theme-dataset-list"
+          theme="ag-theme-dataset"
           agGridProps={{
             rowData: rowData,
             columnDefs: colDef,
-            domLayout: 'autoHeight',
+            rowSelection: 'single',
           }}
         />
       )}
