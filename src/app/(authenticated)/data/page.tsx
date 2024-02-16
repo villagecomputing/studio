@@ -4,7 +4,7 @@ import ZeroState from './components/zero-state/ZeroState';
 
 const DataPage = () => {
   return (
-    <div>
+    <div className="px-6">
       <div className={'my-6 flex items-center justify-between gap-5'}>
         <SearchInput />
         <UploadDataButton />
