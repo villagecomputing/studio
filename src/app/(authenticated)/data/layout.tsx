@@ -7,10 +7,12 @@ const DataLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className={cn(['px-6'])}>
-      <Breadcrumb />
+    <>
+      <div className={cn(['px-6'])}>
+        <Breadcrumb />
+      </div>
       {children}
-    </div>
+    </>
   );
 };
 

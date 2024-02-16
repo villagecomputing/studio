@@ -4,6 +4,7 @@ import { ChevronRightIcon } from 'lucide-react';
 import { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 import { colors } from '../../tailwind.config';
 
 type CustomSegment = {
@@ -37,9 +38,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             </Link>
           );
         return (
-          <>
+          <React.Fragment key={index}>
             <li
-              key={index}
               className={cn([
                 'text-lg',
                 index === pathNames.length - 1
@@ -50,7 +50,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               {element}
             </li>
             {index < pathNames.length - 1 && separator}
-          </>
+          </React.Fragment>
         );
       })}
     </ul>
