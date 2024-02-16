@@ -17,6 +17,10 @@ const config = {
         '2xl': '1400px',
       },
     },
+    colors: {
+      paleBlueGrey: '#FAFDFF',
+      greyText: '#686B72',
+    },
     extend: {
       colors: {
         border: 'hsl(var(--border))',
