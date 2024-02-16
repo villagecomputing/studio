@@ -21,6 +21,10 @@ const config = {
       paleBlueGrey: '#FAFDFF',
       greyText: '#686B72',
       gridHeaderColor: '#E6E6E7',
+      gray800: '#1F2937',
+      slateGray950: '#2F333C',
+      slateGray700: '#67748E',
+      slateGray500: '#8597AC',
     },
     extend: {
       colors: {
@@ -82,4 +86,5 @@ const config = {
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
 
+export const colors = config.theme.colors;
 export default config;
