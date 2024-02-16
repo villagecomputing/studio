@@ -1,10 +1,12 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": ".prettierrc.json",
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "always",
-    "source.fixAll.eslint": "explicit"
+    "source.formatDocument": "always",
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "always"
   },
-  "prettier.configPath": ".prettierrc.json"
+  "cSpell.words": ["lucide", "tailwindcss"]
 }
