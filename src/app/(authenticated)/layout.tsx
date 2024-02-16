@@ -9,7 +9,7 @@ export default function AuthenticatedLayout({
   return (
     <div className={cn(['flex h-full w-full'])}>
       <Navbar />
-      <div className={cn(['flex-1 py-6'])}>{children}</div>
+      <div className={cn(['flex-1 py-4'])}>{children}</div>
     </div>
   );
 }
