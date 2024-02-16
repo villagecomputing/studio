@@ -1,4 +1,17 @@
 .ag-theme-alpine {
   --ag-header-background-color: theme(colors.gridHeaderColor);
+}
+.ag-theme-dataset-list {
+  --ag-foreground-color: theme(colors.gridCellTextColor);
+  --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
   --ag-row-border-width: 0px;
+  --ag-odd-row-background-color: theme(colors.white);
+  --ag-row-border-width: 0px;
+  --ag-border-color: theme(colors.gridBorderColor);
+  --ag-border-radius: 12px;
+}
+.ag-theme-dataset-list .ag-header-row {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
 }
