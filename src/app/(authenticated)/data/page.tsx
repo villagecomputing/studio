@@ -104,10 +104,11 @@ const DataPage = async () => {
         <ZeroState />
       ) : (
         <DataTable
-          theme="ag-theme-dataset"
+          theme="ag-theme-dataset-list"
           agGridProps={{
             rowData: rowData,
             columnDefs: colDef,
+            domLayout: 'autoHeight',
             rowSelection: 'single',
           }}
         />
