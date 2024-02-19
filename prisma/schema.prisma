@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,76 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Dataset {
+  id             BigInt           @id @default(autoincrement())
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  file_name      String
+  file_location  String
+  file_type      String
+  file_size      Decimal          @db.Decimal
+  total_rows     Decimal          @db.Decimal
+  deleted_at     DateTime?        @db.Timestamptz(6)
+  Dataset_column Dataset_column[]
+  Dataset_row    Dataset_row[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Dataset_column {
+  id         BigInt           @id @default(autoincrement())
+  created_at DateTime         @default(now()) @db.Timestamptz(6)
+  dataset_id BigInt
+  name       String
+  dataType   ENUM_Data_type
+  position   Decimal?         @db.Decimal
+  type       ENUM_Column_type
+  deleted_at DateTime?        @db.Timestamptz(6)
+  Dataset    Dataset          @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Dataset_row {
+  id         BigInt          @id @default(autoincrement())
+  created_at DateTime        @default(now()) @db.Timestamptz(6)
+  dataset_id BigInt
+  position   Decimal?        @db.Decimal
+  status     ENUM_Row_status
+  Dataset    Dataset         @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Log_user_action {
+  id         BigInt           @id @default(autoincrement())
+  created_at DateTime         @default(now()) @db.Timestamptz(6)
+  user_id    BigInt?
+  action     ENUM_User_action
+}
+
+enum ENUM_Column_type {
+  GROUND_TRUTH
+  PREDICTIVE_LABEL
+  INPUT
+}
+
+enum ENUM_Data_type {
+  STRING
+  NUMBER
+  DATE
+}
+
+enum ENUM_Row_status {
+  PENDING
+  APPROVED
+}
+
+enum ENUM_User_action {
+  DATASET_UPLOADED
+  DATASET_DOWNLOADED
+  COLUMN_MARKED
+  ROW_MARKED
+  DATASET_RENAMED
+  DATASET_DELETED
+  COLUMN_DELETED
 }
