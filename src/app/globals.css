@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --overlay: 240, 12%, 36%, 0.48;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
