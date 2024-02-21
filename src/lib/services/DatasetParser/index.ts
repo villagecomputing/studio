@@ -55,11 +55,11 @@ const getColumnFromArrayFormatData = (
   return rows.map((row) => row[columnIndex]);
 };
 
-const datasetParser = {
+const DatasetParser = {
   getHeader,
   parseAsObject,
   parseAsArray,
   getColumnFromObjectFormatData,
   getColumnFromArrayFormatData,
 };
-export default datasetParser;
+export default DatasetParser;
