@@ -30,7 +30,6 @@ function parseCSV(
     Papa.parse(file, {
       header: withHeaders,
       skipEmptyLines: true,
-      dynamicTyping: true,
       complete: (results) => {
         resolve(results);
       },
