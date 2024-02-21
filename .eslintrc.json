@@ -13,6 +13,7 @@
     "curly": ["error", "all"],
     "eqeqeq": ["warn", "always"],
     "no-empty": ["error", { "allowEmptyCatch": true }],
-    "no-unused-vars": "error"
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"] // Use the TypeScript-specific rule
   }
 }
