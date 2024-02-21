@@ -40,5 +40,4 @@ function parseCSV(
   });
 }
 
-const PapaParser = { getCSVHeader, parseCSV };
-export default PapaParser;
+export default { getCSVHeader, parseCSV };

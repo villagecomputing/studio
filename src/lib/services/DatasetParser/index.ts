@@ -1,4 +1,4 @@
-import papaParser from '../papa-parse';
+import papaParser from '../PapaParser';
 
 type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
@@ -55,11 +55,10 @@ const getColumnFromArrayFormatData = (
   return rows.map((row) => row[columnIndex]);
 };
 
-const DatasetParser = {
+export default {
   getHeader,
   parseAsObject,
   parseAsArray,
   getColumnFromObjectFormatData,
   getColumnFromArrayFormatData,
 };
-export default DatasetParser;
