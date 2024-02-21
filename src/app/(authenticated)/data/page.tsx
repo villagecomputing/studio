@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import DataTable from '../components/data-table/DataTable';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
+import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
 import ZeroState from './components/zero-state/ZeroState';
 
 const DataPage = () => {
@@ -54,7 +55,9 @@ const DataPage = () => {
     <div className="px-6">
       <div className={'my-6 flex items-center justify-between gap-5'}>
         <SearchInput />
-        <UploadDataButton />
+        <UploadDataProvider>
+          <UploadDataButton />
+        </UploadDataProvider>
       </div>
       {!mockData.length ? (
         <ZeroState />
