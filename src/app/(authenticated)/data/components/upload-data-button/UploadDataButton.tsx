@@ -26,6 +26,7 @@ const UploadDataButton = () => {
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: 'none' }}
+        accept=".csv,.tsv"
       />
       <Button onClick={() => fileInputRef.current?.click()}>
         <UploadIcon size={15} className="mr-2.5" strokeWidth={2.5} />
