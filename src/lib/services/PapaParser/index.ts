@@ -22,12 +22,12 @@ function getCSVHeader(file: File): Promise<Papa.ParseResult<string>> {
   });
 }
 
-function parseCSV(
+function parseCSV<T>(
   file: File,
   withHeaders: boolean = true,
-): Promise<Papa.ParseResult<unknown>> {
+): Promise<Papa.ParseResult<T>> {
   return new Promise((resolve, reject) => {
-    Papa.parse(file, {
+    Papa.parse<T>(file, {
       header: withHeaders,
       skipEmptyLines: true,
       complete: (results) => {

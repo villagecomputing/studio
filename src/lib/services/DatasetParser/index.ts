@@ -24,21 +24,21 @@ const getHeader = async (file: File): Promise<string[]> => {
 const parseAsArray = async (
   file: File,
 ): Promise<{ headers: string[]; rows: string[][] }> => {
-  const parseResult = await papaParser.parseCSV(file, false);
+  const parseResult = await papaParser.parseCSV<ArrayFormatRow>(file, false);
   handleParserError(parseResult.errors);
   return {
     headers: parseResult.data[0] as string[],
-    rows: parseResult.data.slice(1) as ArrayFormatRow[],
+    rows: parseResult.data.slice(1),
   };
 };
 const parseAsObject = async (
   file: File,
 ): Promise<{ headers: string[]; rows: ObjectFormatRow[] }> => {
-  const parseResult = await papaParser.parseCSV(file, true);
+  const parseResult = await papaParser.parseCSV<ObjectFormatRow>(file, true);
   handleParserError(parseResult.errors);
   return {
     headers: parseResult.meta.fields ?? [],
-    rows: parseResult.data as ObjectFormatRow[],
+    rows: parseResult.data,
   };
 };
 const getColumnFromObjectFormatData = (
