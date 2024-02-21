@@ -12,9 +12,12 @@ const UploadDataButton = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && fileInputRef.current) {
       onFileSelected(file);
       openDialog();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 

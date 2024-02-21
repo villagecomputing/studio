@@ -19,7 +19,7 @@ export default function UploadDataDialogContent(
     resolver: zodResolver(UploadDataSchema),
     defaultValues: {
       [UploadDataSchemaValues.DATASET_TITLE]: selectedFile?.name,
-      [UploadDataSchemaValues.GROUND_TRUTH_COLUMN_INDEX]: -1,
+      [UploadDataSchemaValues.GROUND_TRUTH_COLUMN_INDEX]: 0,
     },
   });
 

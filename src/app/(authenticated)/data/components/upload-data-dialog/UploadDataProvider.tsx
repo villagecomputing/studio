@@ -1,3 +1,4 @@
+import datasetParser from '@/lib/services/DatasetParser';
 import React, { ReactNode, createContext, useContext, useState } from 'react';
 import { ColumnHeader, UploadDataContextType } from './types';
 
@@ -21,16 +22,15 @@ export const UploadDataProvider: React.FC<{ children: ReactNode }> = ({
     useState<boolean>(false);
   const [columnHeaders, setColumnHeaders] = useState<ColumnHeader[]>([]);
 
-  const onFileSelected = (file: File | null) => {
+  /**
+   * This also works as a reset for the context
+   */
+  const onFileSelected = async (file: File | null) => {
     if (!file) {
       return;
     }
-    // TODO Add parse logic here
-    setColumnHeaders([
-      { index: 0, name: 'Column 1' },
-      { index: 1, name: 'Column 2' },
-      { index: 2, name: 'Column 3' },
-    ]);
+    const columns = await datasetParser.getHeader(file);
+    setColumnHeaders(columns.map((column, index) => ({ index, name: column })));
     setBlankGroundTruthColumnAdded(false);
     setSelectedFile(file);
   };
