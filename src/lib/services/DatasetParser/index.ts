@@ -2,6 +2,8 @@ import papaParser from '../papa-parse';
 
 type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
+type ArrayFormatRow = string[];
+
 const handleParserError = (errors: ParserError[]) => {
   if (!errors.length) {
     return;
@@ -26,7 +28,7 @@ const parseAsArray = async (
   handleParserError(parseResult.errors);
   return {
     headers: parseResult.data[0] as string[],
-    rows: parseResult.data.slice(1) as string[][],
+    rows: parseResult.data.slice(1) as ArrayFormatRow[],
   };
 };
 const parseAsObject = async (
@@ -39,7 +41,6 @@ const parseAsObject = async (
     rows: parseResult.data as ObjectFormatRow[],
   };
 };
-
 const getColumnFromObjectFormatData = (
   rows: ObjectFormatRow[],
   columnName: string,
@@ -47,8 +48,8 @@ const getColumnFromObjectFormatData = (
   return rows.map((row) => row[columnName]);
 };
 
-const getColumnFromObjectArrayData = (
-  rows: string[][],
+const getColumnFromArrayFormatData = (
+  rows: ArrayFormatRow[],
   columnIndex: number,
 ): string[] => {
   return rows.map((row) => row[columnIndex]);
@@ -59,6 +60,6 @@ const datasetParser = {
   parseAsObject,
   parseAsArray,
   getColumnFromObjectFormatData,
-  getColumnFromObjectArrayData,
+  getColumnFromArrayFormatData,
 };
 export default datasetParser;
