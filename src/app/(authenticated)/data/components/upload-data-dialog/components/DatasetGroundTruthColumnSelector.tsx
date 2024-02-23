@@ -39,8 +39,13 @@ export const DatasetGroundTruthColumnSelector = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="mt-4 rounded-b-none"
+              disabled={control._formState.isSubmitting}
             />
-            <DatasetColumnsList field={field} searchTerm={searchTerm} />
+            <DatasetColumnsList
+              field={field}
+              searchTerm={searchTerm}
+              disabled={control._formState.isSubmitting}
+            />
           </FormItem>
           <Button
             type="button"

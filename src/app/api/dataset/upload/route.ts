@@ -1,4 +1,9 @@
 import FileUpload from '@/lib/services/FileUpload';
+import {
+  ENUM_Column_type,
+  ENUM_Data_type,
+  ENUM_Ground_truth_status,
+} from '@/lib/types';
 import { PrismaClient } from '@prisma/client';
 import { response } from '../../utils';
 import { uploadDatasetPayloadSchema } from './schema';
@@ -20,11 +25,13 @@ export async function POST(request: Request) {
       return response('Invalid request dataset type', 400);
     }
 
+    // Parse the dataset data object using the defined schema
+    // This will throw if the object doesn't match the schema
     const parsedData = uploadDatasetPayloadSchema.parse(
       JSON.parse(requestDatasetData),
     );
-
     const dataToSend = parsedData;
+    // Save file handles the saving method based on env
     const saveFileResult = await FileUpload.saveFile(
       file,
       dataToSend.datasetTitle,
@@ -33,9 +40,21 @@ export async function POST(request: Request) {
     if (!saveFileResult) {
       return response('File upload failed', 500);
     }
+    // Save the dataset object in db
     const prismaClient = new PrismaClient();
 
-    const datasetInsertResult = await prismaClient.dataset.create({
+    const datasetColumns = dataToSend.columnHeaders.map((header, index) => {
+      return {
+        name: header.name,
+        index: header.index,
+        dataType: ENUM_Data_type.STRING,
+        type:
+          index === dataToSend.groundTruthColumnIndex
+            ? ENUM_Column_type.GROUND_TRUTH
+            : ENUM_Column_type.INPUT,
+      };
+    });
+    const datasetResult = await prismaClient.dataset.create({
       data: {
         file_location: `./public/uploads/${dataToSend.datasetTitle}.csv`,
         file_name: dataToSend.datasetTitle,
@@ -44,25 +63,36 @@ export async function POST(request: Request) {
         file_type: saveFileResult.fileType,
 
         Dataset_column: {
-          create: dataToSend.columnHeaders.map((header) => {
-            return {
-              name: header.name,
-              index: header.index,
-              dataType: 'string',
-              type: 'test',
-              //   Ground_truth_cell: {
-              //     create: constdata.groundTruthColumnContent.map((cell) => {
-              //       return {
-              //         index: 2,
-              //       };
-              //     }),
-              //   },
-            };
-          }),
+          create: datasetColumns,
         },
       },
     });
-    console.log('🚀 ~ POST ~ datasetInsertResult:', datasetInsertResult);
+    const groundTruthColumnId = await prismaClient.dataset_column.findFirst({
+      where: {
+        dataset_id: { equals: datasetResult.id },
+        type: { equals: ENUM_Column_type.GROUND_TRUTH },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!groundTruthColumnId) {
+      return response('Ground truth column was not found', 500);
+    }
+
+    // TODO this might be dangerous since we are creating many inserts but there is no createMany function in prisma when using sqlite
+    const inserts = dataToSend.groundTruthColumnContent.map((cell) =>
+      prismaClient.ground_truth_cell.create({
+        data: {
+          content: cell,
+          column_id: groundTruthColumnId.id,
+          status: ENUM_Ground_truth_status.PENDING,
+        },
+      }),
+    );
+    await prismaClient.$transaction(inserts);
+
     return response('Upload successful');
   } catch (error) {
     console.error('Error in POST:', error);

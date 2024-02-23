@@ -20,7 +20,7 @@ export const DatasetTitleInput = () => {
         <FormItem>
           <FormLabel>Dataset Title</FormLabel>
           <FormControl>
-            <Input {...field} />
+            <Input {...field} disabled={control._formState.isSubmitting} />
           </FormControl>
           <FormMessage>{fieldState.error?.message}</FormMessage>
         </FormItem>

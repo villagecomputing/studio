@@ -24,3 +24,25 @@ export const formatDate = (date: string | Date): string => {
 
   return formattedDate;
 };
+
+export function getFilenameWithoutExtension(filename: string) {
+  return filename.replace(/\.[^/.]+$/, '');
+}
+
+export function appendExtensionBasedOnType(filename: string, type: string) {
+  const filenameWithoutExtension = getFilenameWithoutExtension(filename);
+  let newExtension;
+
+  switch (type) {
+    case 'text/csv':
+      newExtension = '.csv';
+      break;
+    case 'text/tab-separated-values':
+      newExtension = '.tsv';
+      break;
+    default:
+      newExtension = '';
+  }
+
+  return filenameWithoutExtension + newExtension;
+}

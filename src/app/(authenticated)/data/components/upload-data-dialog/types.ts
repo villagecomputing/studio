@@ -10,6 +10,7 @@ export enum UploadDataSchemaValues {
 export type UploadDataFormContext = z.infer<typeof UploadDataSchema>;
 
 export type DatasetColumnsListProps = {
+  disabled: boolean;
   searchTerm: string;
   field: ControllerRenderProps<
     UploadDataFormContext,
