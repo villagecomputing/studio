@@ -1,4 +1,3 @@
-'use client';
 import { cn } from '@/lib/utils';
 import Navbar from './components/navbar/Navbar';
 
