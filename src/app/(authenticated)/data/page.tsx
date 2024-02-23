@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
+import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
 import ZeroState from './components/zero-state/ZeroState';
 
 const getData = async () => {
@@ -56,28 +57,34 @@ const DataPage = () => {
     })();
   }, []);
 
+  const refetchData = async () => {
+    setDatasetList(await getData());
+  };
+
   return (
     <div className="px-6">
-      <div className={'my-6 flex items-center justify-between gap-5'}>
-        <SearchInput />
-        <UploadDataButton />
-      </div>
-      {!datasetList.length ? (
-        <ZeroState />
-      ) : (
-        <DataTable
-          theme="ag-theme-dataset-list"
-          agGridProps={{
-            onRowClicked: () => {
-              router.push(`/data/dataset_1`);
-            },
-            rowData,
-            columnDefs: colDef,
-            domLayout: 'autoHeight',
-            rowSelection: 'single',
-          }}
-        />
-      )}
+      <UploadDataProvider refetchData={refetchData}>
+        <div className={'my-6 flex items-center justify-between gap-5'}>
+          <SearchInput />
+          <UploadDataButton />
+        </div>
+        {!datasetList.length ? (
+          <ZeroState />
+        ) : (
+          <DataTable
+            theme="ag-theme-dataset-list"
+            agGridProps={{
+              onRowClicked: () => {
+                router.push(`/data/dataset_1`);
+              },
+              rowData,
+              columnDefs: colDef,
+              domLayout: 'autoHeight',
+              rowSelection: 'single',
+            }}
+          />
+        )}
+      </UploadDataProvider>
     </div>
   );
 };
