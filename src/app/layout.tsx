@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
@@ -17,7 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html className={cn(['h-full w-full'])} lang="en">
-      <body className={cn(['h-full w-full', inter.className])}>{children}</body>
+      <body className={cn(['h-full w-full', inter.className])}>
+        <Toaster />
+        {children}
+      </body>
     </html>
   );
 }

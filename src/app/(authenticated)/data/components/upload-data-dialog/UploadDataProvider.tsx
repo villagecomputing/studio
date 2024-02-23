@@ -14,9 +14,10 @@ export const useUploadDataContext = () => {
   return context;
 };
 
-export const UploadDataProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const UploadDataProvider: React.FC<{
+  children: ReactNode;
+  refetchData: () => Promise<void>;
+}> = ({ children, refetchData }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [blankGroundTruthColumnAdded, setBlankGroundTruthColumnAdded] =
     useState<boolean>(false);
@@ -54,6 +55,7 @@ export const UploadDataProvider: React.FC<{ children: ReactNode }> = ({
         blankGroundTruthColumnAdded,
         onFileSelected,
         addBlankGroundTruthColumn,
+        refetchData,
       }}
     >
       {children}

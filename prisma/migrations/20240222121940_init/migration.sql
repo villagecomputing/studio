@@ -27,7 +27,6 @@ CREATE TABLE "Dataset_column" (
 CREATE TABLE "Ground_truth_cell" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "index" INTEGER NOT NULL,
     "status" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "column_id" INTEGER NOT NULL,

@@ -10,6 +10,7 @@ export enum UploadDataSchemaValues {
 export type UploadDataFormContext = z.infer<typeof UploadDataSchema>;
 
 export type DatasetColumnsListProps = {
+  disabled: boolean;
   searchTerm: string;
   field: ControllerRenderProps<
     UploadDataFormContext,
@@ -35,4 +36,5 @@ export type UploadDataContextType = {
   // TODO Add extra data for upload here
   onFileSelected: (file: File | null) => void;
   addBlankGroundTruthColumn: () => void;
+  refetchData: () => Promise<void>;
 };

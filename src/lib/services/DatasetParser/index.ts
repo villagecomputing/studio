@@ -45,14 +45,14 @@ const getColumnFromObjectFormatData = (
   rows: ObjectFormatRow[],
   columnName: string,
 ): string[] => {
-  return rows.map((row) => row[columnName]);
+  return rows.map((row) => row[columnName] || '');
 };
 
 const getColumnFromArrayFormatData = (
   rows: ArrayFormatRow[],
   columnIndex: number,
 ): string[] => {
-  return rows.map((row) => row[columnIndex]);
+  return rows.map((row) => row[columnIndex] || '');
 };
 
 export default {

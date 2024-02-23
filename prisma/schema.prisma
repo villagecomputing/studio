@@ -35,7 +35,6 @@ model Dataset_column {
 model Ground_truth_cell {
   id             Int            @id @default(autoincrement())
   created_at     DateTime       @default(now())
-  index          Int
   status         String
   content        String
   column_id      Int

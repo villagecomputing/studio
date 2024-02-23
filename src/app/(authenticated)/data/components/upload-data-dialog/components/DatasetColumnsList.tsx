@@ -17,7 +17,7 @@ import {
 } from '../types';
 
 export default function DatasetColumnsList(props: DatasetColumnsListProps) {
-  const { field, searchTerm } = props;
+  const { field, searchTerm, disabled } = props;
   const { setValue } = useFormContext<UploadDataFormContext>();
   const { columnHeaders } = useUploadDataContext();
 
@@ -65,6 +65,7 @@ export default function DatasetColumnsList(props: DatasetColumnsListProps) {
         }}
         defaultValue={field.value.toString()}
         className="mt-0 flex h-40 flex-col gap-4 overflow-auto rounded-b-lg border border-t-0 border-border p-3"
+        disabled={disabled}
       >
         <RadioGroupContent />
       </RadioGroup>
