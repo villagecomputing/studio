@@ -56,7 +56,7 @@ export default function UploadDataDialogContent(
       datasetTitle: values.datasetTitle,
       columnHeaders,
       groundTruthColumnIndex: values.groundTruthColumnIndex,
-      totalNumberOfRows: 10,
+      totalNumberOfRows: groundTruthColumnContent.length,
       groundTruthColumnContent,
     };
 
