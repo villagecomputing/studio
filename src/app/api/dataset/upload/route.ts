@@ -1,10 +1,10 @@
-import { Prisma } from '@/app/layout';
 import FileUpload from '@/lib/services/FileUpload';
 import {
   ENUM_Column_type,
   ENUM_Data_type,
   ENUM_Ground_truth_status,
 } from '@/lib/types';
+import { Prisma } from '@/lib/utils';
 import { response } from '../../utils';
 import { uploadDatasetPayloadSchema } from './schema';
 

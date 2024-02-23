@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma } from '@/app/layout';
+import { Prisma } from '@/lib/utils';
 
 export async function isFilenameAvailable(filename: string): Promise<boolean> {
   const trimmedFilename = filename.trim();

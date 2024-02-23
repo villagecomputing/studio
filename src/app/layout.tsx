@@ -1,13 +1,10 @@
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import { PrismaClient } from '@prisma/client';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
 
 const inter = DM_Sans({ subsets: ['latin'] });
-
-export const Prisma = new PrismaClient();
 
 export const metadata: Metadata = {
   title: 'Create Next App',
