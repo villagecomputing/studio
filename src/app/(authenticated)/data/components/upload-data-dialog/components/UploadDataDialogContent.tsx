@@ -8,6 +8,7 @@ import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { isFilenameAvailable } from '../../../actions';
 import { useUploadDataContext } from '../UploadDataProvider';
 import { UploadDataSchema } from '../constants';
 import { UploadDataDialogContentProps, UploadDataSchemaValues } from '../types';
@@ -33,6 +34,17 @@ export default function UploadDataDialogContent(
   async function onSubmit(values: z.infer<typeof UploadDataSchema>) {
     if (!selectedFile) {
       return;
+    }
+    if (
+      values.datasetTitle.trim() &&
+      !(await isFilenameAvailable(values.datasetTitle))
+    ) {
+      uploadDataForm.reset(values);
+      uploadDataForm.setError('datasetTitle', {
+        message:
+          'This title is already used in another dataset, please enter a new one.',
+      });
+      return true;
     }
     const parsedFile = await DatasetParser.parseAsArray(selectedFile);
     const groundTruthColumnContent = DatasetParser.getColumnFromArrayFormatData(
@@ -60,7 +72,6 @@ export default function UploadDataDialogContent(
       method: 'POST',
       body: formData,
     });
-    console.log('🚀 ~ onSubmit ~ response:', response);
     if (response.status !== 200) {
       toast({
         title: 'Error',

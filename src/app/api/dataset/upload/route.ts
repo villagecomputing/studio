@@ -1,10 +1,10 @@
+import { Prisma } from '@/app/layout';
 import FileUpload from '@/lib/services/FileUpload';
 import {
   ENUM_Column_type,
   ENUM_Data_type,
   ENUM_Ground_truth_status,
 } from '@/lib/types';
-import { PrismaClient } from '@prisma/client';
 import { response } from '../../utils';
 import { uploadDatasetPayloadSchema } from './schema';
 
@@ -41,7 +41,6 @@ export async function POST(request: Request) {
       return response('File upload failed', 500);
     }
     // Save the dataset object in db
-    const prismaClient = new PrismaClient();
 
     const datasetColumns = dataToSend.columnHeaders.map((header, index) => {
       return {
@@ -54,7 +53,7 @@ export async function POST(request: Request) {
             : ENUM_Column_type.INPUT,
       };
     });
-    const datasetResult = await prismaClient.dataset.create({
+    const datasetResult = await Prisma.dataset.create({
       data: {
         file_location: `./public/uploads/${dataToSend.datasetTitle}.csv`,
         file_name: dataToSend.datasetTitle,
@@ -67,7 +66,7 @@ export async function POST(request: Request) {
         },
       },
     });
-    const groundTruthColumnId = await prismaClient.dataset_column.findFirst({
+    const groundTruthColumnId = await Prisma.dataset_column.findFirst({
       where: {
         dataset_id: { equals: datasetResult.id },
         type: { equals: ENUM_Column_type.GROUND_TRUTH },
@@ -83,7 +82,7 @@ export async function POST(request: Request) {
 
     // TODO this might be dangerous since we are creating many inserts but there is no createMany function in prisma when using sqlite
     const inserts = dataToSend.groundTruthColumnContent.map((cell) =>
-      prismaClient.ground_truth_cell.create({
+      Prisma.ground_truth_cell.create({
         data: {
           content: cell,
           column_id: groundTruthColumnId.id,
@@ -91,7 +90,7 @@ export async function POST(request: Request) {
         },
       }),
     );
-    await prismaClient.$transaction(inserts);
+    await Prisma.$transaction(inserts);
 
     return response('Upload successful');
   } catch (error) {
