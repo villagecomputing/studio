@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@/lib/utils';
+import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
 
@@ -12,8 +13,7 @@ export async function GET() {
       total_rows: true,
     } satisfies Prisma.DatasetSelect;
 
-    const prismaClient = new PrismaClient();
-    const datasetList = await prismaClient.dataset.findMany({
+    const datasetList = await PrismaClient.dataset.findMany({
       select: datasetSelect,
     });
     if (!datasetListResponseSchema.safeParse(datasetList)) {

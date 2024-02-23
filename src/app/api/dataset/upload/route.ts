@@ -1,10 +1,10 @@
-import FileUpload from '@/lib/services/FileUpload';
+import FileUpload from '@/lib/services/FileHandler';
 import {
   ENUM_Column_type,
   ENUM_Data_type,
   ENUM_Ground_truth_status,
 } from '@/lib/types';
-import { Prisma } from '@/lib/utils';
+import { PrismaClient } from '@/lib/utils';
 import { response } from '../../utils';
 import { uploadDatasetPayloadSchema } from './schema';
 
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
             : ENUM_Column_type.INPUT,
       };
     });
-    const datasetResult = await Prisma.dataset.create({
+    const datasetResult = await PrismaClient.dataset.create({
       data: {
         file_location: `./public/uploads/${dataToSend.datasetTitle}.csv`,
         file_name: dataToSend.datasetTitle,
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         },
       },
     });
-    const groundTruthColumnId = await Prisma.dataset_column.findFirst({
+    const groundTruthColumnId = await PrismaClient.dataset_column.findFirst({
       where: {
         dataset_id: { equals: datasetResult.id },
         type: { equals: ENUM_Column_type.GROUND_TRUTH },
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     // TODO this might be dangerous since we are creating many inserts but there is no createMany function in prisma when using sqlite
     const inserts = dataToSend.groundTruthColumnContent.map((cell) =>
-      Prisma.ground_truth_cell.create({
+      PrismaClient.ground_truth_cell.create({
         data: {
           content: cell,
           column_id: groundTruthColumnId.id,
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         },
       }),
     );
-    await Prisma.$transaction(inserts);
+    await PrismaClient.$transaction(inserts);
 
     return response('Upload successful');
   } catch (error) {

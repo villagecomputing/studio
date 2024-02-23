@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SearchInput } from '../../components/search-input/SearchInput';
+import { fetchDataSet } from './actions';
 import DataSetTable from './components/DataSetTable';
 
-const fetchDataSet = async () => {
-  const response = await fetch('https://api.spacexdata.com/v3/launches', {
-    cache: 'no-store',
-  });
-  const data = await response.json();
-  return data;
+type DatasetViewPageProps = {
+  params: {
+    datasetId: number;
+  };
 };
 
-export default async function DatasetViewPage() {
-  const dataSet = await fetchDataSet();
+export default async function DatasetViewPage(props: DatasetViewPageProps) {
+  const {
+    params: { datasetId },
+  } = props;
+  const dataSet = await fetchDataSet(Number(datasetId));
 
   return (
     <div>
@@ -20,7 +22,7 @@ export default async function DatasetViewPage() {
         <SearchInput />
         <Button variant={'outline'}>Download</Button>
       </div>
-      <DataSetTable data={dataSet} />
+      {dataSet && <DataSetTable data={dataSet} />}
     </div>
   );
 }
