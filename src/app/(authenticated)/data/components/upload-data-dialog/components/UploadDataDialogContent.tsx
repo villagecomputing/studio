@@ -20,7 +20,7 @@ export default function UploadDataDialogContent(
 ) {
   const { onCancel } = props;
   const { toast } = useToast();
-  const { selectedFile, columnHeaders } = useUploadDataContext();
+  const { selectedFile, columnHeaders, refetchData } = useUploadDataContext();
   const uploadDataForm = useForm<z.infer<typeof UploadDataSchema>>({
     resolver: zodResolver(UploadDataSchema),
     defaultValues: {
@@ -81,6 +81,7 @@ export default function UploadDataDialogContent(
       return;
     }
     onCancel();
+    refetchData();
   }
 
   return (

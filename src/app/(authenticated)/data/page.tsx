@@ -1,32 +1,40 @@
 'use client';
+import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
+import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { formatDate } from '@/lib/utils';
 import { GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
 import ZeroState from './components/zero-state/ZeroState';
 
+const getData = async () => {
+  const response = await fetch(ApiEndpoints.datasetList, {
+    method: 'GET',
+  });
+  const datasetList = JSON.parse(await response.json());
+  return datasetListResponseSchema.parse(datasetList);
+};
+
+type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
+type RowType = {
+  id: number;
+  datasetName: string;
+  numberOfRecords: number;
+  uploadDate: string;
+};
 const DataPage = () => {
-  const mockData = [
-    {
-      id: 1,
-      datasetName: 'dataset_1',
-      numberOfRecords: 100,
-      uploadDate: '2021-10-10',
-    },
-    {
-      id: 10,
-      datasetName: 'dataset_10',
-      numberOfRecords: 1000,
-      uploadDate: '2024-02-16',
-    },
-  ];
-  const rowData = mockData.map((data) => ({
-    datasetName: data.datasetName,
-    numberOfRecords: data.numberOfRecords,
-    uploadDate: formatDate(data.uploadDate),
+  const router = useRouter();
+  const [datasetList, setDatasetList] = useState<DatasetList>([]);
+
+  const rowData: RowType[] = datasetList.map((data) => ({
+    id: data.id,
+    datasetName: data.file_name,
+    numberOfRecords: data.total_rows,
+    uploadDate: formatDate(data.created_at),
   }));
   const colDef: GridOptions['columnDefs'] = [
     {
@@ -49,32 +57,43 @@ const DataPage = () => {
     },
   ];
 
-  const router = useRouter();
+  useEffect(() => {
+    (async () => {
+      setDatasetList(await getData());
+    })();
+  }, []);
+
+  const refetchData = async () => {
+    setDatasetList(await getData());
+  };
 
   return (
     <div className="px-6">
-      <div className={'my-6 flex items-center justify-between gap-5'}>
-        <SearchInput />
-        <UploadDataProvider>
+      <UploadDataProvider refetchData={refetchData}>
+        <div className={'my-6 flex items-center justify-between gap-5'}>
+          <SearchInput />
           <UploadDataButton />
-        </UploadDataProvider>
-      </div>
-      {!mockData.length ? (
-        <ZeroState />
-      ) : (
-        <DataTable
-          theme="ag-theme-dataset-list"
-          agGridProps={{
-            onRowClicked: () => {
-              router.push(`/data/dataset_1`);
-            },
-            rowData: rowData,
-            columnDefs: colDef,
-            domLayout: 'autoHeight',
-            rowSelection: 'single',
-          }}
-        />
-      )}
+        </div>
+        {!datasetList.length ? (
+          <ZeroState />
+        ) : (
+          <DataTable<RowType>
+            theme="ag-theme-dataset-list"
+            agGridProps={{
+              onRowClicked: (event) => {
+                if (!event.data) {
+                  return;
+                }
+                router.push(`/data/${event.data.id}`);
+              },
+              rowData,
+              columnDefs: colDef,
+              domLayout: 'autoHeight',
+              rowSelection: 'single',
+            }}
+          />
+        )}
+      </UploadDataProvider>
     </div>
   );
 };
