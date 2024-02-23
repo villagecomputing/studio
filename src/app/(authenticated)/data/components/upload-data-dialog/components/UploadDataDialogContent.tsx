@@ -1,5 +1,8 @@
+import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { ApiEndpoints } from '@/lib/routes/routes';
+import DatasetParser from '@/lib/services/DatasetParser';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -14,7 +17,7 @@ export default function UploadDataDialogContent(
   props: UploadDataDialogContentProps,
 ) {
   const { onCancel } = props;
-  const { selectedFile } = useUploadDataContext();
+  const { selectedFile, columnHeaders } = useUploadDataContext();
   const uploadDataForm = useForm<z.infer<typeof UploadDataSchema>>({
     resolver: zodResolver(UploadDataSchema),
     defaultValues: {
@@ -23,10 +26,40 @@ export default function UploadDataDialogContent(
     },
   });
 
-  function onSubmit(values: z.infer<typeof UploadDataSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof UploadDataSchema>) {
+    if (!selectedFile) {
+      return;
+    }
+    const parsedFile = await DatasetParser.parseAsArray(selectedFile);
+    const groundTruthColumnContent = DatasetParser.getColumnFromArrayFormatData(
+      parsedFile.rows,
+      values.groundTruthColumnIndex,
+    );
+
+    const dataToSend = {
+      datasetTitle: values.datasetTitle,
+      columnHeaders,
+      groundTruthColumnIndex: values.groundTruthColumnIndex,
+      totalNumberOfRows: 10,
+      groundTruthColumnContent,
+    };
+    console.log('🚀 ~ onSubmit ~ dataToSend:', dataToSend);
+
+    if (!uploadDatasetPayloadSchema.safeParse(dataToSend)) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('datasetData', JSON.stringify(dataToSend));
+    console.log('🚀 ~ onSubmit ~ formData:', formData);
+
+    const response = await fetch(ApiEndpoints.datasetUpload, {
+      method: 'POST',
+      body: formData,
+    });
+
+    console.log('🚀 ~ onSubmit ~ response:', response);
   }
 
   return (
