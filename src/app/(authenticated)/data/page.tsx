@@ -20,12 +20,18 @@ const getData = async () => {
 };
 
 type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
-
+type RowType = {
+  id: number;
+  datasetName: string;
+  numberOfRecords: number;
+  uploadDate: string;
+};
 const DataPage = () => {
   const router = useRouter();
   const [datasetList, setDatasetList] = useState<DatasetList>([]);
 
-  const rowData = datasetList.map((data) => ({
+  const rowData: RowType[] = datasetList.map((data) => ({
+    id: data.id,
     datasetName: data.file_name,
     numberOfRecords: data.total_rows,
     uploadDate: formatDate(data.created_at),
@@ -71,11 +77,14 @@ const DataPage = () => {
         {!datasetList.length ? (
           <ZeroState />
         ) : (
-          <DataTable
+          <DataTable<RowType>
             theme="ag-theme-dataset-list"
             agGridProps={{
-              onRowClicked: () => {
-                router.push(`/data/dataset_1`);
+              onRowClicked: (event) => {
+                if (!event.data) {
+                  return;
+                }
+                router.push(`/data/${event.data.id}`);
               },
               rowData,
               columnDefs: colDef,
