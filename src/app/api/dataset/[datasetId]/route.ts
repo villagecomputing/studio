@@ -5,7 +5,7 @@ import { datasetViewResponseSchema } from './schema';
 
 export async function GET(
   request: Request,
-  { params }: { params: { dataset: string } },
+  { params }: { params: { datasetId: string } },
 ) {
   try {
     const groundTruthSelect = {
@@ -32,7 +32,7 @@ export async function GET(
     } satisfies Prisma.DatasetSelect;
 
     const result = await PrismaClient.dataset.findUniqueOrThrow({
-      where: { id: Number(params.dataset), deleted_at: null },
+      where: { id: Number(params.datasetId), deleted_at: null },
       select: datasetSelect,
     });
 
