@@ -3,7 +3,7 @@ import papaParser from '../PapaParser';
 type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
 type ArrayFormatRow = string[];
-export type ArrayParseResult = { headers: string[]; rows: string[][] };
+export type ArrayParseResult = { headers: string[]; rows: ArrayFormatRow[] };
 export type ObjectParseResult = { headers: string[]; rows: ObjectFormatRow[] };
 
 const handleParserError = (errors: ParserError[]) => {
