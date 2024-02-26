@@ -88,8 +88,8 @@ const DataPage = () => {
               },
               rowData,
               columnDefs: colDef,
-              domLayout: 'autoHeight',
               rowSelection: 'single',
+              domLayout: 'autoHeight',
             }}
           />
         )}

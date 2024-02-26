@@ -5,12 +5,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AgGridReact, CustomHeaderProps } from 'ag-grid-react';
+import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
 
 export type HeaderComponentParams =
   | {
-      tableRef: React.RefObject<AgGridReact>;
+      // tableRef: React.RefObject<AgGridReact>;
       leftSideIcon: JSX.Element;
     }
   | undefined;

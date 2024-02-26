@@ -14,7 +14,11 @@
     "eqeqeq": ["warn", "always"],
     "no-empty": ["error", { "allowEmptyCatch": true }],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["error"], // Use the TypeScript-specific rule
+    "@typescript-eslint/no-unused-vars": ["error",{
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "caughtErrorsIgnorePattern": "^_"
+    }], // Use the TypeScript-specific rule
     "import/no-anonymous-default-export": "off"
   }
 }

@@ -22,7 +22,11 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
         <SearchInput />
         <Button variant={'outline'}>Download</Button>
       </div>
-      {dataSet && <DataSetTable data={dataSet} />}
+      {dataSet && (
+        <div style={{ height: 'calc(100vh - 130px)' }}>
+          <DataSetTable data={dataSet} />
+        </div>
+      )}
     </div>
   );
 }

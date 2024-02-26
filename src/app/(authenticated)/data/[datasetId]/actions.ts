@@ -17,7 +17,9 @@ export const fetchDataSet = async (
   if (!fileContent) {
     return null;
   }
-  const json = await DatasetParser.parseAsObject(fileContent);
+  const fileContentObject = await DatasetParser.parseAsObject(fileContent);
 
-  return convertToAGGridData(json) as AGGridDataset<unknown>;
+  // TODO take the parsedFileContent and map the data to it
+
+  return convertToAGGridData(fileContentObject) as AGGridDataset<unknown>;
 };
