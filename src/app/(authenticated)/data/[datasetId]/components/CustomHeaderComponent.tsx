@@ -5,8 +5,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ENUM_Column_type } from '@/lib/types';
 import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
+import { markColumnAsType } from '../actions';
+import { TableColumnProps } from '../types';
 
 export type HeaderComponentParams =
   | {
@@ -15,15 +18,9 @@ export type HeaderComponentParams =
     }
   | undefined;
 
-const MenuItems = [
-  { label: 'Set as Predicted Label' },
-  { label: 'Set as Ground Truth Label' },
-  { label: 'Rename' },
-  { label: 'Hide' },
-  { label: 'Delete' },
-];
-
-export default function CustomHeaderComponent(props: CustomHeaderProps) {
+export default function CustomHeaderComponent(
+  props: CustomHeaderProps<TableColumnProps>,
+) {
   const { column } = props;
   const colDef = column.getColDef();
   const headerComponentParams =
@@ -40,11 +37,27 @@ export default function CustomHeaderComponent(props: CustomHeaderProps) {
         <MoreVerticalIcon size={14} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-border">
-        {MenuItems.map((item, index) => (
-          <DropdownMenuItem key={index} className="cursor-pointer">
-            {item.label}
-          </DropdownMenuItem>
-        ))}
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() =>
+            markColumnAsType(
+              Number(colDef.colId),
+              ENUM_Column_type.PREDICTIVE_LABEL,
+            )
+          }
+        >
+          {'Set as Predicted Label'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Set as Ground Truth Label'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Rename'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">{'Hide'}</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Delete'}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

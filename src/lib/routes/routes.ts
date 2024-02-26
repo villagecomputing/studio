@@ -1,4 +1,5 @@
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
+import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
@@ -14,11 +15,17 @@ export enum ApiEndpoints {
   datasetUpload = '/api/dataset/upload',
   datasetList = '/api/dataset/list',
   datasetView = '/api/dataset',
+  datasetColumnEdit = '/api/dataset/edit/column',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
   [ApiEndpoints.datasetUpload]: {
     payloadSchema: uploadDatasetPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
+  [ApiEndpoints.datasetColumnEdit]: {
+    payloadSchema: editDatasetColumnSchema,
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
@@ -36,6 +43,7 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
 
 export type PayloadSchemaType = {
   [ApiEndpoints.datasetUpload]: z.infer<typeof uploadDatasetPayloadSchema>;
+  [ApiEndpoints.datasetColumnEdit]: z.infer<typeof editDatasetColumnSchema>;
 };
 
 export type ResultSchemaType = {

@@ -3,7 +3,7 @@ import DatasetParser, { ObjectParseResult } from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
 
 import ApiUtils from '@/lib/services/ApiUtils';
-import { guardStringEnum } from '@/lib/typeUtils';
+import { guardStringEnum, isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type } from '@/lib/types';
 import { permanentRedirect } from 'next/navigation';
 import { FetchDatasetResult, TableColumnProps } from './types';
@@ -35,6 +35,7 @@ export const fetchDataSet = async (
       (column): TableColumnProps => {
         return {
           name: column.name,
+          id: column.id,
           field: getColumnFieldFromName(column.name),
           type: guardStringEnum(ENUM_Column_type, column.type),
         };
@@ -73,5 +74,24 @@ export const fetchDataSet = async (
   } catch (error) {
     console.error(error);
     permanentRedirect('/data');
+  }
+};
+
+export const markColumnAsType = async (
+  columnId: number,
+  type: ENUM_Column_type,
+): Promise<number | null> => {
+  if (!columnId || !isSomeStringEnum(ENUM_Column_type, type)) {
+    return null;
+  }
+  try {
+    const updatedColumnId = await ApiUtils.editDatasetColumn({
+      columnId,
+      type,
+    });
+
+    return updatedColumnId;
+  } catch (error) {
+    return null;
   }
 };

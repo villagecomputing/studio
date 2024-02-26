@@ -8,6 +8,7 @@ export type AGGridDataset<TData> = {
 };
 
 export type TableColumnProps = {
+  id: number;
   name: string;
   field: string;
   type: ENUM_Column_type;
