@@ -1,16 +1,20 @@
-import { ObjectParseResult } from '@/lib/services/DatasetParser';
 import { ENUM_Column_type } from '@/lib/types';
-import { exhaustiveCheck } from '@/lib/utils';
+
+import { exhaustiveCheck } from '@/lib/typeUtils';
 import { GridOptions } from 'ag-grid-community';
 import { SparkleIcon, TagIcon } from 'lucide-react';
 import CustomHeaderComponent, {
   HeaderComponentParams,
 } from './components/CustomHeaderComponent';
-import { AGGridDataset, TableColumnProps } from './types';
+import {
+  AGGridDataset,
+  ConvertToAGGridDataProps,
+  TableColumnProps,
+} from './types';
 
-// function getColumnFieldFromName(columnName: string): string {
-//   return columnName.replace(' ', '_').toLowerCase();
-// }
+export function getColumnFieldFromName(columnName: string): string {
+  return columnName.replace(' ', '_').toLowerCase();
+}
 
 function getTableColumnIcon(columnType: ENUM_Column_type) {
   switch (columnType) {
@@ -29,9 +33,7 @@ function getTableColumnDefs(
   tableColumns: TableColumnProps[],
 ): GridOptions['columnDefs'] {
   return tableColumns.map((tableColumn) => ({
-    // TODO use this instead after also changing the keys in the rows
-    // field: getColumnFieldFromName(tableColumn.name),
-    field: tableColumn.name,
+    field: tableColumn.field,
     headerName: tableColumn.name,
     headerComponent: CustomHeaderComponent,
     headerComponentParams: {
@@ -41,14 +43,10 @@ function getTableColumnDefs(
 }
 
 export function convertToAGGridData(
-  data: ObjectParseResult,
+  data: ConvertToAGGridDataProps,
 ): AGGridDataset<unknown> {
-  const tempColHeaders: TableColumnProps[] = data.headers.map((header) => ({
-    name: header,
-    type: ENUM_Column_type.INPUT,
-  }));
   return {
-    columnDefs: getTableColumnDefs(tempColHeaders),
+    columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
   };
 }

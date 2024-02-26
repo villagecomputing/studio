@@ -2,7 +2,7 @@ import { appendExtensionBasedOnType } from '@/lib/utils';
 import { promises as fs } from 'fs';
 import { FileUploadResult } from './types';
 
-export const UPLOAD_PATH = './public/uploads/';
+export const UPLOAD_PATH = '/public/uploads/';
 
 export async function saveFileLocally(
   file: FormDataEntryValue,
@@ -12,8 +12,9 @@ export async function saveFileLocally(
     throw new Error('The file is not an instance of File.');
   }
   const filePath = `${UPLOAD_PATH}${appendExtensionBasedOnType(fileName, file.type)}`;
+  const uploadPath = `.${filePath}`;
   const data = await file.arrayBuffer();
-  await fs.appendFile(filePath, Buffer.from(data));
+  await fs.appendFile(uploadPath, Buffer.from(data));
   return {
     filePath,
     fileSize: file.size,

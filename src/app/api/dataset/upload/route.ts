@@ -4,7 +4,8 @@ import {
   ENUM_Data_type,
   ENUM_Ground_truth_status,
 } from '@/lib/types';
-import { PrismaClient } from '@/lib/utils';
+
+import PrismaClient from '@/lib/services/prisma';
 import { response } from '../../utils';
 import { uploadDatasetPayloadSchema } from './schema';
 
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
     });
     const datasetResult = await PrismaClient.dataset.create({
       data: {
-        file_location: `./public/uploads/${dataToSend.datasetTitle}.csv`,
+        file_location: saveFileResult.filePath,
         file_name: dataToSend.datasetTitle,
         file_size: saveFileResult?.fileSize,
         total_rows: dataToSend.totalNumberOfRows,

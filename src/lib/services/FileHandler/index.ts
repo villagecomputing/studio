@@ -20,6 +20,7 @@ async function getFile(filepath: string) {
     }
   } catch (error) {
     console.error(error);
+    throw new Error('Failed to retrieve the dataset file');
   }
 }
 
