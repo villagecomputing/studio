@@ -3,7 +3,10 @@ import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
-export async function GET({ params }: { params: { dataset: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { dataset: string } },
+) {
   try {
     const groundTruthSelect = {
       id: true,
