@@ -1,5 +1,4 @@
-import { PrismaClient } from '@/lib/utils';
-import { Prisma } from '@prisma/client';
+import ApiUtils from '@/lib/services/ApiUtils';
 import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
@@ -8,36 +7,14 @@ export async function GET(
   { params }: { params: { datasetId: string } },
 ) {
   try {
-    const groundTruthSelect = {
-      id: true,
-      status: true,
-      content: true,
-      column_id: true,
-    } satisfies Prisma.Ground_truth_cellSelect;
-
-    const columnSelect = {
-      id: true,
-      name: true,
-      type: true,
-      index: true,
-      Ground_truth_cell: { select: groundTruthSelect },
-    } satisfies Prisma.Dataset_columnSelect;
-
-    const datasetSelect = {
-      id: true,
-      file_location: true,
-      file_name: true,
-      total_rows: true,
-      Dataset_column: { select: columnSelect, where: { deleted_at: null } },
-    } satisfies Prisma.DatasetSelect;
-
-    const result = await PrismaClient.dataset.findUniqueOrThrow({
-      where: { id: Number(params.datasetId), deleted_at: null },
-      select: datasetSelect,
-    });
+    const datasetId = Number(params.datasetId);
+    if (!datasetId) {
+      return response('Invalid dataset id', 400);
+    }
+    const result = await ApiUtils.getDatasetDetails(datasetId);
 
     if (!datasetViewResponseSchema.safeParse(result)) {
-      return response('Invalid response dataset view type', 400);
+      return response('Invalid response dataset view type', 500);
     }
 
     const res = JSON.stringify(result);

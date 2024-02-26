@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/lib/utils';
+import PrismaClient from '@/lib/services/prisma';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';

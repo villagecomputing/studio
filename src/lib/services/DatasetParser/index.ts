@@ -1,4 +1,4 @@
-import papaParser from '../PapaParser';
+import PapaParser from './PapaParser/PapaParser';
 
 type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
@@ -17,7 +17,7 @@ const handleParserError = (errors: ParserError[]) => {
 };
 
 const getHeader = async (file: File): Promise<string[]> => {
-  const parseResult = await papaParser.getCSVHeader(file);
+  const parseResult = await PapaParser.getCSVHeader(file);
   // check parseResult.meta.renamedHeaders for Headers that are automatically renamed by the library to avoid duplication.
   handleParserError(parseResult.errors);
   return parseResult.data;
@@ -26,9 +26,9 @@ const getHeader = async (file: File): Promise<string[]> => {
 const parseAsArray = async (csv: File | string): Promise<ArrayParseResult> => {
   let parseResult;
   if (typeof csv === 'string') {
-    parseResult = await papaParser.parseCSVString<ArrayFormatRow>(csv, true);
+    parseResult = await PapaParser.parseCSVString<ArrayFormatRow>(csv, false);
   } else {
-    parseResult = await papaParser.parseCSV<ArrayFormatRow>(csv, false);
+    parseResult = await PapaParser.parseCSV<ArrayFormatRow>(csv, false);
   }
   handleParserError(parseResult.errors);
   return {
@@ -41,9 +41,9 @@ const parseAsObject = async (
 ): Promise<ObjectParseResult> => {
   let parseResult;
   if (typeof csv === 'string') {
-    parseResult = await papaParser.parseCSVString<ObjectFormatRow>(csv, true);
+    parseResult = await PapaParser.parseCSVString<ObjectFormatRow>(csv);
   } else {
-    parseResult = await papaParser.parseCSV<ObjectFormatRow>(csv, false);
+    parseResult = await PapaParser.parseCSV<ObjectFormatRow>(csv);
   }
   handleParserError(parseResult.errors);
   return {

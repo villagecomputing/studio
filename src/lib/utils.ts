@@ -1,8 +1,5 @@
-import { PrismaClient as PrismaClientInit } from '@prisma/client';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-
-export const PrismaClient = new PrismaClientInit();
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -48,8 +45,4 @@ export function appendExtensionBasedOnType(filename: string, type: string) {
   }
 
   return filenameWithoutExtension + newExtension;
-}
-
-export function exhaustiveCheck(_param: never): void {
-  return undefined;
 }
