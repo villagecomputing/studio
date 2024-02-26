@@ -49,3 +49,7 @@ export function appendExtensionBasedOnType(filename: string, type: string) {
 
   return filenameWithoutExtension + newExtension;
 }
+
+export function exhaustiveCheck(_param: never): void {
+  return undefined;
+}

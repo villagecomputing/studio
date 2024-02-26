@@ -40,4 +40,22 @@ function parseCSV<T>(
   });
 }
 
-export default { getCSVHeader, parseCSV };
+function parseCSVString<T>(
+  csvString: string,
+  withHeaders: boolean = true,
+): Promise<Papa.ParseResult<T>> {
+  return new Promise((resolve, reject) => {
+    Papa.parse<T>(csvString, {
+      header: withHeaders,
+      skipEmptyLines: true,
+      complete: (results) => {
+        resolve(results);
+      },
+      error: (error: Error) => {
+        reject(error);
+      },
+    });
+  });
+}
+
+export default { getCSVHeader, parseCSV, parseCSVString };

@@ -1,5 +1,5 @@
 import { appendExtensionBasedOnType } from '@/lib/utils';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import { FileUploadResult } from './types';
 
 export const UPLOAD_PATH = './public/uploads/';
@@ -13,10 +13,15 @@ export async function saveFileLocally(
   }
   const filePath = `${UPLOAD_PATH}${appendExtensionBasedOnType(fileName, file.type)}`;
   const data = await file.arrayBuffer();
-  await fs.appendFile(filePath, Buffer.from(data), () => {});
+  await fs.appendFile(filePath, Buffer.from(data));
   return {
     filePath,
     fileSize: file.size,
     fileType: file.type,
   };
+}
+
+export async function readLocalFile(filepath: string): Promise<string> {
+  const file = await fs.readFile(`${process.cwd()}${filepath}`, 'utf8');
+  return file;
 }

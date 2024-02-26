@@ -3,6 +3,8 @@ import papaParser from '../PapaParser';
 type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
 type ArrayFormatRow = string[];
+export type ArrayParseResult = { headers: string[]; rows: ArrayFormatRow[] };
+export type ObjectParseResult = { headers: string[]; rows: ObjectFormatRow[] };
 
 const handleParserError = (errors: ParserError[]) => {
   if (!errors.length) {
@@ -21,20 +23,28 @@ const getHeader = async (file: File): Promise<string[]> => {
   return parseResult.data;
 };
 
-const parseAsArray = async (
-  file: File,
-): Promise<{ headers: string[]; rows: string[][] }> => {
-  const parseResult = await papaParser.parseCSV<ArrayFormatRow>(file, false);
+const parseAsArray = async (csv: File | string): Promise<ArrayParseResult> => {
+  let parseResult;
+  if (typeof csv === 'string') {
+    parseResult = await papaParser.parseCSVString<ArrayFormatRow>(csv, true);
+  } else {
+    parseResult = await papaParser.parseCSV<ArrayFormatRow>(csv, false);
+  }
   handleParserError(parseResult.errors);
   return {
-    headers: parseResult.data[0] as string[],
+    headers: parseResult.data[0],
     rows: parseResult.data.slice(1),
   };
 };
 const parseAsObject = async (
-  file: File,
-): Promise<{ headers: string[]; rows: ObjectFormatRow[] }> => {
-  const parseResult = await papaParser.parseCSV<ObjectFormatRow>(file, true);
+  csv: File | string,
+): Promise<ObjectParseResult> => {
+  let parseResult;
+  if (typeof csv === 'string') {
+    parseResult = await papaParser.parseCSVString<ObjectFormatRow>(csv, true);
+  } else {
+    parseResult = await papaParser.parseCSV<ObjectFormatRow>(csv, false);
+  }
   handleParserError(parseResult.errors);
   return {
     headers: parseResult.meta.fields ?? [],

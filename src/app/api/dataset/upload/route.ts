@@ -1,4 +1,4 @@
-import FileUpload from '@/lib/services/FileUpload';
+import FileUpload from '@/lib/services/FileHandler';
 import {
   ENUM_Column_type,
   ENUM_Data_type,

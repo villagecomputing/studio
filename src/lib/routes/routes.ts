@@ -1,4 +1,4 @@
-import { datasetViewResponseSchema } from '@/app/api/dataset/[dataset]/schema';
+import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
