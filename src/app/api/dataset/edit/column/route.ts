@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       columnId,
     });
 
-    return { id: updatedColumnId };
+    return Response.json({ id: updatedColumnId });
   } catch (error) {
     console.error('Error in EditDatasetColumn:', error);
     return response('Error processing request', 500);
