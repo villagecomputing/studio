@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma } from '@/lib/utils';
+import { PrismaClient } from '@/lib/utils';
 
 export async function isFilenameAvailable(filename: string): Promise<boolean> {
   const trimmedFilename = filename.trim();
@@ -8,7 +8,7 @@ export async function isFilenameAvailable(filename: string): Promise<boolean> {
     return false;
   }
 
-  const totalFilesWithSameFilename = await Prisma.dataset.count({
+  const totalFilesWithSameFilename = await PrismaClient.dataset.count({
     where: {
       file_name: {
         equals: trimmedFilename,
