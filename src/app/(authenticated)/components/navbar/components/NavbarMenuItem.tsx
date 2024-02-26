@@ -13,7 +13,7 @@ export type NavbarMenuItemProps = {
 export default function NavbarMenuItem(props: NavbarMenuItemProps) {
   const currentRoute = usePathname();
   const { route, name, Icon } = props;
-  const isActive = currentRoute === route;
+  const isActive = currentRoute === route || currentRoute.includes(`${route}/`);
 
   return (
     <Button
