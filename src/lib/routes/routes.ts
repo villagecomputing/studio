@@ -1,3 +1,4 @@
+import { datasetViewResponseSchema } from '@/app/api/dataset/[dataset]/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
@@ -12,6 +13,7 @@ type RouteObject = {
 export enum ApiEndpoints {
   datasetUpload = '/api/dataset/upload',
   datasetList = '/api/dataset/list',
+  datasetView = '/api/dataset',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -25,6 +27,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: datasetListResponseSchema,
     method: 'GET',
   },
+  [ApiEndpoints.datasetView]: {
+    payloadSchema: emptyObjectSchema,
+    resultSchema: datasetViewResponseSchema,
+    method: 'GET',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -33,4 +40,5 @@ export type PayloadSchemaType = {
 
 export type ResultSchemaType = {
   [ApiEndpoints.datasetList]: z.infer<typeof datasetListResponseSchema>;
+  [ApiEndpoints.datasetView]: z.infer<typeof datasetViewResponseSchema>;
 };

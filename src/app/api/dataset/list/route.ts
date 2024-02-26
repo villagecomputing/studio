@@ -15,6 +15,7 @@ export async function GET() {
 
     const datasetList = await PrismaClient.dataset.findMany({
       select: datasetSelect,
+      where: { deleted_at: null },
     });
     if (!datasetListResponseSchema.safeParse(datasetList)) {
       return response('Invalid response datasetList type', 400);
