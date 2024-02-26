@@ -13,15 +13,19 @@ export default function NavbarMenuCollapsed(props: {
       <div className="mt-2 w-full px-2">
         <div className="flex flex-col gap-2">
           <Image
-            className="mx-auto mt-2 h-10 w-10"
+            className="mx-auto mt-2"
             src={'/logo-small.svg'}
-            alt="Stelo Logo"
-            width={40}
-            height={40}
+            alt="LabelKit Logo"
+            width={28}
+            height={28}
           />
 
-          <Button variant={'link'} className={'p-0'} onClick={toggleCollapse}>
-            <ChevronsRightIcon />
+          <Button
+            variant={'link'}
+            className={'p-0 text-greyText'}
+            onClick={toggleCollapse}
+          >
+            <ChevronsRightIcon size={20} />
           </Button>
           {NavbarItems.map((item) => (
             <NavbarMenuItem

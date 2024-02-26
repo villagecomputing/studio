@@ -13,14 +13,17 @@ export default function NavbarMenu(props: { toggleCollapse: () => void }) {
         <Image
           src={'/logo-large.svg'}
           priority
-          alt="Stelo Logo"
-          className={'h-auto w-24'}
-          width={100}
-          height={30}
+          alt="LabelKit Logo"
+          height={24}
+          width={114}
         />
 
-        <Button variant={'link'} onClick={toggleCollapse}>
-          <ChevronsLeftIcon />
+        <Button
+          variant={'link'}
+          className="h-6 p-2 text-greyText"
+          onClick={toggleCollapse}
+        >
+          <ChevronsLeftIcon size={20} />
         </Button>
       </div>
       <div className="w-full px-3">
