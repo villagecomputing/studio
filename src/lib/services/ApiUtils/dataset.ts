@@ -106,10 +106,12 @@ export async function editDatasetCell(
       status = ENUM_Ground_truth_status.APPROVED,
     } = params;
 
-    const updateData = {
-      content,
+    const updateData: { content?: string; status: ENUM_Ground_truth_status } = {
       status,
     };
+    if (content) {
+      updateData.content = content;
+    }
 
     const updatedCell = await PrismaClient.ground_truth_cell.update({
       where: { id: groundTruthCellId },

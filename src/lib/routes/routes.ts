@@ -7,7 +7,7 @@ import { emptyObjectSchema } from '@/app/api/schema';
 import { z } from 'zod';
 
 type RouteObject = {
-  payloadSchema: z.AnyZodObject;
+  payloadSchema: z.AnyZodObject | z.ZodEffects<z.AnyZodObject>;
   resultSchema: z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
 };

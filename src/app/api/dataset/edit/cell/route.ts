@@ -10,10 +10,6 @@ export async function POST(request: Request) {
       throw new Error('Ground Truth Cell Id is required');
     }
 
-    if (!payload.content) {
-      return response('Cell cannot be empty', 400);
-    }
-
     const updatedCellId = await ApiUtils.editDatasetCell(payload);
 
     return Response.json({ id: updatedCellId });
