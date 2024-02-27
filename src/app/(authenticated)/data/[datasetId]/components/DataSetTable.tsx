@@ -3,22 +3,21 @@ import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { AgGridReact } from 'ag-grid-react';
 import { useRef } from 'react';
 import { AGGridDataset } from '../types';
+import { useDatasetTableContext } from './DatasetTableContext';
 
-type DataSetTableProps<TData> = {
-  data: AGGridDataset<TData>;
-};
-
-export default function DataSetTable<TData>(props: DataSetTableProps<TData>) {
-  const { data } = props;
+export default function DataSetTable(props: AGGridDataset) {
+  const { rowData, columnDefs } = props;
   const tableRef = useRef<AgGridReact>(null);
+  const context = useDatasetTableContext(props);
 
   return (
-    <DataTable<TData>
+    <DataTable
       theme="ag-theme-dataset"
       tableRef={tableRef}
       agGridProps={{
-        rowData: data.rowData,
-        columnDefs: data.columnDefs,
+        rowData,
+        columnDefs,
+        context,
       }}
     />
   );

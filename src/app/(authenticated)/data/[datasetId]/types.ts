@@ -2,9 +2,15 @@ import { ObjectParseResult } from '@/lib/services/DatasetParser';
 import { ENUM_Column_type } from '@/lib/types';
 import { GridOptions } from 'ag-grid-community';
 
-export type AGGridDataset<TData> = {
+export type DatasetViewPageProps = {
+  params: {
+    datasetId: number;
+  };
+};
+
+export type AGGridDataset = {
   columnDefs: GridOptions['columnDefs'];
-  rowData: GridOptions<TData>['rowData'];
+  rowData: GridOptions['rowData'];
 };
 
 export type TableColumnProps = {
@@ -18,6 +24,10 @@ export type ConvertToAGGridDataProps = {
   rows: ObjectParseResult['rows'];
 };
 
-export type FetchDatasetResult<TData> = AGGridDataset<TData> & {
+export type FetchDatasetResult = AGGridDataset & {
   datasetName: string;
+};
+
+export type DatasetTableContext = AGGridDataset & {
+  refreshData: () => void;
 };
