@@ -11,7 +11,7 @@ import { convertToAGGridData, getColumnFieldFromName } from './utils';
 
 export const fetchDataSet = async (
   datasetId: number,
-): Promise<FetchDatasetResult<unknown> | null> => {
+): Promise<FetchDatasetResult | null> => {
   try {
     if (!datasetId) {
       permanentRedirect('/data');

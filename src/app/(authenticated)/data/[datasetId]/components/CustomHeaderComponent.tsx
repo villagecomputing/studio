@@ -9,7 +9,7 @@ import { ENUM_Column_type } from '@/lib/types';
 import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
 import { markColumnAsType } from '../actions';
-import { TableColumnProps } from '../types';
+import { DatasetTableContext, TableColumnProps } from '../types';
 
 export type HeaderComponentParams =
   | {
@@ -19,7 +19,7 @@ export type HeaderComponentParams =
   | undefined;
 
 export default function CustomHeaderComponent(
-  props: CustomHeaderProps<TableColumnProps>,
+  props: CustomHeaderProps<TableColumnProps, DatasetTableContext>,
 ) {
   const { column } = props;
   const colDef = column.getColDef();
@@ -39,12 +39,13 @@ export default function CustomHeaderComponent(
       <DropdownMenuContent className="border-border">
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() =>
-            markColumnAsType(
+          onClick={async () => {
+            await markColumnAsType(
               Number(colDef.colId),
               ENUM_Column_type.PREDICTIVE_LABEL,
-            )
-          }
+            );
+            props.context.refreshData();
+          }}
         >
           {'Set as Predicted Label'}
         </DropdownMenuItem>
