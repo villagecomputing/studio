@@ -14,7 +14,7 @@ export async function saveFileLocally(
   const filePath = `${UPLOAD_PATH}${appendExtensionBasedOnType(fileName, file.type)}`;
   const uploadPath = `.${filePath}`;
   const data = await file.arrayBuffer();
-  await fs.appendFile(uploadPath, Buffer.from(data), { encoding: 'utf8' });
+  await fs.appendFile(uploadPath, Buffer.from(data));
   return {
     filePath,
     fileSize: file.size,
