@@ -5,9 +5,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ENUM_Column_type } from '@/lib/types';
 import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
-import { DatasetTableContext } from '../types';
+import { markColumnAsType } from '../actions';
+import { DatasetTableContext, TableColumnProps } from '../types';
 
 export type HeaderComponentParams =
   | {
@@ -16,16 +18,8 @@ export type HeaderComponentParams =
     }
   | undefined;
 
-const MenuItems = [
-  { label: 'Set as Predicted Label' },
-  { label: 'Set as Ground Truth Label' },
-  { label: 'Rename' },
-  { label: 'Hide' },
-  { label: 'Delete' },
-];
-
 export default function CustomHeaderComponent(
-  props: CustomHeaderProps<unknown, DatasetTableContext>,
+  props: CustomHeaderProps<TableColumnProps, DatasetTableContext>,
 ) {
   const { column } = props;
   const colDef = column.getColDef();
@@ -43,11 +37,28 @@ export default function CustomHeaderComponent(
         <MoreVerticalIcon size={14} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-border">
-        {MenuItems.map((item, index) => (
-          <DropdownMenuItem key={index} className="cursor-pointer">
-            {item.label}
-          </DropdownMenuItem>
-        ))}
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={async () => {
+            await markColumnAsType(
+              Number(colDef.colId),
+              ENUM_Column_type.PREDICTIVE_LABEL,
+            );
+            props.context.refreshData();
+          }}
+        >
+          {'Set as Predicted Label'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Set as Ground Truth Label'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Rename'}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">{'Hide'}</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          {'Delete'}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

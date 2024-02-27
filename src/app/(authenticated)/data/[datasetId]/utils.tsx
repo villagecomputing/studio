@@ -37,6 +37,7 @@ function getTableColumnDefs(
     headerName: tableColumn.name,
     headerComponent: CustomHeaderComponent,
     pinned: tableColumn.type === ENUM_Column_type.GROUND_TRUTH && 'right',
+    colId: tableColumn.id.toString(),
     headerComponentParams: {
       leftSideIcon: getTableColumnIcon(tableColumn.type),
     } as HeaderComponentParams,

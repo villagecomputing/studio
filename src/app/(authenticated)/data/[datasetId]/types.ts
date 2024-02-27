@@ -14,6 +14,7 @@ export type AGGridDataset = {
 };
 
 export type TableColumnProps = {
+  id: number;
   name: string;
   field: string;
   type: ENUM_Column_type;
