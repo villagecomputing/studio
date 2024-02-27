@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
+import { DatasetTableContext } from '../types';
 
 export type HeaderComponentParams =
   | {
@@ -23,7 +24,9 @@ const MenuItems = [
   { label: 'Delete' },
 ];
 
-export default function CustomHeaderComponent(props: CustomHeaderProps) {
+export default function CustomHeaderComponent(
+  props: CustomHeaderProps<unknown, DatasetTableContext>,
+) {
   const { column } = props;
   const colDef = column.getColDef();
   const headerComponentParams =

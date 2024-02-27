@@ -45,7 +45,7 @@ function getTableColumnDefs(
 
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
-): AGGridDataset<unknown> {
+): AGGridDataset {
   return {
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
