@@ -1,4 +1,5 @@
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
+import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
@@ -6,7 +7,7 @@ import { emptyObjectSchema } from '@/app/api/schema';
 import { z } from 'zod';
 
 type RouteObject = {
-  payloadSchema: z.AnyZodObject;
+  payloadSchema: z.AnyZodObject | z.ZodEffects<z.AnyZodObject>;
   resultSchema: z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
 };
@@ -16,6 +17,7 @@ export enum ApiEndpoints {
   datasetList = '/api/dataset/list',
   datasetView = '/api/dataset',
   datasetColumnEdit = '/api/dataset/edit/column',
+  datasetCellEdit = '/api/dataset/edit/cell',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -26,6 +28,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
   },
   [ApiEndpoints.datasetColumnEdit]: {
     payloadSchema: editDatasetColumnSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
+  [ApiEndpoints.datasetCellEdit]: {
+    payloadSchema: editDatasetCellSchema,
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
@@ -44,6 +51,7 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
 export type PayloadSchemaType = {
   [ApiEndpoints.datasetUpload]: z.infer<typeof uploadDatasetPayloadSchema>;
   [ApiEndpoints.datasetColumnEdit]: z.infer<typeof editDatasetColumnSchema>;
+  [ApiEndpoints.datasetCellEdit]: z.infer<typeof editDatasetCellSchema>;
 };
 
 export type ResultSchemaType = {

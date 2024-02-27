@@ -1,3 +1,7 @@
-import { editDatasetColumn, getDatasetDetails } from './dataset';
+import {
+  editDatasetColumn,
+  getDatasetDetails,
+  editDatasetCell,
+} from './dataset';
 
-export default { getDatasetDetails, editDatasetColumn };
+export default { getDatasetDetails, editDatasetColumn, editDatasetCell };
