@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
-import DatasetParser from '@/lib/services/DatasetParser';
+
 import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -20,7 +20,7 @@ export default function UploadDataDialogContent(
 ) {
   const { onCancel } = props;
   const { toast } = useToast();
-  const { selectedFile, columnHeaders, refetchData } = useUploadDataContext();
+  const { selectedFile, refetchData } = useUploadDataContext();
   const uploadDataForm = useForm<z.infer<typeof UploadDataSchema>>({
     resolver: zodResolver(UploadDataSchema),
     defaultValues: {
@@ -46,18 +46,10 @@ export default function UploadDataDialogContent(
       });
       return true;
     }
-    const parsedFile = await DatasetParser.parseAsArray(selectedFile);
-    const groundTruthColumnContent = DatasetParser.getColumnFromArrayFormatData(
-      parsedFile.rows,
-      values.groundTruthColumnIndex,
-    );
 
     const dataToSend = {
       datasetTitle: values.datasetTitle,
-      columnHeaders,
       groundTruthColumnIndex: values.groundTruthColumnIndex,
-      totalNumberOfRows: parsedFile.rows.length,
-      groundTruthColumnContent,
     };
 
     if (!uploadDatasetPayloadSchema.safeParse(dataToSend)) {

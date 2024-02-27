@@ -1,7 +1,15 @@
 import {
+  editDatasetCell,
   editDatasetColumn,
   getDatasetDetails,
-  editDatasetCell,
 } from './dataset';
 
-export default { getDatasetDetails, editDatasetColumn, editDatasetCell };
+import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
+
+export default {
+  getDatasetDetails,
+  editDatasetColumn,
+  editDatasetCell,
+  saveDatasetDetails,
+  isFilenameAvailable,
+};
