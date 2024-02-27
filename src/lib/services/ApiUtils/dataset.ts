@@ -1,6 +1,7 @@
+import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { PayloadSchemaType } from '@/lib/routes/routes';
-import { ENUM_Column_type } from '@/lib/types';
+import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
 
@@ -91,5 +92,33 @@ export async function editDatasetColumn(
   } catch (error) {
     console.error(error);
     throw new Error('Error updating column');
+  }
+}
+
+export async function editDatasetCell(
+  payload: PayloadSchemaType['/api/dataset/edit/cell'],
+) {
+  try {
+    const params = editDatasetCellSchema.parse(payload);
+    const {
+      groundTruthCellId,
+      content,
+      status = ENUM_Ground_truth_status.APPROVED,
+    } = params;
+
+    const updateData = {
+      content,
+      status,
+    };
+
+    const updatedCell = await PrismaClient.ground_truth_cell.update({
+      where: { id: groundTruthCellId },
+      data: updateData,
+    });
+
+    return updatedCell.id;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating cell');
   }
 }
