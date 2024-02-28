@@ -98,13 +98,18 @@ export const markColumnAsType = async (
   }
 };
 
-export const updateCellStatus = async (id: number, status: string) => {
+export const updateGTCell = async (
+  id: number,
+  content: string,
+  status: string,
+) => {
   if (!isSomeStringEnum(ENUM_Ground_truth_status, status)) {
     throw new Error('Wrong cell status');
   }
   try {
     const updatedCellId = await ApiUtils.editDatasetCell({
       groundTruthCellId: id,
+      content,
       status,
     });
 
