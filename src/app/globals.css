@@ -54,7 +54,4 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* div:focus:not(:link:active) {  
-    outline: none;  
-    } */
 }

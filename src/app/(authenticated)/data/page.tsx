@@ -101,7 +101,6 @@ const DataPage = () => {
                 rowSelection: 'single',
                 domLayout: 'autoHeight',
                 quickFilterText,
-                containerStyle: { height: 300 },
               }}
             />
           )}
