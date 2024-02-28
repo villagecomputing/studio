@@ -25,7 +25,7 @@ const GroundTruthCellRenderer = (
     <span className={cn(['flex items-center justify-between'])}>
       <span
         className={cn([
-          'min-w-20 flex-shrink overflow-hidden text-ellipsis whitespace-nowrap',
+          'flex-shrink overflow-hidden text-ellipsis whitespace-nowrap',
           isPinnedBottomRow && 'text-slateGray700',
         ])}
       >
