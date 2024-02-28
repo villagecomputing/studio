@@ -12,8 +12,6 @@ export type AGGridDataset = {
   columnDefs: ColDef[];
   rowData: GridOptions['rowData'];
   pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
-  columnTypes: GridOptions['columnTypes'];
-  dataTypeDefinitions: GridOptions['dataTypeDefinitions'];
 };
 
 export type TableColumnProps = {
