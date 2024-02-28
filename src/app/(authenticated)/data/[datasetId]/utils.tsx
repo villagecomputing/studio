@@ -134,7 +134,6 @@ export function convertToAGGridData(
 export const onTableCellValueChanged = (
   event: CellValueChangedEvent<unknown, GroundTruthCell>,
 ) => {
-  console.log('event');
   if (event.colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
     throw new Error('Editing other columns than GT!');
   }
