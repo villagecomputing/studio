@@ -123,7 +123,8 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
     [ENUM_Column_type.GROUND_TRUTH]: {
       editable: (params) => {
         return !(
-          params.node.isRowPinned() && params.node.rowPinned === 'bottom'
+          params.context.tableViewMode === DatasetTableViewModeEnum.PREVIEW ||
+          (params.node.isRowPinned() && params.node.rowPinned === 'bottom')
         );
       },
       pinned: 'right',
