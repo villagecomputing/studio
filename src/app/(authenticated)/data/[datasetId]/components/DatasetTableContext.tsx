@@ -1,8 +1,7 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { CheckedState } from '@radix-ui/react-checkbox';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { updateCellStatus } from '../actions';
+import { updateGTCell } from '../actions';
 import {
   AGGridDataset,
   DatasetTableContext,
@@ -42,16 +41,12 @@ export const useDatasetTableContext = (
     );
   };
 
-  const updateGroundTruthRowStatus = async (
+  const updateGroundTruthCell = async (
     rowId: number,
-    checked: CheckedState,
+    content: string,
+    status: string,
   ) => {
-    await updateCellStatus(
-      rowId,
-      checked
-        ? ENUM_Ground_truth_status.APPROVED
-        : ENUM_Ground_truth_status.PENDING,
-    );
+    await updateGTCell(rowId, content, status);
   };
 
   const toggleViewMode = () => {
@@ -99,7 +94,7 @@ export const useDatasetTableContext = (
 
   return {
     refreshData: router.refresh,
-    updateGroundTruthRowStatus,
+    updateGroundTruthCell,
     getNumberOfApprovedGT,
     toggleViewMode,
     calculateMatchPercentage,

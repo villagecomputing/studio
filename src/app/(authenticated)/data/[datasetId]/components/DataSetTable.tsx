@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChangeEventHandler, useState } from 'react';
 import { AGGridDataset } from '../types';
-import { getTableColumnTypes, getTableDataTypeDefinitions } from '../utils';
+import {
+  getTableColumnTypes,
+  getTableDataTypeDefinitions,
+  onTableCellValueChanged,
+} from '../utils';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
@@ -34,6 +38,7 @@ export default function DataSetTable(props: AGGridDataset) {
           dataTypeDefinitions: getTableDataTypeDefinitions(),
           reactiveCustomComponents: true,
           quickFilterText,
+          onCellValueChanged: onTableCellValueChanged,
         }}
       />
     </>
