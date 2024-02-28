@@ -44,6 +44,7 @@ export type DatasetTableContext = AGGridDataset & {
   refreshData: () => void;
   updateGroundTruthRowStatus: (rowId: number, checked: CheckedState) => void;
   getNumberOfApprovedGT: () => number;
+  toggleViewMode: () => void;
   tableViewMode: DatasetTableViewModeEnum;
 };
 
