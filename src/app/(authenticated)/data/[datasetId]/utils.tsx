@@ -1,22 +1,21 @@
 import { ENUM_Column_type } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 import { SparkleIcon, TagIcon } from 'lucide-react';
-import CustomHeaderComponent, {
-  HeaderComponentParams,
-} from './components/CustomHeaderComponent';
+import CustomHeaderComponent from './components/CustomHeaderComponent';
 import {
   AGGridDataset,
   ConvertToAGGridDataProps,
+  DatasetRow,
   TableColumnProps,
 } from './types';
 
 export function getColumnFieldFromName(columnName: string): string {
-  return columnName.replace(' ', '_').toLowerCase();
+  return columnName.replaceAll(' ', '_').toLowerCase();
 }
 
-function getTableColumnIcon(columnType: ENUM_Column_type) {
+export function getTableColumnIcon(columnType: ENUM_Column_type) {
   switch (columnType) {
     case ENUM_Column_type.GROUND_TRUTH:
       return <SparkleIcon size={14} />;
@@ -29,20 +28,23 @@ function getTableColumnIcon(columnType: ENUM_Column_type) {
     }
   }
 }
-function getTableColumnDefs(
-  tableColumns: TableColumnProps[],
-): GridOptions['columnDefs'] {
+function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
   return tableColumns.map((tableColumn) => ({
     field: tableColumn.field,
     headerName: tableColumn.name,
     headerComponent: CustomHeaderComponent,
-    pinned: tableColumn.type === ENUM_Column_type.GROUND_TRUTH && 'right',
     colId: tableColumn.id.toString(),
-    headerComponentParams: {
-      leftSideIcon: getTableColumnIcon(tableColumn.type),
-    } as HeaderComponentParams,
+    type: tableColumn.type,
   }));
 }
+
+const getEmptyRow = (colHeaders: TableColumnProps[]) => {
+  const emptyRow: DatasetRow = {};
+  colHeaders.forEach((column) => {
+    emptyRow[column.field] = '';
+  });
+  return emptyRow;
+};
 
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
@@ -50,5 +52,6 @@ export function convertToAGGridData(
   return {
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
+    pinnedBottomRowData: [getEmptyRow(data.columns)],
   };
 }

@@ -1,6 +1,6 @@
-import { ObjectParseResult } from '@/lib/services/DatasetParser';
 import { ENUM_Column_type } from '@/lib/types';
-import { GridOptions } from 'ag-grid-community';
+import { CheckedState } from '@radix-ui/react-checkbox';
+import { ColDef, GridOptions } from 'ag-grid-community';
 
 export type DatasetViewPageProps = {
   params: {
@@ -9,8 +9,9 @@ export type DatasetViewPageProps = {
 };
 
 export type AGGridDataset = {
-  columnDefs: GridOptions['columnDefs'];
+  columnDefs: ColDef[];
   rowData: GridOptions['rowData'];
+  pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
 };
 
 export type TableColumnProps = {
@@ -22,7 +23,17 @@ export type TableColumnProps = {
 
 export type ConvertToAGGridDataProps = {
   columns: TableColumnProps[];
-  rows: ObjectParseResult['rows'];
+  rows: DatasetRow[];
+};
+
+export type GroundTruthCell = {
+  content: string;
+  id: number;
+  status: string;
+};
+
+export type DatasetRow = {
+  [k: string]: string | GroundTruthCell;
 };
 
 export type FetchDatasetResult = AGGridDataset & {
@@ -31,4 +42,12 @@ export type FetchDatasetResult = AGGridDataset & {
 
 export type DatasetTableContext = AGGridDataset & {
   refreshData: () => void;
+  getTableViewMode: () => DatasetTableViewModeEnum;
+  updateGroundTruthRowStatus: (rowId: number, checked: CheckedState) => void;
+  getNumberOfApprovedGT: () => number;
 };
+
+export enum DatasetTableViewModeEnum {
+  EDIT = 'EDIT',
+  PREVIEW = 'PREVIEW',
+}
