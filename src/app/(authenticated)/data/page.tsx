@@ -1,10 +1,11 @@
 'use client';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
+import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
-import { formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
@@ -28,6 +29,7 @@ type RowType = {
 };
 const DataPage = () => {
   const router = useRouter();
+  const [quickFilterText, setQuickFilterText] = useState<string>('');
   const [datasetList, setDatasetList] = useState<DatasetList>([]);
 
   const rowData: RowType[] = datasetList.map((data) => ({
@@ -67,34 +69,45 @@ const DataPage = () => {
     setDatasetList(await getData());
   };
 
+  const searchInDatasetList: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setQuickFilterText(event.target.value);
+  };
+
   return (
-    <div className="px-6">
-      <UploadDataProvider refetchData={refetchData}>
-        <div className={'my-6 flex items-center justify-between gap-5'}>
-          <SearchInput />
-          <UploadDataButton />
-        </div>
-        {!datasetList.length ? (
-          <ZeroState />
-        ) : (
-          <DataTable<RowType>
-            theme="ag-theme-dataset-list"
-            agGridProps={{
-              onRowClicked: (event) => {
-                if (!event.data) {
-                  return;
-                }
-                router.push(`/data/${event.data.id}`);
-              },
-              rowData,
-              columnDefs: colDef,
-              rowSelection: 'single',
-              domLayout: 'autoHeight',
-            }}
-          />
-        )}
-      </UploadDataProvider>
-    </div>
+    <>
+      <div className={cn(['px-6'])}>
+        <Breadcrumb />
+      </div>
+      <div className="px-6">
+        <UploadDataProvider refetchData={refetchData}>
+          <div className={'my-6 flex items-center justify-between gap-5'}>
+            <SearchInput onChange={searchInDatasetList} />
+            <UploadDataButton />
+          </div>
+          {!datasetList.length ? (
+            <ZeroState />
+          ) : (
+            <DataTable<RowType>
+              theme="ag-theme-dataset-list"
+              agGridProps={{
+                onRowClicked: (event) => {
+                  if (!event.data) {
+                    return;
+                  }
+                  router.push(`/data/${event.data.id}`);
+                },
+                rowData,
+                columnDefs: colDef,
+                rowSelection: 'single',
+                domLayout: 'autoHeight',
+                quickFilterText,
+                containerStyle: { height: 300 },
+              }}
+            />
+          )}
+        </UploadDataProvider>
+      </div>
+    </>
   );
 };
 
