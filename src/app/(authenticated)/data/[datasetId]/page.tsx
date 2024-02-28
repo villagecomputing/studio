@@ -23,6 +23,8 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
             rowData={dataSet.rowData}
             columnDefs={dataSet.columnDefs}
             pinnedBottomRowData={dataSet.pinnedBottomRowData}
+            dataTypeDefinitions={dataSet.dataTypeDefinitions}
+            columnTypes={dataSet.columnTypes}
           />
         </div>
       )}
