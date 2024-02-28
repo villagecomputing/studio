@@ -31,9 +31,13 @@ const config = {
       slateGray500: '#8597AC',
       borderActive: '#B4C2CD',
       green550: '#1CB454',
+      agDataColor: '#49515f',
     },
     extend: {
       colors: {
+        agWrongLabelColor: 'hsl(var(--ag-row-background-wrong-color))',
+        agGroundMatch: 'hsl(var(--ag-background-match-color))',
+        agOddGroundMatch: 'hsl(var(--ag-odd-row-background-match-color))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

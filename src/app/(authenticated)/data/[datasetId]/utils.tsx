@@ -2,6 +2,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import {
+  CellClassParams,
   CellValueChangedEvent,
   ColDef,
   GridOptions,
@@ -18,6 +19,8 @@ import {
   AGGridDataset,
   ConvertToAGGridDataProps,
   DatasetRow,
+  DatasetTableContext,
+  DatasetTableViewModeEnum,
   GroundTruthCell,
   TableColumnProps,
 } from './types';
@@ -73,13 +76,49 @@ function getEmptyRow(colHeaders: TableColumnProps[]) {
 
 export function getTableColumnTypes(): GridOptions['columnTypes'] {
   return {
-    [ENUM_Column_type.INPUT]: { editable: false },
+    [ENUM_Column_type.INPUT]: {
+      editable: false,
+    },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
       editable: false,
       headerComponentParams: {
         leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
       } as HeaderComponentParams,
-      cellRenderer: PredictiveLabelCellRenderer,
+      cellRendererSelector: (params) => {
+        const context: DatasetTableContext = params.context;
+        if (
+          context.tableViewMode !== DatasetTableViewModeEnum.EDIT &&
+          params.node.isRowPinned() &&
+          params.node.rowPinned === 'bottom'
+        ) {
+          return { component: PredictiveLabelCellRenderer };
+        }
+      },
+      cellClass: (params: CellClassParams) => {
+        const label: string = params.value;
+        const context: DatasetTableContext = params.context;
+        if (
+          !context.groundTruthColumnField ||
+          context.tableViewMode === DatasetTableViewModeEnum.EDIT
+        ) {
+          return '';
+        }
+        const groundTruthCell: GroundTruthCell | undefined =
+          params.data[context.groundTruthColumnField];
+
+        if (
+          !groundTruthCell ||
+          groundTruthCell.status === ENUM_Ground_truth_status.PENDING
+        ) {
+          return '';
+        }
+
+        const matchesGroundTruth = label === groundTruthCell.content;
+
+        return matchesGroundTruth
+          ? 'predictiveLabelCell match'
+          : 'predictiveLabelCell noMatch';
+      },
     },
     [ENUM_Column_type.GROUND_TRUTH]: {
       editable: (params) => {
@@ -93,6 +132,19 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       } as HeaderComponentParams,
       // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
       cellRenderer: GroundTruthCellRenderer,
+      cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
+        const context: DatasetTableContext = params.context;
+        if (
+          !params.value ||
+          context.tableViewMode === DatasetTableViewModeEnum.EDIT
+        ) {
+          return '';
+        }
+        if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
+          return 'groundTruthCell approved';
+        }
+        return '';
+      },
     },
   };
 }

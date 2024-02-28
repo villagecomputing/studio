@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --ag-odd-row-background-match-color: 152, 55%, 94%, 1;
+    --ag-background-match-color: 138, 76%, 97%, 1;
+    --ag-row-background-wrong-color: 0, 100%, 95%, 1;
     --overlay: 240, 12%, 36%, 0.48;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
