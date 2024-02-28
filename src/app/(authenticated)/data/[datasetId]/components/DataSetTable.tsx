@@ -3,16 +3,11 @@ import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { AgGridReact } from 'ag-grid-react';
 import { useRef } from 'react';
 import { AGGridDataset } from '../types';
+import { getTableColumnTypes, getTableDataTypeDefinitions } from '../utils';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
-  const {
-    rowData,
-    columnDefs,
-    pinnedBottomRowData,
-    columnTypes,
-    dataTypeDefinitions,
-  } = props;
+  const { rowData, columnDefs, pinnedBottomRowData } = props;
   const tableRef = useRef<AgGridReact>(null);
   const context = useDatasetTableContext(props);
 
@@ -24,9 +19,9 @@ export default function DataSetTable(props: AGGridDataset) {
         rowData,
         columnDefs,
         context,
-        columnTypes,
         pinnedBottomRowData,
-        dataTypeDefinitions,
+        columnTypes: getTableColumnTypes(),
+        dataTypeDefinitions: getTableDataTypeDefinitions(),
         reactiveCustomComponents: true,
       }}
     />

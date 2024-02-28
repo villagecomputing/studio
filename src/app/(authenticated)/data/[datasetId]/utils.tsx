@@ -42,15 +42,15 @@ function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
   }));
 }
 
-const getEmptyRow = (colHeaders: TableColumnProps[]) => {
+function getEmptyRow(colHeaders: TableColumnProps[]) {
   const emptyRow: DatasetRow = {};
   colHeaders.forEach((column) => {
     emptyRow[column.field] = '';
   });
   return emptyRow;
-};
+}
 
-const getTableColumnTypes = (): GridOptions['columnTypes'] => {
+export function getTableColumnTypes(): GridOptions['columnTypes'] {
   return {
     [ENUM_Column_type.INPUT]: { editable: false },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
@@ -74,9 +74,9 @@ const getTableColumnTypes = (): GridOptions['columnTypes'] => {
       cellRenderer: GroundTruthCellRenderer,
     },
   };
-};
+}
 
-const getTableDataTypeDefinitions = (): GridOptions['dataTypeDefinitions'] => {
+export function getTableDataTypeDefinitions(): GridOptions['dataTypeDefinitions'] {
   return {
     groundTruth: {
       baseDataType: 'object',
@@ -95,7 +95,7 @@ const getTableDataTypeDefinitions = (): GridOptions['dataTypeDefinitions'] => {
         value && !!value.content && !!value.id && !!value.status,
     },
   };
-};
+}
 
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
@@ -104,7 +104,5 @@ export function convertToAGGridData(
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
     pinnedBottomRowData: [getEmptyRow(data.columns)],
-    columnTypes: getTableColumnTypes(),
-    dataTypeDefinitions: getTableDataTypeDefinitions(),
   };
 }
