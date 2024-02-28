@@ -27,3 +27,16 @@
   font-weight: 500px;
   font-size: 14px;
 }
+
+.ag-row {
+  cursor: pointer;
+}
+
+.ag-cell-focus,
+.ag-cell {
+  border: none !important;
+}
+
+.ag-theme-alpine .ag-layout-auto-height .ag-center-cols-viewport {
+  min-height: unset;
+}

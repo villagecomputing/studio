@@ -1,8 +1,13 @@
 import { ENUM_Column_type } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { ColDef, GridOptions, ValueParserParams } from 'ag-grid-community';
-import { SparkleIcon, TagIcon } from 'lucide-react';
+import {
+  ColDef,
+  GridOptions,
+  SortDirection,
+  ValueParserParams,
+} from 'ag-grid-community';
+import { ArrowDownIcon, ArrowUpIcon, SparkleIcon, TagIcon } from 'lucide-react';
 import CustomHeaderComponent, {
   HeaderComponentParams,
 } from './components/CustomHeaderComponent';
@@ -17,6 +22,20 @@ import {
 
 export function getColumnFieldFromName(columnName: string): string {
   return columnName.replaceAll(' ', '_').toLowerCase();
+}
+
+export function getTableColumnSortIcon(sort: SortDirection) {
+  switch (sort) {
+    case 'asc':
+      return <ArrowDownIcon size={14} />;
+    case 'desc':
+      return <ArrowUpIcon size={14} />;
+    case null:
+      return null;
+    default: {
+      return exhaustiveCheck(sort);
+    }
+  }
 }
 
 export function getTableColumnIcon(columnType: ENUM_Column_type) {

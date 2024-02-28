@@ -4,6 +4,7 @@ import { Form } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
 
+import { TOAST_MESSAGE } from '@/lib/language/toasts';
 import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -67,7 +68,7 @@ export default function UploadDataDialogContent(
     if (response.status !== 200) {
       toast({
         title: 'Error',
-        description: 'Failed to upload the dataset',
+        description: TOAST_MESSAGE.UPLOAD_DATASET_FAILED,
         variant: 'destructive',
       });
       return;
@@ -80,7 +81,7 @@ export default function UploadDataDialogContent(
     <Form {...uploadDataForm}>
       <form
         onSubmit={uploadDataForm.handleSubmit(onSubmit)}
-        className="mt-4 flex flex-col gap-8"
+        className="mt-4 flex flex-1 flex-col gap-8 overflow-y-auto"
       >
         <DatasetTitleInput />
         <DatasetGroundTruthColumnSelector />

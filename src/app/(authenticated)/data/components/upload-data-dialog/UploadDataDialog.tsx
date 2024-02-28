@@ -22,7 +22,10 @@ const UploadDataDialog: React.FC<UploadDataDialogProps> = (props) => {
         }
       }}
     >
-      <DialogContent>
+      <DialogContent
+        className="flex max-h-[96vh] flex-col"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Upload Data</DialogTitle>
         </DialogHeader>
