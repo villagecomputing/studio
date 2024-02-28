@@ -47,6 +47,7 @@ export type DatasetTableContext = AGGridDataset & {
     status: string,
   ) => void;
   getNumberOfApprovedGT: () => number;
+  toggleViewMode: () => void;
   tableViewMode: DatasetTableViewModeEnum;
 };
 

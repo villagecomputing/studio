@@ -28,10 +28,8 @@ const GroundTruthCellRenderer = (
       </span>
       {isPinnedBottomRow ? (
         <Button
-          className="flex-shrink-0"
-          onClick={() =>
-            console.log(`on click ${isEditMode ? 'Done' : 'Edit'} button`)
-          }
+          className="h-8 flex-shrink-0"
+          onClick={props.context.toggleViewMode}
         >
           {isEditMode ? 'Done' : 'Edit'}
         </Button>

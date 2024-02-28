@@ -14,7 +14,7 @@ export const useDatasetTableContext = (
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
-    DatasetTableViewModeEnum.EDIT,
+    DatasetTableViewModeEnum.PREVIEW,
   );
 
   const getGroundTruthColumn = () => {
@@ -43,10 +43,23 @@ export const useDatasetTableContext = (
     await updateGTCell(rowId, content, status);
   };
 
+  const toggleViewMode = () => {
+    const isEditMode = tableViewMode === DatasetTableViewModeEnum.EDIT;
+    if (isEditMode) {
+      router.refresh();
+    }
+    setTableViewMode(
+      isEditMode
+        ? DatasetTableViewModeEnum.PREVIEW
+        : DatasetTableViewModeEnum.EDIT,
+    );
+  };
+
   return {
     refreshData: router.refresh,
     updateGroundTruthCell,
     getNumberOfApprovedGT,
+    toggleViewMode,
     tableViewMode,
     ...props,
   };

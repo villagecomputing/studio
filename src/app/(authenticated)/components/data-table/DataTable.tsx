@@ -9,7 +9,7 @@ import { DataTableProps } from './types';
 
 export default function DataTable<TData>(props: DataTableProps<TData>) {
   return (
-    <div className={cn(['ag-theme-alpine', props.theme, 'w-full', 'h-full'])}>
+    <div className={cn(['ag-theme-alpine', props.theme, 'h-full'])}>
       <AgGridReact
         defaultColDef={DEFAULT_COLUMN_DEFINITION}
         {...props.agGridProps}

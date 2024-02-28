@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
+import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
-import { SearchInput } from '../../components/search-input/SearchInput';
 import { fetchDataSet } from './actions';
 import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
@@ -13,9 +12,10 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
 
   return (
     <div>
-      <div className={cn(['flex items-center justify-between p-6'])}>
-        <SearchInput />
-        <Button variant={'outline'}>Download</Button>
+      <div className={cn(['px-6'])}>
+        <Breadcrumb
+          customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
+        />
       </div>
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
