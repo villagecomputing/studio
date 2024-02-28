@@ -1,22 +1,25 @@
 import { ENUM_Column_type } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions, ValueParserParams } from 'ag-grid-community';
 import { SparkleIcon, TagIcon } from 'lucide-react';
 import CustomHeaderComponent, {
   HeaderComponentParams,
 } from './components/CustomHeaderComponent';
+import GroundTruthCellRenderer from './components/GroundTruthCellRenderer';
+import PredictiveLabelCellRenderer from './components/PredictiveLabelCellRenderer';
 import {
   AGGridDataset,
   ConvertToAGGridDataProps,
+  DatasetRow,
   TableColumnProps,
 } from './types';
 
 export function getColumnFieldFromName(columnName: string): string {
-  return columnName.replace(' ', '_').toLowerCase();
+  return columnName.replaceAll(' ', '_').toLowerCase();
 }
 
-function getTableColumnIcon(columnType: ENUM_Column_type) {
+export function getTableColumnIcon(columnType: ENUM_Column_type) {
   switch (columnType) {
     case ENUM_Column_type.GROUND_TRUTH:
       return <SparkleIcon size={14} />;
@@ -29,20 +32,70 @@ function getTableColumnIcon(columnType: ENUM_Column_type) {
     }
   }
 }
-function getTableColumnDefs(
-  tableColumns: TableColumnProps[],
-): GridOptions['columnDefs'] {
+function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
   return tableColumns.map((tableColumn) => ({
     field: tableColumn.field,
     headerName: tableColumn.name,
     headerComponent: CustomHeaderComponent,
-    pinned: tableColumn.type === ENUM_Column_type.GROUND_TRUTH && 'right',
     colId: tableColumn.id.toString(),
-    headerComponentParams: {
-      leftSideIcon: getTableColumnIcon(tableColumn.type),
-    } as HeaderComponentParams,
+    type: tableColumn.type,
   }));
 }
+
+const getEmptyRow = (colHeaders: TableColumnProps[]) => {
+  const emptyRow: DatasetRow = {};
+  colHeaders.forEach((column) => {
+    emptyRow[column.field] = '';
+  });
+  return emptyRow;
+};
+
+const getTableColumnTypes = (): GridOptions['columnTypes'] => {
+  return {
+    [ENUM_Column_type.INPUT]: { editable: false },
+    [ENUM_Column_type.PREDICTIVE_LABEL]: {
+      editable: false,
+      headerComponentParams: {
+        leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
+      } as HeaderComponentParams,
+      cellRenderer: PredictiveLabelCellRenderer,
+    },
+    [ENUM_Column_type.GROUND_TRUTH]: {
+      editable: (params) => {
+        return !(
+          params.node.isRowPinned() && params.node.rowPinned === 'bottom'
+        );
+      },
+      pinned: 'right',
+      headerComponentParams: {
+        leftSideIcon: getTableColumnIcon(ENUM_Column_type.GROUND_TRUTH),
+      } as HeaderComponentParams,
+      // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
+      cellRenderer: GroundTruthCellRenderer,
+    },
+  };
+};
+
+const getTableDataTypeDefinitions = (): GridOptions['dataTypeDefinitions'] => {
+  return {
+    groundTruth: {
+      baseDataType: 'object',
+      extendsDataType: 'object',
+      valueParser: (params) => {
+        return {
+          content: params.newValue,
+          id: (params as ValueParserParams).oldValue?.id,
+          status: (params as ValueParserParams).oldValue?.status,
+        };
+      },
+      valueFormatter: (params) => {
+        return params.value.content;
+      },
+      dataTypeMatcher: (value) =>
+        value && !!value.content && !!value.id && !!value.status,
+    },
+  };
+};
 
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
@@ -50,5 +103,8 @@ export function convertToAGGridData(
   return {
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
+    pinnedBottomRowData: [getEmptyRow(data.columns)],
+    columnTypes: getTableColumnTypes(),
+    dataTypeDefinitions: getTableDataTypeDefinitions(),
   };
 }

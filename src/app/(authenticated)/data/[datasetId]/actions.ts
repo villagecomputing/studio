@@ -1,12 +1,12 @@
 'use server';
-import DatasetParser, { ObjectParseResult } from '@/lib/services/DatasetParser';
+import DatasetParser from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
 
 import ApiUtils from '@/lib/services/ApiUtils';
 import { guardStringEnum, isSomeStringEnum } from '@/lib/typeUtils';
-import { ENUM_Column_type } from '@/lib/types';
+import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { permanentRedirect } from 'next/navigation';
-import { FetchDatasetResult, TableColumnProps } from './types';
+import { DatasetRow, FetchDatasetResult, TableColumnProps } from './types';
 import { convertToAGGridData, getColumnFieldFromName } from './utils';
 
 export const fetchDataSet = async (
@@ -43,26 +43,28 @@ export const fetchDataSet = async (
     );
 
     // Map the rows and modify the content if the column is ground truth
-    const rows: ObjectParseResult['rows'] = fileContentObject.rows.map(
-      (row, rowIndex) => {
-        const updatedRow = Object.fromEntries(
-          Object.entries(row).map(([key, value]) => [
-            getColumnFieldFromName(key),
-            value,
-          ]),
-        );
+    const rows = fileContentObject.rows.map((row, rowIndex) => {
+      const updatedRow: DatasetRow = Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [
+          getColumnFieldFromName(key),
+          value,
+        ]),
+      );
 
-        datasetDetails.Dataset_column.forEach((column) => {
-          if (column.type === ENUM_Column_type.GROUND_TRUTH) {
-            const field = getColumnFieldFromName(column.name);
-            const groundTruthCell = column.Ground_truth_cell[rowIndex];
-            updatedRow[field] = groundTruthCell.content;
-          }
-        });
+      datasetDetails.Dataset_column.forEach((column) => {
+        if (column.type === ENUM_Column_type.GROUND_TRUTH) {
+          const field = getColumnFieldFromName(column.name);
+          const groundTruthCell = column.Ground_truth_cell[rowIndex];
+          updatedRow[field] = {
+            content: groundTruthCell.content,
+            id: groundTruthCell.id,
+            status: groundTruthCell.status,
+          };
+        }
+      });
 
-        return updatedRow;
-      },
-    );
+      return updatedRow;
+    });
 
     return {
       datasetName: datasetDetails.file_name,
@@ -91,6 +93,22 @@ export const markColumnAsType = async (
     });
 
     return updatedColumnId;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const updateCellStatus = async (id: number, status: string) => {
+  if (!isSomeStringEnum(ENUM_Ground_truth_status, status)) {
+    throw new Error('Wrong cell status');
+  }
+  try {
+    const updatedCellId = await ApiUtils.editDatasetCell({
+      groundTruthCellId: id,
+      status,
+    });
+
+    return updatedCellId;
   } catch (error) {
     return null;
   }
