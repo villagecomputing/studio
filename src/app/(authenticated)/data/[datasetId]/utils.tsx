@@ -106,10 +106,7 @@ export function getTableDataTypeDefinitions(): GridOptions['dataTypeDefinitions'
         return {
           content: params.newValue,
           id: (params as ValueParserParams).oldValue?.id,
-          status:
-            params.newValue !== (params as ValueParserParams).oldValue?.content
-              ? ENUM_Ground_truth_status.APPROVED
-              : (params as ValueParserParams).oldValue?.status,
+          status: ENUM_Ground_truth_status.APPROVED,
         };
       },
       valueFormatter: (params) => {
