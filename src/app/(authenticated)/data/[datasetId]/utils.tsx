@@ -1,9 +1,13 @@
 import { ENUM_Column_type } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridOptions, ValueParserParams } from 'ag-grid-community';
 import { SparkleIcon, TagIcon } from 'lucide-react';
-import CustomHeaderComponent from './components/CustomHeaderComponent';
+import CustomHeaderComponent, {
+  HeaderComponentParams,
+} from './components/CustomHeaderComponent';
+import GroundTruthCellRenderer from './components/GroundTruthCellRenderer';
+import PredictiveLabelCellRenderer from './components/PredictiveLabelCellRenderer';
 import {
   AGGridDataset,
   ConvertToAGGridDataProps,
@@ -46,6 +50,53 @@ const getEmptyRow = (colHeaders: TableColumnProps[]) => {
   return emptyRow;
 };
 
+const getTableColumnTypes = (): GridOptions['columnTypes'] => {
+  return {
+    [ENUM_Column_type.INPUT]: { editable: false },
+    [ENUM_Column_type.PREDICTIVE_LABEL]: {
+      editable: false,
+      headerComponentParams: {
+        leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
+      } as HeaderComponentParams,
+      cellRenderer: PredictiveLabelCellRenderer,
+    },
+    [ENUM_Column_type.GROUND_TRUTH]: {
+      editable: (params) => {
+        return !(
+          params.node.isRowPinned() && params.node.rowPinned === 'bottom'
+        );
+      },
+      pinned: 'right',
+      headerComponentParams: {
+        leftSideIcon: getTableColumnIcon(ENUM_Column_type.GROUND_TRUTH),
+      } as HeaderComponentParams,
+      // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
+      cellRenderer: GroundTruthCellRenderer,
+    },
+  };
+};
+
+const getTableDataTypeDefinitions = (): GridOptions['dataTypeDefinitions'] => {
+  return {
+    groundTruth: {
+      baseDataType: 'object',
+      extendsDataType: 'object',
+      valueParser: (params) => {
+        return {
+          content: params.newValue,
+          id: (params as ValueParserParams).oldValue?.id,
+          status: (params as ValueParserParams).oldValue?.status,
+        };
+      },
+      valueFormatter: (params) => {
+        return params.value.content;
+      },
+      dataTypeMatcher: (value) =>
+        value && !!value.content && !!value.id && !!value.status,
+    },
+  };
+};
+
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
 ): AGGridDataset {
@@ -53,5 +104,7 @@ export function convertToAGGridData(
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
     pinnedBottomRowData: [getEmptyRow(data.columns)],
+    columnTypes: getTableColumnTypes(),
+    dataTypeDefinitions: getTableDataTypeDefinitions(),
   };
 }
