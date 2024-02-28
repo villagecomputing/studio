@@ -1,7 +1,8 @@
-import { ENUM_Column_type } from '@/lib/types';
+import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import {
+  CellValueChangedEvent,
   ColDef,
   GridOptions,
   SortDirection,
@@ -17,6 +18,7 @@ import {
   AGGridDataset,
   ConvertToAGGridDataProps,
   DatasetRow,
+  GroundTruthCell,
   TableColumnProps,
 } from './types';
 
@@ -104,7 +106,7 @@ export function getTableDataTypeDefinitions(): GridOptions['dataTypeDefinitions'
         return {
           content: params.newValue,
           id: (params as ValueParserParams).oldValue?.id,
-          status: (params as ValueParserParams).oldValue?.status,
+          status: ENUM_Ground_truth_status.APPROVED,
         };
       },
       valueFormatter: (params) => {
@@ -125,3 +127,33 @@ export function convertToAGGridData(
     pinnedBottomRowData: [getEmptyRow(data.columns)],
   };
 }
+
+export const onTableCellValueChanged = (
+  event: CellValueChangedEvent<unknown, GroundTruthCell>,
+) => {
+  if (event.colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
+    throw new Error('Editing other columns than GT!');
+  }
+  if (!event.value || !event.newValue) {
+    throw new Error('Cell data is missing');
+  }
+  if (
+    event.oldValue?.content === event.newValue?.content &&
+    event.oldValue?.status === event.newValue?.status
+  ) {
+    // nothing to update
+    return;
+  }
+  if (event.oldValue?.status !== event.newValue?.status) {
+    // refresh to update the pinned bottom cell content
+    event.api.refreshCells({
+      columns: [event.column],
+      force: true,
+    });
+  }
+  event.context.updateGroundTruthCell(
+    event.value?.id,
+    event.newValue.content,
+    event.newValue.status,
+  );
+};

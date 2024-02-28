@@ -1,5 +1,4 @@
 import { ENUM_Column_type } from '@/lib/types';
-import { CheckedState } from '@radix-ui/react-checkbox';
 import { ColDef, GridOptions } from 'ag-grid-community';
 
 export type DatasetViewPageProps = {
@@ -42,7 +41,11 @@ export type FetchDatasetResult = AGGridDataset & {
 
 export type DatasetTableContext = AGGridDataset & {
   refreshData: () => void;
-  updateGroundTruthRowStatus: (rowId: number, checked: CheckedState) => void;
+  updateGroundTruthCell: (
+    rowId: number,
+    content: string,
+    status: string,
+  ) => void;
   getNumberOfApprovedGT: () => number;
   toggleViewMode: () => void;
   tableViewMode: DatasetTableViewModeEnum;
