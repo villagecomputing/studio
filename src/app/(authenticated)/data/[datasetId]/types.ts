@@ -48,7 +48,7 @@ export type DatasetTableContext = AGGridDataset & {
   ) => void;
   getNumberOfApprovedGT: () => number;
   toggleViewMode: () => void;
-  calculateMatchPercentage: (predictiveLabel: string) => string;
+  calculateMatchPercentage: (predictiveLabel: string) => string | undefined;
   tableViewMode: DatasetTableViewModeEnum;
   groundTruthColumnField: string | undefined;
 };
