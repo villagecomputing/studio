@@ -6,7 +6,13 @@ import { AGGridDataset } from '../types';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
-  const { rowData, columnDefs } = props;
+  const {
+    rowData,
+    columnDefs,
+    pinnedBottomRowData,
+    columnTypes,
+    dataTypeDefinitions,
+  } = props;
   const tableRef = useRef<AgGridReact>(null);
   const context = useDatasetTableContext(props);
 
@@ -18,6 +24,10 @@ export default function DataSetTable(props: AGGridDataset) {
         rowData,
         columnDefs,
         context,
+        columnTypes,
+        pinnedBottomRowData,
+        dataTypeDefinitions,
+        reactiveCustomComponents: true,
       }}
     />
   );

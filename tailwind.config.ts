@@ -29,6 +29,8 @@ const config = {
       slateGray950: '#2F333C',
       slateGray700: '#67748E',
       slateGray500: '#8597AC',
+      borderActive: '#B4C2CD',
+      green550: '#1CB454',
     },
     extend: {
       colors: {
