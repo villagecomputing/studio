@@ -44,9 +44,9 @@ export type FetchDatasetResult = AGGridDataset & {
 
 export type DatasetTableContext = AGGridDataset & {
   refreshData: () => void;
-  getTableViewMode: () => DatasetTableViewModeEnum;
   updateGroundTruthRowStatus: (rowId: number, checked: CheckedState) => void;
   getNumberOfApprovedGT: () => number;
+  tableViewMode: DatasetTableViewModeEnum;
 };
 
 export enum DatasetTableViewModeEnum {

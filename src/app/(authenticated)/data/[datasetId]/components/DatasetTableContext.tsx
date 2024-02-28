@@ -18,10 +18,6 @@ export const useDatasetTableContext = (
     DatasetTableViewModeEnum.EDIT,
   );
 
-  const getTableViewMode = () => {
-    return tableViewMode;
-  };
-
   const getGroundTruthColumn = () => {
     return props.columnDefs?.find(
       (col) => col?.type === ENUM_Column_type.GROUND_TRUTH,
@@ -54,9 +50,9 @@ export const useDatasetTableContext = (
 
   return {
     refreshData: router.refresh,
-    getTableViewMode,
     updateGroundTruthRowStatus,
     getNumberOfApprovedGT,
+    tableViewMode,
     ...props,
   };
 };

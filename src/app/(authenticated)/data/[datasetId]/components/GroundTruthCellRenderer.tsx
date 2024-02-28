@@ -15,7 +15,7 @@ const GroundTruthCellRenderer = (
   const cellContent = props.valueFormatted || props.value?.content;
 
   const isEditMode =
-    props.context.getTableViewMode() === DatasetTableViewModeEnum.EDIT;
+    props.context.tableViewMode === DatasetTableViewModeEnum.EDIT;
   const isPinnedBottomRow =
     props.node.isRowPinned() && props.node.rowPinned === 'bottom';
 
