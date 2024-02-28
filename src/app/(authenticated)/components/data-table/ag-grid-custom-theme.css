@@ -1,5 +1,6 @@
 .ag-theme-alpine {
   --ag-header-background-color: theme(colors.gridHeaderColor);
+  --ag-data-color: theme(colors.agDataColor);
 }
 .ag-theme-dataset-list {
   --ag-foreground-color: theme(colors.gridCellTextColor);
@@ -17,9 +18,12 @@
 }
 
 .ag-theme-dataset {
+  --ag-row-height: 92px;
+  --ag-line-height: 20px;
+  --ag-border-color: theme(colors.gridBorderColor);
   --ag-odd-row-background-color: theme(colors.gridHeaderColor);
-  --ag-border-color: #d2dde5;
-  --ag-cell-border-width: 1px;
+  --ag-cell-border-width: 2px;
+  --ag-cell-horizontal-border: solid theme(colors.gridBorderColor);
   --ag-header-foreground-color: theme(colors.slateGray700);
 }
 .ag-theme-dataset .ag-header-row {
@@ -28,15 +32,32 @@
   font-size: 14px;
 }
 
+.ag-theme-dataset .ag-floating-bottom,
+.ag-theme-dataset .ag-floating-bottom .ag-cell {
+  min-height: 55px !important;
+}
+
+.ag-theme-dataset .ag-cell {
+  @apply line-clamp-4 whitespace-normal pt-2;
+}
+
 .ag-row {
   cursor: pointer;
 }
 
-.ag-cell-focus,
-.ag-cell {
-  border: none !important;
-}
-
 .ag-theme-alpine .ag-layout-auto-height .ag-center-cols-viewport {
   min-height: unset;
+}
+
+.ag-row > .ag-cell.groundTruthCell.approved {
+  @apply bg-agOddGroundMatch;
+}
+.ag-row.ag-row-odd > .groundTruthCell.approved {
+  @apply bg-agOddGroundMatch;
+}
+.ag-row > .ag-cell.predictiveLabelCell.noMatch {
+  @apply bg-agWrongLabelColor;
+}
+.ag-row > .ag-cell.predictiveLabelCell.match {
+  @apply bg-agOddGroundMatch;
 }
