@@ -38,4 +38,5 @@ next-env.d.ts
 *.toml
 *.db*
 
-/public/uploads/*
+/public/uploads/*.csv
+/public/uploads/*.tsv

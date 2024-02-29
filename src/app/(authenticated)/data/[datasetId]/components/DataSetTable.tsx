@@ -3,9 +3,8 @@ import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { SearchInput } from '@/app/(authenticated)/components/search-input/SearchInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { RowClickedEvent } from 'ag-grid-community';
 import { ChangeEventHandler, useState } from 'react';
-import { AGGridDataset, DatasetTableContext } from '../types';
+import { AGGridDataset } from '../types';
 import {
   getTableColumnTypes,
   getTableDataTypeDefinitions,
@@ -42,9 +41,6 @@ export default function DataSetTable(props: AGGridDataset) {
           reactiveCustomComponents: true,
           quickFilterText,
           onCellValueChanged: onTableCellValueChanged,
-          onRowClicked: (
-            event: RowClickedEvent<unknown, DatasetTableContext>,
-          ) => event.context.setInspectorRowIndex(event.rowIndex),
         }}
       />
     </>

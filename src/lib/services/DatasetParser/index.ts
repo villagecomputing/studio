@@ -1,19 +1,18 @@
 import PapaParser from './PapaParser/PapaParser';
 
-type ParserError = Papa.ParseError;
+export type ParserError = Papa.ParseError;
 type ObjectFormatRow = { [columnName: string]: string };
 type ArrayFormatRow = string[];
 export type ArrayParseResult = { headers: string[]; rows: ArrayFormatRow[] };
 export type ObjectParseResult = { headers: string[]; rows: ObjectFormatRow[] };
 
 const handleParserError = (errors: ParserError[]) => {
+  // https://www.papaparse.com/docs#:~:text=the%20header%20row.-,ERRORS,-//%20Error%20structure%0A%7B%0A%09type
   if (!errors.length) {
     return;
   }
   // display first error
   throw new Error(errors[0].message);
-  //TODO: check what errors we should handle
-  // https://www.papaparse.com/docs#:~:text=the%20header%20row.-,ERRORS,-//%20Error%20structure%0A%7B%0A%09type
 };
 
 const getHeader = async (file: File): Promise<string[]> => {

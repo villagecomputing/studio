@@ -15,7 +15,9 @@ const UploadDataButton = () => {
   const { onFileSelected } = useUploadDataContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file && fileInputRef.current) {
       if (file.size > MAX_FILE_SIZE) {
@@ -25,7 +27,16 @@ const UploadDataButton = () => {
         });
         return;
       }
-      onFileSelected(file);
+      try {
+        await onFileSelected(file);
+      } catch (error) {
+        toast({
+          duration: 8000,
+          variant: 'destructive',
+          description: (error as Error).message,
+        });
+        return;
+      }
       openDialog();
       if (fileInputRef.current) {
         fileInputRef.current.value = '';

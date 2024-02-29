@@ -1,5 +1,5 @@
 'use server';
-import DatasetParser from '@/lib/services/DatasetParser';
+import DatasetParser, { ParserError } from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
 
 import ApiUtils from '@/lib/services/ApiUtils';
@@ -75,7 +75,11 @@ export const fetchDataSet = async (
     };
   } catch (error) {
     console.error(error);
-    permanentRedirect('/data');
+    // TODO: move the try-catch block around individual statements that can throw and handle the error there
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error((error as ParserError).message);
   }
 };
 

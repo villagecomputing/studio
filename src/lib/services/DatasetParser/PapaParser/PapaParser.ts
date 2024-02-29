@@ -5,7 +5,6 @@ function getCSVHeader(file: File): Promise<Papa.ParseResult<string>> {
     Papa.parse(file, {
       skipEmptyLines: true,
       header: true,
-      preview: 1, // Only parse the first row
       complete: (results) => {
         if (results.meta.fields) {
           resolve({
