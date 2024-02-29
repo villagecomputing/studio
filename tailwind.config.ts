@@ -17,8 +17,12 @@ const config = {
         '2xl': '1400px',
       },
     },
+    zIndex: {
+      inspectorView: '10',
+    },
     colors: {
       white: '#FFFFFF',
+      paleGrey: '#EFF2F7',
       paleBlueGrey: '#FAFDFF',
       greyText: '#686B72',
       gridHeaderColor: '#F6F8FA',

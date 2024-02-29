@@ -58,3 +58,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.row-inspector-view {
+  box-shadow: 0px 0px 40px 0px #2b1a5c14;
+  transition: transform 0.3s ease-in-out;
+}
+
+.row-inspector-view-active {
+  transform: translateX(0);
+}
