@@ -80,12 +80,18 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
   return {
     [ENUM_Column_type.INPUT]: {
       editable: false,
+      onCellClicked(event) {
+        event.context.setInspectorRowIndex(event.rowIndex);
+      },
     },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
       editable: false,
       headerComponentParams: {
         leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
       } as HeaderComponentParams,
+      onCellClicked(event) {
+        event.context.setInspectorRowIndex(event.rowIndex);
+      },
       cellRendererSelector: (params) => {
         const context: DatasetTableContext = params.context;
         if (
