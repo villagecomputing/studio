@@ -16,6 +16,9 @@ export const useDatasetTableContext = (
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
     DatasetTableViewModeEnum.PREVIEW,
   );
+  const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
+    null,
+  );
 
   const groundTruthColumnField = useMemo(() => {
     return props.columnDefs.find(
@@ -63,7 +66,7 @@ export const useDatasetTableContext = (
 
   const calculateMatchPercentage = (
     predictiveLabelColumnField: string,
-  ): string => {
+  ): string | undefined => {
     let matchPercentages = 0;
 
     const groundTruthCol = props.columnDefs?.find(
@@ -89,6 +92,9 @@ export const useDatasetTableContext = (
       props.rowData?.filter(
         (row) => row[field].status === ENUM_Ground_truth_status.APPROVED,
       ).length || 0;
+    if (!totalRows) {
+      return undefined;
+    }
     return ((matchPercentages / totalRows) * 100).toFixed(1);
   };
 
@@ -100,6 +106,8 @@ export const useDatasetTableContext = (
     calculateMatchPercentage,
     groundTruthColumnField,
     tableViewMode,
+    inspectorRowIndex,
+    setInspectorRowIndex,
     ...props,
   };
 };

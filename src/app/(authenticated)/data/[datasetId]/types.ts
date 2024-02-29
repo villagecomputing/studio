@@ -1,5 +1,6 @@
 import { ENUM_Column_type } from '@/lib/types';
 import { ColDef, GridOptions } from 'ag-grid-community';
+import { Dispatch, SetStateAction } from 'react';
 
 export type DatasetViewPageProps = {
   params: {
@@ -48,9 +49,11 @@ export type DatasetTableContext = AGGridDataset & {
   ) => void;
   getNumberOfApprovedGT: () => number;
   toggleViewMode: () => void;
-  calculateMatchPercentage: (predictiveLabel: string) => string;
+  calculateMatchPercentage: (predictiveLabel: string) => string | undefined;
   tableViewMode: DatasetTableViewModeEnum;
   groundTruthColumnField: string | undefined;
+  setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
+  inspectorRowIndex: number | null;
 };
 
 export enum DatasetTableViewModeEnum {
