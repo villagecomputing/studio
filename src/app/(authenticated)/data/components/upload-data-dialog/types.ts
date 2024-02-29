@@ -34,7 +34,7 @@ export type UploadDataContextType = {
   columnHeaders: ColumnHeader[];
   blankGroundTruthColumnAdded: boolean;
   // TODO Add extra data for upload here
-  onFileSelected: (file: File | null) => void;
+  onFileSelected: (file: File | null) => Promise<void>;
   addBlankGroundTruthColumn: () => void;
   refetchData: () => Promise<void>;
 };
