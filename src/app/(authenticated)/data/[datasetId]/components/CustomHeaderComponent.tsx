@@ -31,9 +31,9 @@ export default function CustomHeaderComponent(
     colDef.headerComponentParams as HeaderComponentParams;
   const icon = headerComponentParams?.leftSideIcon;
 
-  const sort = () => {
-    props.progressSort();
-  };
+  // const sort = () => {
+  //   props.progressSort();
+  // };
 
   useEffect(() => {
     column.addEventListener('sortChanged', () => {
@@ -45,10 +45,7 @@ export default function CustomHeaderComponent(
 
   return (
     <DropdownMenu>
-      <div
-        className="flex flex-1 cursor-pointer items-center gap-1"
-        onClick={sort}
-      >
+      <div className="flex flex-1 cursor-pointer items-center gap-1">
         {icon}
         {colDef.headerName}
         {!!sortIcon && sortIcon}

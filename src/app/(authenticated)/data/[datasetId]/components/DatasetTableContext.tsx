@@ -16,6 +16,9 @@ export const useDatasetTableContext = (
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
     DatasetTableViewModeEnum.PREVIEW,
   );
+  const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
+    null,
+  );
 
   const groundTruthColumnField = useMemo(() => {
     return props.columnDefs.find(
@@ -103,6 +106,8 @@ export const useDatasetTableContext = (
     calculateMatchPercentage,
     groundTruthColumnField,
     tableViewMode,
+    inspectorRowIndex,
+    setInspectorRowIndex,
     ...props,
   };
 };
