@@ -89,6 +89,7 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
     },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
       editable: false,
+      pinned: 'right',
       headerComponentParams: {
         leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
       } as HeaderComponentParams,
@@ -147,19 +148,19 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       } as HeaderComponentParams,
       // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
       cellRenderer: GroundTruthCellRenderer,
-      cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
-        const context: DatasetTableContext = params.context;
-        if (
-          !params.value ||
-          context.tableViewMode === DatasetTableViewModeEnum.EDIT
-        ) {
-          return '';
-        }
-        if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
-          return 'groundTruthCell approved';
-        }
-        return '';
-      },
+      // cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
+      //   const context: DatasetTableContext = params.context;
+      //   if (
+      //     !params.value ||
+      //     context.tableViewMode === DatasetTableViewModeEnum.EDIT
+      //   ) {
+      //     return '';
+      //   }
+      //   if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
+      //     return 'groundTruthCell approved';
+      //   }
+      //   return '';
+      // },
       onCellClicked(event) {
         if (event.node.isRowPinned()) {
           return;
@@ -207,7 +208,6 @@ export function convertToAGGridData(
 export const onTableCellValueChanged = (
   event: CellValueChangedEvent<unknown, GroundTruthCell>,
 ) => {
-  console.log('🚀 ~ event:', event);
   if (event.colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
     throw new Error('Editing other columns than GT!');
   }

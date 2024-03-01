@@ -57,11 +57,17 @@ export default function CustomHeaderComponent(
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={async () => {
+            if (!colDef.colId) {
+              return;
+            }
             await markColumnAsType(
               Number(colDef.colId),
               ENUM_Column_type.PREDICTIVE_LABEL,
             );
-            props.context.refreshData();
+            props.context.updateCol(Number(colDef.colId), {
+              type: ENUM_Column_type.PREDICTIVE_LABEL,
+              pinned: 'right',
+            });
           }}
         >
           {'Set as Predicted Label'}

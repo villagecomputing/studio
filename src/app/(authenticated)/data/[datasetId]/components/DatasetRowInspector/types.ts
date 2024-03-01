@@ -1,5 +1,5 @@
 import { ENUM_Column_type } from '@/lib/types';
-import { DatasetTableContext } from '../../types';
+import { DatasetTableContext, GroundTruthCell } from '../../types';
 
 export type DatasetRowInspectorFooterProps = {
   onSkipRow: () => void;
@@ -24,7 +24,7 @@ export type DatasetRowInspectorBodyElementProps =
   | {
       colType: ENUM_Column_type.GROUND_TRUTH;
       header: string;
-      content: string;
+      content: GroundTruthCell;
       onGroundTruthChange: (value: string) => void;
     };
 

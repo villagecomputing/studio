@@ -29,12 +29,7 @@ export default function NavbarMenu(props: { toggleCollapse: () => void }) {
       <div className="w-full px-3">
         <div className="flex flex-col gap-2">
           {NavbarItems.map((item) => (
-            <NavbarMenuItem
-              key={item.route}
-              name={item.name}
-              route={item.route}
-              Icon={item.Icon}
-            />
+            <NavbarMenuItem key={item.route} {...item} />
           ))}
         </div>
       </div>

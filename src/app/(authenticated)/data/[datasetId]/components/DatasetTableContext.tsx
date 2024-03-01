@@ -1,4 +1,5 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
+import { ColDef } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { updateGTCell } from '../actions';
@@ -16,7 +17,9 @@ export const useDatasetTableContext = (
   props: AGGridDataset,
 ): DatasetTableContext => {
   const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
-  const [columnDefs] = useState<AGGridDataset['columnDefs']>(props.columnDefs);
+  const [columnDefs, setColumnDefs] = useState<AGGridDataset['columnDefs']>(
+    props.columnDefs,
+  );
 
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -150,8 +153,22 @@ export const useDatasetTableContext = (
     });
   };
 
+  const updateCol = (colId: number, colDef: ColDef) => {
+    if (!columnDefs || !colId) {
+      return;
+    }
+    const colIndex = columnDefs.findIndex((col) => Number(col.colId) === colId);
+    setColumnDefs((currentColumnDefs) => {
+      const result = [
+        ...currentColumnDefs.slice(0, colIndex),
+        { ...currentColumnDefs[colIndex], ...colDef },
+        ...currentColumnDefs.slice(colIndex + 1),
+      ];
+      return result;
+    });
+  };
+
   return {
-    refreshData: router.refresh,
     updateGroundTruthCell,
     getNumberOfApprovedGT,
     toggleViewMode,
@@ -162,5 +179,6 @@ export const useDatasetTableContext = (
     setInspectorRowIndex,
     rows,
     columnDefs,
+    updateCol,
   };
 };
