@@ -43,15 +43,8 @@ const GroundTruthCellRenderer = (
       ) : (
         isEditMode && (
           <Checkbox
-            className="h-6 w-6  rounded-lg data-[state=checked]:cursor-default data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
+            className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
             defaultChecked={isApproved}
-            onClick={(event) => {
-              const target = event.target as HTMLInputElement;
-              // Prevent the Checkbox from being unchecked after it has been checked
-              if (target.getAttribute('data-state') === 'checked') {
-                event.preventDefault();
-              }
-            }}
             onCheckedChange={(checked: CheckedState) => {
               if (!props.value) {
                 throw new Error('Cell data is missing');
