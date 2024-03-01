@@ -11,7 +11,7 @@ const DatasetRowInspectorFooter = (props: DatasetRowInspectorFooterProps) => {
         Skip <ArrowDownIcon size={24} className="ml-2" />
       </Button>
       <Button
-        className="bg-green550 hover:bg-agOddGroundMatch"
+        className="bg-green550 hover:bg-green550 hover:opacity-85"
         onClick={onApproveRow}
       >
         Approve <CornerDownLeftIcon size={24} className="ml-2" />
