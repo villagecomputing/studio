@@ -52,9 +52,11 @@ export default function CustomHeaderComponent(
         </span>
         <div className="ml-auto flex-shrink-0">
           {!!sortIcon && sortIcon}
-          <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
-            <MoreVerticalIcon size={14} />
-          </DropdownMenuTrigger>
+          {colDef.type !== ENUM_Column_type.GROUND_TRUTH && (
+            <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
+              <MoreVerticalIcon size={14} />
+            </DropdownMenuTrigger>
+          )}
         </div>
       </div>
       <DropdownMenuContent className="border-border">
@@ -63,12 +65,16 @@ export default function CustomHeaderComponent(
           onClick={async () => {
             await markColumnAsType(
               Number(colDef.colId),
-              ENUM_Column_type.PREDICTIVE_LABEL,
+              colDef.type === ENUM_Column_type.INPUT
+                ? ENUM_Column_type.PREDICTIVE_LABEL
+                : ENUM_Column_type.INPUT,
             );
             props.context.refreshData();
           }}
         >
-          {'Set as Predicted Label'}
+          {colDef.type === ENUM_Column_type.INPUT
+            ? 'Set as Predicted Label'
+            : 'Remove Predicted Label'}
         </DropdownMenuItem>
         {/* <DropdownMenuItem className="cursor-pointer">
           {'Set as Ground Truth Label'}
