@@ -207,13 +207,14 @@ export function convertToAGGridData(
 export const onTableCellValueChanged = (
   event: CellValueChangedEvent<unknown, GroundTruthCell>,
 ) => {
+  console.log('🚀 ~ event:', event);
   if (event.colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
     throw new Error('Editing other columns than GT!');
   }
   if (!event.value || !event.newValue) {
     throw new Error('Cell data is missing');
   }
-  if (!event.rowIndex) {
+  if (event.rowIndex === null) {
     throw new Error('RowIndex is missing');
   }
   if (
