@@ -213,9 +213,6 @@ export const onTableCellValueChanged = (
   if (!event.value || !event.newValue) {
     throw new Error('Cell data is missing');
   }
-  if (event.rowIndex === null) {
-    throw new Error('RowIndex is missing');
-  }
   if (
     event.oldValue?.content === event.newValue?.content &&
     event.oldValue?.status === event.newValue?.status
@@ -230,14 +227,11 @@ export const onTableCellValueChanged = (
       force: true,
     });
   }
-  (
-    event.context
-      .updateGroundTruthCell as DatasetTableContext['updateGroundTruthCell']
-  )({
-    rowIndex: event.rowIndex,
-    content: event.newValue.content,
-    status: event.newValue.status,
-  });
+  (event.context.updateGTCellInDB as DatasetTableContext['updateGTCellInDB'])(
+    event.value.id,
+    event.newValue.content,
+    event.newValue.status,
+  );
 };
 
 export function isGroundTruthCell(
