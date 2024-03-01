@@ -1,58 +1,71 @@
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { GroundTruthCell } from '../../types';
+import { isGroundTruthCell } from '../../utils';
 import { useDatasetRowInspectorContext } from './DatasetRowInspectorView';
 import { UseDatasetRowInspectorData } from './types';
 
 export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData {
   const {
-    rowData,
+    rows,
     inspectorRowIndex,
     setInspectorRowIndex,
     updateGroundTruthCell,
     groundTruthColumnField,
     refreshData,
+    groundTruthInputValue,
   } = useDatasetRowInspectorContext();
 
   const rowToInspect =
-    rowData && inspectorRowIndex !== null ? rowData[inspectorRowIndex] : null;
+    rows && inspectorRowIndex !== null ? rows[inspectorRowIndex] : null;
 
   const currentGroundTruthCell: GroundTruthCell | null =
-    rowToInspect && groundTruthColumnField
-      ? rowToInspect[groundTruthColumnField]
+    rowToInspect &&
+    groundTruthColumnField &&
+    isGroundTruthCell(rowToInspect[groundTruthColumnField])
+      ? (rowToInspect[groundTruthColumnField] as GroundTruthCell)
       : null;
 
   const navigateTo = useCallback(
     async (direction: 'NEXT' | 'PREVIOUS') => {
-      if (!rowData || inspectorRowIndex === null) {
+      if (!rows || inspectorRowIndex === null) {
         return;
       }
       const nextIndex =
         direction === 'NEXT' ? inspectorRowIndex + 1 : inspectorRowIndex - 1;
-      const toIndex: number | null = rowData[nextIndex] ? nextIndex : null;
+      const toIndex: number | null = rows[nextIndex] ? nextIndex : null;
       setInspectorRowIndex(toIndex);
       if (toIndex === null) {
         refreshData();
       }
     },
-    [rowData, inspectorRowIndex, refreshData, setInspectorRowIndex],
+    [rows, inspectorRowIndex, refreshData, setInspectorRowIndex],
   );
 
   const approveRow = useCallback(async () => {
-    if (!currentGroundTruthCell) {
+    if (!currentGroundTruthCell || inspectorRowIndex === null) {
       return;
     }
-    if (currentGroundTruthCell.status === ENUM_Ground_truth_status.APPROVED) {
+    if (
+      currentGroundTruthCell.status === ENUM_Ground_truth_status.APPROVED &&
+      currentGroundTruthCell.content === groundTruthInputValue
+    ) {
       navigateTo('NEXT');
       return;
     }
-    await updateGroundTruthCell(
-      currentGroundTruthCell.id,
-      currentGroundTruthCell.content,
-      ENUM_Ground_truth_status.APPROVED,
-    );
+    await updateGroundTruthCell({
+      rowIndex: inspectorRowIndex,
+      content: groundTruthInputValue,
+      status: ENUM_Ground_truth_status.APPROVED,
+    });
     navigateTo('NEXT');
-  }, [currentGroundTruthCell, navigateTo, updateGroundTruthCell]);
+  }, [
+    inspectorRowIndex,
+    currentGroundTruthCell,
+    groundTruthInputValue,
+    navigateTo,
+    updateGroundTruthCell,
+  ]);
 
   const approveRowRef = useRef(approveRow);
   const nextRowRef = useRef(navigateTo);
@@ -68,7 +81,6 @@ export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData
     switch (event.key) {
       case 'Escape':
         setInspectorRowIndex(null);
-        refreshData();
         return;
       case 'Enter':
         await approveRowRef.current();

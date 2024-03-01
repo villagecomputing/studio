@@ -4,13 +4,20 @@ import { useMemo, useState } from 'react';
 import { updateGTCell } from '../actions';
 import {
   AGGridDataset,
+  DatasetRow,
   DatasetTableContext,
   DatasetTableViewModeEnum,
+  GroundTruthCell,
+  UpdateGroundTruthCellParams,
 } from '../types';
+import { isGroundTruthCell } from '../utils';
 
 export const useDatasetTableContext = (
   props: AGGridDataset,
 ): DatasetTableContext => {
+  const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
+  const [columnDefs] = useState<AGGridDataset['columnDefs']>(props.columnDefs);
+
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
@@ -38,18 +45,43 @@ export const useDatasetTableContext = (
       props.rowData?.filter(
         (row) =>
           groundTruthColumn?.field &&
-          row[groundTruthColumn.field]?.status ===
+          (row[groundTruthColumn.field] as GroundTruthCell)?.status ===
             ENUM_Ground_truth_status.APPROVED,
       )?.length ?? 0
     );
   };
 
-  const updateGroundTruthCell = async (
-    rowId: number,
-    content: string,
-    status: string,
-  ) => {
-    await updateGTCell(rowId, content, status);
+  const updateGroundTruthCell = async (props: UpdateGroundTruthCellParams) => {
+    const { content, rowIndex, status } = props;
+    if (!groundTruthColumnField) {
+      return;
+    }
+    const groundTruthCell = rows[rowIndex][groundTruthColumnField];
+    if (!isGroundTruthCell(groundTruthCell)) {
+      return;
+    }
+    const updateData: { content?: string; status?: ENUM_Ground_truth_status } =
+      {};
+    if (content) {
+      updateData.content = content;
+    }
+    if (status) {
+      updateData.status = status;
+    }
+
+    const newCellContent = {
+      id: groundTruthCell.id,
+      content: updateData.content || groundTruthCell.content,
+      status: updateData.status || groundTruthCell.status,
+    };
+    updateRow(rowIndex, {
+      [groundTruthColumnField]: newCellContent,
+    });
+    await updateGTCell(
+      groundTruthCell.id,
+      updateData.content || groundTruthCell.content,
+      updateData.status || groundTruthCell.status,
+    );
   };
 
   const toggleViewMode = () => {
@@ -79,9 +111,11 @@ export const useDatasetTableContext = (
     }
 
     props.rowData?.forEach((row) => {
+      const cellData = row[field];
       if (
-        row[field].status === ENUM_Ground_truth_status.APPROVED &&
-        row[predictiveLabelColumnField] === row[field].content
+        isGroundTruthCell(cellData) &&
+        cellData.status === ENUM_Ground_truth_status.APPROVED &&
+        row[predictiveLabelColumnField] === cellData.content
       ) {
         matchPercentages += 1;
       }
@@ -89,13 +123,31 @@ export const useDatasetTableContext = (
 
     // Calculate percentages
     const totalRows =
-      props.rowData?.filter(
-        (row) => row[field].status === ENUM_Ground_truth_status.APPROVED,
-      ).length || 0;
+      props.rowData?.filter((row) => {
+        const cellData = row[field];
+        return (
+          isGroundTruthCell(cellData) &&
+          cellData.status === ENUM_Ground_truth_status.APPROVED
+        );
+      }).length || 0;
     if (!totalRows) {
       return undefined;
     }
     return ((matchPercentages / totalRows) * 100).toFixed(1);
+  };
+
+  const updateRow = (index: number, rowData: DatasetRow) => {
+    if (!rows) {
+      return;
+    }
+    setRows((currentRows) => {
+      const result = [
+        ...currentRows.slice(0, index),
+        { ...currentRows[index], ...rowData },
+        ...currentRows.slice(index + 1),
+      ];
+      return result;
+    });
   };
 
   return {
@@ -108,6 +160,7 @@ export const useDatasetTableContext = (
     tableViewMode,
     inspectorRowIndex,
     setInspectorRowIndex,
-    ...props,
+    rows,
+    columnDefs,
   };
 };

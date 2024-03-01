@@ -30,7 +30,7 @@ const GroundTruthCellRenderer = (
         ])}
       >
         {isPinnedBottomRow
-          ? `${props.context.getNumberOfApprovedGT()} / ${props.context.rowData?.length} Approved`
+          ? `${props.context.getNumberOfApprovedGT()} / ${props.context.rows.length} Approved`
           : cellContent}
       </span>
       {isPinnedBottomRow ? (

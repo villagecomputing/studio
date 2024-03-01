@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
-import { DatasetTableContext } from '../../types';
+import React, { useContext, useEffect, useState } from 'react';
+import { GroundTruthCell } from '../../types';
 import DatasetRowInspector from './DatasetRowInspector';
-import { DatasetRowInspectorProps } from './types';
+import { DatasetRowInspectorContext, DatasetRowInspectorProps } from './types';
 
-const DatasetRowInspectorContext = React.createContext<
-  DatasetTableContext | undefined
->(undefined);
+const DatasetRowInspectorContext =
+  React.createContext<DatasetRowInspectorContext>(undefined);
 
 export const useDatasetRowInspectorContext = () => {
   const context = useContext(DatasetRowInspectorContext);
@@ -20,8 +19,29 @@ export const useDatasetRowInspectorContext = () => {
 export default function DatasetRowInspectorView(
   props: DatasetRowInspectorProps,
 ) {
+  const {
+    context: { inspectorRowIndex, rows, groundTruthColumnField },
+  } = props;
+  const [groundTruthInputValue, setGroundTruthInputValue] =
+    useState<string>('');
+
+  useEffect(() => {
+    if (inspectorRowIndex === null || !groundTruthColumnField) {
+      return;
+    }
+    setGroundTruthInputValue(
+      (rows[inspectorRowIndex][groundTruthColumnField] as GroundTruthCell)
+        .content,
+    );
+  }, [inspectorRowIndex, groundTruthColumnField]);
   return (
-    <DatasetRowInspectorContext.Provider value={props.context}>
+    <DatasetRowInspectorContext.Provider
+      value={{
+        ...props.context,
+        groundTruthInputValue,
+        setGroundTruthInputValue,
+      }}
+    >
       <DatasetRowInspector />
     </DatasetRowInspectorContext.Provider>
   );

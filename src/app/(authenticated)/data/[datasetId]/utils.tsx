@@ -81,6 +81,9 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
     [ENUM_Column_type.INPUT]: {
       editable: false,
       onCellClicked(event) {
+        if (event.node.isRowPinned()) {
+          return;
+        }
         event.context.setInspectorRowIndex(event.rowIndex);
       },
     },
@@ -90,6 +93,9 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
         leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
       } as HeaderComponentParams,
       onCellClicked(event) {
+        if (event.node.isRowPinned()) {
+          return;
+        }
         event.context.setInspectorRowIndex(event.rowIndex);
       },
       cellRendererSelector: (params) => {
@@ -154,6 +160,15 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
         }
         return '';
       },
+      onCellClicked(event) {
+        if (event.node.isRowPinned()) {
+          return;
+        }
+
+        const context: DatasetTableContext = event.context;
+        context.tableViewMode === DatasetTableViewModeEnum.PREVIEW &&
+          context.setInspectorRowIndex(event.rowIndex);
+      },
     },
   };
 }
@@ -198,6 +213,9 @@ export const onTableCellValueChanged = (
   if (!event.value || !event.newValue) {
     throw new Error('Cell data is missing');
   }
+  if (!event.rowIndex) {
+    throw new Error('RowIndex is missing');
+  }
   if (
     event.oldValue?.content === event.newValue?.content &&
     event.oldValue?.status === event.newValue?.status
@@ -212,9 +230,27 @@ export const onTableCellValueChanged = (
       force: true,
     });
   }
-  event.context.updateGroundTruthCell(
-    event.value?.id,
-    event.newValue.content,
-    event.newValue.status,
-  );
+  (
+    event.context
+      .updateGroundTruthCell as DatasetTableContext['updateGroundTruthCell']
+  )({
+    rowIndex: event.rowIndex,
+    content: event.newValue.content,
+    status: event.newValue.status,
+  });
 };
+
+export function isGroundTruthCell(
+  value: DatasetRow[string],
+): value is GroundTruthCell {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'content' in value &&
+    'status' in value &&
+    'id' in value &&
+    Object.values(ENUM_Ground_truth_status).includes(
+      value.status as ENUM_Ground_truth_status,
+    )
+  );
+}
