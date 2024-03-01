@@ -82,7 +82,6 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       onCellClicked(event) {
         event.context.setInspectorRowIndex(event.rowIndex);
       },
-      headerComponentParams: { enableMenu: true },
     },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
       editable: false,
