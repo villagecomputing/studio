@@ -45,26 +45,36 @@ export default function CustomHeaderComponent(
 
   return (
     <DropdownMenu>
-      <div className="flex flex-1 cursor-pointer items-center gap-1">
-        {icon}
-        {colDef.headerName}
-        {!!sortIcon && sortIcon}
+      <div className="flex w-full items-center gap-1">
+        <span className="flex-shrink-0">{icon}</span>
+        <span className="flex-shrink overflow-hidden text-ellipsis whitespace-nowrap">
+          {colDef.headerName}
+        </span>
+        <div className="ml-auto flex-shrink-0">
+          {!!sortIcon && sortIcon}
+          {colDef.type !== ENUM_Column_type.GROUND_TRUTH && (
+            <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
+              <MoreVerticalIcon size={14} />
+            </DropdownMenuTrigger>
+          )}
+        </div>
       </div>
-      <DropdownMenuTrigger className="flex h-full items-center">
-        <MoreVerticalIcon size={14} />
-      </DropdownMenuTrigger>
       <DropdownMenuContent className="border-border">
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={async () => {
             await markColumnAsType(
               Number(colDef.colId),
-              ENUM_Column_type.PREDICTIVE_LABEL,
+              colDef.type === ENUM_Column_type.INPUT
+                ? ENUM_Column_type.PREDICTIVE_LABEL
+                : ENUM_Column_type.INPUT,
             );
             props.context.refreshData();
           }}
         >
-          {'Set as Predicted Label'}
+          {colDef.type === ENUM_Column_type.INPUT
+            ? 'Set as Predicted Label'
+            : 'Remove Predicted Label'}
         </DropdownMenuItem>
         {/* <DropdownMenuItem className="cursor-pointer">
           {'Set as Ground Truth Label'}
