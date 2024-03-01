@@ -147,19 +147,19 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       } as HeaderComponentParams,
       // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
       cellRenderer: GroundTruthCellRenderer,
-      // cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
-      //   const context: DatasetTableContext = params.context;
-      //   if (
-      //     !params.value ||
-      //     context.tableViewMode === DatasetTableViewModeEnum.EDIT
-      //   ) {
-      //     return '';
-      //   }
-      //   if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
-      //     return 'groundTruthCell approved';
-      //   }
-      //   return '';
-      // },
+      cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
+        const context: DatasetTableContext = params.context;
+        if (
+          !params.value ||
+          context.tableViewMode === DatasetTableViewModeEnum.EDIT
+        ) {
+          return '';
+        }
+        if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
+          return 'groundTruthCell approved';
+        }
+        return '';
+      },
       onCellClicked(event) {
         if (event.node.isRowPinned()) {
           return;
