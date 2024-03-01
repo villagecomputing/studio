@@ -1,9 +1,10 @@
 import { Input } from '@/components/ui/input';
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { ENUM_Column_type } from '@/lib/types';
+import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { GroundTruthCell } from '../../../types';
 import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
 import { DatasetRowInspectorBodyElementProps } from '../types';
@@ -14,7 +15,7 @@ const DatasetRowInspectorBodyElement = (
   const { colType, content, header } = props;
   const { register } = useForm<{ gtContent: string }>({
     values: {
-      gtContent: content,
+      gtContent: isGroundTruthCell(content) ? content.content : '',
     },
   });
   const icon = getTableColumnIcon(colType);
@@ -25,18 +26,29 @@ const DatasetRowInspectorBodyElement = (
           <span className="flex items-center gap-1 text-sm text-greyText">
             {header}
           </span>
-          <p className={cn(['text-base'])}>{content || '-'}</p>
+          <p className={cn(['text-base'])}>{content || <i>Empty</i>}</p>
         </div>
       );
     case ENUM_Column_type.PREDICTIVE_LABEL:
+      const isGTApproved =
+        props.gtContent?.status === ENUM_Ground_truth_status.APPROVED;
+      const labelMatchColor =
+        props.gtContent?.content === content
+          ? 'bg-agOddGroundMatch'
+          : 'bg-agWrongLabelColor';
       return (
         <div className="flex flex-col gap-1 py-4">
           <span className="flex items-center gap-1 text-sm text-greyText">
             {!!icon && <span>{icon}</span>}
             {header}
           </span>
-          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>
-            {content || '-'}
+          <p
+            className={cn([
+              'rounded-lg  p-2 text-base',
+              isGTApproved ? labelMatchColor : 'bg-paleGrey',
+            ])}
+          >
+            {content || <i>Empty</i>}
           </p>
         </div>
       );
@@ -50,8 +62,13 @@ const DatasetRowInspectorBodyElement = (
           <Input
             {...register('gtContent')}
             onChange={(event) =>
-              event.target.value !== content &&
+              event.target.value !== content.content &&
               props.onGroundTruthChange(event.target.value)
+            }
+            className={
+              content.status === ENUM_Ground_truth_status.APPROVED
+                ? 'bg-agOddGroundMatch'
+                : ''
             }
           ></Input>
         </div>
@@ -63,8 +80,13 @@ const DatasetRowInspectorBodyElement = (
 };
 
 const DatasetRowInspectorBody = () => {
-  const { inspectorRowIndex, rows, columnDefs, setGroundTruthInputValue } =
-    useDatasetRowInspectorContext();
+  const {
+    inspectorRowIndex,
+    rows,
+    columnDefs,
+    setGroundTruthInputValue,
+    groundTruthColumnField,
+  } = useDatasetRowInspectorContext();
 
   const currentRow =
     rows && inspectorRowIndex !== null ? rows[inspectorRowIndex] : null;
@@ -100,6 +122,7 @@ const DatasetRowInspectorBody = () => {
                   colType={ENUM_Column_type.INPUT}
                   header={colDef.headerName}
                   content={cellContent}
+                  gtContent={null}
                 />
               );
             })}
@@ -122,6 +145,13 @@ const DatasetRowInspectorBody = () => {
                     colType={ENUM_Column_type.PREDICTIVE_LABEL}
                     header={colDef.headerName}
                     content={cellContent}
+                    gtContent={
+                      groundTruthColumnField
+                        ? (currentRow[
+                            groundTruthColumnField
+                          ] as GroundTruthCell)
+                        : null
+                    }
                   />
                 );
               })}
@@ -140,9 +170,9 @@ const DatasetRowInspectorBody = () => {
                 return (
                   <DatasetRowInspectorBodyElement
                     key={colDef.colId}
-                    colType={colDef.type as ENUM_Column_type}
+                    colType={colDef.type as ENUM_Column_type.GROUND_TRUTH}
                     header={colDef.headerName}
-                    content={cellContent.content}
+                    content={cellContent}
                     onGroundTruthChange={(value) => {
                       setGroundTruthInputValue(value);
                     }}

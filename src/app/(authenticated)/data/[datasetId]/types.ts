@@ -45,7 +45,6 @@ export type UpdateGroundTruthCellParams = Partial<
 > & { rowIndex: number };
 
 export type DatasetTableContext = {
-  refreshData: () => void;
   updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
   getNumberOfApprovedGT: () => number;
   toggleViewMode: () => void;
@@ -56,6 +55,7 @@ export type DatasetTableContext = {
   inspectorRowIndex: number | null;
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
+  updateCol: (colId: number, colDef: ColDef) => void;
 };
 
 export enum DatasetTableViewModeEnum {

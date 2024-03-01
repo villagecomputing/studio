@@ -16,11 +16,13 @@ export const NavbarItems: NavbarMenuItemProps[] = [
     route: '/jobs',
     name: 'Jobs',
     Icon: <ListTodoIcon size={20} />,
+    disabled: true,
   },
   {
     route: '/evaluate',
     name: 'Evaluate',
     Icon: <ClipboardListIcon size={20} />,
+    disabled: true,
   },
 ];
 

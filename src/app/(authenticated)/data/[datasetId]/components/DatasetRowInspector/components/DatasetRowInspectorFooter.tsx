@@ -10,7 +10,10 @@ const DatasetRowInspectorFooter = (props: DatasetRowInspectorFooterProps) => {
       <Button variant={'outline'} onClick={onSkipRow}>
         Skip <ArrowDownIcon size={24} className="ml-2" />
       </Button>
-      <Button variant={'default'} onClick={onApproveRow}>
+      <Button
+        className="bg-green550 hover:bg-green550 hover:opacity-85"
+        onClick={onApproveRow}
+      >
         Approve <CornerDownLeftIcon size={24} className="ml-2" />
       </Button>
     </div>

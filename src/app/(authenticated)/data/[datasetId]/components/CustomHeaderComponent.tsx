@@ -63,13 +63,21 @@ export default function CustomHeaderComponent(
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={async () => {
-            await markColumnAsType(
-              Number(colDef.colId),
+            if (!colDef.colId) {
+              return;
+            }
+            const type =
               colDef.type === ENUM_Column_type.INPUT
                 ? ENUM_Column_type.PREDICTIVE_LABEL
-                : ENUM_Column_type.INPUT,
-            );
-            props.context.refreshData();
+                : ENUM_Column_type.INPUT;
+            const pinned =
+              type === ENUM_Column_type.PREDICTIVE_LABEL ? 'right' : false;
+
+            await markColumnAsType(Number(colDef.colId), type);
+            props.context.updateCol(Number(colDef.colId), {
+              type,
+              pinned,
+            });
           }}
         >
           {colDef.type === ENUM_Column_type.INPUT

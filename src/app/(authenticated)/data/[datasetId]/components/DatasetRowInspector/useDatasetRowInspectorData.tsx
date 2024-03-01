@@ -12,7 +12,6 @@ export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData
     setInspectorRowIndex,
     updateGroundTruthCell,
     groundTruthColumnField,
-    refreshData,
     groundTruthInputValue,
   } = useDatasetRowInspectorContext();
 
@@ -35,11 +34,8 @@ export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData
         direction === 'NEXT' ? inspectorRowIndex + 1 : inspectorRowIndex - 1;
       const toIndex: number | null = rows[nextIndex] ? nextIndex : null;
       setInspectorRowIndex(toIndex);
-      if (toIndex === null) {
-        refreshData();
-      }
     },
-    [rows, inspectorRowIndex, refreshData, setInspectorRowIndex],
+    [rows, inspectorRowIndex, setInspectorRowIndex],
   );
 
   const approveRow = useCallback(async () => {
@@ -69,13 +65,11 @@ export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData
 
   const approveRowRef = useRef(approveRow);
   const nextRowRef = useRef(navigateTo);
-  const refreshDataRef = useRef(refreshData);
 
   useEffect(() => {
     approveRowRef.current = approveRow;
     nextRowRef.current = navigateTo;
-    refreshDataRef.current = refreshData;
-  }, [approveRow, navigateTo, refreshData]);
+  }, [approveRow, navigateTo]);
 
   const handleKeyDown = async (event: KeyboardEvent) => {
     switch (event.key) {
