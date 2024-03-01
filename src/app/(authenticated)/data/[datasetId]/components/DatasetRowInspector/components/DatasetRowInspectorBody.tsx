@@ -1,11 +1,10 @@
 import { Input } from '@/components/ui/input';
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
+import { ENUM_Column_type } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { GroundTruthCell } from '../../../types';
-import { getTableColumnIcon } from '../../../utils';
+import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
 import { DatasetRowInspectorBodyElementProps } from '../types';
 
@@ -26,7 +25,7 @@ const DatasetRowInspectorBodyElement = (
           <span className="flex items-center gap-1 text-sm text-greyText">
             {header}
           </span>
-          <p className={cn(['text-base'])}>{content}</p>
+          <p className={cn(['text-base'])}>{content || '-'}</p>
         </div>
       );
     case ENUM_Column_type.PREDICTIVE_LABEL:
@@ -36,19 +35,21 @@ const DatasetRowInspectorBodyElement = (
             {!!icon && <span>{icon}</span>}
             {header}
           </span>
-          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>{content}</p>
+          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>
+            {content || '-'}
+          </p>
         </div>
       );
     case ENUM_Column_type.GROUND_TRUTH:
       return (
-        <div className="sticky bottom-0 flex flex-col gap-1 border-t-[1px] border-border bg-white py-4 pb-7">
+        <div className="flex flex-col gap-1 py-4">
           <span className="flex items-center gap-1 text-sm text-greyText">
             {!!icon && <span>{icon}</span>}
             {header}
           </span>
           <Input
             {...register('gtContent')}
-            onBlur={(event) =>
+            onChange={(event) =>
               event.target.value !== content &&
               props.onGroundTruthChange(event.target.value)
             }
@@ -62,13 +63,13 @@ const DatasetRowInspectorBodyElement = (
 };
 
 const DatasetRowInspectorBody = () => {
-  const { inspectorRowIndex, rowData, columnDefs, updateGroundTruthCell } =
+  const { inspectorRowIndex, rows, columnDefs, setGroundTruthInputValue } =
     useDatasetRowInspectorContext();
 
   const currentRow =
-    rowData && inspectorRowIndex !== null ? rowData[inspectorRowIndex] : null;
+    rows && inspectorRowIndex !== null ? rows[inspectorRowIndex] : null;
 
-  if (!currentRow) {
+  if (!currentRow || inspectorRowIndex === null) {
     return <></>;
   }
   return (
@@ -89,58 +90,66 @@ const DatasetRowInspectorBody = () => {
               if (!colDef.field || !colDef.headerName) {
                 return <></>;
               }
+              const cellContent = currentRow[colDef.field];
+              if (isGroundTruthCell(cellContent)) {
+                return;
+              }
               return (
                 <DatasetRowInspectorBodyElement
                   key={colDef.colId}
                   colType={ENUM_Column_type.INPUT}
                   header={colDef.headerName}
-                  content={currentRow[colDef.field]}
+                  content={cellContent}
                 />
               );
             })}
-          {columnDefs
-            .filter(
-              (colDef) => colDef.type === ENUM_Column_type.PREDICTIVE_LABEL,
-            )
-            .map((colDef) => {
-              if (!colDef.field || !colDef.headerName) {
-                return <></>;
-              }
-              return (
-                <DatasetRowInspectorBodyElement
-                  key={colDef.colId}
-                  colType={ENUM_Column_type.PREDICTIVE_LABEL}
-                  header={colDef.headerName}
-                  content={currentRow[colDef.field]}
-                />
-              );
-            })}
-          {columnDefs
-            .filter((colDef) => colDef.type === ENUM_Column_type.GROUND_TRUTH)
-            .map((colDef) => {
-              const field = colDef.field;
-              if (!field || !colDef.headerName) {
-                return <></>;
-              }
-              const gtCell: GroundTruthCell = currentRow[field];
+          <div className="sticky bottom-0 border-t-[1px] border-border bg-white">
+            {columnDefs
+              .filter(
+                (colDef) => colDef.type === ENUM_Column_type.PREDICTIVE_LABEL,
+              )
+              .map((colDef) => {
+                if (!colDef.field || !colDef.headerName) {
+                  return <></>;
+                }
+                const cellContent = currentRow[colDef.field];
+                if (isGroundTruthCell(cellContent)) {
+                  return;
+                }
+                return (
+                  <DatasetRowInspectorBodyElement
+                    key={colDef.colId}
+                    colType={ENUM_Column_type.PREDICTIVE_LABEL}
+                    header={colDef.headerName}
+                    content={cellContent}
+                  />
+                );
+              })}
+            {columnDefs
+              .filter((colDef) => colDef.type === ENUM_Column_type.GROUND_TRUTH)
+              .map((colDef) => {
+                const field = colDef.field;
+                if (!field || !colDef.headerName) {
+                  return <></>;
+                }
+                const cellContent = currentRow[field];
+                if (!isGroundTruthCell(cellContent)) {
+                  return;
+                }
 
-              return (
-                <DatasetRowInspectorBodyElement
-                  key={colDef.colId}
-                  colType={colDef.type as ENUM_Column_type}
-                  header={colDef.headerName}
-                  content={currentRow[field].content}
-                  onGroundTruthChange={(value) =>
-                    colDef.colId &&
-                    updateGroundTruthCell(
-                      gtCell.id,
-                      value,
-                      ENUM_Ground_truth_status.APPROVED,
-                    )
-                  }
-                />
-              );
-            })}
+                return (
+                  <DatasetRowInspectorBodyElement
+                    key={colDef.colId}
+                    colType={colDef.type as ENUM_Column_type}
+                    header={colDef.headerName}
+                    content={cellContent.content}
+                    onGroundTruthChange={(value) => {
+                      setGroundTruthInputValue(value);
+                    }}
+                  />
+                );
+              })}
+          </div>
         </div>
       </div>
     </>

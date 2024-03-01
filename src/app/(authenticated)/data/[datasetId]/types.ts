@@ -1,4 +1,4 @@
-import { ENUM_Column_type } from '@/lib/types';
+import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -10,7 +10,7 @@ export type DatasetViewPageProps = {
 
 export type AGGridDataset = {
   columnDefs: ColDef[];
-  rowData: GridOptions['rowData'];
+  rowData: DatasetRow[];
   pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
 };
 
@@ -29,7 +29,7 @@ export type ConvertToAGGridDataProps = {
 export type GroundTruthCell = {
   content: string;
   id: number;
-  status: string;
+  status: ENUM_Ground_truth_status;
 };
 
 export type DatasetRow = {
@@ -40,13 +40,13 @@ export type FetchDatasetResult = AGGridDataset & {
   datasetName: string;
 };
 
-export type DatasetTableContext = AGGridDataset & {
+export type UpdateGroundTruthCellParams = Partial<
+  Pick<GroundTruthCell, 'content' | 'status'>
+> & { rowIndex: number };
+
+export type DatasetTableContext = {
   refreshData: () => void;
-  updateGroundTruthCell: (
-    rowId: number,
-    content: string,
-    status: string,
-  ) => void;
+  updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
   getNumberOfApprovedGT: () => number;
   toggleViewMode: () => void;
   calculateMatchPercentage: (predictiveLabel: string) => string | undefined;
@@ -54,6 +54,8 @@ export type DatasetTableContext = AGGridDataset & {
   groundTruthColumnField: string | undefined;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   inspectorRowIndex: number | null;
+  rows: AGGridDataset['rowData'];
+  columnDefs: AGGridDataset['columnDefs'];
 };
 
 export enum DatasetTableViewModeEnum {

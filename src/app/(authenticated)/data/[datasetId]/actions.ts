@@ -58,7 +58,7 @@ export const fetchDataSet = async (
           updatedRow[field] = {
             content: groundTruthCell.content,
             id: groundTruthCell.id,
-            status: groundTruthCell.status,
+            status: groundTruthCell.status as ENUM_Ground_truth_status,
           };
         }
       });

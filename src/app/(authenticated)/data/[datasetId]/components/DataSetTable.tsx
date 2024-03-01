@@ -14,7 +14,7 @@ import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorVi
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
-  const { rowData, columnDefs, pinnedBottomRowData } = props;
+  const { pinnedBottomRowData } = props;
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const context = useDatasetTableContext(props);
 
@@ -32,8 +32,8 @@ export default function DataSetTable(props: AGGridDataset) {
       <DataTable
         theme="ag-theme-dataset"
         agGridProps={{
-          rowData,
-          columnDefs,
+          rowData: context.rows,
+          columnDefs: context.columnDefs,
           context,
           pinnedBottomRowData,
           columnTypes: getTableColumnTypes(),

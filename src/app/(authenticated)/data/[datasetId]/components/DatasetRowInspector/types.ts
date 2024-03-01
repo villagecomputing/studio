@@ -19,11 +19,18 @@ export type DatasetRowInspectorBodyElementProps =
   | {
       colType: ENUM_Column_type.INPUT | ENUM_Column_type.PREDICTIVE_LABEL;
       header: string;
-      content: 'string';
+      content: string;
     }
   | {
       colType: ENUM_Column_type.GROUND_TRUTH;
       header: string;
-      content: 'string';
+      content: string;
       onGroundTruthChange: (value: string) => void;
     };
+
+export type DatasetRowInspectorContext =
+  | ({
+      groundTruthInputValue: string;
+      setGroundTruthInputValue: (value: string) => void;
+    } & DatasetTableContext)
+  | undefined;
