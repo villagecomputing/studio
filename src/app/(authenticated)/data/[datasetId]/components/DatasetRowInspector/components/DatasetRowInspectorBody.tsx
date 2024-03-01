@@ -4,6 +4,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { GroundTruthCell } from '../../../types';
 import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
 import { DatasetRowInspectorBodyElementProps } from '../types';
@@ -29,13 +30,24 @@ const DatasetRowInspectorBodyElement = (
         </div>
       );
     case ENUM_Column_type.PREDICTIVE_LABEL:
+      const isGTApproved =
+        props.gtContent?.status === ENUM_Ground_truth_status.APPROVED;
+      const labelMatchColor =
+        props.gtContent?.content === content
+          ? 'bg-agOddGroundMatch'
+          : 'bg-agWrongLabelColor';
       return (
         <div className="flex flex-col gap-1 py-4">
           <span className="flex items-center gap-1 text-sm text-greyText">
             {!!icon && <span>{icon}</span>}
             {header}
           </span>
-          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>
+          <p
+            className={cn([
+              'rounded-lg  p-2 text-base',
+              isGTApproved ? labelMatchColor : 'bg-paleGrey',
+            ])}
+          >
             {content || <i>Empty</i>}
           </p>
         </div>
@@ -68,8 +80,13 @@ const DatasetRowInspectorBodyElement = (
 };
 
 const DatasetRowInspectorBody = () => {
-  const { inspectorRowIndex, rows, columnDefs, setGroundTruthInputValue } =
-    useDatasetRowInspectorContext();
+  const {
+    inspectorRowIndex,
+    rows,
+    columnDefs,
+    setGroundTruthInputValue,
+    groundTruthColumnField,
+  } = useDatasetRowInspectorContext();
 
   const currentRow =
     rows && inspectorRowIndex !== null ? rows[inspectorRowIndex] : null;
@@ -105,6 +122,7 @@ const DatasetRowInspectorBody = () => {
                   colType={ENUM_Column_type.INPUT}
                   header={colDef.headerName}
                   content={cellContent}
+                  gtContent={null}
                 />
               );
             })}
@@ -127,6 +145,13 @@ const DatasetRowInspectorBody = () => {
                     colType={ENUM_Column_type.PREDICTIVE_LABEL}
                     header={colDef.headerName}
                     content={cellContent}
+                    gtContent={
+                      groundTruthColumnField
+                        ? (currentRow[
+                            groundTruthColumnField
+                          ] as GroundTruthCell)
+                        : null
+                    }
                   />
                 );
               })}

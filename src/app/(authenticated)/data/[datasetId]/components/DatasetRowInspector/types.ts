@@ -20,6 +20,7 @@ export type DatasetRowInspectorBodyElementProps =
       colType: ENUM_Column_type.INPUT | ENUM_Column_type.PREDICTIVE_LABEL;
       header: string;
       content: string;
+      gtContent: GroundTruthCell | null;
     }
   | {
       colType: ENUM_Column_type.GROUND_TRUTH;
