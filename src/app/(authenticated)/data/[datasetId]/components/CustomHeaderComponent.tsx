@@ -66,15 +66,17 @@ export default function CustomHeaderComponent(
             if (!colDef.colId) {
               return;
             }
-            await markColumnAsType(
-              Number(colDef.colId),
+            const type =
               colDef.type === ENUM_Column_type.INPUT
                 ? ENUM_Column_type.PREDICTIVE_LABEL
-                : ENUM_Column_type.INPUT,
-            );
+                : ENUM_Column_type.INPUT;
+            const pinned =
+              type === ENUM_Column_type.PREDICTIVE_LABEL ? 'right' : false;
+
+            await markColumnAsType(Number(colDef.colId), type);
             props.context.updateCol(Number(colDef.colId), {
-              type: ENUM_Column_type.PREDICTIVE_LABEL,
-              pinned: 'right',
+              type,
+              pinned,
             });
           }}
         >
