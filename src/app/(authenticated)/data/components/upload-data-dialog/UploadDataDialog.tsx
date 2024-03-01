@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import UploadDataDialogContent from './components/UploadDataDialogContent';
 import { UploadDataDialogProps } from './types';
 
@@ -34,7 +34,7 @@ const UploadDataDialog: React.FC<UploadDataDialogProps> = (props) => {
     </Dialog>
   );
 };
-
+export default React.memo(UploadDataDialog);
 export const useUploadDataDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,11 +47,6 @@ export const useUploadDataDialog = () => {
       setIsOpen(true);
     },
     closeDialog,
-    UploadDataDialog: () =>
-      isOpen ? (
-        <UploadDataDialog onCancel={closeDialog} open={isOpen} />
-      ) : (
-        <></>
-      ),
+    isOpen,
   };
 };

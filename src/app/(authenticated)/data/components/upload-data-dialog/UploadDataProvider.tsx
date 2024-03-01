@@ -31,7 +31,12 @@ export const UploadDataProvider: React.FC<{
       return;
     }
     const columns = await datasetParser.getHeader(file);
-    setColumnHeaders(columns.map((column, index) => ({ index, name: column })));
+    setColumnHeaders(
+      columns.map((column, index) => ({
+        index,
+        name: column || `Column_${index}`,
+      })),
+    );
     setBlankGroundTruthColumnAdded(false);
     setSelectedFile(file);
   };
@@ -41,8 +46,8 @@ export const UploadDataProvider: React.FC<{
       return;
     }
     setColumnHeaders([
-      ...columnHeaders,
       { index: columnHeaders.length, name: 'Blank ground truth column' },
+      ...columnHeaders,
     ]);
     setBlankGroundTruthColumnAdded(true);
   };

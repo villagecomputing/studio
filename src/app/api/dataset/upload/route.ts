@@ -53,9 +53,17 @@ export async function POST(request: Request) {
       dataToSend.groundTruthColumnIndex,
     );
 
+    let gtColumnContent = groundTruthColumnContent;
+    if (dataToSend.groundTruthColumnIndex === parsedFile['headers'].length) {
+      parsedFile['headers'].push('Blank ground truth column');
+      gtColumnContent = Array(parsedFile.rows.length).fill(' ');
+    }
+
     ApiUtils.saveDatasetDetails({
-      columnHeaders: parsedFile['headers'],
-      groundTruthColumnContent,
+      columnHeaders: parsedFile['headers'].map((header, index) =>
+        header ? header : `Column_${index}`,
+      ),
+      groundTruthColumnContent: gtColumnContent,
       fileTitle: dataToSend.datasetTitle,
       groundTruthColumnIndex: dataToSend.groundTruthColumnIndex,
       totalNumberOfRows: parsedFile.rows.length,

@@ -45,10 +45,10 @@ export const fetchDataSet = async (
     // Map the rows and modify the content if the column is ground truth
     const rows = fileContentObject.rows.map((row, rowIndex) => {
       const updatedRow: DatasetRow = Object.fromEntries(
-        Object.entries(row).map(([key, value]) => [
-          getColumnFieldFromName(key),
-          value,
-        ]),
+        Object.entries(row).map(([key, value], index) => {
+          const header = key ? getColumnFieldFromName(key) : `column_${index}`;
+          return [header, value];
+        }),
       );
 
       datasetDetails.Dataset_column.forEach((column) => {
