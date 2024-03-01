@@ -63,8 +63,7 @@ function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
     headerComponent: CustomHeaderComponent,
     colId: tableColumn.id.toString(),
     type: tableColumn.type,
-    minWidth:
-      tableColumn.type === ENUM_Column_type.GROUND_TRUTH ? 230 : undefined,
+    minWidth: tableColumn.type === ENUM_Column_type.GROUND_TRUTH ? 230 : 200,
   }));
 }
 
@@ -83,6 +82,7 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       onCellClicked(event) {
         event.context.setInspectorRowIndex(event.rowIndex);
       },
+      headerComponentParams: { enableMenu: true },
     },
     [ENUM_Column_type.PREDICTIVE_LABEL]: {
       editable: false,
