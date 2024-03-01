@@ -26,7 +26,7 @@ import {
 } from './types';
 
 export function getColumnFieldFromName(columnName: string): string {
-  return columnName.replaceAll(' ', '_').toLowerCase();
+  return columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase();
 }
 
 export function getTableColumnSortIcon(sort: SortDirection) {

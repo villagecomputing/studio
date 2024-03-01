@@ -6,12 +6,14 @@ import { MAX_FILE_SIZE } from '@/lib/constants';
 import { TOAST_MESSAGE } from '@/lib/language/toasts';
 import { UploadIcon } from 'lucide-react';
 import { useRef } from 'react';
-import { useUploadDataDialog } from '../upload-data-dialog/UploadDataDialog';
+import UploadDataDialog, {
+  useUploadDataDialog,
+} from '../upload-data-dialog/UploadDataDialog';
 import { useUploadDataContext } from '../upload-data-dialog/UploadDataProvider';
 
 const UploadDataButton = () => {
   const { toast } = useToast();
-  const { UploadDataDialog, openDialog } = useUploadDataDialog();
+  const { isOpen, closeDialog, openDialog } = useUploadDataDialog();
   const { onFileSelected } = useUploadDataContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,7 +48,7 @@ const UploadDataButton = () => {
 
   return (
     <>
-      <UploadDataDialog />
+      <UploadDataDialog onCancel={closeDialog} open={isOpen} />
       <input
         type="file"
         ref={fileInputRef}
