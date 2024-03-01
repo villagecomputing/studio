@@ -25,7 +25,7 @@ const DatasetRowInspectorBodyElement = (
           <span className="flex items-center gap-1 text-sm text-greyText">
             {header}
           </span>
-          <p className={cn(['text-base'])}>{content}</p>
+          <p className={cn(['text-base'])}>{content || '-'}</p>
         </div>
       );
     case ENUM_Column_type.PREDICTIVE_LABEL:
@@ -35,7 +35,9 @@ const DatasetRowInspectorBodyElement = (
             {!!icon && <span>{icon}</span>}
             {header}
           </span>
-          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>{content}</p>
+          <p className={'rounded-lg bg-paleGrey p-2 text-base'}>
+            {content || '-'}
+          </p>
         </div>
       );
     case ENUM_Column_type.GROUND_TRUTH:
