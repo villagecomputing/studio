@@ -41,6 +41,7 @@ export default function DataSetTable(props: AGGridDataset) {
           reactiveCustomComponents: true,
           quickFilterText,
           onCellValueChanged: onTableCellValueChanged,
+          enableCellTextSelection: true,
         }}
       />
     </>

@@ -6,7 +6,7 @@ import { DatasetRowInspectorFooterProps } from '../types';
 const DatasetRowInspectorFooter = (props: DatasetRowInspectorFooterProps) => {
   const { onApproveRow, onSkipRow } = props;
   return (
-    <div className="flex h-20 w-full items-center justify-end gap-4 border-t-[1px] border-border">
+    <div className="flex h-20 w-full items-center justify-end gap-4 border-t-[1px] border-border px-6">
       <Button variant={'outline'} onClick={onSkipRow}>
         Skip <ArrowDownIcon size={24} className="ml-2" />
       </Button>

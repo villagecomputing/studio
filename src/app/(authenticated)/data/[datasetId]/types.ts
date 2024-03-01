@@ -56,6 +56,11 @@ export type DatasetTableContext = {
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
   updateCol: (colId: number, colDef: ColDef) => void;
+  updateGTCellInDB: (
+    rowId: number,
+    content: string,
+    status: string,
+  ) => Promise<void>;
 };
 
 export enum DatasetTableViewModeEnum {

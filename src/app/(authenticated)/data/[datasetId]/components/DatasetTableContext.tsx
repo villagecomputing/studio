@@ -22,7 +22,6 @@ export const useDatasetTableContext = (
   );
 
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
     DatasetTableViewModeEnum.PREVIEW,
   );
@@ -85,6 +84,14 @@ export const useDatasetTableContext = (
       updateData.content || groundTruthCell.content,
       updateData.status || groundTruthCell.status,
     );
+  };
+
+  const updateGTCellInDB = async (
+    rowId: number,
+    content: string,
+    status: string,
+  ) => {
+    await updateGTCell(rowId, content, status);
   };
 
   const toggleViewMode = () => {
@@ -180,5 +187,6 @@ export const useDatasetTableContext = (
     rows,
     columnDefs,
     updateCol,
+    updateGTCellInDB,
   };
 };
