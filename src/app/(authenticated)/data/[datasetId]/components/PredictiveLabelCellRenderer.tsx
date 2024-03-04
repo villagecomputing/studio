@@ -6,8 +6,7 @@ const PredictiveLabelCellRenderer = (
 ) => {
   const isEditMode =
     props.context.tableViewMode === DatasetTableViewModeEnum.EDIT;
-  const value = props.value ? `${props.value}%` : '-';
-  return <span>{isEditMode ? '' : value}</span>;
+  return <span>{isEditMode ? '' : props.value}</span>;
 };
 
 export default PredictiveLabelCellRenderer;

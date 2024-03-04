@@ -100,35 +100,36 @@ export const useDatasetTableContext = (
 
   const calculateMatchPercentage = (
     predictiveLabelColumnField: string,
-  ): string | undefined => {
-    let matchPercentages = 0;
+  ): { allMatchesPercentage: number; reviewedMatchesPercentage: number } => {
+    let reviewedMatches = 0;
+    let allMatches = 0;
+    let reviewedRowsCount = 0;
     if (!groundTruthColumnField) {
       throw new Error('No ground truth column');
     }
 
     rows.forEach((row) => {
       const cellData = row[groundTruthColumnField];
-      if (
-        isGroundTruthCell(cellData) &&
-        cellData.status === ENUM_Ground_truth_status.APPROVED &&
-        row[predictiveLabelColumnField] === cellData.content
-      ) {
-        matchPercentages += 1;
+      if (!isGroundTruthCell(cellData)) {
+        return;
+      }
+      if (cellData.status === ENUM_Ground_truth_status.APPROVED) {
+        reviewedRowsCount += 1;
+      }
+      if (row[predictiveLabelColumnField] === cellData.content) {
+        allMatches += 1;
+        if (cellData.status === ENUM_Ground_truth_status.APPROVED) {
+          reviewedMatches += 1;
+        }
       }
     });
-    // Calculate percentage
-    const totalRows =
-      rows.filter((row) => {
-        const cellData = row[groundTruthColumnField];
-        return (
-          isGroundTruthCell(cellData) &&
-          cellData.status === ENUM_Ground_truth_status.APPROVED
-        );
-      }).length || 0;
-    if (!totalRows) {
-      return undefined;
-    }
-    return ((matchPercentages / totalRows) * 100).toFixed(1);
+
+    return {
+      allMatchesPercentage:
+        rows.length > 0 ? (allMatches / rows.length) * 100 : 0,
+      reviewedMatchesPercentage:
+        reviewedRowsCount > 0 ? (reviewedMatches / reviewedRowsCount) * 100 : 0,
+    };
   };
 
   const updateRow = (index: number, rowData: DatasetRow) => {
@@ -178,7 +179,19 @@ export const useDatasetTableContext = (
       if (!col.field) {
         return;
       }
-      newRow[col.field] = calculateMatchPercentage(col.field) ?? '';
+      const percentages = calculateMatchPercentage(col.field);
+      const reviewedRowsPercentage =
+        percentages.reviewedMatchesPercentage % 10 > 0
+          ? percentages.reviewedMatchesPercentage.toFixed(1)
+          : percentages.reviewedMatchesPercentage.toString();
+      const allRowsPercentage =
+        percentages.allMatchesPercentage % 10 > 0
+          ? percentages.allMatchesPercentage.toFixed(1)
+          : percentages.allMatchesPercentage.toString();
+      newRow[col.field] =
+        reviewedRowsPercentage === allRowsPercentage
+          ? `${reviewedRowsPercentage}%`
+          : `${reviewedRowsPercentage}% (reviewed) ${allRowsPercentage}% (all)`;
     });
     if (groundTruthColumnField) {
       newRow[groundTruthColumnField] = {
