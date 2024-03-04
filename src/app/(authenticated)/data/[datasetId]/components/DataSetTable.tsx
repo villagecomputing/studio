@@ -3,9 +3,10 @@ import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { SearchInput } from '@/app/(authenticated)/components/search-input/SearchInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useCallback, useState } from 'react';
 import { AGGridDataset } from '../types';
 import {
+  getRowId,
   getTableColumnTypes,
   getTableDataTypeDefinitions,
   onTableCellValueChanged,
@@ -32,6 +33,7 @@ export default function DataSetTable(props: AGGridDataset) {
       <DataTable
         theme="ag-theme-dataset"
         agGridProps={{
+          getRowId: useCallback(getRowId, []),
           rowData: context.rows,
           columnDefs: context.columnDefs,
           context,
