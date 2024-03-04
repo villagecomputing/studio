@@ -126,9 +126,13 @@ export const useDatasetTableContext = (
 
     return {
       allMatchesPercentage:
-        rows.length > 0 ? (allMatches / rows.length) * 100 : 0,
+        rows.length > 0
+          ? Number(((allMatches / rows.length) * 100).toFixed(1))
+          : 0,
       reviewedMatchesPercentage:
-        reviewedRowsCount > 0 ? (reviewedMatches / reviewedRowsCount) * 100 : 0,
+        reviewedRowsCount > 0
+          ? Number(((reviewedMatches / reviewedRowsCount) * 100).toFixed(1))
+          : 0,
     };
   };
 
@@ -181,13 +185,8 @@ export const useDatasetTableContext = (
       }
       const percentages = calculateMatchPercentage(col.field);
       const reviewedRowsPercentage =
-        percentages.reviewedMatchesPercentage % 10 > 0
-          ? percentages.reviewedMatchesPercentage.toFixed(1)
-          : percentages.reviewedMatchesPercentage.toString();
-      const allRowsPercentage =
-        percentages.allMatchesPercentage % 10 > 0
-          ? percentages.allMatchesPercentage.toFixed(1)
-          : percentages.allMatchesPercentage.toString();
+        percentages.reviewedMatchesPercentage.toString();
+      const allRowsPercentage = percentages.allMatchesPercentage.toString();
       newRow[col.field] =
         reviewedRowsPercentage === allRowsPercentage
           ? `${reviewedRowsPercentage}%`
