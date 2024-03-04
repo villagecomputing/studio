@@ -29,9 +29,7 @@ const GroundTruthCellRenderer = (
           isPinnedBottomRow && 'text-slateGray700',
         ])}
       >
-        {isPinnedBottomRow
-          ? `${props.context.getNumberOfApprovedGT()} / ${props.context.rows.length} Approved`
-          : cellContent}
+        {cellContent}
       </span>
       {isPinnedBottomRow ? (
         <Button
@@ -46,12 +44,12 @@ const GroundTruthCellRenderer = (
             className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
             defaultChecked={isApproved}
             onCheckedChange={(checked: CheckedState) => {
-              if (!props.value) {
-                throw new Error('Cell data is missing');
+              if (!props.value || !props.node.rowIndex) {
+                throw new Error('GT Cell data is missing');
               }
-              // trigger onCellValueChanged where we do the db update and column refresh
-              props.setValue?.({
-                ...props.value,
+              props.context.updateGroundTruthCell({
+                rowIndex: props.node.rowIndex,
+                content: props.value.content,
                 status: checked
                   ? ENUM_Ground_truth_status.APPROVED
                   : ENUM_Ground_truth_status.PENDING,

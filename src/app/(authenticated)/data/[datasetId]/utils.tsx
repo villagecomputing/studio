@@ -100,12 +100,7 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
         event.context.setInspectorRowIndex(event.rowIndex);
       },
       cellRendererSelector: (params) => {
-        const context: DatasetTableContext = params.context;
-        if (
-          context.tableViewMode !== DatasetTableViewModeEnum.EDIT &&
-          params.node.isRowPinned() &&
-          params.node.rowPinned === 'bottom'
-        ) {
+        if (params.node.isRowPinned() && params.node.rowPinned === 'bottom') {
           return { component: PredictiveLabelCellRenderer };
         }
       },
@@ -214,6 +209,9 @@ export const onTableCellValueChanged = (
   if (!event.value || !event.newValue) {
     throw new Error('Cell data is missing');
   }
+  if (event.rowIndex === null) {
+    throw new Error('RowIndex is missing');
+  }
   if (
     event.oldValue?.content === event.newValue?.content &&
     event.oldValue?.status === event.newValue?.status
@@ -221,18 +219,14 @@ export const onTableCellValueChanged = (
     // nothing to update
     return;
   }
-  if (event.oldValue?.status !== event.newValue?.status) {
-    // refresh to update the pinned bottom cell content
-    event.api.refreshCells({
-      columns: [event.column],
-      force: true,
-    });
-  }
-  (event.context.updateGTCellInDB as DatasetTableContext['updateGTCellInDB'])(
-    event.value.id,
-    event.newValue.content,
-    event.newValue.status,
-  );
+  (
+    event.context
+      .updateGroundTruthCell as DatasetTableContext['updateGroundTruthCell']
+  )({
+    rowIndex: event.rowIndex,
+    content: event.newValue.content,
+    status: event.newValue.status,
+  });
 };
 
 export function isGroundTruthCell(

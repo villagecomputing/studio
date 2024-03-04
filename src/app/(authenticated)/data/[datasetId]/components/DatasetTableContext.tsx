@@ -1,7 +1,7 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { updateGTCell } from '../actions';
 import {
   AGGridDataset,
@@ -16,12 +16,15 @@ import { isGroundTruthCell } from '../utils';
 export const useDatasetTableContext = (
   props: AGGridDataset,
 ): DatasetTableContext => {
+  const router = useRouter();
+
   const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
   const [columnDefs, setColumnDefs] = useState<AGGridDataset['columnDefs']>(
     props.columnDefs,
   );
-
-  const router = useRouter();
+  const [pinnedBottomRow, setPinnedBottomRow] = useState<
+    AGGridDataset['pinnedBottomRowData']
+  >(props.pinnedBottomRowData);
   const [tableViewMode, setTableViewMode] = useState<DatasetTableViewModeEnum>(
     DatasetTableViewModeEnum.PREVIEW,
   );
@@ -29,25 +32,22 @@ export const useDatasetTableContext = (
     null,
   );
 
+  useEffect(() => {
+    updatePinnedBottomRow();
+  }, [rows]);
+
   const groundTruthColumnField = useMemo(() => {
-    return props.columnDefs.find(
+    return columnDefs.find(
       (colDef) => colDef.type === ENUM_Column_type.GROUND_TRUTH,
     )?.field;
-  }, [props.columnDefs]);
-
-  const getGroundTruthColumn = () => {
-    return props.columnDefs?.find(
-      (col) => col?.type === ENUM_Column_type.GROUND_TRUTH,
-    );
-  };
+  }, [columnDefs]);
 
   const getNumberOfApprovedGT = () => {
-    const groundTruthColumn = getGroundTruthColumn();
     return (
-      props.rowData?.filter(
+      rows.filter(
         (row) =>
-          groundTruthColumn?.field &&
-          (row[groundTruthColumn.field] as GroundTruthCell)?.status ===
+          groundTruthColumnField &&
+          (row[groundTruthColumnField] as GroundTruthCell)?.status ===
             ENUM_Ground_truth_status.APPROVED,
       )?.length ?? 0
     );
@@ -86,14 +86,6 @@ export const useDatasetTableContext = (
     );
   };
 
-  const updateGTCellInDB = async (
-    rowId: number,
-    content: string,
-    status: string,
-  ) => {
-    await updateGTCell(rowId, content, status);
-  };
-
   const toggleViewMode = () => {
     const isEditMode = tableViewMode === DatasetTableViewModeEnum.EDIT;
     if (isEditMode) {
@@ -110,18 +102,12 @@ export const useDatasetTableContext = (
     predictiveLabelColumnField: string,
   ): string | undefined => {
     let matchPercentages = 0;
-
-    const groundTruthCol = props.columnDefs?.find(
-      (col) => col?.type === ENUM_Column_type.GROUND_TRUTH,
-    );
-
-    const field = groundTruthCol?.field;
-    if (!field) {
-      throw new Error('No ground truth column selected');
+    if (!groundTruthColumnField) {
+      throw new Error('No ground truth column');
     }
 
-    props.rowData?.forEach((row) => {
-      const cellData = row[field];
+    rows.forEach((row) => {
+      const cellData = row[groundTruthColumnField];
       if (
         isGroundTruthCell(cellData) &&
         cellData.status === ENUM_Ground_truth_status.APPROVED &&
@@ -130,11 +116,10 @@ export const useDatasetTableContext = (
         matchPercentages += 1;
       }
     });
-
-    // Calculate percentages
+    // Calculate percentage
     const totalRows =
-      props.rowData?.filter((row) => {
-        const cellData = row[field];
+      rows.filter((row) => {
+        const cellData = row[groundTruthColumnField];
         return (
           isGroundTruthCell(cellData) &&
           cellData.status === ENUM_Ground_truth_status.APPROVED
@@ -175,18 +160,46 @@ export const useDatasetTableContext = (
     });
   };
 
+  const updatePinnedBottomRow = () => {
+    const newRow: DatasetRow = {};
+    columnDefs.forEach((column) => {
+      if (!column.field) {
+        return;
+      }
+      newRow[column.field] = '';
+    });
+
+    const predictiveLabelColumns = columnDefs.filter(
+      (column) =>
+        column.type === ENUM_Column_type.PREDICTIVE_LABEL && column.field,
+    );
+
+    predictiveLabelColumns.map((col) => {
+      if (!col.field) {
+        return;
+      }
+      newRow[col.field] = calculateMatchPercentage(col.field) ?? '';
+    });
+    if (groundTruthColumnField) {
+      newRow[groundTruthColumnField] = {
+        id: -1,
+        content: `${getNumberOfApprovedGT()} / ${rows.length} Approved`,
+        status: ENUM_Ground_truth_status.PENDING,
+      };
+    }
+    setPinnedBottomRow([newRow]);
+  };
+
   return {
-    updateGroundTruthCell,
-    getNumberOfApprovedGT,
-    toggleViewMode,
-    calculateMatchPercentage,
     groundTruthColumnField,
     tableViewMode,
     inspectorRowIndex,
-    setInspectorRowIndex,
     rows,
     columnDefs,
+    pinnedBottomRow,
+    setInspectorRowIndex,
+    updateGroundTruthCell,
+    toggleViewMode,
     updateCol,
-    updateGTCellInDB,
   };
 };
