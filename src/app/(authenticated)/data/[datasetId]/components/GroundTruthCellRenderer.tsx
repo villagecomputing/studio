@@ -44,7 +44,7 @@ const GroundTruthCellRenderer = (
             className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
             defaultChecked={isApproved}
             onCheckedChange={(checked: CheckedState) => {
-              if (!props.value || !props.node.rowIndex) {
+              if (!props.value || props.node.rowIndex === null) {
                 throw new Error('GT Cell data is missing');
               }
               props.context.updateGroundTruthCell({
