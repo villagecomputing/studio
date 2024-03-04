@@ -5,6 +5,7 @@ import {
   CellClassParams,
   CellValueChangedEvent,
   ColDef,
+  GetRowIdParams,
   GridOptions,
   SortDirection,
   ValueParserParams,
@@ -248,3 +249,17 @@ export function isGroundTruthCell(
     )
   );
 }
+
+export const getRowId = (
+  params: GetRowIdParams<unknown, DatasetTableContext>,
+) => {
+  const groundTruthCol = params.context.groundTruthColumnField;
+  if (!groundTruthCol) {
+    throw new Error('Ground truth column is missing');
+  }
+  const groundTruthCell = (params.data as DatasetRow)[groundTruthCol];
+  if (!isGroundTruthCell(groundTruthCell)) {
+    throw new Error('Ground truth cell is missing');
+  }
+  return groundTruthCell.id.toString();
+};
