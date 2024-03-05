@@ -64,7 +64,7 @@ function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
     headerComponent: CustomHeaderComponent,
     colId: tableColumn.id.toString(),
     type: tableColumn.type,
-    minWidth: tableColumn.type === ENUM_Column_type.INPUT ? 200 : 230,
+    width: tableColumn.type === ENUM_Column_type.INPUT ? 200 : 250,
   }));
 }
 

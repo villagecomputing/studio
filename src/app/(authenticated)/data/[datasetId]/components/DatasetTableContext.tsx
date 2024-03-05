@@ -34,7 +34,7 @@ export const useDatasetTableContext = (
 
   useEffect(() => {
     updatePinnedBottomRow();
-  }, [rows]);
+  }, [rows, columnDefs]);
 
   const groundTruthColumnField = useMemo(() => {
     return columnDefs.find(
@@ -190,7 +190,7 @@ export const useDatasetTableContext = (
       newRow[col.field] =
         reviewedRowsPercentage === allRowsPercentage
           ? `${reviewedRowsPercentage}%`
-          : `${reviewedRowsPercentage}% (reviewed) ${allRowsPercentage}% (all)`;
+          : `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
     });
     if (groundTruthColumnField) {
       newRow[groundTruthColumnField] = {
