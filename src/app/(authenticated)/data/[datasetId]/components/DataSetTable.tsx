@@ -15,7 +15,6 @@ import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorVi
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
-  const { pinnedBottomRowData } = props;
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const context = useDatasetTableContext(props);
 
@@ -34,10 +33,10 @@ export default function DataSetTable(props: AGGridDataset) {
         theme="ag-theme-dataset"
         agGridProps={{
           getRowId: useCallback(getRowId, []),
+          context,
           rowData: context.rows,
           columnDefs: context.columnDefs,
-          context,
-          pinnedBottomRowData,
+          pinnedBottomRowData: context.pinnedBottomRow,
           columnTypes: getTableColumnTypes(),
           dataTypeDefinitions: getTableDataTypeDefinitions(),
           reactiveCustomComponents: true,

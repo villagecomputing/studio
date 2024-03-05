@@ -45,22 +45,16 @@ export type UpdateGroundTruthCellParams = Partial<
 > & { rowIndex: number };
 
 export type DatasetTableContext = {
-  updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
-  getNumberOfApprovedGT: () => number;
-  toggleViewMode: () => void;
-  calculateMatchPercentage: (predictiveLabel: string) => string | undefined;
   tableViewMode: DatasetTableViewModeEnum;
   groundTruthColumnField: string | undefined;
-  setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   inspectorRowIndex: number | null;
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
+  pinnedBottomRow: AGGridDataset['pinnedBottomRowData'];
+  setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
+  updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
+  toggleViewMode: () => void;
   updateCol: (colId: number, colDef: ColDef) => void;
-  updateGTCellInDB: (
-    rowId: number,
-    content: string,
-    status: string,
-  ) => Promise<void>;
 };
 
 export enum DatasetTableViewModeEnum {
