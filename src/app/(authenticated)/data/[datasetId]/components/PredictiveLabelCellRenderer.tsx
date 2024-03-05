@@ -6,8 +6,22 @@ const PredictiveLabelCellRenderer = (
 ) => {
   const isEditMode =
     props.context.tableViewMode === DatasetTableViewModeEnum.EDIT;
-  const value = props.value ? `${props.value}%` : '-';
-  return <span>{isEditMode ? '' : value}</span>;
+  const values = props.value?.split('|');
+  const cellContent =
+    values?.length === 2 ? (
+      <>
+        <b>{values[0]}</b>
+        <br />
+        <i>{values[1]}</i>
+      </>
+    ) : (
+      values?.[0] || '-'
+    );
+  return (
+    <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+      {isEditMode ? '' : cellContent}
+    </span>
+  );
 };
 
 export default PredictiveLabelCellRenderer;
