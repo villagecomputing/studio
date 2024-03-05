@@ -3,24 +3,57 @@ import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { SearchInput } from '@/app/(authenticated)/components/search-input/SearchInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChangeEventHandler, useCallback, useState } from 'react';
-import { AGGridDataset } from '../types';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
+
+import {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { AGGridDataset, DatasetRow } from '../types';
 import {
   getRowId,
   getTableColumnTypes,
   getTableDataTypeDefinitions,
+  navigateToNextCell,
   onTableCellValueChanged,
 } from '../utils';
 import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorView';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: AGGridDataset) {
+  const gridRef = useRef<AgGridReactType<DatasetRow>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const context = useDatasetTableContext(props);
 
   const searchInDatasetList: ChangeEventHandler<HTMLInputElement> = (event) => {
     setQuickFilterText(event.target.value);
   };
+
+  useEffect(() => {
+    const gridApi = gridRef.current?.api;
+    if (!gridApi) {
+      return;
+    }
+    const visibleNodes = gridApi.getRenderedNodes();
+    const shouldSelectNode = context.inspectorRowIndex !== null;
+    const selectedNode = visibleNodes.find((node) =>
+      shouldSelectNode
+        ? node.rowIndex === context.inspectorRowIndex
+        : node.isSelected(),
+    );
+    if (!selectedNode) {
+      return;
+    }
+    gridApi.setNodesSelected({
+      nodes: [selectedNode],
+      newValue: shouldSelectNode,
+    });
+    // Schedule the call to ensureNodeVisible to avoid lifecycle warning
+    setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
+  }, [context.inspectorRowIndex, gridRef]);
 
   return (
     <>
@@ -29,8 +62,9 @@ export default function DataSetTable(props: AGGridDataset) {
         <Button variant={'outline'}>Download</Button>
       </div>
       <DatasetRowInspectorView context={context} />
-      <DataTable
+      <DataTable<DatasetRow>
         theme="ag-theme-dataset"
+        gridRef={gridRef}
         agGridProps={{
           getRowId: useCallback(getRowId, []),
           context,
@@ -43,6 +77,8 @@ export default function DataSetTable(props: AGGridDataset) {
           quickFilterText,
           onCellValueChanged: onTableCellValueChanged,
           enableCellTextSelection: true,
+          rowSelection: 'single',
+          navigateToNextCell: useCallback(navigateToNextCell, []),
         }}
       />
     </>

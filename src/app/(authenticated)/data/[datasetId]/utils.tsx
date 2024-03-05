@@ -1,5 +1,6 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 
+import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import {
   CellClassParams,
@@ -7,6 +8,7 @@ import {
   ColDef,
   GetRowIdParams,
   GridOptions,
+  NavigateToNextCellParams,
   SortDirection,
   ValueParserParams,
 } from 'ag-grid-community';
@@ -201,7 +203,7 @@ export function convertToAGGridData(
 }
 
 export const onTableCellValueChanged = (
-  event: CellValueChangedEvent<unknown, GroundTruthCell>,
+  event: CellValueChangedEvent<DatasetRow, GroundTruthCell>,
 ) => {
   if (event.colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
     throw new Error('Editing other columns than GT!');
@@ -245,7 +247,7 @@ export function isGroundTruthCell(
 }
 
 export const getRowId = (
-  params: GetRowIdParams<unknown, DatasetTableContext>,
+  params: GetRowIdParams<DatasetRow, DatasetTableContext>,
 ) => {
   const groundTruthCol = params.context.groundTruthColumnField;
   if (!groundTruthCol) {
@@ -256,4 +258,23 @@ export const getRowId = (
     throw new Error('Ground truth cell is missing');
   }
   return groundTruthCell.id.toString();
+};
+
+export const navigateToNextCell = (
+  params: NavigateToNextCellParams<DatasetRow, DatasetTableContext>,
+) => {
+  const suggestedNextCell = params.nextCellPosition;
+
+  const noUpOrDownKey = params.key !== ARROW_DOWN && params.key !== ARROW_UP;
+  if (noUpOrDownKey) {
+    return suggestedNextCell;
+  }
+
+  params.api.forEachNode((node) => {
+    if (suggestedNextCell && node.rowIndex === suggestedNextCell.rowIndex) {
+      node.setSelected(true);
+    }
+  });
+
+  return suggestedNextCell;
 };

@@ -1,3 +1,4 @@
+import { ARROW_DOWN, ARROW_UP, ENTER, ESCAPE } from '@/lib/constants';
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { GroundTruthCell } from '../../types';
@@ -73,16 +74,16 @@ export default function useDatasetRowInspectorData(): UseDatasetRowInspectorData
 
   const handleKeyDown = async (event: KeyboardEvent) => {
     switch (event.key) {
-      case 'Escape':
+      case ESCAPE:
         setInspectorRowIndex(null);
         return;
-      case 'Enter':
+      case ENTER:
         await approveRowRef.current();
         return;
-      case 'ArrowUp':
+      case ARROW_UP:
         await nextRowRef.current('PREVIOUS');
         return;
-      case 'ArrowDown':
+      case ARROW_DOWN:
         await nextRowRef.current('NEXT');
         return;
       default:
