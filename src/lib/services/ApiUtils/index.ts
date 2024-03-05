@@ -1,13 +1,9 @@
-import {
-  editDatasetCell,
-  editDatasetColumn,
-  getDatasetDetails,
-} from './dataset';
+import { editDatasetCell, editDatasetColumn, getDataset } from './dataset';
 
 import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
 
 export default {
-  getDatasetDetails,
+  getDataset,
   editDatasetColumn,
   editDatasetCell,
   saveDatasetDetails,
