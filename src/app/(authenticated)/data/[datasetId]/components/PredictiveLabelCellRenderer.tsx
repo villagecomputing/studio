@@ -11,6 +11,7 @@ const PredictiveLabelCellRenderer = (
     values?.length === 2 ? (
       <>
         <b>{values[0]}</b>
+        <br />
         <i>{values[1]}</i>
       </>
     ) : (
