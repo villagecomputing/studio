@@ -11,7 +11,11 @@ import { CustomHeaderProps } from 'ag-grid-react';
 import { MoreVerticalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { markColumnAsType } from '../actions';
-import { DatasetTableContext, TableColumnProps } from '../types';
+import {
+  DatasetTableContext,
+  DatasetTableViewModeEnum,
+  TableColumnProps,
+} from '../types';
 import { getTableColumnSortIcon } from '../utils';
 
 export type HeaderComponentParams =
@@ -52,7 +56,9 @@ export default function CustomHeaderComponent(
         </span>
         <div className="ml-auto flex-shrink-0">
           {!!sortIcon && sortIcon}
-          {colDef.type !== ENUM_Column_type.GROUND_TRUTH && (
+          {(colDef.type !== ENUM_Column_type.GROUND_TRUTH ||
+            props.context.tableViewMode !==
+              DatasetTableViewModeEnum.PREVIEW) && (
             <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
               <MoreVerticalIcon size={14} />
             </DropdownMenuTrigger>
@@ -60,30 +66,45 @@ export default function CustomHeaderComponent(
         </div>
       </div>
       <DropdownMenuContent className="border-border">
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={async () => {
-            if (!colDef.colId) {
-              return;
-            }
-            const type =
-              colDef.type === ENUM_Column_type.INPUT
-                ? ENUM_Column_type.PREDICTIVE_LABEL
-                : ENUM_Column_type.INPUT;
-            const pinned =
-              type === ENUM_Column_type.PREDICTIVE_LABEL ? 'right' : false;
+        {colDef.type !== ENUM_Column_type.GROUND_TRUTH && (
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={async () => {
+              if (!colDef.colId) {
+                return;
+              }
+              const type =
+                colDef.type === ENUM_Column_type.INPUT
+                  ? ENUM_Column_type.PREDICTIVE_LABEL
+                  : ENUM_Column_type.INPUT;
+              const pinned =
+                type === ENUM_Column_type.PREDICTIVE_LABEL ? 'right' : false;
 
-            await markColumnAsType(Number(colDef.colId), type);
-            props.context.updateCol(Number(colDef.colId), {
-              type,
-              pinned,
-            });
-          }}
-        >
-          {colDef.type === ENUM_Column_type.INPUT
-            ? 'Set as Predicted Label'
-            : 'Remove Predicted Label'}
-        </DropdownMenuItem>
+              await markColumnAsType(Number(colDef.colId), type);
+              props.context.updateCol(Number(colDef.colId), {
+                type,
+                pinned,
+              });
+            }}
+          >
+            {colDef.type === ENUM_Column_type.INPUT
+              ? 'Set as Predicted Label'
+              : 'Remove Predicted Label'}
+          </DropdownMenuItem>
+        )}
+        {colDef.type === ENUM_Column_type.GROUND_TRUTH && (
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={async () => {
+              if (colDef.type !== ENUM_Column_type.GROUND_TRUTH) {
+                return;
+              }
+              await props.context.approveAll();
+            }}
+          >
+            Approve all
+          </DropdownMenuItem>
+        )}
         {/* <DropdownMenuItem className="cursor-pointer">
           {'Set as Ground Truth Label'}
         </DropdownMenuItem>

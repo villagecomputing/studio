@@ -196,6 +196,7 @@ export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
 ): AGGridDataset {
   return {
+    datasetId: data.datasetId,
     columnDefs: getTableColumnDefs(data.columns),
     rowData: data.rows,
     pinnedBottomRowData: [getEmptyRow(data.columns)],

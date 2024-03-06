@@ -6,10 +6,8 @@ import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
 export default async function DatasetViewPage(props: DatasetViewPageProps) {
-  const {
-    params: { datasetId },
-  } = props;
-  const dataSet = await fetchDataSet(Number(datasetId));
+  const datasetId = Number(props.params.datasetId);
+  const dataSet = await fetchDataSet(datasetId);
 
   // Filter out the 'ground truth' columnDef
   const colDefReordered =
@@ -33,6 +31,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
           <DataSetTable
+            datasetId={datasetId}
             rowData={dataSet.rowData}
             columnDefs={colDefReordered}
             pinnedBottomRowData={dataSet.pinnedBottomRowData}
