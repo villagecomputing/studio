@@ -19,6 +19,8 @@ const config = {
     },
     zIndex: {
       inspectorView: '10',
+      overlay: '100',
+      dialog: '101',
     },
     colors: {
       white: '#FFFFFF',
