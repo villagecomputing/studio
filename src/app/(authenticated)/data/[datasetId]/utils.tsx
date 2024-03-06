@@ -28,8 +28,11 @@ import {
   TableColumnProps,
 } from './types';
 
-export function getColumnFieldFromName(columnName: string): string {
-  return columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase();
+export function getColumnFieldFromNameAndIndex(
+  columnName: string,
+  index: number,
+): string {
+  return `${columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase()}_${index}`;
 }
 
 export function getTableColumnSortIcon(sort: SortDirection) {
