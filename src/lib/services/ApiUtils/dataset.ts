@@ -1,11 +1,23 @@
+import {
+  DatasetRow,
+  TableColumnProps,
+} from '@/app/(authenticated)/data/[datasetId]/types';
+import { getColumnFieldFromName } from '@/app/(authenticated)/data/[datasetId]/utils';
 import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
-import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
+import {
+  ApiEndpoints,
+  PayloadSchemaType,
+  ResultSchemaType,
+} from '@/lib/routes/routes';
+import { guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
+import DatasetParser from '../DatasetParser';
+import FileHandler from '../FileHandler';
 import PrismaClient from '../prisma';
 
-export async function getDatasetDetails(datasetId: number) {
+async function getDatasetDetails(datasetId: number) {
   const groundTruthSelect = {
     id: true,
     status: true,
@@ -26,6 +38,9 @@ export async function getDatasetDetails(datasetId: number) {
     file_location: true,
     file_name: true,
     total_rows: true,
+    file_size: true,
+    file_type: true,
+    created_at: true,
     Dataset_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.DatasetSelect;
 
@@ -40,6 +55,75 @@ export async function getDatasetDetails(datasetId: number) {
     console.error(error);
     throw new Error('Failed to get Dataset details');
   }
+}
+
+export async function getDataset(
+  datasetId: number,
+): Promise<ResultSchemaType['/api/dataset']> {
+  if (!datasetId) {
+    throw new Error('DatasetId is required');
+  }
+  // Get database details about dataset
+  const datasetDetails = await getDatasetDetails(datasetId);
+  if (!datasetDetails) {
+    throw new Error('No dataset for id');
+  }
+  // Get disk content of the dataset
+  const fileContent = await FileHandler.getFile(datasetDetails.file_location);
+
+  if (!fileContent) {
+    throw new Error('No file content');
+  }
+  // Parse File content to an object
+  const fileContentObject = await DatasetParser.parseAsObject(fileContent);
+
+  // Map the columns
+  const columns = datasetDetails.Dataset_column.map(
+    (column): TableColumnProps => {
+      return {
+        name: column.name,
+        id: column.id,
+        field: getColumnFieldFromName(column.name),
+        type: guardStringEnum(ENUM_Column_type, column.type),
+      };
+    },
+  );
+
+  // Map the rows and modify the content if the column is ground truth
+  const rows = fileContentObject.rows.map((row, rowIndex) => {
+    const updatedRow: DatasetRow = Object.fromEntries(
+      Object.entries(row).map(([key, value], index) => {
+        const header = key ? getColumnFieldFromName(key) : `column_${index}`;
+        return [header, value];
+      }),
+    );
+
+    datasetDetails.Dataset_column.forEach((column) => {
+      if (column.type === ENUM_Column_type.GROUND_TRUTH) {
+        const field = getColumnFieldFromName(column.name);
+        const groundTruthCell = column.Ground_truth_cell[rowIndex];
+        updatedRow[field] = {
+          content: groundTruthCell.content,
+          id: groundTruthCell.id,
+          status: groundTruthCell.status as ENUM_Ground_truth_status,
+        };
+      }
+    });
+
+    return updatedRow;
+  });
+
+  return {
+    id: datasetDetails.id,
+    file_location: datasetDetails.file_location,
+    file_name: datasetDetails.file_name,
+    total_rows: datasetDetails.total_rows,
+    file_size: datasetDetails.file_size,
+    file_type: datasetDetails.file_type,
+    created_at: datasetDetails.created_at,
+    columns,
+    rows,
+  };
 }
 
 export async function editDatasetColumn(

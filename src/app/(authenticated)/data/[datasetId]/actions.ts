@@ -1,82 +1,33 @@
 'use server';
-import DatasetParser, { ParserError } from '@/lib/services/DatasetParser';
-import FileHandler from '@/lib/services/FileHandler';
+import { ParserError } from '@/lib/services/DatasetParser';
 
 import ApiUtils from '@/lib/services/ApiUtils';
-import { guardStringEnum, isSomeStringEnum } from '@/lib/typeUtils';
+import { getDataset } from '@/lib/services/ApiUtils/dataset';
+import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { permanentRedirect } from 'next/navigation';
-import { DatasetRow, FetchDatasetResult, TableColumnProps } from './types';
-import { convertToAGGridData, getColumnFieldFromName } from './utils';
+import { FetchDatasetResult } from './types';
+import { convertToAGGridData } from './utils';
 
 export const fetchDataSet = async (
   datasetId: number,
 ): Promise<FetchDatasetResult | null> => {
   try {
-    if (!datasetId) {
+    if (!Number(datasetId)) {
       permanentRedirect('/data');
     }
-    // Get database details about dataset
-    const datasetDetails = await ApiUtils.getDatasetDetails(datasetId);
-    if (!datasetDetails) {
-      return null;
-    }
-    // Get disk content of the dataset
-    const fileContent = await FileHandler.getFile(datasetDetails.file_location);
-
-    if (!fileContent) {
-      return null;
-    }
-    // Parse File content to an object
-    const fileContentObject = await DatasetParser.parseAsObject(fileContent);
-
-    // Map the columns
-    const columns = datasetDetails.Dataset_column.map(
-      (column): TableColumnProps => {
-        return {
-          name: column.name,
-          id: column.id,
-          field: getColumnFieldFromName(column.name),
-          type: guardStringEnum(ENUM_Column_type, column.type),
-        };
-      },
-    );
-
-    // Map the rows and modify the content if the column is ground truth
-    const rows = fileContentObject.rows.map((row, rowIndex) => {
-      const updatedRow: DatasetRow = Object.fromEntries(
-        Object.entries(row).map(([key, value], index) => {
-          const header = key ? getColumnFieldFromName(key) : `column_${index}`;
-          return [header, value];
-        }),
-      );
-
-      datasetDetails.Dataset_column.forEach((column) => {
-        if (column.type === ENUM_Column_type.GROUND_TRUTH) {
-          const field = getColumnFieldFromName(column.name);
-          const groundTruthCell = column.Ground_truth_cell[rowIndex];
-          updatedRow[field] = {
-            content: groundTruthCell.content,
-            id: groundTruthCell.id,
-            status: groundTruthCell.status as ENUM_Ground_truth_status,
-          };
-        }
-      });
-
-      return updatedRow;
-    });
+    const dataset = await getDataset(datasetId);
 
     return {
-      datasetName: datasetDetails.file_name,
+      datasetName: dataset.file_name,
       ...convertToAGGridData({
-        datasetId,
-        columns,
-        rows,
+        datasetId: dataset.id,
+        columns: dataset.columns,
+        rows: dataset.rows,
       }),
     };
   } catch (error) {
     console.error(error);
-    // TODO: move the try-catch block around individual statements that can throw and handle the error there
     if (error instanceof Error) {
       throw new Error(error.message);
     }
