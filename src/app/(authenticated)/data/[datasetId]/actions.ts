@@ -69,6 +69,7 @@ export const fetchDataSet = async (
     return {
       datasetName: datasetDetails.file_name,
       ...convertToAGGridData({
+        datasetId,
         columns,
         rows,
       }),

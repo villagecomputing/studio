@@ -23,6 +23,7 @@ export type TableColumnProps = {
 };
 
 export type ConvertToAGGridDataProps = {
+  datasetId: number;
   columns: TableColumnProps[];
   rows: DatasetRow[];
 };
