@@ -53,12 +53,6 @@
   min-height: unset;
 }
 
-.ag-row > .ag-cell.groundTruthCell.approved {
-  @apply bg-agOddGroundMatch;
-}
-.ag-row.ag-row-odd > .groundTruthCell.approved {
-  @apply bg-agOddGroundMatch;
-}
 .ag-row > .ag-cell.predictiveLabelCell.noMatch {
   @apply bg-agWrongLabelColor;
 }

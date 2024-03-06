@@ -2,7 +2,7 @@ import {
   DatasetRow,
   TableColumnProps,
 } from '@/app/(authenticated)/data/[datasetId]/types';
-import { getColumnFieldFromName } from '@/app/(authenticated)/data/[datasetId]/utils';
+import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils';
 import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import {
@@ -79,11 +79,11 @@ export async function getDataset(
 
   // Map the columns
   const columns = datasetDetails.Dataset_column.map(
-    (column): TableColumnProps => {
+    (column, index): TableColumnProps => {
       return {
         name: column.name,
         id: column.id,
-        field: getColumnFieldFromName(column.name),
+        field: getColumnFieldFromNameAndIndex(column.name, index),
         type: guardStringEnum(ENUM_Column_type, column.type),
       };
     },
@@ -93,14 +93,16 @@ export async function getDataset(
   const rows = fileContentObject.rows.map((row, rowIndex) => {
     const updatedRow: DatasetRow = Object.fromEntries(
       Object.entries(row).map(([key, value], index) => {
-        const header = key ? getColumnFieldFromName(key) : `column_${index}`;
+        const header = key
+          ? getColumnFieldFromNameAndIndex(key, index)
+          : `column_${index}`;
         return [header, value];
       }),
     );
 
-    datasetDetails.Dataset_column.forEach((column) => {
+    datasetDetails.Dataset_column.forEach((column, index) => {
       if (column.type === ENUM_Column_type.GROUND_TRUTH) {
-        const field = getColumnFieldFromName(column.name);
+        const field = getColumnFieldFromNameAndIndex(column.name, index);
         const groundTruthCell = column.Ground_truth_cell[rowIndex];
         updatedRow[field] = {
           content: groundTruthCell.content,

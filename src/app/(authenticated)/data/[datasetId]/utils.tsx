@@ -28,8 +28,11 @@ import {
   TableColumnProps,
 } from './types';
 
-export function getColumnFieldFromName(columnName: string): string {
-  return columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase();
+export function getColumnFieldFromNameAndIndex(
+  columnName: string,
+  index: number,
+): string {
+  return `${columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase()}_${index}`;
 }
 
 export function getTableColumnSortIcon(sort: SortDirection) {
@@ -109,19 +112,13 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       cellClass: (params: CellClassParams) => {
         const label: string = params.value;
         const context: DatasetTableContext = params.context;
-        if (
-          !context.groundTruthColumnField ||
-          context.tableViewMode === DatasetTableViewModeEnum.EDIT
-        ) {
+        if (!context.groundTruthColumnField) {
           return '';
         }
         const groundTruthCell: GroundTruthCell | undefined =
           params.data[context.groundTruthColumnField];
 
-        if (
-          !groundTruthCell ||
-          groundTruthCell.status === ENUM_Ground_truth_status.PENDING
-        ) {
+        if (!groundTruthCell) {
           return '';
         }
 
@@ -145,19 +142,6 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       } as HeaderComponentParams,
       // TODO: Maybe use cellRendererSelector to have separate cell renderer for the pinned bottom row?
       cellRenderer: GroundTruthCellRenderer,
-      cellClass: (params: CellClassParams<unknown, GroundTruthCell>) => {
-        const context: DatasetTableContext = params.context;
-        if (
-          !params.value ||
-          context.tableViewMode === DatasetTableViewModeEnum.EDIT
-        ) {
-          return '';
-        }
-        if (params.value.status === ENUM_Ground_truth_status.APPROVED) {
-          return 'groundTruthCell approved';
-        }
-        return '';
-      },
       onCellClicked(event) {
         if (event.node.isRowPinned()) {
           return;
