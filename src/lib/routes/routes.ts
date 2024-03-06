@@ -1,4 +1,5 @@
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
+import { approveAllSchema } from '@/app/api/dataset/edit/approveAll/schema';
 import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
@@ -18,6 +19,7 @@ export enum ApiEndpoints {
   datasetView = '/api/dataset',
   datasetColumnEdit = '/api/dataset/edit/column',
   datasetCellEdit = '/api/dataset/edit/cell',
+  datasetApproveAll = 'api/dataset/edit/approveAll',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -46,12 +48,18 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: datasetViewResponseSchema,
     method: 'GET',
   },
+  [ApiEndpoints.datasetApproveAll]: {
+    payloadSchema: approveAllSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
 };
 
 export type PayloadSchemaType = {
   [ApiEndpoints.datasetUpload]: z.infer<typeof uploadDatasetPayloadSchema>;
   [ApiEndpoints.datasetColumnEdit]: z.infer<typeof editDatasetColumnSchema>;
   [ApiEndpoints.datasetCellEdit]: z.infer<typeof editDatasetCellSchema>;
+  [ApiEndpoints.datasetApproveAll]: z.infer<typeof approveAllSchema>;
 };
 
 export type ResultSchemaType = {

@@ -69,6 +69,7 @@ export const fetchDataSet = async (
     return {
       datasetName: datasetDetails.file_name,
       ...convertToAGGridData({
+        datasetId,
         columns,
         rows,
       }),
@@ -120,5 +121,14 @@ export const updateGTCell = async (
     return updatedCellId;
   } catch (error) {
     return null;
+  }
+};
+
+export const approveAll = async (datasetId: number) => {
+  try {
+    await ApiUtils.approveAll({ datasetId });
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error approving all');
   }
 };

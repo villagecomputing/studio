@@ -1,4 +1,5 @@
 import {
+  approveAll,
   editDatasetCell,
   editDatasetColumn,
   getDatasetDetails,
@@ -12,4 +13,5 @@ export default {
   editDatasetCell,
   saveDatasetDetails,
   isFilenameAvailable,
+  approveAll,
 };
