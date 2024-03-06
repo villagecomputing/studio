@@ -54,9 +54,17 @@ export async function POST(request: Request) {
     );
 
     let gtColumnContent = groundTruthColumnContent;
-    if (dataToSend.groundTruthColumnIndex === parsedFile['headers'].length) {
+    let gtColumnIndex = dataToSend.groundTruthColumnIndex;
+    // Ground truth column is a new blank column or an existing one
+    if (gtColumnIndex >= parsedFile['headers'].length) {
       parsedFile['headers'].push('Blank ground truth column');
       gtColumnContent = Array(parsedFile.rows.length).fill(' ');
+    } else {
+      // Duplicate the existing column
+      const gtColumnHeader =
+        parsedFile['headers'][dataToSend.groundTruthColumnIndex];
+      parsedFile['headers'].push(`${gtColumnHeader}`);
+      gtColumnIndex = parsedFile['headers'].length - 1;
     }
 
     ApiUtils.saveDatasetDetails({
@@ -65,7 +73,7 @@ export async function POST(request: Request) {
       ),
       groundTruthColumnContent: gtColumnContent,
       fileTitle: dataToSend.datasetTitle,
-      groundTruthColumnIndex: dataToSend.groundTruthColumnIndex,
+      groundTruthColumnIndex: gtColumnIndex,
       totalNumberOfRows: parsedFile.rows.length,
       ...saveFileResult,
     });
