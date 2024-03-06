@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       gtColumnIndex = parsedFile['headers'].length - 1;
     }
 
-    ApiUtils.saveDatasetDetails({
+    const result = await ApiUtils.saveDatasetDetails({
       columnHeaders: parsedFile['headers'].map((header, index) =>
         header ? header : `Column_${index}`,
       ),
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       ...saveFileResult,
     });
 
-    return response('OK');
+    return Response.json(result);
   } catch (error) {
     console.error('Error in POST:', error);
     return response('Error processing request', 500);

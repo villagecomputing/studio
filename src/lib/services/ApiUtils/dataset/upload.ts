@@ -33,7 +33,9 @@ export async function isFilenameAvailable(filename: string): Promise<boolean> {
   return !totalFilesWithSameFilename;
 }
 
-export async function saveDatasetDetails(dataToSave: DataToSave) {
+export async function saveDatasetDetails(
+  dataToSave: DataToSave,
+): Promise<{ datasetId: number }> {
   const {
     columnHeaders,
     groundTruthColumnIndex,
@@ -93,4 +95,5 @@ export async function saveDatasetDetails(dataToSave: DataToSave) {
     }),
   );
   await PrismaClient.$transaction(inserts);
+  return { datasetId: datasetResult.id };
 }
