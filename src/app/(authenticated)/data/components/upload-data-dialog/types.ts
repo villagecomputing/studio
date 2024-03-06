@@ -1,13 +1,16 @@
 import { ControllerRenderProps } from 'react-hook-form';
 import { z } from 'zod';
-import { UploadDataSchema } from './constants';
+import { UploadDataSchema } from './utils';
 
 export enum UploadDataSchemaValues {
   DATASET_TITLE = 'datasetTitle',
   GROUND_TRUTH_COLUMN_INDEX = 'groundTruthColumnIndex',
+  BLANK_GT_COLUMN_TITLE = 'blankGTColumnTitle',
 }
 
-export type UploadDataFormContext = z.infer<typeof UploadDataSchema>;
+export type UploadDataFormContext = z.infer<
+  ReturnType<typeof UploadDataSchema>
+>;
 
 export type DatasetColumnsListProps = {
   disabled: boolean;
@@ -32,9 +35,8 @@ export type ColumnHeader = { index: number; name: string };
 export type UploadDataContextType = {
   selectedFile: File | null;
   columnHeaders: ColumnHeader[];
-  blankGroundTruthColumnAdded: boolean;
-  // TODO Add extra data for upload here
   onFileSelected: (file: File | null) => Promise<void>;
-  addBlankGroundTruthColumn: () => void;
   refetchData: () => Promise<void>;
+  blankGTColumn: ColumnHeader;
+  setBlankGTColumnName: (name: string) => void;
 };

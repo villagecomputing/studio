@@ -1,5 +1,12 @@
 import datasetParser from '@/lib/services/DatasetParser';
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { ColumnHeader, UploadDataContextType } from './types';
 
 const UploadDataContext = createContext<UploadDataContextType | undefined>(
@@ -19,9 +26,11 @@ export const UploadDataProvider: React.FC<{
   refetchData: () => Promise<void>;
 }> = ({ children, refetchData }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [blankGroundTruthColumnAdded, setBlankGroundTruthColumnAdded] =
-    useState<boolean>(false);
   const [columnHeaders, setColumnHeaders] = useState<ColumnHeader[]>([]);
+  const [blankGTColumn, setBlankGTColumn] = useState<ColumnHeader>({
+    index: -1,
+    name: '',
+  });
 
   /**
    * This also works as a reset for the context
@@ -31,35 +40,48 @@ export const UploadDataProvider: React.FC<{
       return;
     }
     const columns = await datasetParser.getHeader(file);
-    setColumnHeaders(
-      columns.map((column, index) => ({
+    const currentBlankGTColumn = {
+      index: columns.length,
+      name: '',
+    };
+    setBlankGTColumn(currentBlankGTColumn);
+    setColumnHeaders([
+      currentBlankGTColumn,
+      ...columns.map((column, index) => ({
         index,
         name: column || `Column_${index}`,
       })),
-    );
-    setBlankGroundTruthColumnAdded(false);
+    ]);
     setSelectedFile(file);
   };
 
-  const addBlankGroundTruthColumn = () => {
-    if (blankGroundTruthColumnAdded) {
+  useEffect(() => {
+    if (!columnHeaders.length || !blankGTColumn) {
       return;
     }
-    setColumnHeaders([
-      { index: columnHeaders.length, name: 'Blank ground truth column' },
-      ...columnHeaders,
-    ]);
-    setBlankGroundTruthColumnAdded(true);
-  };
+    const updatedColumnHeaders = [...columnHeaders];
+    updatedColumnHeaders[0] = blankGTColumn;
+    setColumnHeaders(updatedColumnHeaders);
+  }, [blankGTColumn]);
+
+  const setBlankGTColumnName = useCallback(
+    (name: string) => {
+      setBlankGTColumn({
+        ...blankGTColumn,
+        name,
+      });
+    },
+    [blankGTColumn],
+  );
 
   return (
     <UploadDataContext.Provider
       value={{
         selectedFile,
         columnHeaders,
-        blankGroundTruthColumnAdded,
         onFileSelected,
-        addBlankGroundTruthColumn,
+        blankGTColumn,
+        setBlankGTColumnName,
         refetchData,
       }}
     >

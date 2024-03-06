@@ -57,7 +57,13 @@ export async function POST(request: Request) {
     let gtColumnIndex = dataToSend.groundTruthColumnIndex;
     // Ground truth column is a new blank column or an existing one
     if (gtColumnIndex >= parsedFile['headers'].length) {
-      parsedFile['headers'].push('Blank ground truth column');
+      if (!dataToSend.blankColumnTitle) {
+        return response(
+          'Column Title required for blank ground truth column',
+          400,
+        );
+      }
+      parsedFile['headers'].push(dataToSend.blankColumnTitle.trim());
       gtColumnContent = Array(parsedFile.rows.length).fill(' ');
     } else {
       // Duplicate the existing column
