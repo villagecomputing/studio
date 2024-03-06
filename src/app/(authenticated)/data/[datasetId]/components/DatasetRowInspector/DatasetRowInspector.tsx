@@ -34,7 +34,7 @@ export default function DatasetRowInspector() {
   return (
     <div
       ref={viewRef}
-      className={`row-inspector-view absolute bottom-0 right-0 top-0 z-inspectorView flex w-full max-w-[600px] translate-x-full flex-col bg-white ${inspectorClass}`}
+      className={`row-inspector-view absolute bottom-0 right-0 top-0 z-inspectorView flex w-full max-w-inspectorView translate-x-full flex-col bg-white ${inspectorClass}`}
     >
       <DatasetRowInspectorBody />
       <DatasetRowInspectorFooter

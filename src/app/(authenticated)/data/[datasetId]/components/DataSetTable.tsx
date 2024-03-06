@@ -65,6 +65,9 @@ export default function DataSetTable(props: AGGridDataset) {
       <DataTable<DatasetRow>
         theme="ag-theme-dataset"
         gridRef={gridRef}
+        className={
+          context.inspectorRowIndex !== null ? 'small-dataset-table-view' : ''
+        }
         agGridProps={{
           getRowId: useCallback(getRowId, []),
           context,

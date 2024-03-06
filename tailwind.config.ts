@@ -79,6 +79,12 @@ const config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      width: {
+        inspectorView: 'var(--inspectorViewWidth)',
+      },
+      maxWidth: {
+        inspectorView: 'var(--inspectorViewWidth)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
