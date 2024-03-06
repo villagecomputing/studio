@@ -4,11 +4,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 export type DatasetViewPageProps = {
   params: {
-    datasetId: number;
+    datasetId: string;
   };
 };
 
 export type AGGridDataset = {
+  datasetId: number;
   columnDefs: ColDef[];
   rowData: DatasetRow[];
   pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
@@ -55,6 +56,7 @@ export type DatasetTableContext = {
   updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
   toggleViewMode: () => void;
   updateCol: (colId: number, colDef: ColDef) => void;
+  approveAll: () => Promise<void>;
 };
 
 export enum DatasetTableViewModeEnum {

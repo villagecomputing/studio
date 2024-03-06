@@ -122,3 +122,12 @@ export const updateGTCell = async (
     return null;
   }
 };
+
+export const approveAll = async (datasetId: number) => {
+  try {
+    await ApiUtils.approveAll({ datasetId });
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error approving all');
+  }
+};
