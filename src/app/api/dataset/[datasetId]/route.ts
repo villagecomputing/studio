@@ -11,7 +11,7 @@ export async function GET(
     if (!datasetId) {
       return response('Invalid dataset id', 400);
     }
-    const result = await ApiUtils.getDatasetDetails(datasetId);
+    const result = await ApiUtils.getDataset(datasetId);
 
     if (!datasetViewResponseSchema.safeParse(result)) {
       return response('Invalid response dataset view type', 500);

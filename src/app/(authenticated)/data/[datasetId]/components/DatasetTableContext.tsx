@@ -2,7 +2,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { updateGTCell } from '../actions';
+import { approveAll as approveAllGT, updateGTCell } from '../actions';
 import {
   AGGridDataset,
   DatasetRow,
@@ -84,6 +84,32 @@ export const useDatasetTableContext = (
       updateData.content || groundTruthCell.content,
       updateData.status || groundTruthCell.status,
     );
+  };
+
+  const approveAll = async () => {
+    if (!groundTruthColumnField) {
+      return;
+    }
+    await approveAllGT(props.datasetId);
+    const newRows = await Promise.all(
+      rows.map(async (row) => {
+        const groundTruthCell = row[groundTruthColumnField];
+        if (
+          !isGroundTruthCell(groundTruthCell) ||
+          groundTruthCell.status === ENUM_Ground_truth_status.APPROVED
+        ) {
+          return row;
+        }
+        return {
+          ...row,
+          [groundTruthColumnField]: {
+            ...groundTruthCell,
+            status: ENUM_Ground_truth_status.APPROVED,
+          },
+        };
+      }),
+    );
+    setRows(newRows);
   };
 
   const toggleViewMode = () => {
@@ -188,9 +214,7 @@ export const useDatasetTableContext = (
         percentages.reviewedMatchesPercentage.toString();
       const allRowsPercentage = percentages.allMatchesPercentage.toString();
       newRow[col.field] =
-        reviewedRowsPercentage === allRowsPercentage
-          ? `${reviewedRowsPercentage}%`
-          : `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
+        `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
     });
     if (groundTruthColumnField) {
       newRow[groundTruthColumnField] = {
@@ -213,5 +237,6 @@ export const useDatasetTableContext = (
     updateGroundTruthCell,
     toggleViewMode,
     updateCol,
+    approveAll,
   };
 };

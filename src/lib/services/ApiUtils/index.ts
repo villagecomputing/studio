@@ -1,15 +1,17 @@
 import {
+  approveAll,
   editDatasetCell,
   editDatasetColumn,
-  getDatasetDetails,
+  getDataset,
 } from './dataset';
 
 import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
 
 export default {
-  getDatasetDetails,
+  getDataset,
   editDatasetColumn,
   editDatasetCell,
   saveDatasetDetails,
   isFilenameAvailable,
+  approveAll,
 };
