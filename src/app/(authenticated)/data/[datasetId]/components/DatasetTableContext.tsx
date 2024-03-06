@@ -188,9 +188,7 @@ export const useDatasetTableContext = (
         percentages.reviewedMatchesPercentage.toString();
       const allRowsPercentage = percentages.allMatchesPercentage.toString();
       newRow[col.field] =
-        reviewedRowsPercentage === allRowsPercentage
-          ? `${reviewedRowsPercentage}%`
-          : `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
+        `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
     });
     if (groundTruthColumnField) {
       newRow[groundTruthColumnField] = {
