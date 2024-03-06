@@ -27,6 +27,8 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --radius: 0.5rem;
+
+    --inspectorViewWidth: 600px;
   }
 
   .dark {
@@ -66,4 +68,8 @@
 .row-inspector-view-active {
   display: flex;
   transform: translateX(0);
+}
+
+.small-dataset-table-view {
+  max-width: calc(100% - var(--inspectorViewWidth));
 }

@@ -19,7 +19,14 @@ export default function DataTable<TData>(props: DataTableProps<TData>) {
   }, [gridRef, props.gridRef]);
 
   return (
-    <div className={cn(['ag-theme-alpine', props.theme, 'h-full'])}>
+    <div
+      className={cn([
+        'ag-theme-alpine',
+        props.theme,
+        'h-full',
+        props.className,
+      ])}
+    >
       <AgGridReact
         ref={gridRef}
         defaultColDef={DEFAULT_COLUMN_DEFINITION}
