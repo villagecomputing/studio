@@ -39,24 +39,22 @@ const GroundTruthCellRenderer = (
           {isEditMode ? 'Done' : 'Edit'}
         </Button>
       ) : (
-        isEditMode && (
-          <Checkbox
-            className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
-            checked={isApproved}
-            onCheckedChange={(checked: CheckedState) => {
-              if (!props.value || props.node.rowIndex === null) {
-                throw new Error('GT Cell data is missing');
-              }
-              props.context.updateGroundTruthCell({
-                rowIndex: props.node.rowIndex,
-                content: props.value.content,
-                status: checked
-                  ? ENUM_Ground_truth_status.APPROVED
-                  : ENUM_Ground_truth_status.PENDING,
-              });
-            }}
-          />
-        )
+        <Checkbox
+          className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
+          checked={isApproved}
+          onCheckedChange={(checked: CheckedState) => {
+            if (!props.value || props.node.rowIndex === null) {
+              throw new Error('GT Cell data is missing');
+            }
+            props.context.updateGroundTruthCell({
+              rowIndex: props.node.rowIndex,
+              content: props.value.content,
+              status: checked
+                ? ENUM_Ground_truth_status.APPROVED
+                : ENUM_Ground_truth_status.PENDING,
+            });
+          }}
+        />
       )}
     </span>
   );
