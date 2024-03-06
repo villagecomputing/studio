@@ -7,6 +7,7 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { TOAST_MESSAGE } from '@/lib/language/toasts';
 import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { isFilenameAvailable } from '../../../actions';
 import { useUploadDataContext } from '../UploadDataProvider';
@@ -24,8 +25,8 @@ export default function UploadDataDialogContent(
 ) {
   const { onCancel } = props;
   const { toast } = useToast();
-  const { selectedFile, refetchData, blankGTColumn, columnHeaders } =
-    useUploadDataContext();
+  const router = useRouter();
+  const { selectedFile, blankGTColumn, columnHeaders } = useUploadDataContext();
   const uploadDataForm = useForm<UploadDataFormContext>({
     resolver: zodResolver(UploadDataSchema(columnHeaders.length - 1)),
     reValidateMode: 'onChange',
@@ -75,7 +76,9 @@ export default function UploadDataDialogContent(
       method: 'POST',
       body: formData,
     });
-    if (response.status !== 200) {
+    const datasetId = (await response.json()).datasetId;
+
+    if (response.status !== 200 || !Number(datasetId)) {
       toast({
         title: 'Error',
         description: TOAST_MESSAGE.UPLOAD_DATASET_FAILED,
@@ -84,7 +87,7 @@ export default function UploadDataDialogContent(
       return;
     }
     onCancel();
-    refetchData();
+    router.push(`/data/${datasetId}`);
   }
 
   return (
