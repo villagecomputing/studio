@@ -87,22 +87,27 @@ const DataPage = () => {
           {!datasetList.length ? (
             <ZeroState />
           ) : (
-            <DataTable<RowType>
-              theme="ag-theme-dataset-list"
-              agGridProps={{
-                onRowClicked: (event) => {
-                  if (!event.data) {
-                    return;
-                  }
-                  router.push(`/data/${event.data.id}`);
-                },
-                rowData,
-                columnDefs: colDef,
-                rowSelection: 'single',
-                domLayout: 'autoHeight',
-                quickFilterText,
-              }}
-            />
+            <div
+              className="overflow-y-auto"
+              style={{ height: 'calc(100vh - 150px)' }}
+            >
+              <DataTable<RowType>
+                theme="ag-theme-dataset-list"
+                agGridProps={{
+                  onRowClicked: (event) => {
+                    if (!event.data) {
+                      return;
+                    }
+                    router.push(`/data/${event.data.id}`);
+                  },
+                  rowData,
+                  columnDefs: colDef,
+                  rowSelection: 'single',
+                  domLayout: 'autoHeight',
+                  quickFilterText,
+                }}
+              />
+            </div>
           )}
         </UploadDataProvider>
       </div>

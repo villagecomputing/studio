@@ -112,7 +112,7 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       cellClass: (params: CellClassParams) => {
         const label: string = params.value;
         const context: DatasetTableContext = params.context;
-        if (!context.groundTruthColumnField) {
+        if (!context.groundTruthColumnField || params.node.isRowPinned()) {
           return '';
         }
         const groundTruthCell: GroundTruthCell | undefined =
