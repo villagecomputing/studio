@@ -40,8 +40,15 @@ const GroundTruthCellRenderer = (
         </Button>
       ) : (
         <Checkbox
-          className="h-6 w-6  rounded-lg  data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
+          className="h-6 w-6 rounded-lg data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
           checked={isApproved}
+          onClick={(event) => {
+            if (
+              props.context.tableViewMode === DatasetTableViewModeEnum.PREVIEW
+            ) {
+              event.preventDefault();
+            }
+          }}
           onCheckedChange={(checked: CheckedState) => {
             if (!props.value || props.node.rowIndex === null) {
               throw new Error('GT Cell data is missing');
