@@ -1,7 +1,8 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { approveAll as approveAllGT, updateGTCell } from '../actions';
 import {
   AGGridDataset,
@@ -17,7 +18,7 @@ export const useDatasetTableContext = (
   props: AGGridDataset,
 ): DatasetTableContext => {
   const router = useRouter();
-
+  const gridRef = useRef<AgGridReactType<DatasetRow>>();
   const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
   const [columnDefs, setColumnDefs] = useState<AGGridDataset['columnDefs']>(
     props.columnDefs,
@@ -226,6 +227,30 @@ export const useDatasetTableContext = (
     setPinnedBottomRow([newRow]);
   };
 
+  // Handles the row highlighting (selected) to match the inspector row index
+  useEffect(() => {
+    const gridApi = gridRef.current?.api;
+    if (!gridApi) {
+      return;
+    }
+    const visibleNodes = gridApi.getRenderedNodes();
+    const shouldSelectNode = inspectorRowIndex !== null;
+    const selectedNode = visibleNodes.find((node) =>
+      shouldSelectNode
+        ? node.rowIndex === inspectorRowIndex
+        : node.isSelected(),
+    );
+    if (!selectedNode) {
+      return;
+    }
+    gridApi.setNodesSelected({
+      nodes: [selectedNode],
+      newValue: shouldSelectNode,
+    });
+    // Schedule the call to ensureNodeVisible to avoid lifecycle warning
+    setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
+  }, [inspectorRowIndex, gridRef]);
+
   return {
     groundTruthColumnField,
     tableViewMode,
@@ -233,6 +258,7 @@ export const useDatasetTableContext = (
     rows,
     columnDefs,
     pinnedBottomRow,
+    gridRef,
     setInspectorRowIndex,
     updateGroundTruthCell,
     toggleViewMode,

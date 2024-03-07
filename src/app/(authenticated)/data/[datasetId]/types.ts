@@ -1,6 +1,7 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef, GridOptions } from 'ag-grid-community';
-import { Dispatch, SetStateAction } from 'react';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
 export type DatasetViewPageProps = {
   params: {
@@ -53,6 +54,7 @@ export type DatasetTableContext = {
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
   pinnedBottomRow: AGGridDataset['pinnedBottomRowData'];
+  gridRef: MutableRefObject<AgGridReactType<DatasetRow> | undefined>;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
   toggleViewMode: () => void;
