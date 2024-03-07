@@ -2,7 +2,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { approveAll as approveAllGT, updateGTCell } from '../actions';
 import {
   AGGridDataset,
@@ -251,6 +251,13 @@ export const useDatasetTableContext = (
     setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
   }, [inspectorRowIndex, gridRef]);
 
+  const updateRows = useCallback(
+    (rows: DatasetRow[]) => {
+      setRows(rows);
+    },
+    [setRows],
+  );
+
   return {
     groundTruthColumnField,
     tableViewMode,
@@ -264,5 +271,6 @@ export const useDatasetTableContext = (
     toggleViewMode,
     updateCol,
     approveAll,
+    updateRows,
   };
 };

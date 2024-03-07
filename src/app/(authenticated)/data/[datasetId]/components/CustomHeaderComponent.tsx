@@ -8,15 +8,16 @@ import {
 import { ENUM_Column_type } from '@/lib/types';
 import { SortDirection } from 'ag-grid-community';
 import { CustomHeaderProps } from 'ag-grid-react';
+import { sortBy } from 'lodash';
 import { MoreVerticalIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { markColumnAsType } from '../actions';
 import {
+  DatasetRow,
   DatasetTableContext,
   DatasetTableViewModeEnum,
-  TableColumnProps,
 } from '../types';
-import { getTableColumnSortIcon } from '../utils';
+import { ROW_ID_FIELD_NAME, getTableColumnSortIcon } from '../utils';
 
 export type HeaderComponentParams =
   | {
@@ -26,7 +27,7 @@ export type HeaderComponentParams =
   | undefined;
 
 export default function CustomHeaderComponent(
-  props: CustomHeaderProps<TableColumnProps, DatasetTableContext>,
+  props: CustomHeaderProps<DatasetRow, DatasetTableContext>,
 ) {
   const { column } = props;
   const [sortOrder, setSortOrder] = useState<SortDirection>(null);
@@ -34,28 +35,58 @@ export default function CustomHeaderComponent(
   const headerComponentParams =
     colDef.headerComponentParams as HeaderComponentParams;
   const icon = headerComponentParams?.leftSideIcon;
+  const sortIcon = getTableColumnSortIcon(sortOrder);
 
-  // const sort = () => {
-  //   props.progressSort();
-  // };
+  const propagateNodesOrderToContext = useCallback(
+    (sortOrder: SortDirection | undefined) => {
+      const rows: DatasetRow[] = [];
+      props.api.forEachNodeAfterFilterAndSort((node) => {
+        if (!node.data) {
+          return;
+        }
+        rows.push(node.data);
+      });
+      if (sortOrder === null) {
+        props.context.updateRows(
+          sortBy(rows, (row) => Number(row[ROW_ID_FIELD_NAME])),
+        );
+        return;
+      }
+      props.context.updateRows(rows);
+    },
+    [props.api, props.context],
+  );
+
+  const sort = useCallback(() => {
+    props.progressSort();
+    propagateNodesOrderToContext(column.getSort());
+  }, [props, column, propagateNodesOrderToContext]);
 
   useEffect(() => {
-    column.addEventListener('sortChanged', () => {
+    const sortChangedListener = () => {
       setSortOrder(column.getSort() ?? null);
-    });
-  }, []);
+    };
 
-  const sortIcon = getTableColumnSortIcon(sortOrder);
+    column.addEventListener('sortChanged', sortChangedListener);
+    return () => {
+      column.removeEventListener('sortChanged', sortChangedListener);
+    };
+  }, []);
 
   return (
     <DropdownMenu>
-      <div className="flex w-full items-center gap-1">
-        <span className="flex-shrink-0">{icon}</span>
-        <span className="flex-shrink overflow-hidden text-ellipsis whitespace-nowrap">
-          {colDef.headerName}
-        </span>
-        <div className="ml-auto flex-shrink-0">
+      <div className="flex w-full items-center justify-between">
+        <div
+          className="flex w-full cursor-pointer items-center gap-1 rounded-sm p-1 hover:bg-agGridHeaderHoverGrey"
+          onClick={sort}
+        >
+          <span className="flex-shrink-0">{icon}</span>
+          <span className="flex-shrink overflow-hidden text-ellipsis whitespace-nowrap">
+            {colDef.headerName}
+          </span>
           {!!sortIcon && sortIcon}
+        </div>
+        <div className="flex-shrink-0">
           {(colDef.type !== ENUM_Column_type.GROUND_TRUTH ||
             props.context.tableViewMode !==
               DatasetTableViewModeEnum.PREVIEW) && (
