@@ -33,27 +33,11 @@ export default function DataSetTable(props: AGGridDataset) {
   };
 
   useEffect(() => {
-    const gridApi = gridRef.current?.api;
-    if (!gridApi) {
+    if (!gridRef.current) {
       return;
     }
-    const visibleNodes = gridApi.getRenderedNodes();
-    const shouldSelectNode = context.inspectorRowIndex !== null;
-    const selectedNode = visibleNodes.find((node) =>
-      shouldSelectNode
-        ? node.rowIndex === context.inspectorRowIndex
-        : node.isSelected(),
-    );
-    if (!selectedNode) {
-      return;
-    }
-    gridApi.setNodesSelected({
-      nodes: [selectedNode],
-      newValue: shouldSelectNode,
-    });
-    // Schedule the call to ensureNodeVisible to avoid lifecycle warning
-    setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
-  }, [context.inspectorRowIndex, gridRef]);
+    context.gridRef.current = gridRef.current;
+  }, [gridRef, context.gridRef]);
 
   return (
     <>
