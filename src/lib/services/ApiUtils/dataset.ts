@@ -93,9 +93,10 @@ export async function getDataset(
   const rows = fileContentObject.rows.map((row, rowIndex) => {
     const updatedRow: DatasetRow = Object.fromEntries(
       Object.entries(row).map(([key, value], index) => {
-        const header = key
-          ? getColumnFieldFromNameAndIndex(key, index)
-          : `column_${index}`;
+        const header = getColumnFieldFromNameAndIndex(
+          key || `column_${index}`,
+          index,
+        );
         return [header, value];
       }),
     );

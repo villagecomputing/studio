@@ -59,3 +59,9 @@
 .ag-row > .ag-cell.predictiveLabelCell.match {
   @apply bg-agOddGroundMatch;
 }
+
+.ag-pinned-right-floating-bottom,
+.ag-pinned-right-header,
+.ag-pinned-right-cols-container {
+  box-shadow: rgb(0, 0, 0) 5px 0px 15px 1px;
+}

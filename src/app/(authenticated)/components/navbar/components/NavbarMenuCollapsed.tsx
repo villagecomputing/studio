@@ -28,7 +28,12 @@ export default function NavbarMenuCollapsed(props: {
             <ChevronsRightIcon size={20} />
           </Button>
           {NavbarItems.map((item) => (
-            <NavbarMenuItem key={item.route} {...item} />
+            <NavbarMenuItem
+              key={item.route}
+              route={item.route}
+              Icon={item.Icon}
+              disabled={item.disabled}
+            />
           ))}
         </div>
       </div>
