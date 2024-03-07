@@ -1,8 +1,9 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpIcon, XIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { GroundTruthCell } from '../../../types';
 import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
@@ -86,6 +87,7 @@ const DatasetRowInspectorBody = () => {
     columnDefs,
     setGroundTruthInputValue,
     groundTruthColumnField,
+    setInspectorRowIndex,
   } = useDatasetRowInspectorContext();
 
   const currentRow =
@@ -99,11 +101,28 @@ const DatasetRowInspectorBody = () => {
       <div className="flex h-full min-h-0 w-full flex-col">
         <div className="flex h-16 items-center justify-between border-b-[1px] border-border bg-white p-6">
           <span>Row {inspectorRowIndex}</span>
-          <span className="flex items-center gap-1 text-sm text-greyText">
-            Use <b>Up</b>
-            <ArrowUpIcon /> and <b>Down</b>
-            <ArrowDownIcon /> keys to navigate through rows
-          </span>
+          <div className="flex items-center gap-6">
+            <span className="flex items-center gap-1 text-sm text-muted-foreground">
+              Use <b>Up</b>
+              <span className="flex h-6 w-6 items-center justify-center rounded border border-border text-secondary-foreground">
+                <ArrowUpIcon height={24} width={14} />
+              </span>
+              and <b>Down</b>
+              <span className="flex h-6 w-6 items-center justify-center rounded border border-border text-secondary-foreground">
+                <ArrowDownIcon height={24} width={14} />
+              </span>
+              keys to navigate
+            </span>
+            <Button
+              onClick={() => {
+                setInspectorRowIndex(null);
+              }}
+              variant={'outline'}
+              className="h-7 w-7 p-0 text-secondary-foreground"
+            >
+              <XIcon size={14} />
+            </Button>
+          </div>
         </div>
         <div className="flex flex-col overflow-y-auto px-6">
           {columnDefs
