@@ -120,7 +120,7 @@ const DatasetRowInspectorBody = () => {
               variant={'outline'}
               className="h-7 w-7 p-0 text-secondary-foreground"
             >
-              <XIcon size={16} />
+              <XIcon size={14} />
             </Button>
           </div>
         </div>
