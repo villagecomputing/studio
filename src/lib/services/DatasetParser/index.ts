@@ -64,10 +64,15 @@ const getColumnFromArrayFormatData = (
   return rows.map((row) => row[columnIndex] || '');
 };
 
+const parseRowObjectsToCSVString = (rows: ObjectFormatRow[]): string => {
+  return PapaParser.unparse(rows);
+};
+
 export default {
   getHeader,
   parseAsObject,
   parseAsArray,
   getColumnFromObjectFormatData,
   getColumnFromArrayFormatData,
+  parseRowObjectsToCSVString,
 };
