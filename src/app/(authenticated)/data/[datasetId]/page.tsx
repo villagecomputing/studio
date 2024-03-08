@@ -31,6 +31,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
           <DataSetTable
+            datasetName={dataSet.datasetName}
             datasetId={datasetId}
             rowData={dataSet.rowData}
             columnDefs={colDefReordered}

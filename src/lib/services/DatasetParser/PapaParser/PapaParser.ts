@@ -57,4 +57,8 @@ function parseCSVString<T>(
   });
 }
 
-export default { getCSVHeader, parseCSV, parseCSVString };
+function unparse(rows: unknown[]) {
+  return Papa.unparse(rows);
+}
+
+export default { getCSVHeader, parseCSV, parseCSVString, unparse };

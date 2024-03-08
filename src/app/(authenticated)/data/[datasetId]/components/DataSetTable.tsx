@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 
+import DatasetParser from '@/lib/services/DatasetParser';
 import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
-import { AGGridDataset, DatasetRow } from '../types';
+import { DatasetRow, FetchDatasetResult } from '../types';
+
+import { mapFieldNameToHeaderName } from '../utils/commonUtils';
 import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorView';
 import { useDatasetTableContext } from './DatasetTableContext';
 
-export default function DataSetTable(props: AGGridDataset) {
+export default function DataSetTable(props: FetchDatasetResult) {
   const gridRef = useRef<AgGridReactType<DatasetRow>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const context = useDatasetTableContext(props);
@@ -34,11 +37,28 @@ export default function DataSetTable(props: AGGridDataset) {
     context.gridRef.current = gridRef.current;
   }, [gridRef, context.gridRef]);
 
+  const downloadCSV = () => {
+    const parsedRows = context.rows.map((row) =>
+      mapFieldNameToHeaderName(row, context.columnDefs),
+    );
+    const csv = DatasetParser.parseRowObjectsToCSVString(parsedRows);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${props.datasetName}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <div className={cn(['flex items-center justify-between p-6'])}>
         <SearchInput onChange={searchInDatasetList} />
-        <Button variant={'outline'}>Download</Button>
+        <Button variant={'outline'} onClick={downloadCSV}>
+          Download
+        </Button>
       </div>
       <DatasetRowInspectorView context={context} />
       <DataTable<DatasetRow>
