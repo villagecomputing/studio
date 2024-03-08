@@ -2,7 +2,7 @@ import { ARROW_DOWN, ARROW_UP, ENTER, ESCAPE } from '@/lib/constants';
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { GroundTruthCell } from '../../types';
-import { isGroundTruthCell } from '../../utils';
+import { isGroundTruthCell } from '../../utils/commonUtils';
 import { useDatasetRowInspectorContext } from './DatasetRowInspectorView';
 import { UseDatasetRowInspectorData } from './types';
 

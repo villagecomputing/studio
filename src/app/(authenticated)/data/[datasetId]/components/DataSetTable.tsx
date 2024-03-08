@@ -5,21 +5,9 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 
-import {
-  ChangeEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
+import { useGridOperations } from '../hooks/useGridOperations';
 import { AGGridDataset, DatasetRow } from '../types';
-import {
-  getRowId,
-  getTableColumnTypes,
-  getTableDataTypeDefinitions,
-  navigateToNextCell,
-  onTableCellValueChanged,
-} from '../utils';
 import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorView';
 import { useDatasetTableContext } from './DatasetTableContext';
 
@@ -27,6 +15,13 @@ export default function DataSetTable(props: AGGridDataset) {
   const gridRef = useRef<AgGridReactType<DatasetRow>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const context = useDatasetTableContext(props);
+  const {
+    getRowId,
+    navigateToNextCell,
+    onCellValueChanged,
+    columnTypes,
+    dataTypeDefinitions,
+  } = useGridOperations();
 
   const searchInDatasetList: ChangeEventHandler<HTMLInputElement> = (event) => {
     setQuickFilterText(event.target.value);
@@ -53,19 +48,19 @@ export default function DataSetTable(props: AGGridDataset) {
           context.inspectorRowIndex !== null ? 'small-dataset-table-view' : ''
         }
         agGridProps={{
-          getRowId: useCallback(getRowId, []),
+          getRowId,
           context,
           rowData: context.rows,
           columnDefs: context.columnDefs,
           pinnedBottomRowData: context.pinnedBottomRow,
-          columnTypes: getTableColumnTypes(),
-          dataTypeDefinitions: getTableDataTypeDefinitions(),
+          columnTypes,
+          dataTypeDefinitions,
           reactiveCustomComponents: true,
           quickFilterText,
-          onCellValueChanged: onTableCellValueChanged,
+          onCellValueChanged,
           enableCellTextSelection: true,
           rowSelection: 'single',
-          navigateToNextCell: useCallback(navigateToNextCell, []),
+          navigateToNextCell,
         }}
       />
     </>
