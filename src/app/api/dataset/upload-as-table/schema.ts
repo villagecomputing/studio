@@ -9,6 +9,7 @@ export const uploadDatasetRowPayloadSchema = z.array(
 );
 
 export const uploadDatasetAsTablePayloadSchema = z.object({
+  organizationId: z.number(),
   datasetIdentifier: z.string(),
   datasetRows: z.array(uploadDatasetRowPayloadSchema),
 });

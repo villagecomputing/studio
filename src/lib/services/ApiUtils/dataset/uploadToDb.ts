@@ -6,6 +6,7 @@ type DatasetRow = {
 }[];
 
 type Dataset = {
+  organizationId: number;
   datasetIdentifier: string;
   datasetRows: DatasetRow[];
 };
