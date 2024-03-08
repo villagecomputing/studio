@@ -8,6 +8,7 @@ import {
   ColDef,
   GetRowIdParams,
   GridOptions,
+  IRowNode,
   NavigateToNextCellParams,
   SortDirection,
   ValueParserParams,
@@ -27,6 +28,8 @@ import {
   GroundTruthCell,
   TableColumnProps,
 } from './types';
+
+export const ROW_ID_FIELD_NAME = 'ROW_ID';
 
 export function getColumnFieldFromNameAndIndex(
   columnName: string,
@@ -98,6 +101,38 @@ export function getTableColumnTypes(): GridOptions['columnTypes'] {
       headerComponentParams: {
         leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
       } as HeaderComponentParams,
+      comparator: (
+        valueA,
+        valueB,
+        nodeA: IRowNode<DatasetRow>,
+        nodeB: IRowNode<DatasetRow>,
+      ) => {
+        const nodeAData = nodeA.data;
+        const nodeBData = nodeB.data;
+        if (!nodeAData || !nodeBData) {
+          return 0;
+        }
+
+        const groundTruthField = Object.keys(nodeAData).find((key) =>
+          isGroundTruthCell(nodeAData[key]),
+        );
+
+        if (!groundTruthField) {
+          return 0;
+        }
+
+        const groundTruthA = nodeAData[groundTruthField] as GroundTruthCell;
+        const groundTruthB = nodeBData[groundTruthField] as GroundTruthCell;
+
+        if (!groundTruthA || !groundTruthB) {
+          return 0;
+        }
+
+        const nodeAValue = valueA === groundTruthA.content ? 1 : 0;
+        const nodeBValue = valueB === groundTruthB.content ? 1 : 0;
+
+        return nodeAValue - nodeBValue;
+      },
       onCellClicked(event) {
         if (event.node.isRowPinned()) {
           return;
@@ -176,13 +211,20 @@ export function getTableDataTypeDefinitions(): GridOptions['dataTypeDefinitions'
   };
 }
 
+function getTableRows(rows: DatasetRow[]): DatasetRow[] {
+  return rows.map((row, index) => ({
+    ...row,
+    [ROW_ID_FIELD_NAME]: index.toString(),
+  }));
+}
+
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,
 ): AGGridDataset {
   return {
     datasetId: data.datasetId,
     columnDefs: getTableColumnDefs(data.columns),
-    rowData: data.rows,
+    rowData: getTableRows(data.rows),
     pinnedBottomRowData: [getEmptyRow(data.columns)],
   };
 }
@@ -233,16 +275,12 @@ export function isGroundTruthCell(
 
 export const getRowId = (
   params: GetRowIdParams<DatasetRow, DatasetTableContext>,
-) => {
-  const groundTruthCol = params.context.groundTruthColumnField;
-  if (!groundTruthCol) {
-    throw new Error('Ground truth column is missing');
+): string => {
+  const idValue = params.data[ROW_ID_FIELD_NAME];
+  if (isGroundTruthCell(idValue)) {
+    throw new Error('Wow! Somehow the ROW_ID is a groundTruthCell!');
   }
-  const groundTruthCell = (params.data as DatasetRow)[groundTruthCol];
-  if (!isGroundTruthCell(groundTruthCell)) {
-    throw new Error('Ground truth cell is missing');
-  }
-  return groundTruthCell.id.toString();
+  return idValue;
 };
 
 export const navigateToNextCell = (

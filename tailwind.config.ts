@@ -38,6 +38,7 @@ const config = {
       borderActive: '#B4C2CD',
       green550: '#1CB454',
       agDataColor: '#49515f',
+      agGridHeaderHoverGrey: '#D2DDE580',
     },
     extend: {
       colors: {
