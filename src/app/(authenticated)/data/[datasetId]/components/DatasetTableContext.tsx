@@ -12,7 +12,7 @@ import {
   GroundTruthCell,
   UpdateGroundTruthCellParams,
 } from '../types';
-import { isGroundTruthCell } from '../utils';
+import { isGroundTruthCell } from '../utils/commonUtils';
 
 export const useDatasetTableContext = (
   props: AGGridDataset,

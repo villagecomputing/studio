@@ -1,84 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { exhaustiveCheck } from '@/lib/typeUtils';
-import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { ENUM_Column_type } from '@/lib/types';
 import { ArrowDownIcon, ArrowUpIcon, XIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 import { GroundTruthCell } from '../../../types';
-import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
-import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
-import { DatasetRowInspectorBodyElementProps } from '../types';
 
-const DatasetRowInspectorBodyElement = (
-  props: DatasetRowInspectorBodyElementProps,
-) => {
-  const { colType, content, header } = props;
-  const { register } = useForm<{ gtContent: string }>({
-    values: {
-      gtContent: isGroundTruthCell(content) ? content.content : '',
-    },
-  });
-  const icon = getTableColumnIcon(colType);
-  switch (colType) {
-    case ENUM_Column_type.INPUT:
-      return (
-        <div className="flex flex-col gap-1 py-4">
-          <span className="flex items-center gap-1 text-sm text-greyText">
-            {header}
-          </span>
-          <p className={cn(['text-base'])}>{content || <i>Empty</i>}</p>
-        </div>
-      );
-    case ENUM_Column_type.PREDICTIVE_LABEL:
-      const isGTApproved =
-        props.gtContent?.status === ENUM_Ground_truth_status.APPROVED;
-      const labelMatchColor =
-        props.gtContent?.content === content
-          ? 'bg-agOddGroundMatch'
-          : 'bg-agWrongLabelColor';
-      return (
-        <div className="flex flex-col gap-1 py-4">
-          <span className="flex items-center gap-1 text-sm text-greyText">
-            {!!icon && <span>{icon}</span>}
-            {header}
-          </span>
-          <p
-            className={cn([
-              'rounded-lg  p-2 text-base',
-              isGTApproved ? labelMatchColor : 'bg-paleGrey',
-            ])}
-          >
-            {content || <i>Empty</i>}
-          </p>
-        </div>
-      );
-    case ENUM_Column_type.GROUND_TRUTH:
-      return (
-        <div className="flex flex-col gap-1 py-4">
-          <span className="flex items-center gap-1 text-sm text-greyText">
-            {!!icon && <span>{icon}</span>}
-            {header}
-          </span>
-          <Input
-            {...register('gtContent')}
-            onChange={(event) =>
-              event.target.value !== content.content &&
-              props.onGroundTruthChange(event.target.value)
-            }
-            className={
-              content.status === ENUM_Ground_truth_status.APPROVED
-                ? 'bg-agOddGroundMatch'
-                : ''
-            }
-          ></Input>
-        </div>
-      );
-    default:
-      exhaustiveCheck(colType);
-      return <></>;
-  }
-};
+import { isGroundTruthCell } from '../../../utils/commonUtils';
+import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
+import { DatasetRowInspectorBodyElement } from './DatasetRowInspectorBodyElement';
 
 const DatasetRowInspectorBody = () => {
   const {
