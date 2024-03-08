@@ -2,7 +2,7 @@ import {
   DatasetRow,
   TableColumnProps,
 } from '@/app/(authenticated)/data/[datasetId]/types';
-import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils';
+import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
 import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import {

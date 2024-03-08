@@ -7,7 +7,7 @@ import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { permanentRedirect } from 'next/navigation';
 import { FetchDatasetResult } from './types';
-import { convertToAGGridData } from './utils';
+import { convertToAGGridData } from './utils/gridUtils';
 
 export const fetchDataSet = async (
   datasetId: number,

@@ -17,11 +17,11 @@ import {
   DatasetTableContext,
   DatasetTableViewModeEnum,
 } from '../types';
-import { ROW_ID_FIELD_NAME, getTableColumnSortIcon } from '../utils';
+import { ROW_ID_FIELD_NAME } from '../utils/commonUtils';
+import { getTableColumnSortIcon } from '../utils/gridUtils';
 
 export type HeaderComponentParams =
   | {
-      // tableRef: React.RefObject<AgGridReact>;
       leftSideIcon: JSX.Element;
     }
   | undefined;
@@ -136,16 +136,6 @@ export default function CustomHeaderComponent(
             Approve all
           </DropdownMenuItem>
         )}
-        {/* <DropdownMenuItem className="cursor-pointer">
-          {'Set as Ground Truth Label'}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          {'Rename'}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">{'Hide'}</DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          {'Delete'}
-        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
