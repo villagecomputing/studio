@@ -8,7 +8,7 @@ import {
   NavigateToNextCellParams,
   ValueParserParams,
 } from 'ag-grid-community';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { HeaderComponentParams } from '../components/CustomHeaderComponent';
 import GroundTruthCellRenderer from '../components/GroundTruthCellRenderer';
 import PredictiveLabelCellRenderer from '../components/PredictiveLabelCellRenderer';
@@ -84,7 +84,7 @@ export function useGridOperations() {
     [],
   );
 
-  const columnTypes = useMemo((): GridOptions['columnTypes'] => {
+  const getColumnTypes = useCallback((): GridOptions['columnTypes'] => {
     const handleCellClicked = (
       event: CellClickedEvent<DatasetRow, unknown>,
       setRowIndex: DatasetTableContext['setInspectorRowIndex'],
@@ -128,8 +128,8 @@ export function useGridOperations() {
     };
   }, []);
 
-  const dataTypeDefinitions =
-    useMemo((): GridOptions['dataTypeDefinitions'] => {
+  const getDataTypeDefinitions =
+    useCallback((): GridOptions['dataTypeDefinitions'] => {
       return {
         groundTruth: {
           baseDataType: 'object',
@@ -154,7 +154,7 @@ export function useGridOperations() {
     getRowId,
     navigateToNextCell,
     onCellValueChanged,
-    columnTypes,
-    dataTypeDefinitions,
+    columnTypes: getColumnTypes(),
+    dataTypeDefinitions: getDataTypeDefinitions(),
   };
 }
