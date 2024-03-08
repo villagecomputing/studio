@@ -20,7 +20,9 @@ export default function DatasetRowInspector() {
       if (
         viewRef.current &&
         !(viewRef.current as HTMLElement).contains(target) &&
-        !target.closest('.ag-row')
+        !target.closest('.ag-row') &&
+        // click on menu item from dropdown menu
+        !target.hasAttribute('data-radix-collection-item')
       ) {
         setInspectorRowIndex(null);
       }

@@ -1,10 +1,22 @@
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ArrowDownIcon, ArrowUpIcon, XIcon } from 'lucide-react';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  MoreVerticalIcon,
+  XIcon,
+} from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { markColumnAsType } from '../../../actions';
 import { GroundTruthCell } from '../../../types';
 import { getTableColumnIcon, isGroundTruthCell } from '../../../utils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
@@ -13,19 +25,42 @@ import { DatasetRowInspectorBodyElementProps } from '../types';
 const DatasetRowInspectorBodyElement = (
   props: DatasetRowInspectorBodyElementProps,
 ) => {
-  const { colType, content, header } = props;
+  const { colType, content, header, colId, updateCol } = props;
   const { register } = useForm<{ gtContent: string }>({
     values: {
       gtContent: isGroundTruthCell(content) ? content.content : '',
     },
   });
   const icon = getTableColumnIcon(colType);
+
   switch (colType) {
     case ENUM_Column_type.INPUT:
       return (
         <div className="flex flex-col gap-1 py-4">
           <span className="flex items-center gap-1 text-sm text-greyText">
             {header}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
+                <MoreVerticalIcon size={14} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="z-overlay border-border ">
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={async () => {
+                    await markColumnAsType(
+                      colId,
+                      ENUM_Column_type.PREDICTIVE_LABEL,
+                    );
+                    updateCol(colId, {
+                      type: ENUM_Column_type.PREDICTIVE_LABEL,
+                      pinned: 'right',
+                    });
+                  }}
+                >
+                  Set as Label
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </span>
           <p className={cn(['text-base'])}>{content || <i>Empty</i>}</p>
         </div>
@@ -42,6 +77,25 @@ const DatasetRowInspectorBodyElement = (
           <span className="flex items-center gap-1 text-sm text-greyText">
             {!!icon && <span>{icon}</span>}
             {header}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
+                <MoreVerticalIcon size={14} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="z-overlay border-border ">
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={async () => {
+                    await markColumnAsType(colId, ENUM_Column_type.INPUT);
+                    updateCol(colId, {
+                      type: ENUM_Column_type.INPUT,
+                      pinned: false,
+                    });
+                  }}
+                >
+                  Remove as Label
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </span>
           <p
             className={cn([
@@ -88,6 +142,7 @@ const DatasetRowInspectorBody = () => {
     setGroundTruthInputValue,
     groundTruthColumnField,
     setInspectorRowIndex,
+    updateCol,
   } = useDatasetRowInspectorContext();
 
   const currentRow =
@@ -128,7 +183,7 @@ const DatasetRowInspectorBody = () => {
           {columnDefs
             .filter((colDef) => colDef.type === ENUM_Column_type.INPUT)
             .map((colDef) => {
-              if (!colDef.field || !colDef.headerName) {
+              if (!colDef.field || !colDef.headerName || !colDef.colId) {
                 return <></>;
               }
               const cellContent = currentRow[colDef.field];
@@ -142,6 +197,8 @@ const DatasetRowInspectorBody = () => {
                   header={colDef.headerName}
                   content={cellContent}
                   gtContent={null}
+                  colId={Number(colDef.colId)}
+                  updateCol={updateCol}
                 />
               );
             })}
@@ -151,7 +208,7 @@ const DatasetRowInspectorBody = () => {
                 (colDef) => colDef.type === ENUM_Column_type.PREDICTIVE_LABEL,
               )
               .map((colDef) => {
-                if (!colDef.field || !colDef.headerName) {
+                if (!colDef.field || !colDef.headerName || !colDef.colId) {
                   return <></>;
                 }
                 const cellContent = currentRow[colDef.field];
@@ -164,6 +221,8 @@ const DatasetRowInspectorBody = () => {
                     colType={ENUM_Column_type.PREDICTIVE_LABEL}
                     header={colDef.headerName}
                     content={cellContent}
+                    colId={Number(colDef.colId)}
+                    updateCol={updateCol}
                     gtContent={
                       groundTruthColumnField
                         ? (currentRow[
@@ -192,6 +251,8 @@ const DatasetRowInspectorBody = () => {
                     colType={colDef.type as ENUM_Column_type.GROUND_TRUTH}
                     header={colDef.headerName}
                     content={cellContent}
+                    colId={Number(colDef.colId)}
+                    updateCol={updateCol}
                     onGroundTruthChange={(value) => {
                       setGroundTruthInputValue(value);
                     }}
