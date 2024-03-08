@@ -6,6 +6,7 @@ import {
 } from './dataset';
 
 import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
+import { saveDatasetDetailsAsTable } from './dataset/uploadToDb';
 
 export default {
   getDataset,
@@ -13,5 +14,6 @@ export default {
   editDatasetCell,
   saveDatasetDetails,
   isFilenameAvailable,
+  saveDatasetDetailsAsTable,
   approveAll,
 };
