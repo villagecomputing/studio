@@ -16,6 +16,7 @@ const GroundTruthCellRenderer = (
   const isApproved = props.value?.status === ENUM_Ground_truth_status.APPROVED;
   const cellContent = props.valueFormatted || props.value?.content;
 
+  console.log('🚀 ~ props.context.tableViewMode:', props.context.tableViewMode);
   const isEditMode =
     props.context.tableViewMode === DatasetTableViewModeEnum.EDIT;
   const isPinnedBottomRow =
