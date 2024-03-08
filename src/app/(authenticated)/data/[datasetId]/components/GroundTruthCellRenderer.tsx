@@ -4,6 +4,7 @@ import { ENUM_Ground_truth_status } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { CustomCellRendererProps } from 'ag-grid-react';
+import { CheckIcon } from 'lucide-react';
 import {
   DatasetTableContext,
   DatasetTableViewModeEnum,
@@ -22,7 +23,7 @@ const GroundTruthCellRenderer = (
     props.node.isRowPinned() && props.node.rowPinned === 'bottom';
 
   return (
-    <span className={cn(['flex items-center justify-between'])}>
+    <span className={cn(['flex h-full items-center justify-between'])}>
       <span
         className={cn([
           'flex-shrink overflow-hidden text-ellipsis whitespace-nowrap',
@@ -31,38 +32,35 @@ const GroundTruthCellRenderer = (
       >
         {cellContent}
       </span>
-      {isPinnedBottomRow ? (
+      {isPinnedBottomRow && (
         <Button
           className="flex-shrink-0"
           onClick={props.context.toggleViewMode}
         >
           {isEditMode ? 'Done' : 'Edit'}
         </Button>
-      ) : (
-        <Checkbox
-          className="h-6 w-6 rounded-lg data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
-          checked={isApproved}
-          onClick={(event) => {
-            if (
-              props.context.tableViewMode === DatasetTableViewModeEnum.PREVIEW
-            ) {
-              event.preventDefault();
-            }
-          }}
-          onCheckedChange={(checked: CheckedState) => {
-            if (!props.value || props.node.rowIndex === null) {
-              throw new Error('GT Cell data is missing');
-            }
-            props.context.updateGroundTruthCell({
-              rowIndex: props.node.rowIndex,
-              content: props.value.content,
-              status: checked
-                ? ENUM_Ground_truth_status.APPROVED
-                : ENUM_Ground_truth_status.PENDING,
-            });
-          }}
-        />
       )}
+      {!isPinnedBottomRow &&
+        (isEditMode ? (
+          <Checkbox
+            className="h-6 w-6 rounded-lg data-[state=checked]:border-green550 data-[state=unchecked]:border-borderActive data-[state=checked]:bg-green550 data-[state=unchecked]:bg-white"
+            checked={isApproved}
+            onCheckedChange={(checked: CheckedState) => {
+              if (!props.value || props.node.rowIndex === null) {
+                throw new Error('GT Cell data is missing');
+              }
+              props.context.updateGroundTruthCell({
+                rowIndex: props.node.rowIndex,
+                content: props.value.content,
+                status: checked
+                  ? ENUM_Ground_truth_status.APPROVED
+                  : ENUM_Ground_truth_status.PENDING,
+              });
+            }}
+          />
+        ) : (
+          isApproved && <CheckIcon className="h-6 w-6 text-green550" />
+        ))}
     </span>
   );
 };
