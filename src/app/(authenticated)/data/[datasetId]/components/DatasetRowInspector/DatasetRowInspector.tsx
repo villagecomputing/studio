@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useDatasetRowInspectorContext } from './DatasetRowInspectorView';
 import DatasetRowInspectorBody from './components/DatasetRowInspectorBody';
+import { INSPECTOR_DROPDOWN_ATTRIBUTE } from './components/DatasetRowInspectorBodyElement';
 import DatasetRowInspectorFooter from './components/DatasetRowInspectorFooter';
 import useDatasetRowInspectorData from './useDatasetRowInspectorData';
 
@@ -21,8 +22,7 @@ export default function DatasetRowInspector() {
         viewRef.current &&
         !(viewRef.current as HTMLElement).contains(target) &&
         !target.closest('.ag-row') &&
-        // click on menu item from dropdown menu
-        !target.hasAttribute('data-radix-collection-item')
+        !document.body.hasAttribute(INSPECTOR_DROPDOWN_ATTRIBUTE)
       ) {
         setInspectorRowIndex(null);
       }
