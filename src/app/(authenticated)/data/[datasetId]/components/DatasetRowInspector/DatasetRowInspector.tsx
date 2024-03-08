@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useDatasetRowInspectorContext } from './DatasetRowInspectorView';
 import DatasetRowInspectorBody from './components/DatasetRowInspectorBody';
+import { INSPECTOR_DROPDOWN_ATTRIBUTE } from './components/DatasetRowInspectorBodyElement';
 import DatasetRowInspectorFooter from './components/DatasetRowInspectorFooter';
 import useDatasetRowInspectorData from './useDatasetRowInspectorData';
 
@@ -20,7 +21,8 @@ export default function DatasetRowInspector() {
       if (
         viewRef.current &&
         !(viewRef.current as HTMLElement).contains(target) &&
-        !target.closest('.ag-row')
+        !target.closest('.ag-row') &&
+        !document.body.hasAttribute(INSPECTOR_DROPDOWN_ATTRIBUTE)
       ) {
         setInspectorRowIndex(null);
       }
