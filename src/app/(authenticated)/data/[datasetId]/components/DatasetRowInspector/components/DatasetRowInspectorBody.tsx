@@ -3,6 +3,7 @@ import { ENUM_Column_type } from '@/lib/types';
 import { ArrowDownIcon, ArrowUpIcon, XIcon } from 'lucide-react';
 import { GroundTruthCell } from '../../../types';
 
+import { markColumnAsType } from '../../../actions';
 import { isGroundTruthCell } from '../../../utils/commonUtils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspectorView';
 import { DatasetRowInspectorBodyElement } from './DatasetRowInspectorBodyElement';
@@ -15,7 +16,19 @@ const DatasetRowInspectorBody = () => {
     setGroundTruthInputValue,
     groundTruthColumnField,
     setInspectorRowIndex,
+    updateCol,
   } = useDatasetRowInspectorContext();
+
+  const handleColumnUpdate = async (
+    colId: number,
+    colTypeUpdated: ENUM_Column_type,
+  ) => {
+    await markColumnAsType(colId, colTypeUpdated);
+    updateCol(colId, {
+      type: colTypeUpdated,
+      pinned: colTypeUpdated !== ENUM_Column_type.INPUT ? 'right' : false,
+    });
+  };
 
   const currentRow =
     rows && inspectorRowIndex !== null ? rows[inspectorRowIndex] : null;
@@ -55,7 +68,7 @@ const DatasetRowInspectorBody = () => {
           {columnDefs
             .filter((colDef) => colDef.type === ENUM_Column_type.INPUT)
             .map((colDef) => {
-              if (!colDef.field || !colDef.headerName) {
+              if (!colDef.field || !colDef.headerName || !colDef.colId) {
                 return <></>;
               }
               const cellContent = currentRow[colDef.field];
@@ -69,6 +82,12 @@ const DatasetRowInspectorBody = () => {
                   header={colDef.headerName}
                   content={cellContent}
                   gtContent={null}
+                  updateCol={async (colTypeUpdate: ENUM_Column_type) =>
+                    await handleColumnUpdate(
+                      Number(colDef.colId),
+                      colTypeUpdate,
+                    )
+                  }
                 />
               );
             })}
@@ -78,7 +97,7 @@ const DatasetRowInspectorBody = () => {
                 (colDef) => colDef.type === ENUM_Column_type.PREDICTIVE_LABEL,
               )
               .map((colDef) => {
-                if (!colDef.field || !colDef.headerName) {
+                if (!colDef.field || !colDef.headerName || !colDef.colId) {
                   return <></>;
                 }
                 const cellContent = currentRow[colDef.field];
@@ -91,6 +110,12 @@ const DatasetRowInspectorBody = () => {
                     colType={ENUM_Column_type.PREDICTIVE_LABEL}
                     header={colDef.headerName}
                     content={cellContent}
+                    updateCol={async (colTypeUpdate: ENUM_Column_type) =>
+                      await handleColumnUpdate(
+                        Number(colDef.colId),
+                        colTypeUpdate,
+                      )
+                    }
                     gtContent={
                       groundTruthColumnField
                         ? (currentRow[
@@ -119,6 +144,12 @@ const DatasetRowInspectorBody = () => {
                     colType={colDef.type as ENUM_Column_type.GROUND_TRUTH}
                     header={colDef.headerName}
                     content={cellContent}
+                    updateCol={async (colTypeUpdate: ENUM_Column_type) =>
+                      await handleColumnUpdate(
+                        Number(colDef.colId),
+                        colTypeUpdate,
+                      )
+                    }
                     onGroundTruthChange={(value) => {
                       setGroundTruthInputValue(value);
                     }}

@@ -15,19 +15,21 @@ export type UseDatasetRowInspectorData = {
   navigateTo: (direction: 'NEXT' | 'PREVIOUS') => void;
 };
 
-export type DatasetRowInspectorBodyElementProps =
+export type DatasetRowInspectorBodyElementProps = {
+  header: string;
+  updateCol: (colTypeUpdated: ENUM_Column_type) => Promise<void>;
+} & (
   | {
       colType: ENUM_Column_type.INPUT | ENUM_Column_type.PREDICTIVE_LABEL;
-      header: string;
       content: string;
       gtContent: GroundTruthCell | null;
     }
   | {
       colType: ENUM_Column_type.GROUND_TRUTH;
-      header: string;
       content: GroundTruthCell;
       onGroundTruthChange: (value: string) => void;
-    };
+    }
+);
 
 export type DatasetRowInspectorContext =
   | ({
