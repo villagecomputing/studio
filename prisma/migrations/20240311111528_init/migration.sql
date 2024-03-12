@@ -3,6 +3,7 @@ CREATE TABLE "Column" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "dataset_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
+    "field" TEXT NOT NULL,
     "index" INTEGER NOT NULL,
     "type" TEXT NOT NULL CHECK ( "type" IN (
         'GROUND_TRUTH',
