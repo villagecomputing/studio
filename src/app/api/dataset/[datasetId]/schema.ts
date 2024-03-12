@@ -21,12 +21,8 @@ const DatasetRowSchema = z.record(
 
 export const datasetViewResponseSchema = z.object({
   id: z.number(),
-  file_location: z.string(),
-  file_name: z.string(),
-  total_rows: z.number(),
-  file_size: z.number(),
-  file_type: z.string(),
   created_at: z.date(),
+  name: z.string(),
   columns: z.array(TableColumnPropsSchema),
   rows: z.array(DatasetRowSchema),
 });
