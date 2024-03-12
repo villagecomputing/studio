@@ -8,9 +8,9 @@ export async function isFilenameAvailable(filename: string): Promise<boolean> {
     return false;
   }
 
-  const totalFilesWithSameFilename = await PrismaClient.dataset.count({
+  const totalFilesWithSameFilename = await PrismaClient.dataset_list.count({
     where: {
-      file_name: {
+      name: {
         equals: trimmedFilename,
       },
     },
