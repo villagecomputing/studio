@@ -22,7 +22,7 @@ model Column {
 
 model Dataset_list {
   id         Int       @id @default(autoincrement())
-  name       String
+  name       String    @unique(map: "sqlite_autoindex_Dataset_list_1")
   created_at DateTime  @default(now())
   deleted_at DateTime?
   updated_at DateTime  @updatedAt
