@@ -1,6 +1,6 @@
 import { readLocalFile, saveFileLocally } from './utils';
 
-async function saveFile(file: File, datasetTitle: string) {
+async function saveFile(file: FormDataEntryValue, datasetTitle: string) {
   try {
     if (process.env.NODE_ENV === 'development' && typeof file !== 'string') {
       return await saveFileLocally(file, datasetTitle);
