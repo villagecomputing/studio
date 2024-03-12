@@ -20,7 +20,7 @@
 
 .ag-theme-dataset {
   --ag-row-height: 92px;
-  --ag-line-height: 20px;
+  --ag-line-height: 22px;
   --ag-border-color: theme(colors.gridBorderColor);
   --ag-odd-row-background-color: theme(colors.gridHeaderColor);
   --ag-cell-border-width: 2px;
@@ -42,7 +42,7 @@
 }
 
 .ag-theme-dataset .ag-cell {
-  @apply line-clamp-4 whitespace-normal pt-2;
+  @apply line-clamp-4 whitespace-normal;
 }
 
 .ag-row {
@@ -64,4 +64,9 @@
 .ag-pinned-right-header,
 .ag-pinned-right-cols-container {
   box-shadow: rgb(0, 0, 0) 5px 0px 15px 1px;
+}
+
+.ag-cell-wrapper,
+.ag-cell-wrapper > span {
+  height: 100%;
 }

@@ -7,43 +7,23 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Dataset {
-  id             Int              @id @default(autoincrement())
-  created_at     DateTime         @default(now())
-  file_name      String
-  file_location  String
-  file_type      String
-  file_size      Int
-  total_rows     Int
-  deleted_at     DateTime?
-  Dataset_column Dataset_column[]
+model Column {
+  id           Int          @id @default(autoincrement())
+  dataset_id   Int
+  name         String
+  index        Int
+  type         String
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  deleted_at   DateTime?
+  Dataset_list Dataset_list @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
 }
 
-model Dataset_column {
-  id                Int                 @id @default(autoincrement())
-  created_at        DateTime            @default(now())
-  dataset_id        Int
-  name              String
-  dataType          String
-  type              String
-  deleted_at        DateTime?
-  index             Int
-  Dataset           Dataset             @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
-  Ground_truth_cell Ground_truth_cell[]
-}
-
-model Ground_truth_cell {
-  id             Int            @id @default(autoincrement())
-  created_at     DateTime       @default(now())
-  status         String
-  content        String
-  column_id      Int
-  Dataset_column Dataset_column @relation(fields: [column_id], references: [id], onDelete: Cascade)
-}
-
-model Log_user_action {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  user_id    Int?
-  action     String
+model Dataset_list {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+  updated_at DateTime  @updatedAt
+  Column     Column[]
 }
