@@ -3,7 +3,7 @@ import { approveAll, editDatasetCell, editDatasetColumn } from './dataset';
 import { getDataset } from './dataset/getDataset';
 
 import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
-import { saveDatasetDetailsAsTable } from './dataset/uploadToDb';
+import { saveDatasetDetailsAsTable } from './dataset/uploadToDb/saveDatasetDetailsAsTable';
 
 export default {
   getDataset,
