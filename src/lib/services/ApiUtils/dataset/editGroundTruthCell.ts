@@ -13,6 +13,7 @@ export async function editGroundTruthCell(
       status = ENUM_Ground_truth_status.APPROVED,
     } = payload;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const dataset = await PrismaClient.dataset_list.findUniqueOrThrow({
       where: { id: datasetId },
       select: { name: true },
@@ -23,8 +24,8 @@ export async function editGroundTruthCell(
       select: { field: true },
     });
 
-    if (!dataset.name || !groundTruthColumn?.field) {
-      throw new Error('Dataset name or ground truth column field not found');
+    if (!groundTruthColumn?.field) {
+      throw new Error('Dataset ground truth column field not found');
     }
 
     const updateData: Record<string, string | ENUM_Ground_truth_status> = {
