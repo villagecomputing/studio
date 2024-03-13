@@ -2,19 +2,19 @@
 
 import PrismaClient from '@/lib/services/prisma';
 
-export async function isFilenameAvailable(filename: string): Promise<boolean> {
-  const trimmedFilename = filename.trim();
-  if (!trimmedFilename) {
+export async function isDatasetNameAvailable(name: string): Promise<boolean> {
+  const trimmedName = name.trim();
+  if (!trimmedName) {
     return false;
   }
 
-  const totalFilesWithSameFilename = await PrismaClient.dataset.count({
+  const totalDatasetsWithSameName = await PrismaClient.dataset_list.count({
     where: {
-      file_name: {
-        equals: trimmedFilename,
+      name: {
+        equals: trimmedName,
       },
     },
   });
 
-  return !totalFilesWithSameFilename;
+  return !totalDatasetsWithSameName;
 }

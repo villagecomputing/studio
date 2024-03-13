@@ -34,7 +34,7 @@ const DataPage = () => {
 
   const rowData: RowType[] = datasetList.map((data) => ({
     id: data.id,
-    datasetName: data.file_name,
+    datasetName: data.name,
     numberOfRecords: data.total_rows,
     uploadDate: formatDate(data.created_at),
   }));

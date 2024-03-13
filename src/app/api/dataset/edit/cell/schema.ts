@@ -1,9 +1,10 @@
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import { z } from 'zod';
 
-export const editDatasetCellSchema = z
+export const editGroundTruthCellSchema = z
   .object({
-    groundTruthCellId: z.number(),
+    datasetId: z.number(),
+    rowId: z.number(),
     content: z.string().optional(),
     status: z.nativeEnum(ENUM_Ground_truth_status).optional(),
   })
