@@ -1,4 +1,5 @@
-import PrismaClient, { Prisma } from '../prisma';
+import { Prisma } from '@prisma/client';
+import PrismaClient from '../prisma';
 import { assertTableExists } from './common';
 
 export async function selectAggregation(
