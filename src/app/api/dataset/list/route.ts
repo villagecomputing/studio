@@ -1,3 +1,4 @@
+import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '@/lib/services/prisma';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
@@ -8,20 +9,29 @@ export async function GET() {
     const datasetSelect = {
       id: true,
       created_at: true,
-      file_location: true,
-      file_name: true,
-      total_rows: true,
-    } satisfies Prisma.DatasetSelect;
+      name: true,
+    } satisfies Prisma.Dataset_listSelect;
 
-    const datasetList = await PrismaClient.dataset.findMany({
+    const datasetList = await PrismaClient.dataset_list.findMany({
       select: datasetSelect,
       where: { deleted_at: null },
     });
-    if (!datasetListResponseSchema.safeParse(datasetList)) {
+
+    const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
+      datasetList.map((dataset) => {
+        return {
+          ...dataset,
+          created_at: dataset.created_at.toDateString(),
+          // TODO: total_rows = number of rows from ${dataset.name} table.
+          total_rows: 0,
+        };
+      });
+
+    if (!datasetListResponseSchema.safeParse(datasetListResponse)) {
       return response('Invalid response datasetList type', 400);
     }
 
-    const res = JSON.stringify(datasetList);
+    const res = JSON.stringify(datasetListResponse);
     return Response.json(res);
   } catch (error) {
     console.error('Error in GET dataset list:', error);

@@ -2,7 +2,7 @@
 import { ParserError } from '@/lib/services/DatasetParser';
 
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDataset } from '@/lib/services/ApiUtils/dataset';
+
 import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { permanentRedirect } from 'next/navigation';
@@ -16,10 +16,10 @@ export const fetchDataSet = async (
     if (!Number(datasetId)) {
       permanentRedirect('/data');
     }
-    const dataset = await getDataset(datasetId);
+    const dataset = await ApiUtils.getDataset(datasetId);
 
     return {
-      datasetName: dataset.file_name,
+      datasetName: dataset.name,
       ...convertToAGGridData({
         datasetId: dataset.id,
         columns: dataset.columns,
