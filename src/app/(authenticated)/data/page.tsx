@@ -24,7 +24,7 @@ type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
 type RowType = {
   id: number;
   datasetName: string;
-  numberOfRecords: number;
+  numberOfRecords: string;
   uploadDate: string;
 };
 const DataPage = () => {
