@@ -18,3 +18,9 @@ export const getDatasetNameAndGTColumnField = async (
     groundTruthColumnField: groundTruthColumn.field,
   };
 };
+
+export const getGroundTruthStatusColumnName = (
+  groundTruthColumnName: string,
+) => {
+  return `${groundTruthColumnName}_STATUS`;
+};

@@ -8,6 +8,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
+import { getGroundTruthStatusColumnName } from './utils';
 
 async function getDatasetDetails(datasetId: number) {
   const columnSelect = {
@@ -72,27 +73,27 @@ export async function getDataset(
     };
   });
 
-  const groundTruthField = datasetDetails.Column.find(
+  const groundTruthFields = datasetDetails.Column.filter(
     (column) => column.type === ENUM_Column_type.GROUND_TRUTH,
-  )?.field;
+  ).map((column) => column.field);
 
-  let rows: DatasetRow[] = datasetContent;
-  if (groundTruthField) {
-    rows = datasetContent.map((row) => {
-      // TODO FIX this
-      const rowGroundTruthStatus = ENUM_Ground_truth_status.PENDING;
-      const rowId = 0;
-      return {
-        ...row,
-        [groundTruthField]: {
-          content: row[groundTruthField] as string,
-          id: rowId,
-          status: rowGroundTruthStatus,
-        },
+  if (!groundTruthFields.length) {
+    throw new Error('Dataset has no ground truth columns');
+  }
+
+  const rows: DatasetRow[] = datasetContent.map((row) => {
+    const rowWithGroundTruth: DatasetRow = { ...row };
+    groundTruthFields.forEach((groundTruthField) => {
+      const groundTruthStatus =
+        row[getGroundTruthStatusColumnName(groundTruthField)];
+      rowWithGroundTruth[groundTruthField] = {
+        content: row[groundTruthField] as string,
+        id: Number(row['id']),
+        status: guardStringEnum(ENUM_Ground_truth_status, groundTruthStatus),
       };
     });
-  }
-  // Map the rows and modify the content if the column is ground truth
+    return rowWithGroundTruth;
+  });
 
   return {
     id: datasetDetails.id,
