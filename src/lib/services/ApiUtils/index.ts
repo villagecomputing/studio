@@ -6,7 +6,8 @@ import { approveAll } from './dataset/approveAll';
 import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
-import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
+import { saveDatasetDetails } from './dataset/upload';
+import { isDatasetNameAvailable } from './dataset/utils';
 
 export default {
   getDataset,
@@ -15,6 +16,6 @@ export default {
   addData,
   editGroundTruthCell,
   saveDatasetDetails,
-  isFilenameAvailable,
+  isDatasetNameAvailable,
   approveAll,
 };

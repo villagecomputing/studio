@@ -7,6 +7,22 @@ import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 import PrismaClient from '../../prisma';
 
 type DatasetField = Pick<Column, 'name' | 'field' | 'index' | 'type'>;
+export async function isDatasetNameAvailable(name: string): Promise<boolean> {
+  const trimmedName = name.trim();
+  if (!trimmedName) {
+    return false;
+  }
+
+  const totalDatasetsWithSameName = await PrismaClient.dataset_list.count({
+    where: {
+      name: {
+        equals: trimmedName,
+      },
+    },
+  });
+
+  return !totalDatasetsWithSameName;
+}
 
 export const getDatasetNameAndGTColumnField = async (
   datasetId: number,

@@ -1,8 +1,5 @@
-import {
-  ENUM_Column_type,
-  ENUM_Data_type,
-  ENUM_Ground_truth_status,
-} from '@/lib/types';
+import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
+import { ENUM_Column_type } from '@/lib/types';
 import PrismaClient from '../../prisma';
 
 type DataToSave = {
@@ -16,61 +13,32 @@ type DataToSave = {
   fileType: string;
 };
 
-export async function isFilenameAvailable(filename: string): Promise<boolean> {
-  const trimmedFilename = filename.trim();
-  if (!trimmedFilename) {
-    return false;
-  }
-
-  const totalFilesWithSameFilename = await PrismaClient.dataset.count({
-    where: {
-      file_name: {
-        equals: trimmedFilename,
-      },
-    },
-  });
-
-  return !totalFilesWithSameFilename;
-}
-
 export async function saveDatasetDetails(
   dataToSave: DataToSave,
 ): Promise<{ datasetId: number }> {
-  const {
-    columnHeaders,
-    groundTruthColumnIndex,
-    totalNumberOfRows,
-    filePath,
-    fileTitle,
-    fileSize,
-    fileType,
-  } = dataToSave;
+  const { columnHeaders, groundTruthColumnIndex, fileTitle } = dataToSave;
 
   const datasetColumns = columnHeaders.map((header, index) => {
     return {
+      field: getColumnFieldFromNameAndIndex(header, index),
       name: header,
       index: index,
-      dataType: ENUM_Data_type.STRING,
       type:
         index === groundTruthColumnIndex
           ? ENUM_Column_type.GROUND_TRUTH
           : ENUM_Column_type.INPUT,
     };
   });
-  const datasetResult = await PrismaClient.dataset.create({
+  const datasetResult = await PrismaClient.dataset_list.create({
     data: {
-      file_location: filePath,
-      file_name: fileTitle,
-      file_size: fileSize,
-      total_rows: totalNumberOfRows,
-      file_type: fileType,
+      name: fileTitle,
 
-      Dataset_column: {
+      Column: {
         create: datasetColumns,
       },
     },
   });
-  const groundTruthColumnId = await PrismaClient.dataset_column.findFirst({
+  const groundTruthColumnId = await PrismaClient.column.findFirst({
     where: {
       dataset_id: { equals: datasetResult.id },
       type: { equals: ENUM_Column_type.GROUND_TRUTH },
@@ -85,15 +53,15 @@ export async function saveDatasetDetails(
   }
 
   // TODO this might be dangerous since we are creating many inserts but there is no createMany function in prisma when using sqlite
-  const inserts = dataToSave.groundTruthColumnContent.map((cell) =>
-    PrismaClient.ground_truth_cell.create({
-      data: {
-        content: cell,
-        column_id: groundTruthColumnId.id,
-        status: ENUM_Ground_truth_status.PENDING,
-      },
-    }),
-  );
-  await PrismaClient.$transaction(inserts);
+  // const inserts = dataToSave.groundTruthColumnContent.map((cell) =>
+  //   PrismaClient.ground_truth_cell.create({
+  //     data: {
+  //       content: cell,
+  //       column_id: groundTruthColumnId.id,
+  //       status: ENUM_Ground_truth_status.PENDING,
+  //     },
+  //   }),
+  // );
+  // await PrismaClient.$transaction(inserts);
   return { datasetId: datasetResult.id };
 }
