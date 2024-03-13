@@ -18,6 +18,7 @@ export const useDatasetTableContext = (
   props: AGGridDataset,
 ): DatasetTableContext => {
   const router = useRouter();
+  const datasetId = props.datasetId;
   const gridRef = useRef<AgGridReactType<DatasetRow>>();
   const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
   const [columnDefs, setColumnDefs] = useState<AGGridDataset['columnDefs']>(
@@ -81,6 +82,7 @@ export const useDatasetTableContext = (
       [groundTruthColumnField]: newCellContent,
     });
     await updateGTCell(
+      datasetId,
       groundTruthCell.id,
       updateData.content || groundTruthCell.content,
       updateData.status || groundTruthCell.status,
@@ -91,7 +93,7 @@ export const useDatasetTableContext = (
     if (!groundTruthColumnField) {
       return;
     }
-    await approveAllGT(props.datasetId);
+    await approveAllGT(datasetId);
     const newRows = await Promise.all(
       rows.map(async (row) => {
         const groundTruthCell = row[groundTruthColumnField];

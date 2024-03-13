@@ -55,7 +55,8 @@ export const markColumnAsType = async (
 };
 
 export const updateGTCell = async (
-  id: number,
+  datasetId: number,
+  rowId: number,
   content: string,
   status: string,
 ) => {
@@ -63,15 +64,17 @@ export const updateGTCell = async (
     throw new Error('Wrong cell status');
   }
   try {
-    const updatedCellId = await ApiUtils.editDatasetCell({
-      groundTruthCellId: id,
+    const updatedCellId = await ApiUtils.editGroundTruthCell({
+      datasetId,
+      rowId,
       content,
       status,
     });
 
     return updatedCellId;
   } catch (error) {
-    return null;
+    console.error(error);
+    throw new Error('Error updating ground truth cell');
   }
 };
 

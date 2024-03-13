@@ -1,7 +1,7 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
 import { approveAllSchema } from '@/app/api/dataset/edit/approveAll/schema';
-import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
+import { editGroundTruthCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import {
@@ -25,7 +25,7 @@ export enum ApiEndpoints {
   datasetList = '/api/dataset/list',
   datasetView = '/api/dataset',
   datasetColumnEdit = '/api/dataset/edit/column',
-  datasetCellEdit = '/api/dataset/edit/cell',
+  groundTruthCellEdit = '/api/dataset/edit/cell',
   datasetApproveAll = 'api/dataset/edit/approveAll',
 }
 
@@ -50,8 +50,8 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
-  [ApiEndpoints.datasetCellEdit]: {
-    payloadSchema: editDatasetCellSchema,
+  [ApiEndpoints.groundTruthCellEdit]: {
+    payloadSchema: editGroundTruthCellSchema,
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
@@ -77,7 +77,7 @@ export type PayloadSchemaType = {
   [ApiEndpoints.datasetNew]: z.infer<typeof newDatasetPayloadSchema>;
   [ApiEndpoints.datasetAddData]: z.infer<typeof addDataPayloadSchema>;
   [ApiEndpoints.datasetColumnEdit]: z.infer<typeof editDatasetColumnSchema>;
-  [ApiEndpoints.datasetCellEdit]: z.infer<typeof editDatasetCellSchema>;
+  [ApiEndpoints.groundTruthCellEdit]: z.infer<typeof editGroundTruthCellSchema>;
   [ApiEndpoints.datasetApproveAll]: z.infer<typeof approveAllSchema>;
 };
 

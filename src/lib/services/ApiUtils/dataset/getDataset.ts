@@ -6,6 +6,7 @@ import { ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
+import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
 
 async function getDatasetDetails(datasetId: number) {
@@ -37,11 +38,13 @@ async function getDatasetDetails(datasetId: number) {
   }
 }
 
-async function getDatasetContent(datasetName: string): Promise<DatasetRow[]> {
+async function getDatasetContent(datasetName: string) {
   if (!datasetName) {
     throw new Error('DatasetName is required');
   }
-  return [];
+  const result =
+    await DatabaseUtils.select<Record<string, string>>(datasetName);
+  return result;
 }
 
 export async function getDataset(
@@ -73,7 +76,7 @@ export async function getDataset(
     (column) => column.type === ENUM_Column_type.GROUND_TRUTH,
   )?.field;
 
-  let rows = datasetContent;
+  let rows: DatasetRow[] = datasetContent;
   if (groundTruthField) {
     rows = datasetContent.map((row) => {
       // TODO FIX this
