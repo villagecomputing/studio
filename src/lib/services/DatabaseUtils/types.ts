@@ -14,7 +14,7 @@ export enum ColumnType {
 }
 
 export type ColumnDefinition = {
-  sanitizedName: string;
+  name: string;
   type: ColumnType;
   isNullable?: boolean;
   isPrimaryKey?: boolean;

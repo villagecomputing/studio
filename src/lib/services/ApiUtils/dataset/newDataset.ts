@@ -4,6 +4,7 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { ENUM_Column_type } from '@/lib/types';
 import { PrismaClient } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
+import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 import { getGroundTruthStatusColumnName } from './utils';
 
 type DatasetField = {
@@ -65,26 +66,50 @@ function buildDatasetFields(
   return datasetFields;
 }
 
+function buildDatasetColumnDefinition(
+  datasetFields: DatasetField[],
+): ColumnDefinition[] {
+  return datasetFields.map((field) => {
+    switch (field.type) {
+      case ENUM_Column_type.IDENTIFIER:
+        return {
+          isAutoincrement: true,
+          type: ColumnType.INTEGER,
+          isNullable: false,
+          name: field.sanitizedName,
+          isPrimaryKey: true,
+        };
+      case ENUM_Column_type.GROUND_TRUTH:
+      case ENUM_Column_type.GROUND_TRUTH_STATUS:
+      case ENUM_Column_type.INPUT:
+        return {
+          type: ColumnType.TEXT,
+          name: field.sanitizedName,
+        };
+      default:
+        throw new Error(`Unupported field type: ${field.type}`);
+    }
+  });
+}
+
 export async function newDataset(
   payload: PayloadSchemaType[ApiEndpoints.datasetNew],
 ) {
   const params = newDatasetPayloadSchema.parse(payload);
   const { datasetName, columns, groundTruths } = params;
 
-  const datasetFields: DatasetField[] = buildDatasetFields(
-    columns,
-    groundTruths,
-  );
-
-  const result = await DatabaseUtils.create(
-    datasetName,
-    datasetFields.map((column) => column.sanitizedName),
-  );
+  const datasetFields = buildDatasetFields(columns, groundTruths);
+  const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
+  // Create dynamic dataset table
+  const result = await DatabaseUtils.create(datasetName, columnDefinitions);
 
   if (!result) {
     throw new Error('Failed to create new dataset table');
   }
 
+  // TODO: handle existing entries to the dataset_list table
+
+  // Update dataset_list table
   const dataset = await PrismaClient.dataset_list.create({
     data: {
       name: datasetName,
@@ -96,6 +121,7 @@ export async function newDataset(
   }
 
   // TODO: update logic to use future executeRaw for bulk insert
+  // Update columns table
   for (const field of datasetFields) {
     await PrismaClient.column.create({
       data: {
