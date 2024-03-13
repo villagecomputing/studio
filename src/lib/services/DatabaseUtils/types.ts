@@ -7,3 +7,18 @@ export type SelectParams = {
   orderBy?: Prisma.Sql;
   limit?: number;
 };
+
+export enum ColumnType {
+  TEXT = 'TEXT',
+  INTEGER = 'INTEGER',
+}
+
+export type ColumnDefinition = {
+  sanitizedName: string;
+  type: ColumnType;
+  isNullable?: boolean;
+  isPrimaryKey?: boolean;
+  isAutoincrement?: boolean;
+  typeCheckValues?: string[];
+  defaultValue?: string;
+};
