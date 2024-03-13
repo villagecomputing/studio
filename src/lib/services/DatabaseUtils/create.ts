@@ -4,7 +4,7 @@ import { assertTableExists } from './common';
 import { ColumnDefinition, ColumnType } from './types';
 
 const buildDefinitionString = (columnDefinition: ColumnDefinition): string => {
-  let columnString = `${columnDefinition.sanitizedName} ${columnDefinition.type}`;
+  let columnString = `${columnDefinition.name} ${columnDefinition.type}`;
   if (columnDefinition.defaultValue) {
     columnString += ` DEFAULT ${
       columnDefinition.type === ColumnType.INTEGER
