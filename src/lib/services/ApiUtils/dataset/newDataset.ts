@@ -4,6 +4,7 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { ENUM_Column_type } from '@/lib/types';
 import { PrismaClient } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
+import { getGroundTruthStatusColumnName } from './utils';
 
 type DatasetField = {
   displayName: string;
@@ -34,19 +35,28 @@ function buildDatasetFields(
     });
   }
 
+  const groundTruthSanitizedsNames: string[] = [];
   for (let i = 0; i < groundTruths.length; i++) {
+    const index = i + columns.length;
+    const sanitizedName = getColumnFieldFromNameAndIndex(
+      groundTruths[index],
+      index,
+    );
+    groundTruthSanitizedsNames.push(sanitizedName);
     datasetFields.push({
       displayName: groundTruths[i],
-      sanitizedName: getColumnFieldFromNameAndIndex(groundTruths[i], i),
-      index: i + columns.length,
+      sanitizedName: sanitizedName,
+      index: index + columns.length,
       type: ENUM_Column_type.GROUND_TRUTH,
     });
   }
 
   for (let i = 0; i < groundTruths.length; i++) {
     datasetFields.push({
-      displayName: `${groundTruths[i]}_STATUS`,
-      sanitizedName: `${groundTruths[i]}_STATUS`,
+      displayName: `${groundTruths[i]} status`,
+      sanitizedName: getGroundTruthStatusColumnName(
+        groundTruthSanitizedsNames[i],
+      ),
       index: -1,
       type: ENUM_Column_type.GROUND_TRUTH_STATUS,
     });
