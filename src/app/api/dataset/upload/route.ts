@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       JSON.parse(requestDatasetData),
     );
 
-    if (!(await ApiUtils.isFilenameAvailable(dataToSend.datasetTitle))) {
+    if (!(await ApiUtils.isDatasetNameAvailable(dataToSend.datasetTitle))) {
       return response('Filename already exists', 400);
     }
 

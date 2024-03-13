@@ -9,7 +9,7 @@ import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { isFilenameAvailable } from '../../../actions';
+import { isDatasetNameAvailable } from '../../../actions';
 import { useUploadDataContext } from '../UploadDataProvider';
 import {
   UploadDataDialogContentProps,
@@ -45,7 +45,7 @@ export default function UploadDataDialogContent(
     }
     if (
       values.datasetTitle.trim() &&
-      !(await isFilenameAvailable(values.datasetTitle))
+      !(await isDatasetNameAvailable(values.datasetTitle))
     ) {
       uploadDataForm.reset(values);
       uploadDataForm.setError('datasetTitle', {

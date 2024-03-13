@@ -1,4 +1,5 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
+import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
@@ -18,14 +19,19 @@ export async function GET() {
     });
 
     const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
-      datasetList.map((dataset) => {
-        return {
-          ...dataset,
-          created_at: dataset.created_at.toDateString(),
-          // TODO: total_rows = number of rows from ${dataset.name} table.
-          total_rows: 0,
-        };
-      });
+      await Promise.all(
+        datasetList.map(async (dataset) => {
+          const result = await DatabaseUtils.selectAggregation(dataset.name, {
+            func: 'COUNT',
+          });
+
+          return {
+            ...dataset,
+            created_at: dataset.created_at.toDateString(),
+            total_rows: result,
+          };
+        }),
+      );
 
     if (!datasetListResponseSchema.safeParse(datasetListResponse)) {
       return response('Invalid response datasetList type', 400);
