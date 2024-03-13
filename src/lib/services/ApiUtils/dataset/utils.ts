@@ -2,7 +2,7 @@ import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[data
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Column } from '@prisma/client';
-import _ from 'lodash';
+import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 import PrismaClient from '../../prisma';
 
@@ -84,7 +84,7 @@ export function buildDatasetFields(
 export function buildDatasetColumnDefinition(
   datasetFields: DatasetField[],
 ): ColumnDefinition[] {
-  return _(
+  return compact(
     datasetFields.map((field) => {
       const type = guardStringEnum(ENUM_Column_type, field.type);
       switch (type) {
@@ -115,7 +115,5 @@ export function buildDatasetColumnDefinition(
           exhaustiveCheck(type);
       }
     }),
-  )
-    .compact()
-    .value();
+  );
 }
