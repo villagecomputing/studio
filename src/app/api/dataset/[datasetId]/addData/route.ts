@@ -1,6 +1,6 @@
+import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { response } from '../../utils';
-import { uploadDatasetAsTablePayloadSchema } from './schema';
+import { addDataPayloadSchema } from './schema';
 
 export async function POST(request: Request) {
   try {
@@ -14,8 +14,8 @@ export async function POST(request: Request) {
 
     // Parse the dataset data object using the defined schema
     // This will throw if the object doesn't match the schema
-    const dataset = uploadDatasetAsTablePayloadSchema.parse(body);
-    ApiUtils.saveDatasetDetailsAsTable(dataset);
+    const dataset = addDataPayloadSchema.parse(body);
+    ApiUtils.addData(dataset);
 
     return response('OK');
   } catch (error) {

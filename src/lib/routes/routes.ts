@@ -1,9 +1,13 @@
+import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
 import { approveAllSchema } from '@/app/api/dataset/edit/approveAll/schema';
 import { editDatasetCellSchema } from '@/app/api/dataset/edit/cell/schema';
 import { editDatasetColumnSchema } from '@/app/api/dataset/edit/column/schema';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
-import { uploadDatasetAsTablePayloadSchema } from '@/app/api/dataset/upload-as-table/schema';
+import {
+  newDatasetPayloadSchema,
+  newDatasetResponseSchema,
+} from '@/app/api/dataset/new/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
 import { z } from 'zod';
@@ -16,7 +20,8 @@ type RouteObject = {
 
 export enum ApiEndpoints {
   datasetUpload = '/api/dataset/upload',
-  datasetUploadAsTable = '/api/dataset/upload-as-table',
+  datasetNew = '/api/dataset/new',
+  datasetAddData = '/api/dataset/addData',
   datasetList = '/api/dataset/list',
   datasetView = '/api/dataset',
   datasetColumnEdit = '/api/dataset/edit/column',
@@ -30,8 +35,13 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
-  [ApiEndpoints.datasetUploadAsTable]: {
-    payloadSchema: uploadDatasetAsTablePayloadSchema,
+  [ApiEndpoints.datasetNew]: {
+    payloadSchema: newDatasetPayloadSchema,
+    resultSchema: newDatasetResponseSchema,
+    method: 'POST',
+  },
+  [ApiEndpoints.datasetAddData]: {
+    payloadSchema: addDataPayloadSchema,
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
@@ -64,9 +74,8 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
 
 export type PayloadSchemaType = {
   [ApiEndpoints.datasetUpload]: z.infer<typeof uploadDatasetPayloadSchema>;
-  [ApiEndpoints.datasetUploadAsTable]: z.infer<
-    typeof uploadDatasetAsTablePayloadSchema
-  >;
+  [ApiEndpoints.datasetNew]: z.infer<typeof newDatasetPayloadSchema>;
+  [ApiEndpoints.datasetAddData]: z.infer<typeof addDataPayloadSchema>;
   [ApiEndpoints.datasetColumnEdit]: z.infer<typeof editDatasetColumnSchema>;
   [ApiEndpoints.datasetCellEdit]: z.infer<typeof editDatasetCellSchema>;
   [ApiEndpoints.datasetApproveAll]: z.infer<typeof approveAllSchema>;
