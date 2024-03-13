@@ -1,6 +1,6 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
-import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import PrismaClient from '../../prisma';
+import { ENUM_Ground_truth_status } from '@/lib/types';
+import { getDatasetNameAndGTColumnField } from './utils';
 
 export async function editGroundTruthCell(
   payload: PayloadSchemaType[ApiEndpoints.groundTruthCellEdit],
@@ -14,25 +14,14 @@ export async function editGroundTruthCell(
     } = payload;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const dataset = await PrismaClient.dataset_list.findUniqueOrThrow({
-      where: { id: datasetId },
-      select: { name: true },
-    });
-
-    const groundTruthColumn = await PrismaClient.column.findFirst({
-      where: { dataset_id: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
-      select: { field: true },
-    });
-
-    if (!groundTruthColumn?.field) {
-      throw new Error('Dataset ground truth column field not found');
-    }
+    const { datasetName, groundTruthColumnField } =
+      await getDatasetNameAndGTColumnField(datasetId);
 
     const updateData: Record<string, string | ENUM_Ground_truth_status> = {
       ground_truth_status: status,
     };
     if (content) {
-      updateData[groundTruthColumn.field] = content;
+      updateData[groundTruthColumnField] = content;
     }
     // TODO: Update the ${dataset.name} table where id = rowId with the updatedData
 

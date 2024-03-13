@@ -1,4 +1,4 @@
-import { approveAll } from './dataset';
+import { approveAll } from './dataset/approveAll';
 import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
