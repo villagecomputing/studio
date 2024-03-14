@@ -1,9 +1,16 @@
+import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
+import DatabaseUtils from '../../DatabaseUtils';
 
-// TODO: may need to expand to include labelkit specific columns common for all datasets
 export async function addData(
-  _dataset: PayloadSchemaType[ApiEndpoints.datasetAddData],
+  payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
 ) {
-  // TODO: implement + parse
-  throw new Error('Not implemented');
+  const { datasetName, datasetRows } = addDataPayloadSchema.parse(payload);
+  try {
+    const result = await DatabaseUtils.insert(datasetName, datasetRows);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error inserting data');
+  }
 }
