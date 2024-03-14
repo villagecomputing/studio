@@ -67,8 +67,15 @@ export async function POST(request: Request) {
     // Creates a new dataset record
     const datasetId = await ApiUtils.newDataset(dataset);
 
+    const datasetRows = parsedFile.rows.map((row) => {
+      const dataRow: Record<string, string> = {};
+      parsedFile.headers.forEach((value, index) => {
+        dataRow[value] = row[index];
+      });
+      return dataRow;
+    });
     // Add data to the created dataset
-    // TODO call ApiUtils.addData(datasetId, parsedFile.rows)
+    await ApiUtils.addData({ datasetName: dataset.datasetName, datasetRows });
 
     return Response.json({ datasetId });
   } catch (error) {

@@ -1,3 +1,4 @@
+import { DEFAULT_COLUMN_NAME_PREFIX } from '@/lib/services/ApiUtils/dataset/utils';
 import datasetParser from '@/lib/services/DatasetParser';
 import React, {
   ReactNode,
@@ -49,7 +50,7 @@ export const UploadDataProvider: React.FC<{
       currentBlankGTColumn,
       ...columns.map((column, index) => ({
         index,
-        name: column || `Column_${index}`,
+        name: column || `${DEFAULT_COLUMN_NAME_PREFIX}${index}`,
       })),
     ]);
     setSelectedFile(file);
