@@ -7,8 +7,10 @@ CREATE TABLE "Column" (
     "index" INTEGER NOT NULL,
     "type" TEXT NOT NULL CHECK ( "type" IN (
         'GROUND_TRUTH',
+        'GROUND_TRUTH_STATUS',
         'PREDICTIVE_LABEL',
-        'INPUT'
+        'INPUT',
+        'IDENTIFIER'
     ) ),
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,

@@ -1,90 +1,82 @@
-import FileUpload from '@/lib/services/FileHandler';
-
+// Imports necessary modules and schemas
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
+import FileHandler from '@/lib/services/FileHandler';
 import { response } from '../../utils';
+import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
 
 export async function POST(request: Request) {
   try {
+    // Checks for the correct 'Content-Type' in request headers
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
       return response('Invalid request headers type', 400);
     }
-    // Parse the FormData from the request
+
+    // Retrieves FormData from the request
     const formData = await request.formData();
     const file = formData.get('file');
     const requestDatasetData = formData.get('datasetData');
 
+    // Validates the presence of 'file' and 'datasetData' in the FormData
     if (!file || !requestDatasetData) {
       return response('Missing required data', 400);
     }
+
+    // Ensures 'datasetData' is a string before parsing
     if (typeof requestDatasetData !== 'string') {
       return response('Invalid request dataset type', 400);
     }
 
-    // Parse the dataset data object using the defined schema
-    // This will throw if the object doesn't match the schema
+    // Validates 'datasetData' against the schema
     const dataToSend = uploadDatasetPayloadSchema.parse(
       JSON.parse(requestDatasetData),
     );
 
+    // Checks if the dataset name is already in use
     if (!(await ApiUtils.isDatasetNameAvailable(dataToSend.datasetTitle))) {
-      return response('Filename already exists', 400);
+      return response('Dataset name already exists', 400);
     }
 
-    // Save file handles the saving method based on env
-    const saveFileResult = await FileUpload.saveFile(
-      file,
-      dataToSend.datasetTitle,
-    );
-    if (!saveFileResult) {
-      return response('File upload failed', 500);
-    }
-
-    const fileContent = await FileUpload.getFile(saveFileResult.filePath);
-
+    // Attempts to read the file content
+    const fileContent = await FileHandler.readFileAsStream(file);
     if (!fileContent) {
       return response('File content is missing', 500);
     }
 
+    // Converts file content to a structured format
     const parsedFile = await DatasetParser.parseAsArray(fileContent);
-    const groundTruthColumnContent = DatasetParser.getColumnFromArrayFormatData(
-      parsedFile.rows,
-      dataToSend.groundTruthColumnIndex,
-    );
 
-    let gtColumnContent = groundTruthColumnContent;
-    let gtColumnIndex = dataToSend.groundTruthColumnIndex;
-    // Ground truth column is a new blank column or an existing one
+    // Handles the addition of a new blank column for ground truth data
+    const gtColumnIndex = dataToSend.groundTruthColumnIndex;
+    const newGTColumnTitle = dataToSend.blankColumnTitle?.trim();
+    let groundTruths = [parsedFile.headers[dataToSend.groundTruthColumnIndex]];
     if (gtColumnIndex >= parsedFile['headers'].length) {
-      if (!dataToSend.blankColumnTitle) {
+      if (!newGTColumnTitle) {
         return response(
           'Column Title required for blank ground truth column',
           400,
         );
       }
-      parsedFile['headers'].push(dataToSend.blankColumnTitle.trim());
-      gtColumnContent = Array(parsedFile.rows.length).fill(' ');
-    } else {
-      // Duplicate the existing column
-      const gtColumnHeader =
-        parsedFile['headers'][dataToSend.groundTruthColumnIndex];
-      parsedFile['headers'].push(`${gtColumnHeader}`);
-      gtColumnIndex = parsedFile['headers'].length - 1;
+      groundTruths = [newGTColumnTitle];
+      parsedFile.rows.map((row) => ({ ...row, [newGTColumnTitle]: '' }));
     }
 
-    const result = await ApiUtils.saveDatasetDetails({
-      columnHeaders: parsedFile['headers'].map((header, index) =>
-        header ? header : `Column_${index}`,
-      ),
-      groundTruthColumnContent: gtColumnContent,
-      fileTitle: dataToSend.datasetTitle,
-      groundTruthColumnIndex: gtColumnIndex,
-      totalNumberOfRows: parsedFile.rows.length,
-      ...saveFileResult,
-    });
+    // Prepares the dataset object for creation
+    const dataset = newDatasetPayloadSchema.parse({
+      datasetName: dataToSend.datasetTitle,
+      columns: parsedFile.headers,
+      groundTruths,
+    } as PayloadSchemaType[ApiEndpoints.datasetNew]);
 
-    return Response.json(result);
+    // Creates a new dataset record
+    const datasetId = await ApiUtils.newDataset(dataset);
+
+    // Add data to the created dataset
+    // TODO call ApiUtils.addData(datasetId, parsedFile.rows)
+
+    return Response.json({ datasetId });
   } catch (error) {
     console.error('Error in POST:', error);
     return response('Error processing request', 500);
