@@ -21,7 +21,7 @@ export async function insert(
         'Invalid dataset schema: all rows must have the same columns',
       );
     }
-    return columns.map((column) => row[column]).join(', ');
+    return `(${columns.map((column) => `"${row[column]}"`).join(', ')})`;
   });
 
   const sqlQuery = Prisma.sql`INSERT INTO ${Prisma.raw(`"${tableName}"`)} 

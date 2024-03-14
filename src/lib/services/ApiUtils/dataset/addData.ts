@@ -7,6 +7,7 @@ export async function addData(
 ) {
   const { datasetName, datasetRows } = addDataPayloadSchema.parse(payload);
   try {
+    // TODO: sanitize column names. otherwise we would be trying to insert values for ColumnName instead of ColumnName_index
     const result = await DatabaseUtils.insert(datasetName, datasetRows);
     return result;
   } catch (error) {

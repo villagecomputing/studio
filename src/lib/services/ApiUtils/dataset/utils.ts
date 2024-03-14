@@ -101,7 +101,7 @@ export function buildDatasetColumnDefinition(
           return {
             isAutoincrement: true,
             type: ColumnType.INTEGER,
-            isNullable: false,
+            isNotNull: true,
             name: field.field,
             isPrimaryKey: true,
           };
