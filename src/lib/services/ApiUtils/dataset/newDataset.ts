@@ -11,30 +11,24 @@ export async function newDataset(
   const params = newDatasetPayloadSchema.parse(payload);
   const { datasetName, columns, groundTruths } = params;
 
+  // Build the dataset fields based on columns and groundTruths
   const datasetFields = buildDatasetFields(columns, groundTruths);
+  // Generate the column definitions for the new dataset
   const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
-  // Create dynamic dataset table
-  const result = await DatabaseUtils.create(datasetName, columnDefinitions);
-
-  if (!result) {
-    throw new Error('Failed to create new dataset table');
-  }
 
   // TODO: handle existing entries to the dataset_list table
+  // Create a new dynamic dataset table with the given name and column definitions
+  await DatabaseUtils.create(datasetName, columnDefinitions);
 
-  // Update dataset_list table
+  // Add a new entry to the dataset_list table with the dataset details
   const dataset = await PrismaClient.dataset_list.create({
     data: {
       name: datasetName,
     },
   });
 
-  if (dataset?.id) {
-    throw new Error('Failed to insert into dataset table');
-  }
-
   // TODO: update logic to use future executeRaw for bulk insert
-  // Update columns table
+  // Create column entries for the new dataset in the database
   await Promise.all(
     datasetFields.map(
       async (field) =>

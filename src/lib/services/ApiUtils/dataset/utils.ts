@@ -60,39 +60,32 @@ export function buildDatasetFields(
       type: ENUM_Column_type.IDENTIFIER,
     },
   ];
-  columns.map((value, index) =>
+  columns.map((columnName, index) => {
+    const name = columnName ? columnName : `Column_${index}`;
     datasetFields.push({
-      name: value,
-      field: getColumnFieldFromNameAndIndex(value, index),
-      index: index,
-      type: ENUM_Column_type.INPUT,
-    }),
-  );
-
-  const groundTruthSanitizedsNames: string[] = [];
-  groundTruths.map((value, index) => {
-    const newIndex = index + columns.length;
-    const sanitizedName = getColumnFieldFromNameAndIndex(
-      groundTruths[newIndex],
+      name,
+      field: getColumnFieldFromNameAndIndex(name, index),
       index,
-    );
-    groundTruthSanitizedsNames.push(sanitizedName);
-    datasetFields.push({
-      name: value,
-      field: sanitizedName,
-      index: newIndex,
-      type: ENUM_Column_type.GROUND_TRUTH,
+      type: ENUM_Column_type.INPUT,
     });
   });
 
-  groundTruths.map((value, index) =>
+  groundTruths.map((name, index) => {
+    const indexInDataset = index + columns.length;
+    const field = getColumnFieldFromNameAndIndex(name, indexInDataset);
     datasetFields.push({
-      name: `${value} status`,
-      field: getGroundTruthStatusColumnName(groundTruthSanitizedsNames[index]),
+      name,
+      field,
+      index: indexInDataset,
+      type: ENUM_Column_type.GROUND_TRUTH,
+    });
+    datasetFields.push({
+      name: getGroundTruthStatusColumnName(field),
+      field: getGroundTruthStatusColumnName(field),
       index: -1,
       type: ENUM_Column_type.GROUND_TRUTH_STATUS,
-    }),
-  );
+    });
+  });
 
   return datasetFields;
 }
