@@ -16,7 +16,6 @@ export async function newDataset(
   // Generate the column definitions for the new dataset
   const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
 
-  // TODO: handle existing entries to the dataset_list table
   // Create a new dynamic dataset table with the given name and column definitions
   await DatabaseUtils.create(datasetName, columnDefinitions);
 
@@ -27,21 +26,20 @@ export async function newDataset(
     },
   });
 
-  // TODO: update logic to use future executeRaw for bulk insert
-  // Create column entries for the new dataset in the database
-  await Promise.all(
-    datasetFields.map(
-      async (field) =>
-        await PrismaClient.column.create({
-          data: {
-            dataset_id: dataset.id,
-            name: field.name,
-            field: field.field,
-            index: field.index,
-            type: field.type,
-          },
-        }),
-    ),
-  );
+  try {
+    // Use raw insert function to insert multiple rows in a single request
+    const datasetFieldRows = datasetFields.map((field) => ({
+      dataset_id: dataset.id.toString(),
+      name: field.name,
+      field: field.field,
+      index: field.index.toString(),
+      type: field.type,
+    }));
+    await DatabaseUtils.insert('Column', datasetFieldRows);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to insert into columns table');
+  }
+
   return dataset.id;
 }
