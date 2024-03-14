@@ -26,20 +26,20 @@ export async function newDataset(
     },
   });
 
-  try {
-    // Use raw insert function to insert multiple rows in a single request
-    const datasetFieldRows = datasetFields.map((field) => ({
-      dataset_id: dataset.id.toString(),
-      name: field.name,
-      field: field.field,
-      index: field.index.toString(),
-      type: field.type,
-    }));
-    await DatabaseUtils.insert('Column', datasetFieldRows);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to insert into columns table');
-  }
+  await Promise.all(
+    datasetFields.map(
+      async (field) =>
+        await PrismaClient.column.create({
+          data: {
+            dataset_id: dataset.id,
+            name: field.name,
+            field: field.field,
+            index: field.index,
+            type: field.type,
+          },
+        }),
+    ),
+  );
 
   return dataset.id;
 }
