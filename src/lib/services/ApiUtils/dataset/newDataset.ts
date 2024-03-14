@@ -2,7 +2,7 @@ import { newDatasetPayloadSchema } from '@/app/api/dataset/new/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import DatabaseUtils from '../../DatabaseUtils';
-import { PrismaClient } from '../../prisma';
+import PrismaClient from '../../prisma';
 import { buildDatasetColumnDefinition, buildDatasetFields } from './utils';
 
 export async function newDataset(
