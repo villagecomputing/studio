@@ -2,10 +2,12 @@ import {
   DatasetRow,
   TableColumnProps,
 } from '@/app/(authenticated)/data/[datasetId]/types';
+import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
+import { sortBy } from 'lodash';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
 import { getGroundTruthStatusColumnName } from './utils';
@@ -64,14 +66,20 @@ export async function getDataset(
   const datasetContent = await getDatasetContent(datasetDetails.name);
 
   // Map the columns
-  const columns = datasetDetails.Column.map((column): TableColumnProps => {
-    return {
-      name: column.name,
-      id: column.id,
-      field: column.field,
-      type: guardStringEnum(ENUM_Column_type, column.type),
-    };
-  });
+  const columns = sortBy(datasetDetails.Column, 'index')
+    .filter((column) =>
+      DISPLAYABLE_DATASET_COLUMN_TYPES.includes(
+        guardStringEnum(ENUM_Column_type, column.type),
+      ),
+    )
+    .map((column): TableColumnProps => {
+      return {
+        name: column.name,
+        id: column.id,
+        field: column.field,
+        type: guardStringEnum(ENUM_Column_type, column.type),
+      };
+    });
 
   const groundTruthFields = datasetDetails.Column.filter(
     (column) => column.type === ENUM_Column_type.GROUND_TRUTH,

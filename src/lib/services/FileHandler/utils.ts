@@ -1,28 +1,28 @@
-import { appendExtensionBasedOnType } from '@/lib/utils';
-import { promises as fs } from 'fs';
-import { FileUploadResult } from './types';
-
-export const UPLOAD_PATH = '/public/uploads/';
-
-export async function saveFileLocally(
-  file: FormDataEntryValue,
-  fileName: string,
-): Promise<FileUploadResult> {
-  if (typeof file === 'string') {
-    throw new Error('The file is not an instance of File.');
-  }
-  const filePath = `${UPLOAD_PATH}${appendExtensionBasedOnType(fileName, file.type)}`;
-  const uploadPath = `.${filePath}`;
-  const data = await file.arrayBuffer();
-  await fs.appendFile(uploadPath, Buffer.from(data));
-  return {
-    filePath,
-    fileSize: file.size,
-    fileType: file.type,
-  };
+export function uint8ArrayToString(data: Uint8Array) {
+  const decoder = new TextDecoder('utf-8');
+  return decoder.decode(data);
 }
 
-export async function readLocalFile(filepath: string): Promise<string> {
-  const file = await fs.readFile(`${process.cwd()}${filepath}`, 'utf8');
-  return file;
+export async function readStream(stream: ReadableStream<Uint8Array>) {
+  const reader = stream.getReader();
+  const chunks = [];
+  let totalLength = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    chunks.push(value);
+    totalLength += value.length;
+  }
+
+  const fileContent = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    fileContent.set(chunk, offset);
+    offset += chunk.length;
+  }
+
+  return fileContent;
 }

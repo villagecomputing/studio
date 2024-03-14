@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
-import { assertTableExists } from './common';
 import { ColumnDefinition, ColumnType } from './types';
 
 const buildDefinitionString = (columnDefinition: ColumnDefinition): string => {
@@ -35,8 +34,6 @@ export async function create(
   tableName: string,
   columnDefinitions: ColumnDefinition[],
 ): Promise<number> {
-  await assertTableExists(tableName);
-
   const columnDefinitionStringArray = columnDefinitions.map((definition) =>
     buildDefinitionString(definition),
   );
