@@ -16,7 +16,6 @@ export async function newDataset(
   // Generate the column definitions for the new dataset
   const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
 
-  // TODO: handle existing entries to the dataset_list table
   // Create a new dynamic dataset table with the given name and column definitions
   await DatabaseUtils.create(datasetName, columnDefinitions);
 
@@ -27,8 +26,6 @@ export async function newDataset(
     },
   });
 
-  // TODO: update logic to use future executeRaw for bulk insert
-  // Create column entries for the new dataset in the database
   await Promise.all(
     datasetFields.map(
       async (field) =>
@@ -43,5 +40,6 @@ export async function newDataset(
         }),
     ),
   );
+
   return dataset.id;
 }
