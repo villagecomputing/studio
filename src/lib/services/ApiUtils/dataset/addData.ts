@@ -1,8 +1,8 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
+import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
-import { DEFAULT_COLUMN_NAME_PREFIX } from './utils';
 
 export async function addData(
   payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
@@ -23,33 +23,23 @@ export async function addData(
       },
       where: {
         dataset_id: dataset.id,
+        type: {
+          in: DISPLAYABLE_DATASET_COLUMN_TYPES,
+        },
       },
     });
 
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {
       const sanitizedRow: Record<string, string> = {};
-      Object.keys(datasetRow).map((datasetColumn, index) => {
-        const fieldToUpdate = !!datasetColumn
-          ? existingColumns.find(
-              (existingColumn) =>
-                existingColumn.name.toLowerCase() ===
-                datasetColumn.toLowerCase(),
-            )?.field
-          : existingColumns.find((existingColumn) =>
-              existingColumn.field
-                .toLowerCase()
-                .startsWith(
-                  `${DEFAULT_COLUMN_NAME_PREFIX}${index}`.toLowerCase(),
-                ),
-            )?.field;
 
-        if (!fieldToUpdate) {
-          throw new Error(
-            `Field ${datasetColumn} does not exist in the database`,
-          );
+      existingColumns.forEach((existingColumn) => {
+        const columnName = existingColumn.name;
+        const datasetColumnValue = datasetRow[columnName] || '';
+
+        if (datasetColumnValue !== undefined) {
+          sanitizedRow[existingColumn.field] = datasetColumnValue;
         }
-        sanitizedRow[fieldToUpdate] = datasetRow[datasetColumn];
       });
 
       return sanitizedRow;
