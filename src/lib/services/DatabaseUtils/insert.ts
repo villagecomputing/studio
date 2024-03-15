@@ -21,12 +21,12 @@ export async function insert(
         'Invalid dataset schema: all rows must have the same columns',
       );
     }
-    return columns.map((column) => row[column]).join(', ');
+    return columns.map((column) => row[column]);
   });
-
-  const sqlQuery = Prisma.sql`INSERT INTO ${Prisma.raw(`"${tableName}"`)} 
-    (${Prisma.raw(firstRowColumns.join(', '))}) 
-    VALUES ${Prisma.raw(rowValuesArray.join(',\n'))}`;
+  const sqlQuery = Prisma.sql`INSERT INTO ${Prisma.raw(`"${tableName}"`)} (${Prisma.raw(firstRowColumns.join(', '))}) 
+    VALUES ${Prisma.join(
+      rowValuesArray.map((row) => Prisma.sql`(${Prisma.join(row)})`),
+    )}`;
 
   try {
     const result = await PrismaClient.$executeRaw(sqlQuery);

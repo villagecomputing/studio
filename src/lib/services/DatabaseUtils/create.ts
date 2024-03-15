@@ -17,14 +17,14 @@ const buildDefinitionString = (columnDefinition: ColumnDefinition): string => {
   if (columnDefinition.isAutoincrement) {
     columnString += ' AUTOINCREMENT';
   }
-  if (!columnDefinition.isNullable) {
+  if (columnDefinition.isNotNull) {
     columnString += ' NOT NULL';
   }
   if (
     columnDefinition.typeCheckValues &&
     columnDefinition.typeCheckValues.length > 0
   ) {
-    columnString += ` CHECK ( "type" IN (${columnDefinition.typeCheckValues.map((value) => `'${value}'`).join(', ')}) )`;
+    columnString += ` CHECK ( "${columnDefinition.name}" IN (${columnDefinition.typeCheckValues.map((value) => `'${value}'`).join(', ')}) )`;
   }
 
   return columnString;

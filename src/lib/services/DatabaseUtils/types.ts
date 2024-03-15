@@ -16,7 +16,7 @@ export enum ColumnType {
 export type ColumnDefinition = {
   name: string;
   type: ColumnType;
-  isNullable?: boolean;
+  isNotNull?: boolean;
   isPrimaryKey?: boolean;
   isAutoincrement?: boolean;
   typeCheckValues?: string[];

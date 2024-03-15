@@ -4,12 +4,16 @@ import { ObjectParseResult } from '@/lib/services/DatasetParser';
 import { AGGridDataset, DatasetRow, GroundTruthCell } from '../types';
 
 export const ROW_ID_FIELD_NAME = 'ROW_ID';
+export const GROUND_TRUTH_COLUMN_SUFFIX = ' (GT)';
 
 export function getColumnFieldFromNameAndIndex(
   columnName: string,
   index: number,
 ): string {
-  return `${columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase()}_${index}`;
+  const sanitizedColumnName = columnName
+    .replaceAll(/[^a-zA-Z0-9_]/g, '_')
+    .toLowerCase();
+  return `${sanitizedColumnName.toLowerCase()}_${index}`;
 }
 
 export function isGroundTruthCell(
@@ -39,7 +43,7 @@ export function mapFieldNameToHeaderName(
     if (field) {
       acc[field] =
         type === ENUM_Column_type.GROUND_TRUTH
-          ? `${headerName} (GT)`
+          ? `${headerName}${GROUND_TRUTH_COLUMN_SUFFIX}`
           : headerName;
     }
     return acc;
@@ -49,7 +53,9 @@ export function mapFieldNameToHeaderName(
   // defined in the headerNameMap. If the cell content is a ground truth cell, use its content.
   // Exclude the ROW_ID_FIELD_NAME when creating the new row object.
   return Object.keys(row)
-    .filter((key) => key !== ROW_ID_FIELD_NAME)
+    .filter(
+      (key) => key !== ROW_ID_FIELD_NAME && headerNameMap.hasOwnProperty(key),
+    )
     .reduce<{ [key: string]: string }>((acc, key) => {
       let cellContent = row[key];
       // If the cell i
