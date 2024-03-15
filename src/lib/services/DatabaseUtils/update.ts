@@ -11,13 +11,13 @@ export async function update<T>(
 
   let sqlQuery = Prisma.sql`UPDATE "${Prisma.raw(tableName)}" SET `;
   const setClauses = Object.entries(setValues).map(([key, value]) => {
-    return `"${key}" = ${Prisma.raw(value)}`;
+    return Prisma.raw(`"${key}" = "${value}"`);
   });
   sqlQuery = Prisma.sql`${sqlQuery} ${Prisma.join(setClauses)}`;
 
   if (whereConditions) {
     const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
-      return `"${key}" = ${Prisma.raw(value)}`;
+      return Prisma.raw(`"${key}" = "${value}"`);
     });
     sqlQuery = Prisma.sql`${sqlQuery} WHERE ${Prisma.join(whereClauses)}`;
   }
