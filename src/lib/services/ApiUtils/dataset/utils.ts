@@ -7,6 +7,7 @@ import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 import PrismaClient from '../../prisma';
 
 type DatasetField = Pick<Column, 'name' | 'field' | 'index' | 'type'>;
+export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 export async function isDatasetNameAvailable(name: string): Promise<boolean> {
   const trimmedName = name.trim();
   if (!trimmedName) {
@@ -61,7 +62,9 @@ export function buildDatasetFields(
     },
   ];
   columns.map((columnName, index) => {
-    const name = columnName ? columnName : `Column_${index}`;
+    const name = columnName
+      ? columnName
+      : `${DEFAULT_COLUMN_NAME_PREFIX}${index}`;
     datasetFields.push({
       name,
       field: getColumnFieldFromNameAndIndex(name, index),

@@ -1,4 +1,5 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
+import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
@@ -14,32 +15,33 @@ export async function addData(
       },
     });
 
-    if (!dataset.id) {
-      throw new Error(`Dataset '${datasetName}' not found.`);
-    }
-
     // Get all fields and column names associated with the dataset
-    const columns = await PrismaClient.column.findMany({
+    const existingColumns = await PrismaClient.column.findMany({
       select: {
         name: true,
         field: true,
       },
       where: {
         dataset_id: dataset.id,
+        type: {
+          in: DISPLAYABLE_DATASET_COLUMN_TYPES,
+        },
       },
     });
 
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {
       const sanitizedRow: Record<string, string> = {};
-      Object.keys(datasetRow).map((datasetColumn) => {
-        const field =
-          columns.find(
-            (column) =>
-              column.name.toLowerCase() === datasetColumn.toLowerCase(),
-          )?.field || datasetColumn;
-        sanitizedRow[field] = datasetRow[datasetColumn];
+
+      existingColumns.forEach((existingColumn) => {
+        const columnName = existingColumn.name;
+        const datasetColumnValue = datasetRow[columnName] || '';
+
+        if (datasetColumnValue !== undefined) {
+          sanitizedRow[existingColumn.field] = datasetColumnValue;
+        }
       });
+
       return sanitizedRow;
     });
 

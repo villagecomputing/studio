@@ -39,6 +39,7 @@ export async function create(
   );
   const sqlQuery = Prisma.sql`CREATE TABLE "${Prisma.raw(tableName)}"
   (${Prisma.raw(columnDefinitionStringArray.join(', '))})`;
+
   try {
     const result = await PrismaClient.$executeRaw(sqlQuery);
     return result;

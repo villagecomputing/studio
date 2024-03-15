@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     // Parse the dataset data object using the defined schema
     // This will throw if the object doesn't match the schema
     const dataset = addDataPayloadSchema.parse(body);
-    ApiUtils.addData(dataset);
+    await ApiUtils.addData(dataset);
 
     return response('OK');
   } catch (error) {
