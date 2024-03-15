@@ -9,7 +9,10 @@ export function getColumnFieldFromNameAndIndex(
   columnName: string,
   index: number,
 ): string {
-  return `${columnName.replaceAll('.', '_').replaceAll(' ', '_').toLowerCase()}_${index}`;
+  const sanitizedColumnName = columnName
+    .replaceAll(/[^a-zA-Z0-9_]/g, '_')
+    .toLowerCase();
+  return `${sanitizedColumnName.toLowerCase()}_${index}`;
 }
 
 export function isGroundTruthCell(

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
 
     // Converts file content to a structured format
-    const parsedFile = await DatasetParser.parseAsArray(fileContent);
+    const parsedFile = await DatasetParser.parseAsObject(fileContent);
 
     // Handles the addition of a new blank column for ground truth data
     const gtColumnIndex = dataToSend.groundTruthColumnIndex;
@@ -67,15 +67,11 @@ export async function POST(request: Request) {
     // Creates a new dataset record
     const datasetId = await ApiUtils.newDataset(dataset);
 
-    const datasetRows = parsedFile.rows.map((row) => {
-      const dataRow: Record<string, string> = {};
-      parsedFile.headers.forEach((value, index) => {
-        dataRow[value] = row[index];
-      });
-      return dataRow;
-    });
     // Add data to the created dataset
-    await ApiUtils.addData({ datasetName: dataset.datasetName, datasetRows });
+    await ApiUtils.addData({
+      datasetName: dataset.datasetName,
+      datasetRows: parsedFile.rows,
+    });
 
     return Response.json({ datasetId });
   } catch (error) {

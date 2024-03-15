@@ -15,10 +15,6 @@ export async function addData(
       },
     });
 
-    if (!dataset.id) {
-      throw new Error(`Dataset '${datasetName}' not found.`);
-    }
-
     // Get all fields and column names associated with the dataset
     const existingColumns = await PrismaClient.column.findMany({
       select: {
