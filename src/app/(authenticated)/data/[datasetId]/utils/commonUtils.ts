@@ -53,7 +53,9 @@ export function mapFieldNameToHeaderName(
   // defined in the headerNameMap. If the cell content is a ground truth cell, use its content.
   // Exclude the ROW_ID_FIELD_NAME when creating the new row object.
   return Object.keys(row)
-    .filter((key) => key !== ROW_ID_FIELD_NAME)
+    .filter(
+      (key) => key !== ROW_ID_FIELD_NAME && headerNameMap.hasOwnProperty(key),
+    )
     .reduce<{ [key: string]: string }>((acc, key) => {
       let cellContent = row[key];
       // If the cell i
