@@ -4,6 +4,7 @@ import { ObjectParseResult } from '@/lib/services/DatasetParser';
 import { AGGridDataset, DatasetRow, GroundTruthCell } from '../types';
 
 export const ROW_ID_FIELD_NAME = 'ROW_ID';
+export const GROUND_TRUTH_COLUMN_SUFFIX = ' (GT)';
 
 export function getColumnFieldFromNameAndIndex(
   columnName: string,
@@ -42,7 +43,7 @@ export function mapFieldNameToHeaderName(
     if (field) {
       acc[field] =
         type === ENUM_Column_type.GROUND_TRUTH
-          ? `${headerName} (GT)`
+          ? `${headerName}${GROUND_TRUTH_COLUMN_SUFFIX}`
           : headerName;
     }
     return acc;

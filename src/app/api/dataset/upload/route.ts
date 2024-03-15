@@ -1,3 +1,4 @@
+import { GROUND_TRUTH_COLUMN_SUFFIX } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
@@ -43,25 +44,31 @@ export async function POST(request: Request) {
     const parsedFile = await DatasetParser.parseAsObject(fileContent);
 
     // Handles the addition of a new blank column for ground truth data
+    let groundTruth = '';
     const gtColumnIndex = dataToSend.groundTruthColumnIndex;
-    const newGTColumnTitle = dataToSend.blankColumnTitle?.trim();
-    let groundTruths = [parsedFile.headers[dataToSend.groundTruthColumnIndex]];
     if (gtColumnIndex >= parsedFile['headers'].length) {
+      const newGTColumnTitle = dataToSend.blankColumnTitle?.trim();
       if (!newGTColumnTitle) {
         return response(
           'Column Title required for blank ground truth column',
           400,
         );
       }
-      groundTruths = [newGTColumnTitle];
-      parsedFile.rows.map((row) => ({ ...row, [newGTColumnTitle]: '' }));
+      groundTruth = newGTColumnTitle;
+      parsedFile.rows.forEach((row) => (row[newGTColumnTitle] = ''));
+    } else {
+      const oldGroundTruth = parsedFile.headers[gtColumnIndex];
+      groundTruth = `${oldGroundTruth}${GROUND_TRUTH_COLUMN_SUFFIX}`;
+      parsedFile.rows.forEach((row) => {
+        row[`${groundTruth}`] = row[oldGroundTruth];
+      });
     }
 
     // Prepares the dataset object for creation
     const dataset = newDatasetPayloadSchema.parse({
       datasetName: dataToSend.datasetTitle,
       columns: parsedFile.headers,
-      groundTruths,
+      groundTruths: [groundTruth],
     } as PayloadSchemaType[ApiEndpoints.datasetNew]);
 
     // Creates a new dataset record
