@@ -159,7 +159,7 @@ const GroundTruthColumn: React.FC<GroundTruthColumnProps> = ({
   onGroundTruthChange,
 }) => {
   const { register } = useForm<{ gtContent: string }>({
-    defaultValues: {
+    values: {
       gtContent: isGroundTruthCell(content) ? content.content : '',
     },
   });
