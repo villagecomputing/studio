@@ -144,8 +144,7 @@ export function useGridOperations() {
           valueFormatter: (params) => {
             return params.value.content;
           },
-          dataTypeMatcher: (value) =>
-            value && !!value.content && !!value.id && !!value.status,
+          dataTypeMatcher: (value) => value && isGroundTruthCell(value),
         },
       };
     }, []);
