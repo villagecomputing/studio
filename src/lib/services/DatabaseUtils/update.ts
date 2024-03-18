@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
 import { assertTableExists } from './common';
 
@@ -9,21 +8,32 @@ export async function update<T>(
 ): Promise<number> {
   await assertTableExists(tableName);
 
-  let sqlQuery = Prisma.sql`UPDATE "${Prisma.raw(tableName)}" SET `;
-  const setClauses = Object.entries(setValues).map(([key, value]) => {
-    return Prisma.raw(`"${key}" = "${value}"`);
-  });
-  sqlQuery = Prisma.sql`${sqlQuery} ${Prisma.join(setClauses)}`;
+  const setKeys = Object.keys(setValues);
+  const setParams = setKeys
+    .map((key, index) => `"${key}" = $${index + 1}`)
+    .join(', ');
+  const setValuesArray = Object.values(setValues);
 
-  if (whereConditions) {
-    const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
-      return Prisma.raw(`"${key}" = "${value}"`);
-    });
-    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${Prisma.join(whereClauses)}`;
+  let sqlQuery = `UPDATE "${tableName}" SET ${setParams}`;
+  let queryParams = [...setValuesArray];
+
+  if (whereConditions && Object.keys(whereConditions).length > 0) {
+    const whereKeys = Object.keys(whereConditions);
+    const whereParams = whereKeys
+      .map((key, index) => `"${key}" = $${setValuesArray.length + index + 1}`)
+      .join(' AND ');
+    const whereValuesArray = Object.values(whereConditions);
+
+    sqlQuery += ` WHERE ${whereParams}`;
+    queryParams = [...queryParams, ...whereValuesArray];
   }
 
   try {
-    const result = await PrismaClient.$executeRaw<T>(sqlQuery);
+    // TODO change to executeRaw
+    const result = await PrismaClient.$executeRawUnsafe<T>(
+      sqlQuery,
+      ...queryParams,
+    );
     return result;
   } catch (error) {
     console.error('Error executing raw SQL update:', error);
