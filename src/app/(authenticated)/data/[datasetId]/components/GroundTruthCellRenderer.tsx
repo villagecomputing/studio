@@ -23,7 +23,12 @@ const GroundTruthCellRenderer = (
     props.node.isRowPinned() && props.node.rowPinned === 'bottom';
 
   return (
-    <span className={cn(['flex h-full items-center justify-between'])}>
+    <span
+      className={cn([
+        'flex h-full justify-between',
+        !isPinnedBottomRow ? 'items-center' : 'pt-1.5',
+      ])}
+    >
       <span
         className={cn([
           'flex-shrink self-start overflow-hidden text-ellipsis whitespace-nowrap',

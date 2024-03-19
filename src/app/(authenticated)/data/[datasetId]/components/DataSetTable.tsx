@@ -80,6 +80,8 @@ export default function DataSetTable(props: FetchDatasetResult) {
           onCellValueChanged,
           enableCellTextSelection: true,
           rowSelection: 'single',
+          suppressCellFocus: true,
+          stopEditingWhenCellsLoseFocus: true,
           navigateToNextCell,
         }}
       />
