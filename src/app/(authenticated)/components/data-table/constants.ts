@@ -12,4 +12,6 @@ export const DEFAULT_GRID_OPTIONS: AgGridReactProps = {
   rowSelection: 'single',
   enableCellTextSelection: true,
   reactiveCustomComponents: true,
+  suppressCellFocus: true,
+  stopEditingWhenCellsLoseFocus: true,
 };
