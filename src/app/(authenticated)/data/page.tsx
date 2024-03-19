@@ -7,6 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
+import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
@@ -94,6 +95,7 @@ const DataPage = () => {
               <DataTable<RowType>
                 theme="ag-theme-dataset-list"
                 agGridProps={{
+                  ...DEFAULT_GRID_OPTIONS,
                   onRowClicked: (event) => {
                     if (!event.data) {
                       return;
@@ -102,7 +104,6 @@ const DataPage = () => {
                   },
                   rowData,
                   columnDefs: colDef,
-                  rowSelection: 'single',
                   domLayout: 'autoHeight',
                   quickFilterText,
                 }}
