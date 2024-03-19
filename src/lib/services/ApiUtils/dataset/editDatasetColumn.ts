@@ -24,7 +24,7 @@ export async function editDatasetColumn(
       return columnId;
     }
 
-    const updatedColumn = await PrismaClient.column.update({
+    const updatedColumn = await PrismaClient.dataset_column.update({
       where: { id: columnId },
       data: updateData,
     });

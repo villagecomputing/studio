@@ -19,13 +19,13 @@ async function getDatasetDetails(datasetId: number) {
     type: true,
     index: true,
     field: true,
-  } satisfies Prisma.ColumnSelect;
+  } satisfies Prisma.Dataset_columnSelect;
 
   const datasetSelect = {
     id: true,
     created_at: true,
     name: true,
-    Column: { select: columnSelect, where: { deleted_at: null } },
+    Dataset_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.Dataset_listSelect;
 
   try {
@@ -66,7 +66,7 @@ export async function getDataset(
   const datasetContent = await getDatasetContent(datasetDetails.name);
 
   // Map the columns
-  const columns = sortBy(datasetDetails.Column, 'index')
+  const columns = sortBy(datasetDetails.Dataset_column, 'index')
     .filter((column) =>
       DISPLAYABLE_DATASET_COLUMN_TYPES.includes(
         guardStringEnum(ENUM_Column_type, column.type),
@@ -81,7 +81,7 @@ export async function getDataset(
       };
     });
 
-  const groundTruthFields = datasetDetails.Column.filter(
+  const groundTruthFields = datasetDetails.Dataset_column.filter(
     (column) => column.type === ENUM_Column_type.GROUND_TRUTH,
   ).map((column) => column.field);
 

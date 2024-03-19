@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Column" (
+CREATE TABLE "Dataset_column" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "dataset_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,

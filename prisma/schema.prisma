@@ -7,7 +7,16 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Column {
+model Dataset_list {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique(map: "sqlite_autoindex_Dataset_list_1")
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  Dataset_column Dataset_column[]
+}
+
+model Dataset_column {
   id           Int          @id @default(autoincrement())
   dataset_id   Int
   name         String
@@ -18,13 +27,4 @@ model Column {
   updated_at   DateTime     @updatedAt
   deleted_at   DateTime?
   Dataset_list Dataset_list @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
-}
-
-model Dataset_list {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique(map: "sqlite_autoindex_Dataset_list_1")
-  created_at DateTime  @default(now())
-  deleted_at DateTime?
-  updated_at DateTime  @updatedAt
-  Column     Column[]
 }
