@@ -1,7 +1,8 @@
 import { ENUM_Column_type } from './types';
 
-export const MAX_FILE_SIZE_MB = 50;
+export const MAX_FILE_SIZE_MB = 100;
 export const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
+export const MAX_SQL_VARIABLES = 999;
 export const ARROW_UP = 'ArrowUp';
 export const ARROW_DOWN = 'ArrowDown';
 export const ESCAPE = 'Escape';

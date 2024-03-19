@@ -1,3 +1,4 @@
+import { MAX_SQL_VARIABLES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
@@ -70,11 +71,16 @@ export async function POST(request: Request) {
     // Creates a new dataset record
     const datasetId = await ApiUtils.newDataset(dataset);
 
-    // Add data to the created dataset
-    await ApiUtils.addData({
-      datasetName: dataset.datasetName,
-      datasetRows: parsedFile.rows,
-    });
+    const columnsPerRow = parsedFile.headers.length;
+    const batchSize = Math.floor(MAX_SQL_VARIABLES / columnsPerRow);
+
+    for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
+      const batch = parsedFile.rows.slice(i, i + batchSize);
+      await ApiUtils.addData({
+        datasetName: dataset.datasetName,
+        datasetRows: batch,
+      });
+    }
 
     return Response.json({ datasetId });
   } catch (error) {
