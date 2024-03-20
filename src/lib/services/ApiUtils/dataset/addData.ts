@@ -9,7 +9,7 @@ export async function addData(
 ) {
   const { datasetName, datasetRows } = addDataPayloadSchema.parse(payload);
   try {
-    const dataset = await PrismaClient.dataset_list.findFirstOrThrow({
+    const dataset = await PrismaClient.dataset.findFirstOrThrow({
       where: {
         name: datasetName,
       },
@@ -22,7 +22,7 @@ export async function addData(
         field: true,
       },
       where: {
-        dataset_id: dataset.id,
+        dataset_uuid: dataset.uuid,
         type: {
           in: DISPLAYABLE_DATASET_COLUMN_TYPES,
         },

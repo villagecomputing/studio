@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   try {
     const id = generateUUID(UUIDPrefixEnum.EXPERIMENT);
     const existingExperimentGroup = await PrismaClient.experiment.findFirst({
-      where: { dataset_id: payload.datasetId, deleted_at: null },
+      where: { dataset_uuid: payload.datasetId, deleted_at: null },
       select: { group_id: true },
     });
     const groupId = existingExperimentGroup?.group_id
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       data: {
         uuid: id,
         name: payload.name,
-        dataset_id: payload.datasetId,
+        dataset_uuid: payload.datasetId,
         pipeline_metadata: JSON.stringify(payload.parameters),
         group_id: groupId,
       },
