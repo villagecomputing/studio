@@ -8,8 +8,8 @@ datasource db {
 }
 
 model Dataset {
-  id             Int              @id @default(autoincrement())
-  name           String           @unique(map: "sqlite_autoindex_Dataset_1")
+  uuid           String           @id
+  name           String           @unique(map: "sqlite_autoindex_Dataset_2")
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt
@@ -19,7 +19,7 @@ model Dataset {
 
 model Dataset_column {
   id                Int                 @id @default(autoincrement())
-  dataset_id        Int
+  dataset_uuid      String
   name              String
   field             String
   index             Int
@@ -27,7 +27,7 @@ model Dataset_column {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
-  Dataset           Dataset             @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
   Experiment_column Experiment_column[]
 }
 
@@ -54,13 +54,13 @@ model Experiment_group {
 model Experiment {
   uuid              String              @id
   name              String
-  dataset_id        Int
+  dataset_uuid      String
   group_id          Int
   pipeline_metadata String
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
   Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  Dataset           Dataset             @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
   Experiment_column Experiment_column[]
 }
