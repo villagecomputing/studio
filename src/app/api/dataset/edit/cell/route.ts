@@ -4,7 +4,8 @@ import { editGroundTruthCellSchema } from './schema';
 
 export async function POST(request: Request) {
   try {
-    const payload = editGroundTruthCellSchema.parse(request.body);
+    const requestBody = await request.json();
+    const payload = editGroundTruthCellSchema.parse(requestBody);
 
     const updatedCellId = await ApiUtils.editGroundTruthCell(payload);
 
