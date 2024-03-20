@@ -10,9 +10,9 @@ export async function GET() {
       uuid: true,
       name: true,
       created_at: true,
-      Dataset_list: {
+      Dataset: {
         select: {
-          id: true,
+          uuid: true,
           name: true,
         },
       },
@@ -28,7 +28,12 @@ export async function GET() {
         experimentList.map(async (dataset) => {
           return {
             ...dataset,
+            id: dataset.uuid,
             created_at: dataset.created_at.toDateString(),
+            Dataset: {
+              ...dataset.Dataset,
+              id: dataset.uuid,
+            },
           };
         }),
       );
