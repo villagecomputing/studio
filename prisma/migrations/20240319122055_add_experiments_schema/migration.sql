@@ -5,7 +5,7 @@ CREATE TABLE "Experiment_group" (
 );
 
 -- CreateTable
-CREATE TABLE "Experiment_list" (
+CREATE TABLE "Experiment" (
   "uuid" TEXT NOT NULL PRIMARY KEY,
   "name" TEXT NOT NULL,
   "dataset_id" INTEGER NOT NULL,
@@ -34,6 +34,6 @@ CREATE TABLE "Experiment_column" (
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,
   "deleted_at" DATETIME,
-  CONSTRAINT "experiment_column_experiment_id_fkey" FOREIGN KEY ("experiment_uuid") REFERENCES "Experiment_list" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "experiment_column_experiment_id_fkey" FOREIGN KEY ("experiment_uuid") REFERENCES "Experiment" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "experiment_column_ground_truth_id_fkey" FOREIGN KEY ("ground_truth_column_id") REFERENCES "Dataset_column" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 )

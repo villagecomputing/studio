@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Dataset_list {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique(map: "sqlite_autoindex_Dataset_list_1")
-  created_at      DateTime          @default(now())
-  deleted_at      DateTime?
-  updated_at      DateTime          @updatedAt
-  Dataset_column  Dataset_column[]
-  Experiment_list Experiment_list[]
+  id             Int              @id @default(autoincrement())
+  name           String           @unique(map: "sqlite_autoindex_Dataset_list_1")
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  Dataset_column Dataset_column[]
+  Experiment     Experiment[]
 }
 
 model Dataset_column {
@@ -42,25 +42,25 @@ model Experiment_column {
   updated_at             DateTime        @updatedAt
   deleted_at             DateTime?
   Dataset_column         Dataset_column? @relation(fields: [ground_truth_column_id], references: [id])
-  Experiment_list        Experiment_list @relation(fields: [experiment_uuid], references: [uuid], onDelete: Cascade)
+  Experiment             Experiment      @relation(fields: [experiment_uuid], references: [uuid], onDelete: Cascade)
 }
 
-model Experiment_list {
+model Experiment_group {
+  id         Int          @id @default(autoincrement())
+  created_at DateTime     @default(now())
+  Experiment Experiment[]
+}
+
+model Experiment {
   uuid              String              @id
   name              String
   dataset_id        Int
   group_id          Int
   pipeline_metadata String
   created_at        DateTime            @default(now())
-  updated_at        DateTime            @updatedAt
+  updated_at        DateTime
   deleted_at        DateTime?
-  Experiment_column Experiment_column[]
   Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
   Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
-}
-
-model Experiment_group {
-  id              Int               @id @default(autoincrement())
-  created_at      DateTime          @default(now())
-  Experiment_list Experiment_list[]
+  Experiment_column Experiment_column[]
 }
