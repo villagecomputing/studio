@@ -11,19 +11,19 @@ export async function newDataset(
 ) {
   const params = newDatasetPayloadSchema.parse(payload);
   const { datasetName, columns, groundTruths } = params;
+  const datasetId = generateUUID(UUIDPrefixEnum.DATASET);
 
   // Build the dataset fields based on columns and groundTruths
   const datasetFields = buildDatasetFields(columns, groundTruths);
   // Generate the column definitions for the new dataset
   const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
+  // Create a new dynamic dataset table with the generated uuid as name and column definitions
+  await DatabaseUtils.create(datasetId, columnDefinitions);
 
-  // Create a new dynamic dataset table with the given name and column definitions
-  await DatabaseUtils.create(datasetName, columnDefinitions);
-
-  // Add a new entry to the dataset_list table with the dataset details
+  // Add a new entry to the dataset table with the dataset details
   const dataset = await PrismaClient.dataset.create({
     data: {
-      uuid: generateUUID(UUIDPrefixEnum.DATASET),
+      uuid: datasetId,
       name: datasetName,
     },
   });

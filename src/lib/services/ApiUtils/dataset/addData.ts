@@ -45,7 +45,7 @@ export async function addData(
       return sanitizedRow;
     });
 
-    const result = await DatabaseUtils.insert(datasetName, sanitizedRows);
+    const result = await DatabaseUtils.insert(dataset.uuid, sanitizedRows);
     return result;
   } catch (error) {
     console.error(error);

@@ -21,7 +21,7 @@ export async function GET() {
     const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
       await Promise.all(
         datasetList.map(async (dataset) => {
-          const result = await DatabaseUtils.selectAggregation(dataset.name, {
+          const result = await DatabaseUtils.selectAggregation(dataset.uuid, {
             func: 'COUNT',
           });
 
