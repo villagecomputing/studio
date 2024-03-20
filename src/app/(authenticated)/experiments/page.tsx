@@ -25,10 +25,10 @@ const ExperimentsPage = () => {
   const [experimentsList, setExperimentsList] = useState<ExperimentList>([]);
 
   const rowData: ExperimentRowType[] = experimentsList.map((data) => ({
-    uuid: data.uuid,
+    id: data.id,
     experimentName: data.name,
     date: formatDate(data.created_at),
-    datasetName: data.Dataset_list.name,
+    datasetName: data.Dataset.name,
   }));
   const colDef: GridOptions['columnDefs'] = [
     {
@@ -93,7 +93,7 @@ const ExperimentsPage = () => {
                   if (!event.data) {
                     return;
                   }
-                  router.push(`/experiments/${event.data.uuid}`);
+                  router.push(`/experiments/${event.data.id}`);
                 },
                 rowData,
                 columnDefs: colDef,

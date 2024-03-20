@@ -14,7 +14,7 @@ export async function isDatasetNameAvailable(name: string): Promise<boolean> {
     return false;
   }
 
-  const totalDatasetsWithSameName = await PrismaClient.dataset_list.count({
+  const totalDatasetsWithSameName = await PrismaClient.dataset.count({
     where: {
       name: {
         equals: trimmedName,
@@ -26,15 +26,15 @@ export async function isDatasetNameAvailable(name: string): Promise<boolean> {
 }
 
 export const getDatasetNameAndGTColumnField = async (
-  datasetId: number,
+  datasetId: string,
 ): Promise<{ datasetName: string; groundTruthColumnField: string }> => {
-  const dataset = await PrismaClient.dataset_list.findUniqueOrThrow({
-    where: { id: datasetId },
+  const dataset = await PrismaClient.dataset.findUniqueOrThrow({
+    where: { uuid: datasetId },
     select: { name: true },
   });
 
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
-    where: { dataset_id: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
+    where: { dataset_uuid: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
     select: { field: true },
   });
   return {

@@ -5,7 +5,7 @@ import { ExperimentViewPageProps } from '../types';
 export default async function ExperimentViewPage(
   props: ExperimentViewPageProps,
 ) {
-  const experimentId = Number(props.params.experimentId);
+  const experimentId = props.params.experimentId;
 
   return (
     <div>

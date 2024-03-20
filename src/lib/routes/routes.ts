@@ -8,7 +8,10 @@ import {
   newDatasetPayloadSchema,
   newDatasetResponseSchema,
 } from '@/app/api/dataset/new/schema';
-import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
+import {
+  uploadDatasetPayloadSchema,
+  uploadDatasetResultSchema,
+} from '@/app/api/dataset/upload/schema';
 import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
 import {
   newExperimentPayloadSchema,
@@ -39,7 +42,7 @@ export enum ApiEndpoints {
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
   [ApiEndpoints.datasetUpload]: {
     payloadSchema: uploadDatasetPayloadSchema,
-    resultSchema: emptyObjectSchema,
+    resultSchema: uploadDatasetResultSchema,
     method: 'POST',
   },
   [ApiEndpoints.datasetNew]: {

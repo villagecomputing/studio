@@ -5,17 +5,13 @@ import ApiUtils from '@/lib/services/ApiUtils';
 
 import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { permanentRedirect } from 'next/navigation';
 import { FetchDatasetResult } from './types';
 import { convertToAGGridData } from './utils/gridUtils';
 
 export const fetchDataSet = async (
-  datasetId: number,
+  datasetId: string,
 ): Promise<FetchDatasetResult | null> => {
   try {
-    if (!Number(datasetId)) {
-      permanentRedirect('/data');
-    }
     const dataset = await ApiUtils.getDataset(datasetId);
 
     return {
@@ -55,7 +51,7 @@ export const markColumnAsType = async (
 };
 
 export const updateGTCell = async (
-  datasetId: number,
+  datasetId: string,
   rowId: number,
   content: string,
   status: string,
@@ -78,7 +74,7 @@ export const updateGTCell = async (
   }
 };
 
-export const approveAll = async (datasetId: number) => {
+export const approveAll = async (datasetId: string) => {
   try {
     await ApiUtils.approveAll({ datasetId });
   } catch (error) {

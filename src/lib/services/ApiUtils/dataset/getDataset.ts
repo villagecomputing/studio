@@ -3,7 +3,7 @@ import {
   TableColumnProps,
 } from '@/app/(authenticated)/data/[datasetId]/types';
 import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
-import { ResultSchemaType } from '@/lib/routes/routes';
+import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
@@ -12,7 +12,7 @@ import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
 import { getGroundTruthStatusColumnName } from './utils';
 
-async function getDatasetDetails(datasetId: number) {
+async function getDatasetDetails(datasetId: string) {
   const columnSelect = {
     id: true,
     name: true,
@@ -22,15 +22,15 @@ async function getDatasetDetails(datasetId: number) {
   } satisfies Prisma.Dataset_columnSelect;
 
   const datasetSelect = {
-    id: true,
+    uuid: true,
     created_at: true,
     name: true,
     Dataset_column: { select: columnSelect, where: { deleted_at: null } },
-  } satisfies Prisma.Dataset_listSelect;
+  } satisfies Prisma.DatasetSelect;
 
   try {
-    const result = await PrismaClient.dataset_list.findUniqueOrThrow({
-      where: { id: Number(datasetId), deleted_at: null },
+    const result = await PrismaClient.dataset.findUniqueOrThrow({
+      where: { uuid: datasetId, deleted_at: null },
       select: datasetSelect,
     });
 
@@ -51,8 +51,8 @@ async function getDatasetContent(datasetName: string) {
 }
 
 export async function getDataset(
-  datasetId: number,
-): Promise<ResultSchemaType['/api/dataset']> {
+  datasetId: string,
+): Promise<ResultSchemaType[ApiEndpoints.datasetView]> {
   if (!datasetId) {
     throw new Error('DatasetId is required');
   }
@@ -104,7 +104,7 @@ export async function getDataset(
   });
 
   return {
-    id: datasetDetails.id,
+    id: datasetDetails.uuid,
     name: datasetDetails.name,
     created_at: datasetDetails.created_at,
     columns,

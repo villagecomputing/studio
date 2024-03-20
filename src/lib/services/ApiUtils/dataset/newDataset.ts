@@ -1,6 +1,7 @@
 import { newDatasetPayloadSchema } from '@/app/api/dataset/new/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
+import { UUIDPrefixEnum, generateUUID } from '@/lib/utils';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
 import { buildDatasetColumnDefinition, buildDatasetFields } from './utils';
@@ -20,8 +21,9 @@ export async function newDataset(
   await DatabaseUtils.create(datasetName, columnDefinitions);
 
   // Add a new entry to the dataset_list table with the dataset details
-  const dataset = await PrismaClient.dataset_list.create({
+  const dataset = await PrismaClient.dataset.create({
     data: {
+      uuid: generateUUID(UUIDPrefixEnum.DATASET),
       name: datasetName,
     },
   });
@@ -31,7 +33,7 @@ export async function newDataset(
       async (field) =>
         await PrismaClient.dataset_column.create({
           data: {
-            dataset_id: dataset.id,
+            dataset_uuid: dataset.uuid,
             name: field.name,
             field: field.field,
             index: field.index,
@@ -41,5 +43,5 @@ export async function newDataset(
     ),
   );
 
-  return dataset.id;
+  return dataset.uuid;
 }

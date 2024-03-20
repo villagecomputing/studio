@@ -5,3 +5,7 @@ export const uploadDatasetPayloadSchema = z.object({
   groundTruthColumnIndex: z.number(),
   blankColumnTitle: z.optional(z.string()),
 });
+
+export const uploadDatasetResultSchema = z.object({
+  datasetId: z.string(),
+});

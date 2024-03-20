@@ -8,13 +8,13 @@ CREATE TABLE "Experiment_group" (
 CREATE TABLE "Experiment" (
   "uuid" TEXT NOT NULL PRIMARY KEY,
   "name" TEXT NOT NULL,
-  "dataset_id" INTEGER NOT NULL,
+  "dataset_uuid" TEXT NOT NULL,
   "group_id" INTEGER NOT NULL,
   "pipeline_metadata" TEXT NOT NULL, 
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,
   "deleted_at" DATETIME,
-  CONSTRAINT "experiments_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "Dataset_list" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "experiments_dataset_id_fkey" FOREIGN KEY ("dataset_uuid") REFERENCES "Dataset" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "experiment_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "Experiment_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
