@@ -49,10 +49,18 @@ model Experiment_list {
   uuid              String              @id
   name              String
   dataset_id        Int
+  group_id          Int
   pipeline_metadata String
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
   Experiment_column Experiment_column[]
+  Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
   Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+}
+
+model Experiment_group {
+  id              Int               @id @default(autoincrement())
+  created_at      DateTime          @default(now())
+  Experiment_list Experiment_list[]
 }
