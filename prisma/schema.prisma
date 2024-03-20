@@ -7,9 +7,9 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Dataset_list {
+model Dataset {
   id             Int              @id @default(autoincrement())
-  name           String           @unique(map: "sqlite_autoindex_Dataset_list_1")
+  name           String           @unique(map: "sqlite_autoindex_Dataset_1")
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt
@@ -27,7 +27,7 @@ model Dataset_column {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
-  Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
   Experiment_column Experiment_column[]
 }
 
@@ -61,6 +61,6 @@ model Experiment {
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
   Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
   Experiment_column Experiment_column[]
 }

@@ -15,11 +15,11 @@ CREATE TABLE "Dataset_column" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
     "deleted_at" DATETIME,
-    CONSTRAINT "Column_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "Dataset_list" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "Column_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "Dataset" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Dataset_list" (
+CREATE TABLE "Dataset" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL UNIQUE,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
