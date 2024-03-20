@@ -41,12 +41,11 @@ async function getDatasetDetails(datasetId: string) {
   }
 }
 
-async function getDatasetContent(datasetName: string) {
-  if (!datasetName) {
-    throw new Error('DatasetName is required');
+async function getDatasetContent(datasetId: string) {
+  if (!datasetId) {
+    throw new Error('DatasetId is required');
   }
-  const result =
-    await DatabaseUtils.select<Record<string, string>>(datasetName);
+  const result = await DatabaseUtils.select<Record<string, string>>(datasetId);
   return result;
 }
 
@@ -63,7 +62,7 @@ export async function getDataset(
   }
 
   // Get database dataset content
-  const datasetContent = await getDatasetContent(datasetDetails.name);
+  const datasetContent = await getDatasetContent(datasetId);
 
   // Map the columns
   const columns = sortBy(datasetDetails.Dataset_column, 'index')

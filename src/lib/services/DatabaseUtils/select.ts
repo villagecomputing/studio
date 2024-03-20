@@ -9,7 +9,7 @@ export async function select<T>(
   orderBy?: { field: string; direction: 'asc' | 'desc' },
   limit?: number,
 ): Promise<T[]> {
-  // First, check if the table name exists in the Dataset_list table
+  // First, check if the table name exists in the Dataset table
   await assertTableExists(tableName);
 
   let sqlQuery = Prisma.sql`SELECT `;
