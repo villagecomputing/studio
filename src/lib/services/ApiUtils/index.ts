@@ -7,6 +7,7 @@ import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
 import { isDatasetNameAvailable } from './dataset/utils';
+import { createExperimentTable } from './experiment/createExperimentTableIfNotExists';
 
 export default {
   getDataset,
@@ -16,4 +17,5 @@ export default {
   editGroundTruthCell,
   isDatasetNameAvailable,
   approveAll,
+  createExperimentTable,
 };
