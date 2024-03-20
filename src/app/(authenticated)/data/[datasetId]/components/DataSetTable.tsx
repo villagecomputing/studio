@@ -11,7 +11,7 @@ import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
 import { mapFieldNameToHeaderName } from '../utils/commonUtils';
-import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorView';
+import DatasetRowInspector from './DatasetRowInspector/DatasetRowInspector';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: FetchDatasetResult) {
@@ -60,7 +60,7 @@ export default function DataSetTable(props: FetchDatasetResult) {
           Download
         </Button>
       </div>
-      <DatasetRowInspectorView context={context} />
+      <DatasetRowInspector context={context} />
       <DataTable<DatasetRow>
         theme="ag-theme-dataset"
         gridRef={gridRef}
