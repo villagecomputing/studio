@@ -1,11 +1,6 @@
 import { ENUM_Column_type } from '@/lib/types';
 import { DatasetTableContext, GroundTruthCell } from '../../types';
 
-export type DatasetRowInspectorFooterProps = {
-  onSkipRow: () => void;
-  onApproveRow: () => void;
-};
-
 export type DatasetRowInspectorProps = {
   context: DatasetTableContext;
 };
