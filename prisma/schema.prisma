@@ -7,24 +7,60 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Column {
-  id           Int          @id @default(autoincrement())
-  dataset_id   Int
-  name         String
-  field        String
-  index        Int
-  type         String
-  created_at   DateTime     @default(now())
-  updated_at   DateTime     @updatedAt
-  deleted_at   DateTime?
-  Dataset_list Dataset_list @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+model Dataset_list {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique(map: "sqlite_autoindex_Dataset_list_1")
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  Dataset_column Dataset_column[]
+  Experiment     Experiment[]
 }
 
-model Dataset_list {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique(map: "sqlite_autoindex_Dataset_list_1")
-  created_at DateTime  @default(now())
-  deleted_at DateTime?
-  updated_at DateTime  @updatedAt
-  Column     Column[]
+model Dataset_column {
+  id                Int                 @id @default(autoincrement())
+  dataset_id        Int
+  name              String
+  field             String
+  index             Int
+  type              String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  deleted_at        DateTime?
+  Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Experiment_column Experiment_column[]
+}
+
+model Experiment_column {
+  id                     Int             @id @default(autoincrement())
+  experiment_uuid        String
+  name                   String
+  field                  String
+  type                   String
+  ground_truth_column_id Int?
+  created_at             DateTime        @default(now())
+  updated_at             DateTime        @updatedAt
+  deleted_at             DateTime?
+  Dataset_column         Dataset_column? @relation(fields: [ground_truth_column_id], references: [id])
+  Experiment             Experiment      @relation(fields: [experiment_uuid], references: [uuid], onDelete: Cascade)
+}
+
+model Experiment_group {
+  id         Int          @id @default(autoincrement())
+  created_at DateTime     @default(now())
+  Experiment Experiment[]
+}
+
+model Experiment {
+  uuid              String              @id
+  name              String
+  dataset_id        Int
+  group_id          Int
+  pipeline_metadata String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime
+  deleted_at        DateTime?
+  Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  Dataset_list      Dataset_list        @relation(fields: [dataset_id], references: [id], onDelete: Cascade)
+  Experiment_column Experiment_column[]
 }

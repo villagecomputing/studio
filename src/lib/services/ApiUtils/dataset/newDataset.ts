@@ -29,7 +29,7 @@ export async function newDataset(
   await Promise.all(
     datasetFields.map(
       async (field) =>
-        await PrismaClient.column.create({
+        await PrismaClient.dataset_column.create({
           data: {
             dataset_id: dataset.id,
             name: field.name,

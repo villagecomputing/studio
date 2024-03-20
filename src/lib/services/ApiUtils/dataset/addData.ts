@@ -16,7 +16,7 @@ export async function addData(
     });
 
     // Get all fields and column names associated with the dataset
-    const existingColumns = await PrismaClient.column.findMany({
+    const existingColumns = await PrismaClient.dataset_column.findMany({
       select: {
         name: true,
         field: true,

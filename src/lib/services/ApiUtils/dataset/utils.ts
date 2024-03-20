@@ -1,12 +1,12 @@
 import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { Column } from '@prisma/client';
+import { Dataset_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 import PrismaClient from '../../prisma';
 
-type DatasetField = Pick<Column, 'name' | 'field' | 'index' | 'type'>;
+type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 export async function isDatasetNameAvailable(name: string): Promise<boolean> {
   const trimmedName = name.trim();
@@ -33,7 +33,7 @@ export const getDatasetNameAndGTColumnField = async (
     select: { name: true },
   });
 
-  const groundTruthColumn = await PrismaClient.column.findFirstOrThrow({
+  const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
     where: { dataset_id: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
     select: { field: true },
   });
