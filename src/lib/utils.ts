@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { v4 as uuidv4 } from 'uuid';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,3 +59,13 @@ export function arraysEqual(arr1: string[], arr2: string[]) {
   }
   return true;
 }
+
+export enum UUIDPrefixEnum {
+  DATASET = 'd_',
+  EXPERIMENT = 'e_',
+}
+
+export const generateUUID = (prefix?: UUIDPrefixEnum) => {
+  const uuid = uuidv4();
+  return prefix ? `${prefix}${uuid}` : uuid;
+};
