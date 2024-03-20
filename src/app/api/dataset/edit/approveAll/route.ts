@@ -4,7 +4,8 @@ import { approveAllSchema } from './schema';
 
 export async function POST(request: Request) {
   try {
-    const { datasetId } = approveAllSchema.parse(request.body);
+    const requestBody = await request.json();
+    const { datasetId } = approveAllSchema.parse(requestBody);
     if (!datasetId) {
       return response('Required data is missing', 400);
     }
