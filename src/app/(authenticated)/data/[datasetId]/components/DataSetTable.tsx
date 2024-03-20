@@ -1,5 +1,6 @@
 'use client';
 import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
+import { DEFAULT_GRID_OPTIONS } from '@/app/(authenticated)/components/data-table/constants';
 import { SearchInput } from '@/app/(authenticated)/components/search-input/SearchInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -68,6 +69,7 @@ export default function DataSetTable(props: FetchDatasetResult) {
           context.inspectorRowIndex !== null ? 'small-dataset-table-view' : ''
         }
         agGridProps={{
+          ...DEFAULT_GRID_OPTIONS,
           getRowId,
           context,
           rowData: context.rows,
@@ -75,13 +77,8 @@ export default function DataSetTable(props: FetchDatasetResult) {
           pinnedBottomRowData: context.pinnedBottomRow,
           columnTypes,
           dataTypeDefinitions,
-          reactiveCustomComponents: true,
           quickFilterText,
           onCellValueChanged,
-          enableCellTextSelection: true,
-          rowSelection: 'single',
-          suppressCellFocus: true,
-          stopEditingWhenCellsLoseFocus: true,
           navigateToNextCell,
         }}
       />

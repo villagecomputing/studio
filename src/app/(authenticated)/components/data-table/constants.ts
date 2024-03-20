@@ -7,3 +7,11 @@ export const DEFAULT_COLUMN_DEFINITION: AgGridReactProps['defaultColDef'] = {
   suppressMovable: true,
   enableRowGroup: false,
 };
+
+export const DEFAULT_GRID_OPTIONS: AgGridReactProps = {
+  rowSelection: 'single',
+  enableCellTextSelection: true,
+  reactiveCustomComponents: true,
+  suppressCellFocus: true,
+  stopEditingWhenCellsLoseFocus: true,
+};

@@ -13,10 +13,9 @@ export const NavbarItems: NavbarMenuItemProps[] = [
     Icon: <DatabaseIcon size={20} />,
   },
   {
-    route: '/jobs',
-    name: 'Jobs',
+    route: '/experiments',
+    name: 'Experiments',
     Icon: <ListTodoIcon size={20} />,
-    disabled: true,
   },
   {
     route: '/evaluate',
