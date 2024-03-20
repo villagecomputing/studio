@@ -9,6 +9,7 @@ import {
   newDatasetResponseSchema,
 } from '@/app/api/dataset/new/schema';
 import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
+import { insertExperimentPayloadSchema } from '@/app/api/experiments/[experimentId]/insert/schema';
 import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
@@ -32,6 +33,7 @@ export enum ApiEndpoints {
   groundTruthCellEdit = '/api/dataset/edit/cell',
   datasetApproveAll = 'api/dataset/edit/approveAll',
   experimentNew = 'api/experiments/new',
+  experimentInsert = 'api/experiments/insert',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -80,6 +82,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: newExperimentResponseSchema,
     method: 'POST',
   },
+  [ApiEndpoints.experimentInsert]: {
+    payloadSchema: insertExperimentPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -90,6 +97,9 @@ export type PayloadSchemaType = {
   [ApiEndpoints.groundTruthCellEdit]: z.infer<typeof editGroundTruthCellSchema>;
   [ApiEndpoints.datasetApproveAll]: z.infer<typeof approveAllSchema>;
   [ApiEndpoints.experimentNew]: z.infer<typeof newExperimentPayloadSchema>;
+  [ApiEndpoints.experimentInsert]: z.infer<
+    typeof insertExperimentPayloadSchema
+  >;
 };
 
 export type ResultSchemaType = {
