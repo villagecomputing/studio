@@ -4,9 +4,8 @@ import { editDatasetColumnSchema } from './schema';
 
 export async function POST(request: Request) {
   try {
-    const { columnId, type, name } = editDatasetColumnSchema.parse(
-      request.body,
-    );
+    const requestBody = await request.json();
+    const { columnId, type, name } = editDatasetColumnSchema.parse(requestBody);
 
     const updatedColumnId = await ApiUtils.editDatasetColumn({
       name,
