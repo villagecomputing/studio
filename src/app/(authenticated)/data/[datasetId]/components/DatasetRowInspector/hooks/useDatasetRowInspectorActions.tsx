@@ -1,7 +1,7 @@
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import { useCallback } from 'react';
+import { isGroundTruthCell } from '../../../../utils/commonUtils';
 import { GroundTruthCell } from '../../../types';
-import { isGroundTruthCell } from '../../../utils/commonUtils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspector';
 import { UseDatasetRowInspectorData } from '../types';
 

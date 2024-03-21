@@ -1,8 +1,8 @@
 import { ENUM_Column_type } from '@/lib/types';
 import { GroundTruthCell } from '../../../types';
 
+import { isGroundTruthCell } from '../../../../utils/commonUtils';
 import { markColumnAsType } from '../../../actions';
-import { isGroundTruthCell } from '../../../utils/commonUtils';
 import { useDatasetRowInspectorContext } from '../DatasetRowInspector';
 import { DatasetRowInspectorBodyElement } from './DatasetRowInspectorBodyElement';
 

@@ -3,6 +3,7 @@ import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isGroundTruthCell } from '../../utils/commonUtils';
 import { approveAll as approveAllGT, updateGTCell } from '../actions';
 import {
   AGGridDataset,
@@ -12,7 +13,6 @@ import {
   GroundTruthCell,
   UpdateGroundTruthCellParams,
 } from '../types';
-import { isGroundTruthCell } from '../utils/commonUtils';
 
 export const useDatasetTableContext = (
   props: AGGridDataset,

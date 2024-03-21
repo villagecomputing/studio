@@ -1,4 +1,4 @@
-import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
+import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/utils/commonUtils';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Dataset_column } from '@prisma/client';
