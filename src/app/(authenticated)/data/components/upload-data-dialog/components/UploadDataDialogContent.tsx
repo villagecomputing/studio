@@ -1,4 +1,7 @@
-import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
+import {
+  uploadDatasetPayloadSchema,
+  uploadDatasetResultSchema,
+} from '@/app/api/dataset/upload/schema';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
@@ -76,9 +79,10 @@ export default function UploadDataDialogContent(
       method: 'POST',
       body: formData,
     });
-    const datasetId = (await response.json()).datasetId;
+    const responseBody = await response.json();
+    const dataset = uploadDatasetResultSchema.parse(responseBody);
 
-    if (response.status !== 200 || !Number(datasetId)) {
+    if (response.status !== 200 || !dataset.datasetId) {
       toast({
         title: 'Error',
         description: TOAST_MESSAGE.UPLOAD_DATASET_FAILED,
@@ -87,7 +91,7 @@ export default function UploadDataDialogContent(
       return;
     }
     onCancel();
-    router.push(`/data/${datasetId}`);
+    router.push(`/data/${dataset.datasetId}`);
   }
 
   return (

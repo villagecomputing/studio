@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const editGroundTruthCellSchema = z
   .object({
-    datasetId: z.number(),
+    datasetId: z.string(),
     rowId: z.number(),
     content: z.string().optional(),
     status: z.nativeEnum(ENUM_Ground_truth_status).optional(),

@@ -6,7 +6,7 @@ import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
 export default async function DatasetViewPage(props: DatasetViewPageProps) {
-  const datasetId = Number(props.params.datasetId);
+  const datasetId = props.params.datasetId;
   const dataSet = await fetchDataSet(datasetId);
 
   // Filter out the 'ground truth' columnDef

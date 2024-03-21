@@ -1,25 +1,61 @@
 'use client';
+import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
-import { cn } from '@/lib/utils';
+import { ApiEndpoints } from '@/lib/routes/routes';
+import { cn, formatDate } from '@/lib/utils';
 import { GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
-import { RowType } from './types';
+import { ExperimentList, ExperimentRowType } from './types';
 
-const getData = async () => {
-  return [];
+const getData = async (): Promise<ExperimentList> => {
+  const response = await fetch(ApiEndpoints.experimentList, {
+    method: 'GET',
+  });
+  const experimentList = JSON.parse(await response.json());
+  return experimentListResponseSchema.parse(experimentList);
 };
 
 const ExperimentsPage = () => {
   const router = useRouter();
   const [quickFilterText, setQuickFilterText] = useState<string>('');
-  const [experimentsList, setExperimentsList] = useState([]);
+  const [experimentsList, setExperimentsList] = useState<ExperimentList>([]);
 
-  const rowData: RowType[] = [];
-  const colDef: GridOptions['columnDefs'] = [];
+  const rowData: ExperimentRowType[] = experimentsList.map((data) => ({
+    id: data.id,
+    experimentName: data.name,
+    date: formatDate(data.created_at),
+    datasetName: data.Dataset.name,
+  }));
+  const colDef: GridOptions['columnDefs'] = [
+    {
+      headerName: 'Id',
+      field: 'uuid',
+      flex: 2,
+      minWidth: 100,
+    },
+    {
+      headerName: 'Dataset',
+      field: 'datasetName',
+      flex: 2,
+      minWidth: 200,
+    },
+    {
+      headerName: 'Experiment Name',
+      field: 'experimentName',
+      flex: 2,
+      minWidth: 200,
+    },
+    {
+      headerName: 'Date',
+      field: 'date',
+      flex: 2,
+      minWidth: 90,
+    },
+  ];
 
   useEffect(() => {
     (async () => {
@@ -49,7 +85,7 @@ const ExperimentsPage = () => {
             className="overflow-y-auto"
             style={{ height: 'calc(100vh - 150px)' }}
           >
-            <DataTable<RowType>
+            <DataTable<ExperimentRowType>
               theme="ag-theme-dataset-list"
               agGridProps={{
                 ...DEFAULT_GRID_OPTIONS,

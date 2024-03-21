@@ -10,7 +10,7 @@ export async function selectAggregation(
   },
   whereConditions?: { [key: string]: string },
 ): Promise<string> {
-  // First, check if the table name exists in the Dataset_list table
+  // First, check if the table name exists in the Dataset table
   await assertTableExists(tableName);
 
   const aggField = aggregation.field

@@ -8,12 +8,12 @@ import { datasetListResponseSchema } from './schema';
 export async function GET() {
   try {
     const datasetSelect = {
-      id: true,
+      uuid: true,
       created_at: true,
       name: true,
-    } satisfies Prisma.Dataset_listSelect;
+    } satisfies Prisma.DatasetSelect;
 
-    const datasetList = await PrismaClient.dataset_list.findMany({
+    const datasetList = await PrismaClient.dataset.findMany({
       select: datasetSelect,
       where: { deleted_at: null },
     });
@@ -21,12 +21,13 @@ export async function GET() {
     const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
       await Promise.all(
         datasetList.map(async (dataset) => {
-          const result = await DatabaseUtils.selectAggregation(dataset.name, {
+          const result = await DatabaseUtils.selectAggregation(dataset.uuid, {
             func: 'COUNT',
           });
 
           return {
             ...dataset,
+            id: dataset.uuid,
             created_at: dataset.created_at.toDateString(),
             total_rows: result,
           };

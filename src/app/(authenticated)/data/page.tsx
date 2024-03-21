@@ -23,7 +23,7 @@ const getData = async () => {
 
 type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
 type RowType = {
-  id: number;
+  id: string;
   datasetName: string;
   numberOfRecords: string;
   uploadDate: string;
