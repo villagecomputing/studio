@@ -33,7 +33,7 @@ const ExperimentsPage = () => {
   const colDef: GridOptions['columnDefs'] = [
     {
       headerName: 'Id',
-      field: 'uuid',
+      field: 'id',
       flex: 2,
       minWidth: 100,
     },
@@ -93,7 +93,7 @@ const ExperimentsPage = () => {
                   if (!event.data) {
                     return;
                   }
-                  router.push(`/experiments/${event.data.id}`);
+                  router.push(`/experiment/${event.data.id}`);
                 },
                 rowData,
                 columnDefs: colDef,

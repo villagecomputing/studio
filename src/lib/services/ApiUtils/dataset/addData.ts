@@ -9,6 +9,7 @@ export async function addData(
 ) {
   const { datasetName, datasetRows } = addDataPayloadSchema.parse(payload);
   try {
+    // TODO Replace this with getDatasetOrThrow
     const dataset = await PrismaClient.dataset.findFirstOrThrow({
       where: {
         name: datasetName,
