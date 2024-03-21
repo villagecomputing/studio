@@ -12,12 +12,15 @@ import {
   uploadDatasetPayloadSchema,
   uploadDatasetResultSchema,
 } from '@/app/api/dataset/upload/schema';
+import {
+  createExperimentPayloadSchema,
+  insertExperimentPayloadSchema,
+} from '@/app/api/experiment/[experimentId]/insert/schema';
 import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
-import { insertExperimentPayloadSchema } from '@/app/api/experiments/[experimentId]/insert/schema';
 import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
-} from '@/app/api/experiments/new/schema';
+} from '@/app/api/experiment/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
 import { z } from 'zod';
 
@@ -39,6 +42,7 @@ export enum ApiEndpoints {
   experimentList = '/api/experiment/list',
   experimentNew = 'api/experiments/new',
   experimentInsert = 'api/experiments/insert',
+  experimentCreate = 'api/experiments/create',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -97,6 +101,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
+  [ApiEndpoints.experimentCreate]: {
+    payloadSchema: createExperimentPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -109,6 +118,9 @@ export type PayloadSchemaType = {
   [ApiEndpoints.experimentNew]: z.infer<typeof newExperimentPayloadSchema>;
   [ApiEndpoints.experimentInsert]: z.infer<
     typeof insertExperimentPayloadSchema
+  >;
+  [ApiEndpoints.experimentCreate]: z.infer<
+    typeof createExperimentPayloadSchema
   >;
 };
 
