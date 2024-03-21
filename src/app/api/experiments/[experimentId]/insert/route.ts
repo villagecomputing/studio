@@ -21,7 +21,7 @@ export async function POST(
 
     return response('Ok');
   } catch (error) {
-    console.error('Error in newExperiment:', error);
+    console.error('Error in inserting experiment:', error);
     return response('Error processing request', 500);
   }
 }
