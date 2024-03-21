@@ -6,6 +6,12 @@ export enum ENUM_Column_type {
   INPUT = 'INPUT',
 }
 
+export enum Enum_Experiment_Column_Type {
+  IDENTIFIER = 'IDENTIFIER',
+  OUTPUT = 'OUTPUT',
+  METADATA = 'METADATA',
+}
+
 export enum ENUM_Data_type {
   STRING = 'STRING',
   NUMBER = 'NUMBER',
