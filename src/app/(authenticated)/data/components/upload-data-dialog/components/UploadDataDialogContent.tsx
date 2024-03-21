@@ -12,7 +12,6 @@ import { cn, getFilenameWithoutExtension } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { isDatasetNameAvailable } from '../../../actions';
 import { useUploadDataContext } from '../UploadDataProvider';
 import {
   UploadDataDialogContentProps,
@@ -45,17 +44,6 @@ export default function UploadDataDialogContent(
   async function onSubmit(values: UploadDataFormContext) {
     if (!selectedFile) {
       return;
-    }
-    if (
-      values.datasetTitle.trim() &&
-      !(await isDatasetNameAvailable(values.datasetTitle))
-    ) {
-      uploadDataForm.reset(values);
-      uploadDataForm.setError('datasetTitle', {
-        message:
-          'This title is already used in another dataset, please enter a new one.',
-      });
-      return true;
     }
 
     const dataToSend: PayloadSchemaType['/api/dataset/upload'] = {

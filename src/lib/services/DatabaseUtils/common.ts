@@ -1,16 +1,16 @@
 import { arrayContainsArray } from '@/lib/utils';
 import PrismaClient from '../prisma';
 
-export async function assertTableExists(tableName: string) {
-  await PrismaClient.dataset.findUniqueOrThrow({
+export async function getExperimentOrThrow(experimentId: string) {
+  return await PrismaClient.experiment.findUniqueOrThrow({
     where: {
-      uuid: tableName,
+      uuid: experimentId,
     },
   });
 }
 
-export async function assertDatasetExists(datasetId: string) {
-  await PrismaClient.dataset.findUniqueOrThrow({
+export async function getDatasetOrThrow(datasetId: string) {
+  return await PrismaClient.dataset.findUniqueOrThrow({
     where: {
       uuid: datasetId,
     },
