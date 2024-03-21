@@ -22,24 +22,32 @@ export function buildExperimentFields(
   ];
 
   let index = 0;
-  Object.entries(outputFieldsByMetadata).flatMap(
-    ([metadataName, outputTypes]) => [
+  Object.entries(outputFieldsByMetadata).flatMap(([metadataName, outputs]) => [
+    experimentFields.push({
+      name: metadataName,
+      field: getColumnFieldFromNameAndIndex(metadataName, index++),
+      type: Enum_Experiment_Column_Type.METADATA,
+    }),
+    outputs.forEach((output) =>
       experimentFields.push({
-        name: metadataName,
-        field: getColumnFieldFromNameAndIndex(metadataName, index++),
-        type: Enum_Experiment_Column_Type.METADATA,
+        name: getMetadataSpecificOutputName(metadataName, output),
+        field: getColumnFieldFromNameAndIndex(output, index++),
+        type: Enum_Experiment_Column_Type.OUTPUT,
       }),
-      outputTypes.forEach((outputType) =>
-        experimentFields.push({
-          name: outputType,
-          field: getColumnFieldFromNameAndIndex(outputType, index++),
-          type: Enum_Experiment_Column_Type.OUTPUT,
-        }),
-      ),
-    ],
-  );
+    ),
+  ]);
 
   return experimentFields;
+}
+
+// Experiments can have multiple steps/netadata and each can have multiple outputs
+// Ouputs for different metadata can have the same name
+// When searching for the field to insert an output to we need to also take into account the metadata name so that we insert the proper value
+export function getMetadataSpecificOutputName(
+  metadataName: string,
+  outputName: string,
+) {
+  return `${outputName} (${metadataName})`;
 }
 
 export function buildExperimentColumnDefinition(
