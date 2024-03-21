@@ -1,6 +1,7 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
+import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import { getGTColumnField, getGroundTruthStatusColumnName } from './utils';
 
 export async function editGroundTruthCell(
@@ -14,6 +15,7 @@ export async function editGroundTruthCell(
       status = ENUM_Ground_truth_status.APPROVED,
     } = payload;
 
+    await getDatasetOrThrow(datasetId);
     const groundTruthColumnField = await getGTColumnField(datasetId);
 
     const updateData: Record<string, string | ENUM_Ground_truth_status> = {
