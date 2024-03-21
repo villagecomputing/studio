@@ -21,7 +21,7 @@ CREATE TABLE "Dataset_column" (
 -- CreateTable
 CREATE TABLE "Dataset" (
     "uuid" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL UNIQUE,
+    "name" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" DATETIME,
     "updated_at" DATETIME NOT NULL

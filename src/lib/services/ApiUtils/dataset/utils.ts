@@ -8,22 +8,6 @@ import PrismaClient from '../../prisma';
 
 type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
-export async function isDatasetNameAvailable(name: string): Promise<boolean> {
-  const trimmedName = name.trim();
-  if (!trimmedName) {
-    return false;
-  }
-
-  const totalDatasetsWithSameName = await PrismaClient.dataset.count({
-    where: {
-      name: {
-        equals: trimmedName,
-      },
-    },
-  });
-
-  return !totalDatasetsWithSameName;
-}
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({

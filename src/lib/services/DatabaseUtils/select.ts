@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
-import { assertTableExists } from './common';
 
 export async function select<T>(
   tableName: string,
@@ -9,9 +8,6 @@ export async function select<T>(
   orderBy?: { field: string; direction: 'asc' | 'desc' },
   limit?: number,
 ): Promise<T[]> {
-  // First, check if the table name exists in the Dataset table
-  await assertTableExists(tableName);
-
   let sqlQuery = Prisma.sql`SELECT `;
 
   if (selectFields && selectFields.length > 0) {
