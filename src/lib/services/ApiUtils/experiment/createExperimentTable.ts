@@ -1,6 +1,6 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
-import { insertExperimentPayloadSchema } from '@/app/api/experiments/[experimentId]/insert/schema';
+import { createExperimentPayloadSchema } from '@/app/api/experiment/[experimentId]/insert/schema';
 import DatabaseUtils from '../../DatabaseUtils';
 import {
   assertExperimentExists,
@@ -13,23 +13,12 @@ import {
 } from './utils';
 
 export async function createExperimentTable(
-  experimentId: string,
-  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
+  payload: PayloadSchemaType[ApiEndpoints.experimentCreate],
 ) {
   // Don't create dynamic table if doesn't exist in the Experiments list table
+  const { experimentId, outputFieldsByMetadata } =
+    createExperimentPayloadSchema.parse(payload);
   await assertExperimentExists(experimentId);
-  const params = insertExperimentPayloadSchema.parse(payload);
-  const { steps } = params;
-
-  const outputFieldsByMetadata = steps.reduce(
-    (acc: Record<string, string[]>, step) => {
-      if (step.name && step.metadata) {
-        acc[step.name] = step.outputs.map((output) => output.name);
-      }
-      return acc;
-    },
-    {},
-  );
 
   const experimentColumns = buildExperimentFields(outputFieldsByMetadata);
   const experimentFields = experimentColumns.map((field) => field.field);

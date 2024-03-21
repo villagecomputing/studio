@@ -18,6 +18,6 @@ export const insertExperimentPayloadSchema = z.object({
 // Ideally the creation of a dynamic experiment table should be a separate endpoint (experiment/new) but
 // due to limitations of the SDK, ATM (mv1) we can only create the dynamic table during the insert call
 export const createExperimentPayloadSchema = z.object({
-  id: z.string(),
+  experimentId: z.string(),
   outputFieldsByMetadata: z.record(z.array(z.string())),
 });

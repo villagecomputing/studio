@@ -10,7 +10,23 @@ export async function POST(
   const requestBody = await request.json();
   const payload = insertExperimentPayloadSchema.parse(requestBody);
   try {
-    ApiUtils.createExperimentTable(experimentId, payload);
+    const { steps } = insertExperimentPayloadSchema.parse(payload);
+
+    const outputFieldsByMetadata = steps.reduce(
+      (acc: Record<string, string[]>, step) => {
+        if (step.name && step.metadata) {
+          acc[step.name] = step.outputs.map((output) => output.name);
+        }
+        return acc;
+      },
+      {},
+    );
+
+    ApiUtils.createExperimentTable({
+      experimentId,
+      outputFieldsByMetadata,
+    });
+
     // TODO:
     // 2) Extract fields from payload:
     //   a) step[..].name = 'METADATA' type columns
