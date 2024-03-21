@@ -30,12 +30,8 @@ export async function addData(
       const sanitizedRow: Record<string, string> = {};
 
       existingColumns.forEach((existingColumn) => {
-        const columnName = existingColumn.name;
-        const datasetColumnValue = datasetRow[columnName] || '';
-
-        if (datasetColumnValue !== undefined) {
-          sanitizedRow[existingColumn.field] = datasetColumnValue;
-        }
+        sanitizedRow[existingColumn.field] =
+          datasetRow[existingColumn.name] || '';
       });
 
       return sanitizedRow;

@@ -1,17 +1,18 @@
 import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 
-export type ExperimentField = Pick<
+export type ExperimentField = { value?: string } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
 
 export function buildExperimentFields(
-  outputFieldsByMetadata: Record<string, string[]>,
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ): ExperimentField[] {
   const experimentFields: ExperimentField[] = [
     {
@@ -21,23 +22,28 @@ export function buildExperimentFields(
     },
   ];
 
-  let index = 0;
-  Object.entries(outputFieldsByMetadata).flatMap(
-    ([metadataName, outputTypes]) => [
-      experimentFields.push({
-        name: metadataName,
-        field: getColumnFieldFromNameAndIndex(metadataName, index++),
+  payload.steps
+    .map((step) => [
+      {
+        name: step.name,
         type: Enum_Experiment_Column_Type.METADATA,
+        value: JSON.stringify(step.metadata),
+      },
+      ...step.outputs.map((output) => ({
+        name: output.name,
+        type: Enum_Experiment_Column_Type.OUTPUT,
+        value: output.value,
+      })),
+    ])
+    .flatMap((fields) => fields)
+    .forEach((field, index) =>
+      experimentFields.push({
+        name: field.name,
+        field: getColumnFieldFromNameAndIndex(field.name, index),
+        value: field.value,
+        type: field.type,
       }),
-      outputTypes.forEach((outputType) =>
-        experimentFields.push({
-          name: outputType,
-          field: getColumnFieldFromNameAndIndex(outputType, index++),
-          type: Enum_Experiment_Column_Type.OUTPUT,
-        }),
-      ),
-    ],
-  );
+    );
 
   return experimentFields;
 }
