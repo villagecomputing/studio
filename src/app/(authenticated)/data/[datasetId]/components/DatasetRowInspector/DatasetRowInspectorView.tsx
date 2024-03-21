@@ -5,6 +5,7 @@ import { BaseRowInspectorFooter } from '@/app/(authenticated)/components/base-ro
 import { BaseRowInspectorHeader } from '@/app/(authenticated)/components/base-row-inspector/components/BaseRowInspectorHeader';
 import { RowInspectorType } from '@/app/(authenticated)/components/base-row-inspector/type';
 import { Button } from '@/components/ui/button';
+import { ENUM_Ground_truth_status } from '@/lib/types';
 import { ArrowDownIcon, CornerDownLeftIcon } from 'lucide-react';
 import { useDatasetRowInspectorContext } from './DatasetRowInspector';
 import DatasetRowInspectorBody from './components/DatasetRowInspectorBody';
@@ -13,7 +14,8 @@ import useDatasetRowInspectorData from './hooks/useDatasetRowInspectorActions';
 export default function DatasetRowInspectorView() {
   const { inspectorRowIndex, setInspectorRowIndex } =
     useDatasetRowInspectorContext();
-  const { approveRow, navigateTo } = useDatasetRowInspectorData();
+  const { groundTruthCell, approveRow, navigateTo } =
+    useDatasetRowInspectorData();
 
   return (
     <>
@@ -39,7 +41,10 @@ export default function DatasetRowInspectorView() {
             className="bg-green550 hover:bg-green550 hover:opacity-85"
             onClick={approveRow}
           >
-            Approve <CornerDownLeftIcon size={24} className="ml-2" />
+            {groundTruthCell?.status === ENUM_Ground_truth_status.APPROVED
+              ? 'Approved'
+              : 'Approve'}
+            <CornerDownLeftIcon size={24} className="ml-2" />
           </Button>
         </BaseRowInspectorFooter>
       </BaseRowInspector>

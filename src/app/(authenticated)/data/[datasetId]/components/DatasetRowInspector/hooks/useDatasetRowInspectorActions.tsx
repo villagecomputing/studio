@@ -58,6 +58,7 @@ export default function useDatasetRowInspectorActions(): UseDatasetRowInspectorD
   };
 
   return {
+    groundTruthCell: currentGroundTruthCell,
     approveRow,
     navigateTo,
   };

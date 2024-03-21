@@ -6,6 +6,7 @@ export type DatasetRowInspectorProps = {
 };
 
 export type UseDatasetRowInspectorData = {
+  groundTruthCell: GroundTruthCell | null;
   approveRow: () => Promise<void>;
   navigateTo: (direction: 'NEXT' | 'PREVIOUS') => void;
 };
