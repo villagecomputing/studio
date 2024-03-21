@@ -63,8 +63,6 @@ export function buildExperimentColumnDefinition(
             type: ColumnType.TEXT,
             name: field.field,
           };
-        case Enum_Experiment_Column_Type.INPUT:
-          throw new Error(`Unupported field type: ${field.type}`);
         default:
           exhaustiveCheck(type);
       }

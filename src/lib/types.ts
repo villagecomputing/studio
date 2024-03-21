@@ -8,7 +8,6 @@ export enum ENUM_Column_type {
 
 export enum Enum_Experiment_Column_Type {
   IDENTIFIER = 'IDENTIFIER',
-  INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
   METADATA = 'METADATA',
 }
