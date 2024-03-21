@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { datasetId: string } },
 ) {
   try {
-    const datasetId = Number(params.datasetId);
+    const datasetId = params.datasetId;
     if (!datasetId) {
       return response('Invalid dataset id', 400);
     }

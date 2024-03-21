@@ -20,7 +20,7 @@ const DatasetRowSchema = z.record(
 );
 
 export const datasetViewResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   created_at: z.date(),
   name: z.string(),
   columns: z.array(TableColumnPropsSchema),

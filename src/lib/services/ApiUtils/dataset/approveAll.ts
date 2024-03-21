@@ -1,20 +1,16 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { ENUM_Ground_truth_status } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
-import {
-  getDatasetNameAndGTColumnField,
-  getGroundTruthStatusColumnName,
-} from './utils';
+import { getGTColumnField, getGroundTruthStatusColumnName } from './utils';
 
 export async function approveAll(
   payload: PayloadSchemaType[ApiEndpoints.datasetApproveAll],
 ) {
   const { datasetId } = payload;
   try {
-    const { datasetName, groundTruthColumnField } =
-      await getDatasetNameAndGTColumnField(datasetId);
+    const groundTruthColumnField = await getGTColumnField(datasetId);
 
-    await DatabaseUtils.update(datasetName, {
+    await DatabaseUtils.update(datasetId, {
       [getGroundTruthStatusColumnName(groundTruthColumnField)]:
         ENUM_Ground_truth_status.APPROVED,
     });
