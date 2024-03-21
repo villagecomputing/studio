@@ -29,11 +29,6 @@ export async function POST(request: Request) {
       JSON.parse(requestDatasetData),
     );
 
-    // Checks if the dataset name is already in use
-    if (!(await ApiUtils.isDatasetNameAvailable(dataToSend.datasetTitle))) {
-      return response('Dataset name already exists', 400);
-    }
-
     // Attempts to read the file content
     const fileContent = await FileHandler.readFileAsStream(file);
     if (!fileContent) {
@@ -77,7 +72,7 @@ export async function POST(request: Request) {
     for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
       const batch = parsedFile.rows.slice(i, i + batchSize);
       await ApiUtils.addData({
-        datasetName: dataset.datasetName,
+        datasetId: datasetId,
         datasetRows: batch,
       });
     }
