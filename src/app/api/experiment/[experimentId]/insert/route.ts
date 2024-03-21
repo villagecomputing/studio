@@ -20,10 +20,7 @@ export async function POST(
       {},
     );
 
-    ApiUtils.createExperimentTable({
-      experimentId,
-      outputFieldsByMetadata,
-    });
+    ApiUtils.createExperimentTable(experimentId, outputFieldsByMetadata);
 
     // TODO:
     // 2) Extract fields from payload:
