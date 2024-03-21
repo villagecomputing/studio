@@ -16,7 +16,7 @@ import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
 import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
-} from '@/app/api/experiments/new/schema';
+} from '@/app/api/experiment/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
 import { z } from 'zod';
 

@@ -1,4 +1,4 @@
-import { assertDatasetExists } from '@/lib/services/DatabaseUtils/common';
+import { getDatasetOrThrow } from '@/lib/services/DatabaseUtils/common';
 import PrismaClient from '@/lib/services/prisma';
 import { UUIDPrefixEnum, generateUUID } from '@/lib/utils';
 import { response } from '../../utils';
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
   try {
-    await assertDatasetExists(payload.datasetId);
+    await getDatasetOrThrow(payload.datasetId);
   } catch (error) {
     return response('Invalid dataset id', 400);
   }

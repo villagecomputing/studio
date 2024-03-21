@@ -1,14 +1,11 @@
 import { arraysEqual } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
-import { assertTableExists } from './common';
 
 export async function insert(
   tableName: string,
   rows: Record<string, string>[],
 ): Promise<number> {
-  await assertTableExists(tableName);
-
   if (rows.length === 0) {
     return 0;
   }
