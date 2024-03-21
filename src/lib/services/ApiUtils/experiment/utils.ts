@@ -1,17 +1,18 @@
 import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 
-export type ExperimentField = Pick<
+export type ExperimentField = { value?: string } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
 
 export function buildExperimentFields(
-  outputFieldsByMetadata: Record<string, string[]>,
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ): ExperimentField[] {
   const experimentFields: ExperimentField[] = [
     {
@@ -21,33 +22,30 @@ export function buildExperimentFields(
     },
   ];
 
-  let index = 0;
-  Object.entries(outputFieldsByMetadata).flatMap(([metadataName, outputs]) => [
-    experimentFields.push({
-      name: metadataName,
-      field: getColumnFieldFromNameAndIndex(metadataName, index++),
-      type: Enum_Experiment_Column_Type.METADATA,
-    }),
-    outputs.forEach((output) =>
-      experimentFields.push({
-        name: getMetadataSpecificOutputName(metadataName, output),
-        field: getColumnFieldFromNameAndIndex(output, index++),
+  payload.steps
+    .map((step) => [
+      {
+        name: step.name,
+        type: Enum_Experiment_Column_Type.METADATA,
+        value: JSON.stringify(step.metadata),
+      },
+      ...step.outputs.map((output) => ({
+        name: output.name,
         type: Enum_Experiment_Column_Type.OUTPUT,
+        value: output.value,
+      })),
+    ])
+    .flatMap((fields) => fields)
+    .forEach((field, index) =>
+      experimentFields.push({
+        name: field.name,
+        field: getColumnFieldFromNameAndIndex(field.name, index),
+        value: field.value,
+        type: field.type,
       }),
-    ),
-  ]);
+    );
 
   return experimentFields;
-}
-
-// Experiments can have multiple steps/netadata and each can have multiple outputs
-// Ouputs for different metadata can have the same name
-// When searching for the field to insert an output to we need to also take into account the metadata name so that we insert the proper value
-export function getMetadataSpecificOutputName(
-  metadataName: string,
-  outputName: string,
-) {
-  return `${outputName} (${metadataName})`;
 }
 
 export function buildExperimentColumnDefinition(

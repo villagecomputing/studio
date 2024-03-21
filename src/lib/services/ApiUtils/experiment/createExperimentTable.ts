@@ -1,3 +1,4 @@
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import {
   assertExperimentExists,
@@ -11,23 +12,24 @@ import {
 
 export async function createExperimentTable(
   experimentId: string,
-  outputFieldsByMetadata: Record<string, string[]>,
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ) {
   // Don't create dynamic table if doesn't exist in the Experiments list table
   await assertExperimentExists(experimentId);
+  const experimentFields = buildExperimentFields(payload);
+  const fields = experimentFields.map(
+    (experimentField) => experimentField.field,
+  );
 
-  const experimentColumns = buildExperimentFields(outputFieldsByMetadata);
-  const experimentFields = experimentColumns.map((field) => field.field);
-  // Return if table is already created
-  if (await isExperimentTableCreated(experimentId, experimentFields)) {
-    return;
+  // Create table if it does not exist
+  if (await isExperimentTableCreated(experimentId, fields)) {
+    return experimentFields;
   }
 
-  const columnDefinitions = buildExperimentColumnDefinition(experimentColumns);
+  const columnDefinitions = buildExperimentColumnDefinition(experimentFields);
   await DatabaseUtils.create(experimentId, columnDefinitions);
-
   await Promise.all(
-    experimentColumns.map(
+    experimentFields.map(
       async (field) =>
         await PrismaClient.experiment_column.create({
           data: {

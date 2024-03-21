@@ -7,7 +7,7 @@ import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
 import { createExperimentTable } from './experiment/createExperimentTable';
-import { insertExperimentSteps } from './experiment/insertExperimentStep';
+import { insertExperimentSteps } from './experiment/insertExperimentSteps';
 
 export default {
   getDataset,
