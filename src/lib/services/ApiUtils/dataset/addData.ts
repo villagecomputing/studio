@@ -2,6 +2,7 @@ import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/sche
 import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
+import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
 export async function addData(
@@ -9,6 +10,7 @@ export async function addData(
 ) {
   const { datasetId, datasetRows } = addDataPayloadSchema.parse(payload);
   try {
+    await getDatasetOrThrow(datasetId);
     // Get all fields and column names associated with the dataset
     const existingColumns = await PrismaClient.dataset_column.findMany({
       select: {

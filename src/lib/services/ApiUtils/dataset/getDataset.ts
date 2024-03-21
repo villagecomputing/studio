@@ -9,6 +9,7 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash';
 import DatabaseUtils from '../../DatabaseUtils';
+import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 import { getGroundTruthStatusColumnName } from './utils';
 
@@ -45,6 +46,9 @@ async function getDatasetContent(datasetId: string) {
   if (!datasetId) {
     throw new Error('DatasetId is required');
   }
+  // Ensure the dataset exists and throw an error if not
+  await getDatasetOrThrow(datasetId);
+  // Retrieve the dataset table content from the database as a record with string values
   const result = await DatabaseUtils.select<Record<string, string>>(datasetId);
   return result;
 }

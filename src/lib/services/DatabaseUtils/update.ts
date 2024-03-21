@@ -1,13 +1,10 @@
 import PrismaClient from '../prisma';
-import { assertTableExists } from './common';
 
 export async function update<T>(
   tableName: string,
   setValues: { [key: string]: string },
   whereConditions?: { [key: string]: string },
 ): Promise<number> {
-  await assertTableExists(tableName);
-
   const setKeys = Object.keys(setValues);
   const setParams = setKeys
     .map((key, index) => `"${key}" = $${index + 1}`)

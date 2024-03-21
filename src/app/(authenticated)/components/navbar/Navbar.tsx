@@ -13,7 +13,7 @@ export const NavbarItems: NavbarMenuItemProps[] = [
     Icon: <DatabaseIcon size={20} />,
   },
   {
-    route: '/experiments',
+    route: '/experiment',
     name: 'Experiments',
     Icon: <ListTodoIcon size={20} />,
   },

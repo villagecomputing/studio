@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
-import { assertTableExists } from './common';
 
 export async function selectAggregation(
   tableName: string,
@@ -10,9 +9,6 @@ export async function selectAggregation(
   },
   whereConditions?: { [key: string]: string },
 ): Promise<string> {
-  // First, check if the table name exists in the Dataset table
-  await assertTableExists(tableName);
-
   const aggField = aggregation.field
     ? `"${Prisma.raw(aggregation.field)}"`
     : '*';
