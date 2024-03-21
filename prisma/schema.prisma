@@ -9,7 +9,7 @@ datasource db {
 
 model Dataset {
   uuid           String           @id
-  name           String           @unique(map: "sqlite_autoindex_Dataset_2")
+  name           String
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt

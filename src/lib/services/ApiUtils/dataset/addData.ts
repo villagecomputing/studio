@@ -2,20 +2,15 @@ import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/sche
 import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
+import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
 export async function addData(
   payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
 ) {
-  const { datasetName, datasetRows } = addDataPayloadSchema.parse(payload);
+  const { datasetId, datasetRows } = addDataPayloadSchema.parse(payload);
   try {
-    // TODO Replace this with getDatasetOrThrow
-    const dataset = await PrismaClient.dataset.findFirstOrThrow({
-      where: {
-        name: datasetName,
-      },
-    });
-
+    await getDatasetOrThrow(datasetId);
     // Get all fields and column names associated with the dataset
     const existingColumns = await PrismaClient.dataset_column.findMany({
       select: {
@@ -23,7 +18,7 @@ export async function addData(
         field: true,
       },
       where: {
-        dataset_uuid: dataset.uuid,
+        dataset_uuid: datasetId,
         type: {
           in: DISPLAYABLE_DATASET_COLUMN_TYPES,
         },
@@ -46,7 +41,7 @@ export async function addData(
       return sanitizedRow;
     });
 
-    const result = await DatabaseUtils.insert(dataset.uuid, sanitizedRows);
+    const result = await DatabaseUtils.insert(datasetId, sanitizedRows);
     return result;
   } catch (error) {
     console.error(error);
