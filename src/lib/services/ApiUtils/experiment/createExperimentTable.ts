@@ -2,26 +2,21 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import { insertExperimentPayloadSchema } from '@/app/api/experiments/[experimentId]/insert/schema';
 import DatabaseUtils from '../../DatabaseUtils';
-import { assertExperimentExists } from '../../DatabaseUtils/common';
+import {
+  assertExperimentExists,
+  isExperimentTableCreated,
+} from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 import {
-  ExperimentField,
   buildExperimentColumnDefinition,
   buildExperimentFields,
 } from './utils';
-
-export async function isExperimentTableAlreadyCreated(
-  _experimentId: string,
-  _fields: ExperimentField[],
-): Promise<boolean> {
-  // TODO:
-  throw new Error('Not implemented');
-}
 
 export async function createExperimentTable(
   experimentId: string,
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ) {
+  // Don't create dynamic table if doesn't exist in the Experiments list table
   await assertExperimentExists(experimentId);
   const params = insertExperimentPayloadSchema.parse(payload);
   const { steps } = params;
@@ -36,16 +31,18 @@ export async function createExperimentTable(
     {},
   );
 
-  const experimentFields = buildExperimentFields(outputFieldsByMetadata);
-  if (await isExperimentTableAlreadyCreated(experimentId, experimentFields)) {
+  const experimentColumns = buildExperimentFields(outputFieldsByMetadata);
+  const experimentFields = experimentColumns.map((field) => field.field);
+  // Return if table is already created
+  if (await isExperimentTableCreated(experimentId, experimentFields)) {
     return;
   }
 
-  const columnDefinitions = buildExperimentColumnDefinition(experimentFields);
+  const columnDefinitions = buildExperimentColumnDefinition(experimentColumns);
   await DatabaseUtils.create(experimentId, columnDefinitions);
 
   await Promise.all(
-    experimentFields.map(
+    experimentColumns.map(
       async (field) =>
         await PrismaClient.experiment_column.create({
           data: {

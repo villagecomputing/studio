@@ -60,6 +60,20 @@ export function arraysEqual(arr1: string[], arr2: string[]) {
   return true;
 }
 
+export function arrayContainsArray(arr1: string[], arr2: string[]) {
+  // Convert both arrays to Sets for easier comparison
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+
+  // Check if set2 is a subset of set1
+  for (const item in set2) {
+    if (!set1.has(item)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export enum UUIDPrefixEnum {
   DATASET = 'd_',
   EXPERIMENT = 'e_',
