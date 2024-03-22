@@ -5,8 +5,9 @@ import ApiUtils from '@/lib/services/ApiUtils';
 
 import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
+
+import DatasetGrid from '../utils/DatasetGrid';
 import { FetchDatasetResult } from './types';
-import { convertToAGGridData } from './utils/gridUtils';
 
 export const fetchDataSet = async (
   datasetId: string,
@@ -16,7 +17,7 @@ export const fetchDataSet = async (
 
     return {
       datasetName: dataset.name,
-      ...convertToAGGridData({
+      ...DatasetGrid.convertToAGGridData({
         datasetId: dataset.id,
         columns: dataset.columns,
         rows: dataset.rows,

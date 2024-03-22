@@ -11,7 +11,7 @@ import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
-import { mapFieldNameToHeaderName } from '../utils/commonUtils';
+import { mapFieldNameToHeaderName } from '../../utils/commonUtils';
 import DatasetRowInspector from './DatasetRowInspector/DatasetRowInspector';
 import { useDatasetTableContext } from './DatasetTableContext';
 

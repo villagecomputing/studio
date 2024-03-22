@@ -1,7 +1,11 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 
 import { ObjectParseResult } from '@/lib/services/DatasetParser';
-import { AGGridDataset, DatasetRow, GroundTruthCell } from '../types';
+import {
+  AGGridDataset,
+  DatasetRow,
+  GroundTruthCell,
+} from '../[datasetId]/types';
 
 export const ROW_ID_FIELD_NAME = 'ROW_ID';
 export const GROUND_TRUTH_COLUMN_SUFFIX = ' (GT)';
