@@ -1,3 +1,4 @@
 import { convertToAGGridData } from './convertToAGGridData';
+import { convertToExperimentListGridData } from './convertToExperimentListGridData';
 
-export default { convertToAGGridData };
+export default { convertToAGGridData, convertToExperimentListGridData };

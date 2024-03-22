@@ -1,4 +1,4 @@
-import { ExperimentTableColumnProps } from '@/app/(authenticated)/experiment/types';
+import { ExperimentTableColumnProps } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { ResultSchemaType } from '@/lib/routes/routes';
 import { Prisma } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
