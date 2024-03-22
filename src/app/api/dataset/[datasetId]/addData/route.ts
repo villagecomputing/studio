@@ -1,5 +1,6 @@
 import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { addDataPayloadSchema } from './schema';
 
 export async function POST(request: Request) {
@@ -15,7 +16,8 @@ export async function POST(request: Request) {
     // Parse the dataset data object using the defined schema
     // This will throw if the object doesn't match the schema
     const dataset = addDataPayloadSchema.parse(body);
-    await ApiUtils.addData(dataset);
+    const datasetUuid = getDatasetUuidFromFakeId(dataset.datasetId);
+    await ApiUtils.addData({ ...dataset, datasetId: datasetUuid });
 
     return response('OK');
   } catch (error) {
