@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx prisma generate & next dev",
+    "dev": "npx prisma migrate dev & npx prisma db pull & npx prisma generate & next dev",
     "build": "npx prisma generate & next build",
     "start": "next start",
     "lint": "next lint",
