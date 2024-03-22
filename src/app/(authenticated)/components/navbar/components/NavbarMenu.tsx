@@ -9,13 +9,13 @@ export default function NavbarMenu(props: { toggleCollapse: () => void }) {
   const { toggleCollapse } = props;
   return (
     <>
-      <div className={cn(['mb-4 flex justify-between p-4'])}>
+      <div className={cn(['mb-4 flex items-center justify-between p-4'])}>
         <Image
           src={'/logo-large.svg'}
           priority
           alt="LabelKit Logo"
-          height={24}
-          width={114}
+          height={20}
+          width={120}
         />
 
         <Button

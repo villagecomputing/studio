@@ -1,4 +1,4 @@
-import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/[datasetId]/utils/commonUtils';
+import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/utils/commonUtils';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';

@@ -33,7 +33,7 @@ export default function Navbar() {
       className={cn([
         'flex h-full flex-col bg-paleBlueGrey drop-shadow',
         'transition-all duration-300 ease-in-out',
-        collapsed ? 'w-16' : ' w-48',
+        collapsed ? 'w-16' : 'w-52',
       ])}
     >
       {collapsed ? (
