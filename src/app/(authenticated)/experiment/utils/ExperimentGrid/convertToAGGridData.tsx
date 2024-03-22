@@ -1,4 +1,7 @@
-import { AGGridExperiment, ConvertToAGGridDataProps } from '../../types';
+import {
+  AGGridExperiment,
+  ConvertToAGGridDataProps,
+} from '../../[experimentId]/types';
 
 export function convertToAGGridData(
   data: ConvertToAGGridDataProps,

@@ -1,7 +1,8 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
-import { ExperimentViewPageProps } from '../types';
+
 import { fetchExperiment } from './actions';
+import { ExperimentViewPageProps } from './types';
 
 export default async function ExperimentViewPage(
   props: ExperimentViewPageProps,

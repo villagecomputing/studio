@@ -2,8 +2,9 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { ParserError } from '@/lib/services/DatasetParser';
 import { permanentRedirect } from 'next/navigation';
-import { FetchExperimentResult } from '../types';
+
 import ExperimentGrid from '../utils/ExperimentGrid';
+import { FetchExperimentResult } from './types';
 
 export const fetchExperiment = async (
   experimentId: string,
