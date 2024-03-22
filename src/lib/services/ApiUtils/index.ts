@@ -9,6 +9,7 @@ import { getDataset } from './dataset/getDataset';
 import { createExperimentTable } from './experiment/createExperimentTable';
 import { getExperiment } from './experiment/getExperiment';
 import { insertExperimentSteps } from './experiment/insertExperimentSteps';
+import { updateExperiment } from './experiment/updateExperiment';
 
 export default {
   getDataset,
@@ -20,4 +21,5 @@ export default {
   getExperiment,
   createExperimentTable,
   insertExperimentSteps,
+  updateExperiment,
 };

@@ -14,6 +14,12 @@ CREATE TABLE "Experiment" (
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,
   "deleted_at" DATETIME,
+  "total_latency" INTEGER NOT NULL DEFAULT 0,
+  "avg_latency_p50" INTEGER NOT NULL DEFAULT 0,
+  "avg_latency_950" INTEGER NOT NULL DEFAULT 0,
+  "total_cost" INTEGER NOT NULL DEFAULT 0,
+  "total_accuracy" INTEGER NOT NULL DEFAULT 0,
+  "total_rows" INTEGER NOT NULL DEFAULT 0,
   CONSTRAINT "experiments_dataset_id_fkey" FOREIGN KEY ("dataset_uuid") REFERENCES "Dataset" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "experiment_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "Experiment_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

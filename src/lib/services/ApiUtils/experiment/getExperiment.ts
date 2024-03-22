@@ -23,7 +23,7 @@ async function getExperimentContent(experimentTableName: string) {
   }
 }
 
-async function getExperimentDetails(experimentId: string) {
+export async function getExperimentDetails(experimentId: string) {
   const columnSelect = {
     id: true,
     name: true,
@@ -35,6 +35,7 @@ async function getExperimentDetails(experimentId: string) {
     uuid: true,
     created_at: true,
     name: true,
+    // TODO: add new columns
     Experiment_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.ExperimentSelect;
 
