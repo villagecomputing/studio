@@ -2,13 +2,14 @@
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
-import { cn, formatDate } from '@/lib/utils';
-import { GridOptions } from 'ag-grid-community';
+import { cn, createDatasetFakeId, formatDate } from '@/lib/utils';
+import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
+import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
 import ZeroState from './components/zero-state/ZeroState';
@@ -24,6 +25,7 @@ const getData = async () => {
 type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
 type RowType = {
   id: string;
+  fakeId: string;
   datasetName: string;
   numberOfRecords: string;
   uploadDate: string;
@@ -35,28 +37,46 @@ const DataPage = () => {
 
   const rowData: RowType[] = datasetList.map((data) => ({
     id: data.id,
+    fakeId: createDatasetFakeId(data.name, data.id),
     datasetName: data.name,
     numberOfRecords: data.total_rows,
     uploadDate: formatDate(data.created_at),
   }));
+  const onCellClicked = (event: CellClickedEvent<RowType, string>) => {
+    if (!event.data) {
+      return;
+    }
+    router.push(`/data/${event.data.id}`);
+  };
   const colDef: GridOptions['columnDefs'] = [
+    {
+      headerName: 'ID',
+      // The 'fakeId' field is also referenced in the ag-grid-custom-theme. Any changes here should be reflected there.
+      field: 'fakeId',
+      cellRenderer: FakeIdCellRenderer,
+      maxWidth: 50,
+      tooltipValueGetter: (props) => `Copy dataset id: ${props.value}`,
+    },
     {
       headerName: 'Dataset Name',
       field: 'datasetName',
       flex: 5,
       minWidth: 200,
+      onCellClicked,
     },
     {
       headerName: 'Rows',
       field: 'numberOfRecords',
       flex: 1,
       minWidth: 90,
+      onCellClicked,
     },
     {
       headerName: 'Upload Date',
       field: 'uploadDate',
       flex: 1,
       minWidth: 200,
+      onCellClicked,
     },
   ];
 
@@ -96,16 +116,13 @@ const DataPage = () => {
                 theme="ag-theme-dataset-list"
                 agGridProps={{
                   ...DEFAULT_GRID_OPTIONS,
-                  onRowClicked: (event) => {
-                    if (!event.data) {
-                      return;
-                    }
-                    router.push(`/data/${event.data.id}`);
-                  },
                   rowData,
                   columnDefs: colDef,
                   domLayout: 'autoHeight',
                   quickFilterText,
+                  rowSelection: undefined,
+                  tooltipShowDelay: 100,
+                  tooltipHideDelay: 2000,
                 }}
               />
             </div>
