@@ -7,6 +7,7 @@ import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
 import { useExperimentListContext } from './components/ExperimentListProvider';
+import ExperimentListZeroState from './components/zero-state/ExperimentListZeroState';
 import { ExperimentListRowType } from './types';
 import ExperimentGrid from './utils/ExperimentGrid';
 
@@ -33,7 +34,7 @@ const ExperimentsPage = () => {
           <SearchInput onChange={searchInExperimentList} />
         </div>
         {!experiments.length ? (
-          <span>No Experiments :(</span>
+          <ExperimentListZeroState />
         ) : (
           <div
             className="overflow-y-auto"
