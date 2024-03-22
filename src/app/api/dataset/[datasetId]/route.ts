@@ -1,4 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
@@ -11,7 +12,10 @@ export async function GET(
     if (!datasetId) {
       return response('Invalid dataset id', 400);
     }
-    const result = await ApiUtils.getDataset(datasetId);
+
+    const result = await ApiUtils.getDataset(
+      getDatasetUuidFromFakeId(datasetId),
+    );
 
     if (!datasetViewResponseSchema.safeParse(result)) {
       return response('Invalid response dataset view type', 500);

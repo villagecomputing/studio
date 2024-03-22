@@ -75,11 +75,49 @@ export function arrayContainsArray(arr1: string[], arr2: string[]) {
 }
 
 export enum UUIDPrefixEnum {
-  DATASET = 'd_',
-  EXPERIMENT = 'e_',
+  DATASET = 'd-',
+  EXPERIMENT = 'e-',
 }
 
 export const generateUUID = (prefix?: UUIDPrefixEnum) => {
   const uuid = uuidv4();
   return prefix ? `${prefix}${uuid}` : uuid;
+};
+function sanitizeDatasetName(datasetName: string): string {
+  return datasetName.replace(/[^a-z0-9-_]/gi, '');
+}
+
+/**
+ * Generates a fake ID for a dataset.
+ *
+ * @param {string} datasetName - The name of the dataset.
+ * @param {string} uuid - The UUID associated with the dataset.
+ * @returns {string} The fake ID for the dataset, which is a sanitized version of the dataset name concatenated with the UUID.
+ */
+export const createDatasetFakeId = (datasetName: string, uuid: string) => {
+  const sanitizedDatasetName = sanitizeDatasetName(datasetName);
+  return `${sanitizedDatasetName}-${uuid}`;
+};
+
+/** 
+  A UUID version 4 has 36 characters in total, which includes 32 hexadecimal characters and 4 hyphens 
+  that are used to separate the UUID into 5 groups in the form of 8-4-4-4-12.
+  Here is an example of a UUID v4: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+  Where x is any hexadecimal digit and y is one of 8, 9, A, or B.
+*/
+function isValidUUIDv4(uuid: string): boolean {
+  const regex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return regex.test(uuid);
+}
+
+export const getDatasetUuidFromFakeId = (datasetFakeId: string) => {
+  const datasetId = datasetFakeId.slice(-36 - UUIDPrefixEnum.DATASET.length);
+  if (
+    !isValidUUIDv4(datasetId.slice(-36)) ||
+    !datasetId.startsWith(UUIDPrefixEnum.DATASET)
+  ) {
+    throw new Error('Invalid dataset id');
+  }
+  return datasetId;
 };

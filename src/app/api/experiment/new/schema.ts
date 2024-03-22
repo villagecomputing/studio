@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const newExperimentPayloadSchema = z.object({
-  datasetId: z.string(),
+  datasetFakeId: z.string(),
   name: z.string(),
   parameters: z.record(z.any()),
 });

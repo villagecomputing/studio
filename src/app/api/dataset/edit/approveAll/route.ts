@@ -1,5 +1,6 @@
 import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { approveAllSchema } from './schema';
 
 export async function POST(request: Request) {
@@ -9,7 +10,9 @@ export async function POST(request: Request) {
     if (!datasetId) {
       return response('Required data is missing', 400);
     }
-    await ApiUtils.approveAll({ datasetId });
+    await ApiUtils.approveAll({
+      datasetId: getDatasetUuidFromFakeId(datasetId),
+    });
     return response('OK');
   } catch (error) {
     console.error('Error in dataset/edit/approveAll', error);
