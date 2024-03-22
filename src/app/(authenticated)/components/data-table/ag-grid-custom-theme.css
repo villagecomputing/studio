@@ -69,3 +69,8 @@
 .ag-cell-wrapper > span {
   height: 100%;
 }
+
+.ag-cell[col-id='fakeId'] {
+  padding-left: 0;
+  padding-right: 0;
+}
