@@ -6,6 +6,7 @@ import { approveAll } from './dataset/approveAll';
 import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
+import { getExperiment } from './experiment/getExperiment';
 
 export default {
   getDataset,
@@ -14,4 +15,5 @@ export default {
   addData,
   editGroundTruthCell,
   approveAll,
+  getExperiment,
 };
