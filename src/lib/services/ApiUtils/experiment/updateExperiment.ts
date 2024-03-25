@@ -5,14 +5,29 @@ import {
   DEFAULT_ROW_METADATA_VALUES,
   ExperimentUpdatableMetadata,
   RowMetadata,
+  assertIsMetadataValid,
 } from './utils';
 
 const getUpdatedAvgLatency = (
-  existingLatency: number,
-  existingRowNumber: number,
+  currentLatency: number,
+  currentRowNumber: number,
   newLatency: number,
-) =>
-  (existingLatency * existingRowNumber + newLatency) / (existingRowNumber + 1);
+) => (currentLatency * currentRowNumber + newLatency) / (currentRowNumber + 1);
+
+const buildRowMetadata = (
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
+): RowMetadata => {
+  return payload.steps.reduce<RowMetadata>((acc, curr) => {
+    assertIsMetadataValid(curr.metadata);
+
+    return {
+      row_latency_p50: acc.row_latency_p50 + Number(curr.metadata.latencyP50),
+      row_latency_p90: acc.row_latency_p90 + Number(curr.metadata.latencyP90),
+      row_cost: acc.row_cost + Number(curr.metadata.cost),
+      row_accuracy: acc.row_accuracy + Number(curr.metadata.accuracy),
+    };
+  }, DEFAULT_ROW_METADATA_VALUES);
+};
 
 export async function updateExperiment(
   experimentId: string,
@@ -20,21 +35,7 @@ export async function updateExperiment(
 ) {
   try {
     const experimentDetails = await getExperimentDetails(experimentId);
-
-    const payloadMetadata: RowMetadata = payload.steps.reduce<RowMetadata>(
-      (acc, cur) => {
-        return {
-          row_latency_p50:
-            acc.row_latency_p50 + (Number(cur.metadata.latencyP50) || 0),
-          row_latency_p90:
-            acc.row_latency_p90 + (Number(cur.metadata.latencyP90) || 0),
-          row_latency: acc.row_latency + (Number(cur.metadata.latency) || 0),
-          row_cost: acc.row_cost + (Number(cur.metadata.cost) || 0),
-          row_accuracy: acc.row_accuracy + (Number(cur.metadata.accuracy) || 0),
-        };
-      },
-      DEFAULT_ROW_METADATA_VALUES,
-    );
+    const payloadMetadata = buildRowMetadata(payload);
 
     const updatedData: ExperimentUpdatableMetadata = {
       avg_latency_p50: getUpdatedAvgLatency(

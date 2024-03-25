@@ -11,7 +11,7 @@ export async function POST(
   const payload = insertExperimentPayloadSchema.parse(requestBody);
   try {
     // Creates table if it doesn't exist
-    await ApiUtils.createExperimentTable(experimentId, payload);
+    await ApiUtils.ensureExperimentTable(experimentId, payload);
   } catch (error) {
     console.error('Error creating experiment dynamic table:', error);
     return response('Error processing request', 500);
