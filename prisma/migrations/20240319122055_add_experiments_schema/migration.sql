@@ -16,7 +16,7 @@ CREATE TABLE "Experiment" (
   "deleted_at" DATETIME,
   "total_latency" INTEGER NOT NULL DEFAULT 0,
   "avg_latency_p50" INTEGER NOT NULL DEFAULT 0,
-  "avg_latency_950" INTEGER NOT NULL DEFAULT 0,
+  "avg_latency_p90" INTEGER NOT NULL DEFAULT 0,
   "total_cost" INTEGER NOT NULL DEFAULT 0,
   "total_accuracy" INTEGER NOT NULL DEFAULT 0,
   "total_rows" INTEGER NOT NULL DEFAULT 0,
