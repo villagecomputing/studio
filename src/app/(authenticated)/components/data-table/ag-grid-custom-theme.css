@@ -17,6 +17,22 @@
   font-size: 14px;
 }
 
+.ag-theme-experiment-list {
+  --ag-foreground-color: theme(colors.gridCellTextColor);
+  --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
+  --ag-odd-row-background-color: theme(colors.white);
+  --ag-row-border-width: 1px;
+  --ag-border-color: theme(colors.gridBorderColor);
+  --ag-border-radius: 12px;
+  --ag-row-height: 69px;
+  --ag-line-height: 18px;
+}
+.ag-theme-experiment-list .ag-header-row {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+}
+
 .ag-theme-dataset {
   --ag-row-height: 92px;
   --ag-line-height: 22px;

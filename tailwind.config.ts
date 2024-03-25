@@ -37,6 +37,7 @@ const config = {
       slateGray500: '#8597AC',
       borderActive: '#B4C2CD',
       green550: '#1CB454',
+      lightGreen: '#BBF7D0',
       agDataColor: '#49515f',
       agGridHeaderHoverGrey: '#D2DDE580',
     },
