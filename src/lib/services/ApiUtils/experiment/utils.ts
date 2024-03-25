@@ -2,7 +2,7 @@ import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/utils
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
-import { Experiment_column } from '@prisma/client';
+import { Experiment, Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 
@@ -10,6 +10,30 @@ export type ExperimentField = { value?: string } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
+export type ExperimentUpdatableMetadata = Pick<
+  Experiment,
+  | 'avg_latency_p50'
+  | 'avg_latency_p90'
+  | 'total_cost'
+  | 'total_accuracy'
+  | 'total_rows'
+>;
+
+export type RowMetadata = {
+  row_latency_p50: number;
+  row_latency_p90: number;
+  row_latency: number;
+  row_cost: number;
+  row_accuracy: number;
+};
+
+export const DEFAULT_ROW_METADATA_VALUES = {
+  row_latency_p50: 0,
+  row_latency_p90: 0,
+  row_latency: 0,
+  row_cost: 0,
+  row_accuracy: 0,
+};
 
 export function buildExperimentFields(
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],

@@ -1,5 +1,7 @@
 import { ExperimentTableColumnProps } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { ResultSchemaType } from '@/lib/routes/routes';
+import { guardStringEnum } from '@/lib/typeUtils';
+import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
@@ -35,7 +37,11 @@ export async function getExperimentDetails(experimentId: string) {
     uuid: true,
     created_at: true,
     name: true,
-    // TODO: add new columns
+    avg_latency_p50: true,
+    avg_latency_p90: true,
+    total_cost: true,
+    total_accuracy: true,
+    total_rows: true,
     Experiment_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.ExperimentSelect;
 
@@ -51,6 +57,7 @@ export async function getExperimentDetails(experimentId: string) {
     throw new Error('Failed to get Experiment details');
   }
 }
+
 export async function getExperiment(
   experimentId: string,
 ): Promise<ResultSchemaType['/api/experiment']> {
@@ -73,7 +80,7 @@ export async function getExperiment(
         name: column.name,
         id: column.id,
         field: column.field,
-        type: column.type,
+        type: guardStringEnum(Enum_Experiment_Column_Type, column.type),
       };
     },
   );

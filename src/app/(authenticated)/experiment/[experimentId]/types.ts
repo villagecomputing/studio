@@ -1,3 +1,4 @@
+import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 
 export type ExperimentViewPageProps = {
@@ -16,8 +17,7 @@ export type ExperimentTableColumnProps = {
   id: number;
   name: string;
   field: string;
-  // TODO Change this to Enum type
-  type: string;
+  type: Enum_Experiment_Column_Type;
 };
 
 export type ConvertToAGGridDataProps = {
