@@ -6,9 +6,10 @@ import { approveAll } from './dataset/approveAll';
 import { editDatasetColumn } from './dataset/editDatasetColumn';
 import { editGroundTruthCell } from './dataset/editGroundTruthCell';
 import { getDataset } from './dataset/getDataset';
-import { createExperimentTable } from './experiment/createExperimentTable';
+import { ensureExperimentTable } from './experiment/createExperimentTable';
 import { getExperiment } from './experiment/getExperiment';
 import { insertExperimentSteps } from './experiment/insertExperimentSteps';
+import { updateExperiment } from './experiment/updateExperiment';
 
 export default {
   getDataset,
@@ -18,6 +19,7 @@ export default {
   editGroundTruthCell,
   approveAll,
   getExperiment,
-  createExperimentTable,
+  ensureExperimentTable,
   insertExperimentSteps,
+  updateExperiment,
 };

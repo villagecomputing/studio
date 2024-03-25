@@ -8,15 +8,27 @@ export async function POST(
 ) {
   const experimentId = params.experimentId;
   const requestBody = await request.json();
+  const payload = insertExperimentPayloadSchema.parse(requestBody);
   try {
-    const payload = insertExperimentPayloadSchema.parse(requestBody);
     // Creates table if it doesn't exist
-    await ApiUtils.createExperimentTable(experimentId, payload);
-    await ApiUtils.insertExperimentSteps(experimentId, payload);
-
-    return response('Ok');
+    await ApiUtils.ensureExperimentTable(experimentId, payload);
   } catch (error) {
-    console.error('Error in inserting experiment:', error);
+    console.error('Error creating experiment dynamic table:', error);
     return response('Error processing request', 500);
   }
+  try {
+    await ApiUtils.insertExperimentSteps(experimentId, payload);
+  } catch (error) {
+    console.error('Error inserting experiment steps:', error);
+    return response('Error processing request', 500);
+  }
+
+  try {
+    await ApiUtils.updateExperiment(experimentId, payload);
+  } catch (error) {
+    console.error('Error updating experiment details:', error);
+    return response('Error processing request', 500);
+  }
+
+  return response('Ok');
 }

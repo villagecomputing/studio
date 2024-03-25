@@ -10,7 +10,7 @@ import {
   buildExperimentFields,
 } from './utils';
 
-export async function createExperimentTable(
+export async function ensureExperimentTable(
   experimentId: string,
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ) {
