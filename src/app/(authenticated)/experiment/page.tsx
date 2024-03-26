@@ -1,8 +1,9 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
+import { CellClickedEvent } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useCallback, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
@@ -15,8 +16,15 @@ const ExperimentsPage = () => {
   const router = useRouter();
   const [quickFilterText, setQuickFilterText] = useState<string>('');
   const { experiments } = useExperimentListContext();
+  const onCellClicked = useCallback((event: CellClickedEvent) => {
+    if (!event.data) {
+      return;
+    }
+    router.push(`/experiment/${event.data.id}`);
+  }, []);
+
   const { columnDefs, rowData } =
-    ExperimentGrid.convertToExperimentListGridData(experiments);
+    ExperimentGrid.convertToExperimentListGridData(experiments, onCellClicked);
 
   const searchInExperimentList: ChangeEventHandler<HTMLInputElement> = (
     event,
@@ -41,19 +49,14 @@ const ExperimentsPage = () => {
             style={{ height: 'calc(100vh - 150px)' }}
           >
             <DataTable<ExperimentListRowType>
-              theme="ag-theme-dataset-list"
+              theme="ag-theme-experiment-list"
               agGridProps={{
                 ...DEFAULT_GRID_OPTIONS,
-                onRowClicked: (event) => {
-                  if (!event.data) {
-                    return;
-                  }
-                  router.push(`/experiment/${event.data.id}`);
-                },
                 rowData,
                 columnDefs,
                 domLayout: 'autoHeight',
                 quickFilterText,
+                rowStyle: { padding: '8px 0' },
               }}
             />
           </div>
