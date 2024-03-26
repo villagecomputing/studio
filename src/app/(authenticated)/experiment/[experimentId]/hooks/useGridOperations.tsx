@@ -47,9 +47,7 @@ export function useGridOperations() {
       event: CellClickedEvent<ExperimentRow, unknown>,
       setRowIndex: ExperimentTableContext['setInspectorRowIndex'],
     ) => {
-      if (!event.node.isRowPinned()) {
-        setRowIndex(event.rowIndex);
-      }
+      setRowIndex(event.rowIndex);
     };
 
     return {
