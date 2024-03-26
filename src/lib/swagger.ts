@@ -9,15 +9,7 @@ export const getApiDocs = async () => {
         title: 'Labelkit Studio API - OpenAPI 3.0',
         version: '1.0',
       },
-      components: {
-        securitySchemes: {
-          BearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-          },
-        },
-      },
+      components: {},
       security: [],
     },
   });
