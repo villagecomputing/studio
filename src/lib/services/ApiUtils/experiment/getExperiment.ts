@@ -1,4 +1,5 @@
 import { ExperimentTableColumnProps } from '@/app/(authenticated)/experiment/[experimentId]/types';
+import { DISPLAYABLE_EXPERIMENT_COLUMN_TYPES } from '@/lib/constants';
 import { ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
@@ -74,16 +75,18 @@ export async function getExperiment(
   const experimentContent = await getExperimentContent(experimentId);
 
   // Map the columns
-  const columns = experimentDetails.Experiment_column.map(
-    (column): ExperimentTableColumnProps => {
-      return {
-        name: column.name,
-        id: column.id,
-        field: column.field,
-        type: guardStringEnum(Enum_Experiment_Column_Type, column.type),
-      };
-    },
-  );
+  const columns = experimentDetails.Experiment_column.filter((column) =>
+    DISPLAYABLE_EXPERIMENT_COLUMN_TYPES.includes(
+      guardStringEnum(Enum_Experiment_Column_Type, column.type),
+    ),
+  ).map((column): ExperimentTableColumnProps => {
+    return {
+      name: column.name,
+      id: column.id,
+      field: column.field,
+      type: guardStringEnum(Enum_Experiment_Column_Type, column.type),
+    };
+  });
 
   return {
     uuid: experimentDetails.uuid,
