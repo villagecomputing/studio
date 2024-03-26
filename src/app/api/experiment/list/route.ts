@@ -4,6 +4,14 @@ import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/experiment/list:
+ *   get:
+ *     tags:
+ *      - experiment
+ *     description: Lists all experiments (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function GET() {
   try {
     const experimentSelect = {

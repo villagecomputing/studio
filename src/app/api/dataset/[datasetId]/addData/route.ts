@@ -3,6 +3,14 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { addDataPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/[datasetId]/addData:
+ *   post:
+ *     tags:
+ *      - dataset
+ *     description: Inserts data into a dataset (TODO - add rest body, response and rest of data)
+ */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {

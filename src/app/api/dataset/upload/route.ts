@@ -7,6 +7,14 @@ import { response } from '../../utils';
 import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/upload:
+ *   post:
+ *     tags:
+ *      - dataset
+ *     description: Uploads a dataset file (CSV) (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {

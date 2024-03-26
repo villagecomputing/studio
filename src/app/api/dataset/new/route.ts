@@ -3,6 +3,14 @@ import { createDatasetFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/new:
+ *   post:
+ *     tags:
+ *      - dataset
+ *     description: Creates a new dataset (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {

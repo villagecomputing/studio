@@ -5,6 +5,14 @@ import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/list:
+ *   get:
+ *     tags:
+ *      - dataset
+ *     description: Returns a list if datasets (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function GET() {
   try {
     const datasetSelect = {

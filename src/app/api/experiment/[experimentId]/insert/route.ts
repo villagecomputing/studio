@@ -2,6 +2,14 @@ import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { insertExperimentPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/experiment/[experimentId]/insert:
+ *   post:
+ *     tags:
+ *      - experiment
+ *     description: Inserts a row of steps inside an experiment (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function POST(
   request: Request,
   { params }: { params: { experimentId: string } },

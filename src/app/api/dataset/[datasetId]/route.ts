@@ -3,6 +3,14 @@ import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/[datasetId]:
+ *   get:
+ *     tags:
+ *      - dataset
+ *     description: Returns a dataset (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function GET(
   request: Request,
   { params }: { params: { datasetId: string } },

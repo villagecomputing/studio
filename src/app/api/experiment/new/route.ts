@@ -8,6 +8,14 @@ import {
 import { response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/experiment/new:
+ *   post:
+ *     tags:
+ *      - experiment
+ *     description: Adds a new experiment (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ */
 export async function POST(request: Request) {
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
