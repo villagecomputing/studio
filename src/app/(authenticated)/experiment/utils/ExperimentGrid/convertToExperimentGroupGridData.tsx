@@ -29,16 +29,25 @@ function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
       headerName: 'Avg. Cost',
       field: 'avgCost',
       width: 100,
+      valueFormatter: (params) => `$${params.value}`,
     },
     {
-      headerName: 'Latency',
-      field: 'avgLatency',
+      headerName: 'Latency P90',
+      field: 'p90Latency',
       width: 90,
+      valueFormatter: (params) => `${params.value}s`,
+    },
+    {
+      headerName: 'Latency P50',
+      field: 'p50Latency',
+      width: 90,
+      valueFormatter: (params) => `${params.value}s`,
     },
     {
       headerName: 'Accuracy',
       field: 'avgAccuracy',
       width: 100,
+      valueFormatter: (params) => `${params.value}%`,
     },
   ];
 }
@@ -76,9 +85,14 @@ function getExperimentGroupRowData(data: ExperimentList) {
       id: experimentData.id,
       experimentName: experimentData.name,
       date: formatDate(experimentData.created_at),
-      avgAccuracy: '79.36%',
-      avgCost: '$ 0.0034',
-      avgLatency: '1.82s',
+      avgAccuracy: experimentData.totalAccuracy
+        ? experimentData.totalAccuracy / experimentData.totalRows
+        : 0,
+      avgCost: experimentData.totalCost
+        ? experimentData.totalCost / experimentData.totalRows
+        : 0,
+      p50Latency: experimentData.avgLatencyP50,
+      p90Latency: experimentData.avgLatencyP90,
       runtime: '5m 32s',
       ...dynamicData,
     };

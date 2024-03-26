@@ -1,5 +1,4 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
-import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
@@ -13,6 +12,12 @@ export async function GET() {
       created_at: true,
       group_id: true,
       pipeline_metadata: true,
+      avg_latency_p50: true,
+      avg_latency_p90: true,
+      total_accuracy: true,
+      total_cost: true,
+      total_latency: true,
+      total_rows: true,
       Dataset: {
         select: {
           uuid: true,
@@ -29,24 +34,18 @@ export async function GET() {
     const experimentListResponse: ResultSchemaType[ApiEndpoints.experimentList] =
       await Promise.all(
         experimentList.map(async (experiment) => {
-          let totalRows = 0;
-          try {
-            const result = await DatabaseUtils.selectAggregation(
-              experiment.uuid,
-              {
-                func: 'COUNT',
-              },
-            );
-            totalRows = Number(result);
-          } catch (error) {}
-
           return {
             ...experiment,
             id: experiment.uuid,
             groupId: experiment.group_id,
             pipelineMetadata: experiment.pipeline_metadata,
             created_at: experiment.created_at.toDateString(),
-            totalRows,
+            avgLatencyP50: experiment.avg_latency_p50,
+            avgLatencyP90: experiment.avg_latency_p90,
+            totalAccuracy: experiment.total_accuracy,
+            totalCost: experiment.total_cost,
+            totalLatency: experiment.total_latency,
+            totalRows: experiment.total_rows,
             Dataset: {
               ...experiment.Dataset,
               id: experiment.Dataset.uuid,

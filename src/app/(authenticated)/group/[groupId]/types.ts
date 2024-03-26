@@ -9,9 +9,10 @@ export type ExperimentGroupRowType = {
   experimentName: string;
   runtime: string;
   date: string;
-  avgCost: string;
-  avgLatency: string;
-  avgAccuracy: string;
+  avgCost: number;
+  avgAccuracy: number;
+  p50Latency: number;
+  p90Latency: number;
 };
 
 export type GroupMetaInfo = {
