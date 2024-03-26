@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const experimentStepPayloadSchema = z.object({
   name: z.string(),
-  metadata: z.record(z.string()),
+  metadata: z.record(z.string(), z.union([z.number(), z.string()])),
   outputs: z.array(
     z.object({
       name: z.string(),

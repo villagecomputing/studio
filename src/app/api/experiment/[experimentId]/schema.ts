@@ -1,11 +1,11 @@
+import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { z } from 'zod';
 
 const ExperimentTableColumnPropsSchema = z.object({
   name: z.string(),
   id: z.number(),
   field: z.string(),
-  // TODO Change this to experiment column type ENUM
-  type: z.string(),
+  type: z.nativeEnum(Enum_Experiment_Column_Type),
 });
 
 const ExperimentRowSchema = z.record(z.string(), z.string());
