@@ -1,5 +1,8 @@
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { AGGridDataset } from '../../data/[datasetId]/types';
 
 export type ExperimentViewPageProps = {
   params: {
@@ -32,4 +35,12 @@ export type ExperimentRow = {
 
 export type FetchExperimentResult = AGGridExperiment & {
   experimentName: string;
+};
+
+export type ExperimentTableContext = {
+  inspectorRowIndex: number | null;
+  setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
+  rows: AGGridDataset['rowData'];
+  columnDefs: AGGridDataset['columnDefs'];
+  gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
 };
