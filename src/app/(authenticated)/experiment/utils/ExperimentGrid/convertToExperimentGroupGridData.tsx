@@ -93,6 +93,7 @@ function getExperimentGroupRowData(data: ExperimentList) {
         : 0,
       p50Latency: experimentData.avgLatencyP50,
       p90Latency: experimentData.avgLatencyP90,
+      // TODO Fix this
       runtime: '5m 32s',
       ...dynamicData,
     };
