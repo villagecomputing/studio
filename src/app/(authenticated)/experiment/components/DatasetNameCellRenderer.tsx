@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import { Link2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -20,7 +21,12 @@ export const DatasetName: React.FC<DatasetNameProps> = (props) => {
       className="flex cursor-pointer items-center text-sm"
       onClick={handleOnClick}
     >
-      <span className="flex max-w-full items-center gap-2 self-start rounded-lg border-[thin] border-border bg-white px-2 py-1 hover:bg-paleGrey">
+      <span
+        className={cn([
+          'flex max-w-full items-center gap-2 self-start rounded-lg border-[thin] border-border bg-white px-2 py-1 hover:bg-paleGrey',
+          props.className,
+        ])}
+      >
         <Link2Icon className="shrink-0 text-primary" size={20}></Link2Icon>
         <span className="truncate">{`${props.name}`}</span>
       </span>

@@ -5,6 +5,7 @@ export type ExperimentList = ResultSchemaType[ApiEndpoints.experimentList];
 export type DatasetNameProps = {
   name: string;
   id: string;
+  className?: string;
 };
 
 export type ExperimentListRowType = {
