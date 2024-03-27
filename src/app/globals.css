@@ -16,7 +16,8 @@
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 212 82% 59%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
+    --secondary: 204, 88%, 95%;
+    --secondary-hover: 211, 56%, 91%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215, 13%, 54%;
