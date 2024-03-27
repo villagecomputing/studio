@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import { FolderIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -17,12 +19,19 @@ const GroupIdCellRenderer = (
   };
 
   return (
-    <div className="flex items-center text-sm" onClick={handleOnClick}>
-      <span className="flex max-w-full items-center gap-2 self-start rounded-lg border-[thin] border-border bg-white px-2 py-1 hover:bg-paleGrey">
-        <FolderIcon className="shrink-0" size={20}></FolderIcon>
-        <span className="truncate">{`Group ${props.value}`}</span>
-      </span>
-    </div>
+    <Button
+      variant="outline"
+      onClick={handleOnClick}
+      className={cn([
+        'flex h-7 max-w-full items-center gap-2 rounded-lg px-2 py-1',
+      ])}
+    >
+      <FolderIcon
+        className="shrink-0 text-muted-foreground"
+        size={20}
+      ></FolderIcon>
+      <span className="truncate">{`Group ${props.value}`}</span>
+    </Button>
   );
 };
 export default GroupIdCellRenderer;
