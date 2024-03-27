@@ -6,6 +6,7 @@ import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import DatabaseUtils from '../../DatabaseUtils';
 import PrismaClient from '../../prisma';
+import { DYNAMIC_EXPERIMENT_LATENCY_FIELD } from './utils';
 
 async function getExperimentContent(experimentTableName: string) {
   if (!experimentTableName) {
@@ -38,8 +39,7 @@ export async function getExperimentDetails(experimentId: string) {
     uuid: true,
     created_at: true,
     name: true,
-    avg_latency_p50: true,
-    avg_latency_p90: true,
+    total_latency: true,
     total_cost: true,
     total_accuracy: true,
     total_rows: true,
@@ -56,6 +56,36 @@ export async function getExperimentDetails(experimentId: string) {
   } catch (error) {
     console.error(error);
     throw new Error('Failed to get Experiment details');
+  }
+}
+
+export async function getOrderedExperimentLatencies(
+  experimentId: string,
+): Promise<number[]> {
+  if (!experimentId) {
+    throw new Error('experimentTableName is required');
+  }
+
+  const selectFields = [DYNAMIC_EXPERIMENT_LATENCY_FIELD];
+  const orderBy = {
+    field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+    direction: 'asc',
+  };
+
+  try {
+    const result = await DatabaseUtils.select<number>(
+      experimentId,
+      selectFields,
+      orderBy,
+    );
+    return result;
+  } catch (error) {
+    // Check if the error is because the table doesn't exist
+    if (error instanceof Error && 'code' in error && error.code === 'P2010') {
+      return [];
+    } else {
+      throw error;
+    }
   }
 }
 

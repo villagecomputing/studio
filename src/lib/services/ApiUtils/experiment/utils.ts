@@ -12,27 +12,27 @@ export type ExperimentField = { value?: string } & Pick<
 >;
 export type ExperimentUpdatableMetadata = Pick<
   Experiment,
-  | 'avg_latency_p50'
-  | 'avg_latency_p90'
+  | 'latency_p50'
+  | 'latency_p90'
   | 'total_cost'
   | 'total_accuracy'
   | 'total_rows'
+  | 'total_latency'
 >;
 
 export type RowMetadata = {
-  row_latency_p50: number;
-  row_latency_p90: number;
+  row_latency: number;
   row_cost: number;
   row_accuracy: number;
 };
 
 export const DEFAULT_ROW_METADATA_VALUES = {
-  row_latency_p50: 0,
-  row_latency_p90: 0,
   row_latency: 0,
   row_cost: 0,
   row_accuracy: 0,
 };
+
+export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
 
 export const assertIsNumber = (value: string | number) => {
   if (
@@ -48,8 +48,7 @@ export const assertIsNumber = (value: string | number) => {
 export function assertIsMetadataValid(
   metadata: Record<string, string | number>,
 ) {
-  assertIsNumber(metadata.latencyP50);
-  assertIsNumber(metadata.latencyP90);
+  assertIsNumber(metadata.latency);
   assertIsNumber(metadata.cost);
   assertIsNumber(metadata.accuracy);
 }
@@ -65,7 +64,8 @@ export function buildExperimentFields(
     },
   ];
 
-  payload.steps
+  const rowLatency = 0;
+  const fieldMap = payload.steps
     .map((step) => {
       assertIsMetadataValid(step.metadata);
       return [
@@ -81,15 +81,22 @@ export function buildExperimentFields(
         })),
       ];
     })
-    .flatMap((fields) => fields)
-    .forEach((field, index) =>
-      experimentFields.push({
-        name: field.name,
-        field: getColumnFieldFromNameAndIndex(field.name, index),
-        value: field.value,
-        type: field.type,
-      }),
-    );
+    .flatMap((fields) => fields);
+
+  fieldMap.push({
+    name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+    type: Enum_Experiment_Column_Type.METADATA,
+    value: rowLatency.toString(),
+  });
+
+  fieldMap.forEach((field, index) =>
+    experimentFields.push({
+      name: field.name,
+      field: getColumnFieldFromNameAndIndex(field.name, index),
+      value: field.value,
+      type: field.type,
+    }),
+  );
 
   return experimentFields;
 }
