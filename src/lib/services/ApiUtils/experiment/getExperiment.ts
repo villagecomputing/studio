@@ -39,7 +39,6 @@ export async function getExperimentDetails(experimentId: string) {
     uuid: true,
     created_at: true,
     name: true,
-    total_latency: true,
     description: true,
     latency_p50: true,
     latency_p90: true,
