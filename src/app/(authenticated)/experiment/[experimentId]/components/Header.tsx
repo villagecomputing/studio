@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Popover } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
-import { BracesIcon, Link2Icon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { BracesIcon } from 'lucide-react';
+import { DatasetName } from '../../components/DatasetNameCellRenderer';
 import { FetchExperimentResult } from '../types';
 import MetadataElement from './MetadataElement';
 
@@ -12,24 +12,15 @@ type HeaderProps = {
   experiment: FetchExperimentResult;
 };
 const Header: React.FC<HeaderProps> = ({ experiment }) => {
-  const router = useRouter();
   const parameters = JSON.parse(experiment.parameters);
-
-  const redirectToDataset = () => {
-    if (!experiment.dataset?.id) {
-      return;
-    }
-    router.push(`/data/${experiment.dataset.id}`);
-  };
 
   return (
     <div className="flex gap-4 px-4 pb-4 pt-2">
-      <Button variant={'secondary'} onClick={redirectToDataset}>
-        <span className="flex items-center gap-2.5">
-          <Link2Icon size={16} />
-          {experiment.dataset.name}
-        </span>
-      </Button>
+      <DatasetName
+        name={experiment.dataset.name}
+        id={experiment.dataset.id}
+        variant="secondary"
+      />
       <Popover>
         <PopoverTrigger asChild>
           <Button variant={'secondary'}>

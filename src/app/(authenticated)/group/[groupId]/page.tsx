@@ -39,7 +39,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
           <DatasetName
             id={groupData.datasetId}
             name={groupData.datasetName}
-            className="border-none bg-secondary px-3 py-2 text-base text-gridCellTextColor"
+            variant="secondary"
           />
           <p className="line-clamp-2 text-sm text-gridHeaderTextColor">
             {groupData.description}
