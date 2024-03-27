@@ -8,6 +8,7 @@ CREATE TABLE "Experiment_group" (
 CREATE TABLE "Experiment" (
   "uuid" TEXT NOT NULL PRIMARY KEY,
   "name" TEXT NOT NULL,
+  "description" TEXT,
   "dataset_uuid" TEXT NOT NULL,
   "group_id" INTEGER NOT NULL,
   "pipeline_metadata" TEXT NOT NULL, 

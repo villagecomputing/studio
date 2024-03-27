@@ -4,6 +4,7 @@ export const experimentListResponseSchema = z.array(
   z.object({
     id: z.string(),
     name: z.string(),
+    description: z.string(),
     created_at: z.string(),
     groupId: z.number(),
     pipelineMetadata: z.string(),
