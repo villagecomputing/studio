@@ -38,7 +38,7 @@ export async function GET() {
           return {
             ...experiment,
             id: experiment.uuid,
-            description: experiment.description,
+            description: experiment.description || '',
             groupId: experiment.group_id,
             pipelineMetadata: experiment.pipeline_metadata,
             created_at: experiment.created_at.toDateString(),

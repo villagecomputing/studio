@@ -92,7 +92,7 @@ export async function getExperiment(
   return {
     uuid: experimentDetails.uuid,
     name: experimentDetails.name,
-    description: experimentDetails.description,
+    description: experimentDetails.description || '',
     created_at: experimentDetails.created_at,
     columns,
     rows: experimentContent,
