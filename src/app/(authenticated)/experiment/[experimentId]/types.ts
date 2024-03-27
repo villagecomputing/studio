@@ -35,6 +35,15 @@ export type ExperimentRow = {
 
 export type FetchExperimentResult = AGGridExperiment & {
   experimentName: string;
+  dataset: {
+    name: string;
+    id: string;
+  };
+  latencyP50: number;
+  latencyP90: number;
+  cost: number;
+  accuracy: number;
+  parameters: string;
 };
 
 export type ExperimentTableContext = {

@@ -8,7 +8,7 @@ import { FetchExperimentResult } from './types';
 
 export const fetchExperiment = async (
   experimentId: string,
-): Promise<FetchExperimentResult | null> => {
+): Promise<FetchExperimentResult> => {
   try {
     if (!experimentId) {
       permanentRedirect('/experiments');
@@ -17,6 +17,12 @@ export const fetchExperiment = async (
 
     return {
       experimentName: experiment.name,
+      dataset: { id: experiment.dataset.uuid, name: experiment.dataset.name },
+      latencyP50: experiment.latencyP50,
+      latencyP90: experiment.latencyP90,
+      cost: experiment.cost,
+      parameters: experiment.parameters,
+      accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.uuid,
         columns: experiment.columns,

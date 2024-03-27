@@ -46,6 +46,8 @@ export async function getExperimentDetails(experimentId: string) {
     total_cost: true,
     total_accuracy: true,
     total_rows: true,
+    pipeline_metadata: true,
+    Dataset: { select: { name: true, uuid: true } },
     Experiment_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.ExperimentSelect;
 
@@ -125,6 +127,12 @@ export async function getExperiment(
     uuid: experimentDetails.uuid,
     name: experimentDetails.name,
     description: experimentDetails.description || '',
+    latencyP50: experimentDetails.avg_latency_p50,
+    latencyP90: experimentDetails.avg_latency_p90,
+    cost: experimentDetails.total_cost,
+    accuracy: experimentDetails.total_accuracy,
+    dataset: experimentDetails.Dataset,
+    parameters: experimentDetails.pipeline_metadata,
     created_at: experimentDetails.created_at,
     columns,
     rows: experimentContent,
