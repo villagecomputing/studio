@@ -1,4 +1,7 @@
-import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
+import {
+  ROW_ID_FIELD_NAME,
+  isGroundTruthCell,
+} from '@/app/(authenticated)/data/utils/commonUtils';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import {
@@ -37,6 +40,9 @@ export function useGridOperations() {
   const getRowId = useCallback(
     (params: GetRowIdParams<ExperimentRow, ExperimentTableContext>): string => {
       const idValue = params.data[ROW_ID_FIELD_NAME];
+      if (isGroundTruthCell(idValue)) {
+        throw new Error('Wow! Somehow the ROW_ID is a groundTruthCell!');
+      }
       return idValue;
     },
     [],

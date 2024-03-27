@@ -16,7 +16,7 @@ export type AGGridDataset = {
   pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
 };
 
-export type TableColumnProps = {
+export type DatasetTableColumnProps = {
   id: number;
   name: string;
   field: string;
@@ -25,7 +25,7 @@ export type TableColumnProps = {
 
 export type ConvertToAGGridDataProps = {
   datasetId: string;
-  columns: TableColumnProps[];
+  columns: DatasetTableColumnProps[];
   rows: DatasetRow[];
 };
 
