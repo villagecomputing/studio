@@ -24,5 +24,4 @@ export type GroupMetaInfo = {
 export type UseGroupSpecificDataResult = {
   datasetId: string;
   datasetName: string;
-  meta: GroupMetaInfo;
 };

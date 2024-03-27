@@ -37,17 +37,6 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
       <div className="px-6">
         <div className={'my-6 flex items-center gap-6'}>
           <DatasetName id={groupData.datasetId} name={groupData.datasetName} />
-          {groupData.meta.map((metaInfo) => {
-            return (
-              <span className="flex items-center gap-2" key={metaInfo.title}>
-                <span className="text-gridHeaderTextColor">
-                  {metaInfo.title}
-                </span>
-                {metaInfo.icon}
-                {metaInfo.value}
-              </span>
-            );
-          })}
         </div>
         <div
           className="overflow-y-auto"

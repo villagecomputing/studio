@@ -6,16 +6,6 @@ import { ExperimentList } from '../../types';
 function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
   return [
     {
-      headerName: 'Id',
-      field: 'id',
-      width: 100,
-    },
-    {
-      headerName: 'Experiment Name',
-      field: 'experimentName',
-      width: 200,
-    },
-    {
       headerName: 'Runtime',
       field: 'runtime',
       width: 90,

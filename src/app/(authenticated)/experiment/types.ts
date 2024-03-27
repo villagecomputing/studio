@@ -8,8 +8,7 @@ export type DatasetNameProps = {
 };
 
 export type ExperimentListRowType = {
-  id: string;
-  experimentName: string;
+  description: string;
   groupId: number;
   dataset: { id: string; name: string };
   runtime: string;

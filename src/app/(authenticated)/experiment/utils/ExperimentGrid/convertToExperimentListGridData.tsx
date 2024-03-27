@@ -10,14 +10,8 @@ function getExperimentListTableColumnDefs(
 ): GridOptions<ExperimentListRowType>['columnDefs'] {
   return [
     {
-      headerName: 'Id',
-      field: 'id',
-      width: 100,
-      onCellClicked,
-    },
-    {
-      headerName: 'Experiment Name',
-      field: 'experimentName',
+      headerName: 'Description',
+      field: 'description',
       width: 200,
       onCellClicked,
     },
@@ -91,7 +85,7 @@ function getExperimentListRowData(
 ): ExperimentListRowType[] {
   return data.map((data) => ({
     id: data.id,
-    experimentName: data.name,
+    description: data.description || '-',
     groupId: data.groupId,
     date: formatDate(data.created_at),
     dataset: { id: data.Dataset.id, name: data.Dataset.name },
