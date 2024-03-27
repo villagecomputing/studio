@@ -54,6 +54,7 @@ model Experiment_group {
 model Experiment {
   uuid              String              @id
   name              String
+  description       String?
   dataset_uuid      String
   group_id          Int
   pipeline_metadata String
