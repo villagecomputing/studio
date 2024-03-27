@@ -38,6 +38,7 @@ export async function getExperimentDetails(experimentId: string) {
     uuid: true,
     created_at: true,
     name: true,
+    description: true,
     avg_latency_p50: true,
     avg_latency_p90: true,
     total_cost: true,
@@ -91,6 +92,7 @@ export async function getExperiment(
   return {
     uuid: experimentDetails.uuid,
     name: experimentDetails.name,
+    description: experimentDetails.description,
     created_at: experimentDetails.created_at,
     columns,
     rows: experimentContent,

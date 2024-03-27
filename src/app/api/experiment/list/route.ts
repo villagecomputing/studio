@@ -9,6 +9,7 @@ export async function GET() {
     const experimentSelect = {
       uuid: true,
       name: true,
+      description: true,
       created_at: true,
       group_id: true,
       pipeline_metadata: true,
@@ -37,6 +38,7 @@ export async function GET() {
           return {
             ...experiment,
             id: experiment.uuid,
+            description: experiment.description,
             groupId: experiment.group_id,
             pipelineMetadata: experiment.pipeline_metadata,
             created_at: experiment.created_at.toDateString(),

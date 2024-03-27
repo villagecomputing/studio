@@ -14,6 +14,7 @@ export const experimentViewResponseSchema = z.object({
   uuid: z.string(),
   created_at: z.date(),
   name: z.string(),
+  description: z.string(),
   columns: z.array(ExperimentTableColumnPropsSchema),
   rows: z.array(ExperimentRowSchema),
 });
