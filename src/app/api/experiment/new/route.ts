@@ -44,6 +44,7 @@ export async function POST(request: Request) {
       data: {
         uuid: id,
         name: payload.name,
+        description: payload.description,
         dataset_uuid: datasetId,
         pipeline_metadata: JSON.stringify(payload.parameters),
         group_id: groupId,

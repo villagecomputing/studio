@@ -8,19 +8,29 @@ import { FetchExperimentResult } from './types';
 
 export const fetchExperiment = async (
   experimentId: string,
-): Promise<FetchExperimentResult | null> => {
+): Promise<FetchExperimentResult> => {
   try {
     if (!experimentId) {
       permanentRedirect('/experiments');
     }
     const experiment = await ApiUtils.getExperiment(experimentId);
+    const dataset = await ApiUtils.getDataset(experiment.dataset.uuid);
 
     return {
       experimentName: experiment.name,
+      dataset: { id: experiment.dataset.uuid, name: experiment.dataset.name },
+      latencyP50: experiment.latencyP50,
+      latencyP90: experiment.latencyP90,
+      cost: experiment.cost,
+      parameters: experiment.parameters,
+      accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.uuid,
-        columns: experiment.columns,
-        rows: experiment.rows,
+        columns: [...dataset.columns, ...experiment.columns],
+        rows: experiment.rows.map((row, index) => ({
+          ...row,
+          ...dataset.rows[index],
+        })),
       }),
     };
   } catch (error) {

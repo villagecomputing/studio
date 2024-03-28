@@ -14,6 +14,16 @@ export const experimentViewResponseSchema = z.object({
   uuid: z.string(),
   created_at: z.date(),
   name: z.string(),
+  description: z.string(),
   columns: z.array(ExperimentTableColumnPropsSchema),
   rows: z.array(ExperimentRowSchema),
+  dataset: z.object({
+    name: z.string(),
+    uuid: z.string(),
+  }),
+  latencyP50: z.number(),
+  latencyP90: z.number(),
+  cost: z.number(),
+  accuracy: z.number(),
+  parameters: z.string(),
 });

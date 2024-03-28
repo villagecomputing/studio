@@ -38,6 +38,8 @@ const config = {
       borderActive: '#B4C2CD',
       green550: '#1CB454',
       lightGreen: '#BBF7D0',
+      peach: '#FEDEB7',
+      lightRed: '#FECACA',
       agDataColor: '#49515f',
       agGridHeaderHoverGrey: '#D2DDE580',
     },
@@ -59,6 +61,7 @@ const config = {
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+          hover: 'hsl(var(--secondary-hover))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

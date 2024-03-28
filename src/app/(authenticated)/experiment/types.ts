@@ -2,14 +2,8 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 
 export type ExperimentList = ResultSchemaType[ApiEndpoints.experimentList];
 
-export type DatasetNameProps = {
-  name: string;
-  id: string;
-};
-
 export type ExperimentListRowType = {
-  id: string;
-  experimentName: string;
+  description: string;
   groupId: number;
   dataset: { id: string; name: string };
   runtime: string;

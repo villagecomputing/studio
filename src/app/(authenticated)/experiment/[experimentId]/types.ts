@@ -1,5 +1,12 @@
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import {
+  AGGridDataset,
+  DatasetTableColumnProps,
+  GroundTruthCell,
+} from '../../data/[datasetId]/types';
 
 export type ExperimentViewPageProps = {
   params: {
@@ -22,14 +29,31 @@ export type ExperimentTableColumnProps = {
 
 export type ConvertToAGGridDataProps = {
   experimentId: string;
-  columns: ExperimentTableColumnProps[];
+  columns: (ExperimentTableColumnProps | DatasetTableColumnProps)[];
   rows: ExperimentRow[];
 };
 
 export type ExperimentRow = {
-  [k: string]: string;
+  [k: string]: string | GroundTruthCell;
 };
 
 export type FetchExperimentResult = AGGridExperiment & {
   experimentName: string;
+  dataset: {
+    name: string;
+    id: string;
+  };
+  latencyP50: number;
+  latencyP90: number;
+  cost: number;
+  accuracy: number;
+  parameters: string;
+};
+
+export type ExperimentTableContext = {
+  inspectorRowIndex: number | null;
+  setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
+  rows: AGGridDataset['rowData'];
+  columnDefs: AGGridDataset['columnDefs'];
+  gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
 };

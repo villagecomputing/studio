@@ -1,18 +1,15 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '../../prisma';
-import { getExperimentDetails } from './getExperiment';
+
+import { getExperimentDetails } from './getExperimentDetails';
+import getOrderedExperimentLatencies from './getOrderedExperimentLatencies';
 import {
   DEFAULT_ROW_METADATA_VALUES,
   ExperimentUpdatableMetadata,
   RowMetadata,
   assertIsMetadataValid,
+  calculatePercentile,
 } from './utils';
-
-const getUpdatedAvgLatency = (
-  currentLatency: number,
-  currentRowNumber: number,
-  newLatency: number,
-) => (currentLatency * currentRowNumber + newLatency) / (currentRowNumber + 1);
 
 const buildRowMetadata = (
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
@@ -21,8 +18,7 @@ const buildRowMetadata = (
     assertIsMetadataValid(curr.metadata);
 
     return {
-      row_latency_p50: acc.row_latency_p50 + Number(curr.metadata.latencyP50),
-      row_latency_p90: acc.row_latency_p90 + Number(curr.metadata.latencyP90),
+      row_latency: acc.row_latency + Number(curr.metadata.latency),
       row_cost: acc.row_cost + Number(curr.metadata.cost),
       row_accuracy: acc.row_accuracy + Number(curr.metadata.accuracy),
     };
@@ -35,19 +31,15 @@ export async function updateExperiment(
 ) {
   try {
     const experimentDetails = await getExperimentDetails(experimentId);
+    const experimentLatencies =
+      await getOrderedExperimentLatencies(experimentId);
     const payloadMetadata = buildRowMetadata(payload);
 
     const updatedData: ExperimentUpdatableMetadata = {
-      avg_latency_p50: getUpdatedAvgLatency(
-        experimentDetails.avg_latency_p50,
-        experimentDetails.total_rows,
-        payloadMetadata.row_latency_p50,
-      ),
-      avg_latency_p90: getUpdatedAvgLatency(
-        experimentDetails.avg_latency_p90,
-        experimentDetails.total_rows,
-        payloadMetadata.row_latency_p90,
-      ),
+      latency_p50: calculatePercentile(experimentLatencies, 50),
+      latency_p90: calculatePercentile(experimentLatencies, 90),
+      total_latency:
+        experimentDetails.total_latency + payloadMetadata.row_latency,
       total_cost: experimentDetails.total_cost + payloadMetadata.row_cost,
       total_accuracy:
         experimentDetails.total_accuracy + payloadMetadata.row_accuracy,
