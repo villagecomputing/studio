@@ -72,7 +72,7 @@ export function buildExperimentFields(
       return [
         {
           name: step.name,
-          type: Enum_Experiment_Column_Type.METADATA,
+          type: Enum_Experiment_Column_Type.STEP_METADATA,
           value: JSON.stringify(step.metadata),
         },
         ...step.outputs.map((output) => ({
@@ -95,7 +95,7 @@ export function buildExperimentFields(
   experimentFields.push({
     name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
     field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
-    type: Enum_Experiment_Column_Type.OUTPUT,
+    type: Enum_Experiment_Column_Type.METADATA,
     value: rowLatency.toString(),
   });
 
@@ -118,11 +118,15 @@ export function buildExperimentColumnDefinition(
             isPrimaryKey: true,
           };
         case Enum_Experiment_Column_Type.OUTPUT:
+        case Enum_Experiment_Column_Type.STEP_METADATA:
         case Enum_Experiment_Column_Type.METADATA:
           return {
             type: ColumnType.TEXT,
             name: field.field,
           };
+        case Enum_Experiment_Column_Type.ROW_METADATA:
+          // This column type is only on FE. It is for the computed column: Metadata
+          return null;
         default:
           exhaustiveCheck(type);
       }
