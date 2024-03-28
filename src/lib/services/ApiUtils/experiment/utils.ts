@@ -125,7 +125,7 @@ export function buildExperimentColumnDefinition(
             name: field.field,
           };
         case Enum_Experiment_Column_Type.ROW_METADATA:
-          // This column type is only on FE. It is for the computed column: Metadata
+          // For FE use only: Type of 'Metadata' column
           return null;
         default:
           exhaustiveCheck(type);
