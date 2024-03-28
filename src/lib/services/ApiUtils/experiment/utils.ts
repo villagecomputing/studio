@@ -34,7 +34,7 @@ export const DEFAULT_ROW_METADATA_VALUES = {
 
 export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
 
-export const assertIsNumber = (value: string | number) => {
+export const assertIsNumber = (value: string | number | null | boolean) => {
   if (
     value === '' ||
     value === undefined ||
@@ -46,7 +46,7 @@ export const assertIsNumber = (value: string | number) => {
 };
 
 export function assertIsMetadataValid(
-  metadata: Record<string, string | number>,
+  metadata: Record<string, string | number | null | boolean>,
 ) {
   assertIsNumber(metadata.latency);
   assertIsNumber(metadata.cost);
