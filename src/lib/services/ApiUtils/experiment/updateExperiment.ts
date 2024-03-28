@@ -7,7 +7,6 @@ import {
   DEFAULT_ROW_METADATA_VALUES,
   ExperimentUpdatableMetadata,
   RowMetadata,
-  assertIsMetadataValid,
   calculatePercentile,
 } from './utils';
 
@@ -15,12 +14,12 @@ const buildRowMetadata = (
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ): RowMetadata => {
   return payload.steps.reduce<RowMetadata>((acc, curr) => {
-    assertIsMetadataValid(curr.metadata);
-
     return {
       row_latency: acc.row_latency + Number(curr.metadata.latency),
-      row_cost: acc.row_cost + Number(curr.metadata.cost),
-      row_accuracy: acc.row_accuracy + Number(curr.metadata.accuracy),
+      row_cost:
+        acc.row_cost +
+        Number(curr.metadata.input_cost ?? 0) +
+        Number(curr.metadata.output_cost ?? 0),
     };
   }, DEFAULT_ROW_METADATA_VALUES);
 };
@@ -41,8 +40,8 @@ export async function updateExperiment(
       total_latency:
         experimentDetails.total_latency + payloadMetadata.row_latency,
       total_cost: experimentDetails.total_cost + payloadMetadata.row_cost,
-      total_accuracy:
-        experimentDetails.total_accuracy + payloadMetadata.row_accuracy,
+      // TODO: update accuracy!!
+      total_accuracy: experimentDetails.total_accuracy,
       total_rows: experimentDetails.total_rows + 1,
     };
 

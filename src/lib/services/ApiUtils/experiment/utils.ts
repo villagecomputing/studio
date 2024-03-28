@@ -23,35 +23,14 @@ export type ExperimentUpdatableMetadata = Pick<
 export type RowMetadata = {
   row_latency: number;
   row_cost: number;
-  row_accuracy: number;
 };
 
 export const DEFAULT_ROW_METADATA_VALUES = {
   row_latency: 0,
   row_cost: 0,
-  row_accuracy: 0,
 };
 
 export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
-
-export const assertIsNumber = (value: string | number) => {
-  if (
-    value === '' ||
-    value === undefined ||
-    value === null ||
-    Number.isNaN(value)
-  ) {
-    throw new Error('Not a number');
-  }
-};
-
-export function assertIsMetadataValid(
-  metadata: Record<string, string | number>,
-) {
-  assertIsNumber(metadata.latency);
-  assertIsNumber(metadata.cost);
-  assertIsNumber(metadata.accuracy);
-}
 
 export function buildExperimentFields(
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
@@ -67,7 +46,7 @@ export function buildExperimentFields(
   let rowLatency = 0;
   payload.steps
     .map((step) => {
-      assertIsMetadataValid(step.metadata);
+      // experimentStepMetadata.parse(step.metadata);
       rowLatency += step.metadata.latency;
       return [
         {

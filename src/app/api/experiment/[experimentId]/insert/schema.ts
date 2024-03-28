@@ -1,12 +1,18 @@
 import { z } from 'zod';
 
+export const experimentStepMetadata = z.object({
+  latency: z.number(),
+  success: z.boolean(),
+  error: z.union([z.string(), z.null()]),
+  input_tokens: z.number().optional(),
+  output_tokens: z.number().optional(),
+  input_cost: z.number().optional(),
+  output_cost: z.number().optional(),
+});
+
 export const experimentStepPayloadSchema = z.object({
   name: z.string(),
-  metadata: z
-    .object({
-      latency: z.number(),
-    })
-    .and(z.record(z.string(), z.union([z.number(), z.string()]))),
+  metadata: experimentStepMetadata,
   outputs: z.array(
     z.object({
       name: z.string(),
@@ -14,6 +20,7 @@ export const experimentStepPayloadSchema = z.object({
     }),
   ),
 });
+export type ExperimentStepMetadata = z.infer<typeof experimentStepMetadata>;
 
 export const insertExperimentPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
