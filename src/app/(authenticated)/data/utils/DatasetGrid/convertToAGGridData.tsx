@@ -5,7 +5,7 @@ import {
   AGGridDataset,
   ConvertToAGGridDataProps,
   DatasetRow,
-  TableColumnProps,
+  DatasetTableColumnProps,
 } from '../../[datasetId]/types';
 import { ROW_ID_FIELD_NAME } from '../commonUtils';
 
@@ -16,7 +16,7 @@ function getTableRows(rows: DatasetRow[]): DatasetRow[] {
   }));
 }
 
-function getEmptyRow(colHeaders: TableColumnProps[]) {
+function getEmptyRow(colHeaders: DatasetTableColumnProps[]) {
   const emptyRow: DatasetRow = {};
   colHeaders.forEach((column) => {
     emptyRow[column.field] = '';
@@ -24,7 +24,7 @@ function getEmptyRow(colHeaders: TableColumnProps[]) {
   return emptyRow;
 }
 
-function getTableColumnDefs(tableColumns: TableColumnProps[]): ColDef[] {
+function getTableColumnDefs(tableColumns: DatasetTableColumnProps[]): ColDef[] {
   return tableColumns.map((tableColumn) => ({
     field: tableColumn.field,
     headerName: tableColumn.name,

@@ -31,7 +31,7 @@ const ExperimentTable = (props: FetchExperimentResult) => {
           getRowId,
           context,
           rowData: props.rowData,
-          columnDefs: props.columnDefs,
+          columnDefs: context.columnDefs,
           columnTypes,
           navigateToNextCell,
         }}

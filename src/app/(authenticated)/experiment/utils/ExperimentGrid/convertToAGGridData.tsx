@@ -1,3 +1,4 @@
+import { DatasetTableColumnProps } from '@/app/(authenticated)/data/[datasetId]/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import { ColDef } from 'ag-grid-community';
 import {
@@ -8,7 +9,7 @@ import {
 } from '../../[experimentId]/types';
 
 function getTableColumnDefs(
-  tableColumns: ExperimentTableColumnProps[],
+  tableColumns: (ExperimentTableColumnProps | DatasetTableColumnProps)[],
 ): ColDef[] {
   return tableColumns.map((tableColumn) => ({
     field: tableColumn.field,

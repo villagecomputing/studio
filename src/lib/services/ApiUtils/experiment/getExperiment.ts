@@ -102,7 +102,7 @@ export async function getExperiment(
     dataset: experimentDetails.Dataset,
     parameters: experimentDetails.pipeline_metadata,
     created_at: experimentDetails.created_at,
-    columns,
+    columns: columns,
     rows: experimentContent,
   };
 }

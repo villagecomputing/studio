@@ -1,6 +1,6 @@
 import {
   DatasetRow,
-  TableColumnProps,
+  DatasetTableColumnProps,
 } from '@/app/(authenticated)/data/[datasetId]/types';
 import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
@@ -75,7 +75,7 @@ export async function getDataset(
         guardStringEnum(ENUM_Column_type, column.type),
       ),
     )
-    .map((column): TableColumnProps => {
+    .map((column): DatasetTableColumnProps => {
       return {
         name: column.name,
         id: column.id,

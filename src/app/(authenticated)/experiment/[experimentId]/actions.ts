@@ -14,6 +14,7 @@ export const fetchExperiment = async (
       permanentRedirect('/experiments');
     }
     const experiment = await ApiUtils.getExperiment(experimentId);
+    const dataset = await ApiUtils.getDataset(experiment.dataset.uuid);
 
     return {
       experimentName: experiment.name,
@@ -25,8 +26,11 @@ export const fetchExperiment = async (
       accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.uuid,
-        columns: experiment.columns,
-        rows: experiment.rows,
+        columns: [...dataset.columns, ...experiment.columns],
+        rows: experiment.rows.map((row, index) => ({
+          ...row,
+          ...dataset.rows[index],
+        })),
       }),
     };
   } catch (error) {
