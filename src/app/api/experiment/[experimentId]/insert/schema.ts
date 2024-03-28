@@ -5,8 +5,6 @@ export const experimentStepPayloadSchema = z.object({
   metadata: z
     .object({
       latency: z.number(),
-      input_tokens: z.number(),
-      output_tokens: z.number(),
     })
     .and(z.record(z.string(), z.union([z.number(), z.string()]))),
   outputs: z.array(

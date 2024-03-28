@@ -62,8 +62,8 @@ model Experiment {
   updated_at        DateTime            @updatedAt
   deleted_at        DateTime?
   total_latency     Float               @default(0)
-  avg_latency_p50   Float               @default(0)
-  avg_latency_p90   Float               @default(0)
+  latency_p50       Float               @default(0)
+  latency_p90       Float               @default(0)
   total_cost        Float               @default(0)
   total_accuracy    Float               @default(0)
   total_rows        Float               @default(0)

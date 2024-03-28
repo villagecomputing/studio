@@ -1,11 +1,12 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
+import { ENUM_ORDER_DIRECTION } from './types';
 
 export async function select<T>(
   tableName: string,
   selectFields?: string[],
   whereConditions?: { [key: string]: string },
-  orderBy?: { field: string; direction: 'asc' | 'desc' },
+  orderBy?: { field: string; direction: ENUM_ORDER_DIRECTION },
   limit?: number,
 ): Promise<T[]> {
   let sqlQuery = Prisma.sql`SELECT `;

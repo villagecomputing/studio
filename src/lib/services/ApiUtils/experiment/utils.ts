@@ -12,27 +12,27 @@ export type ExperimentField = { value?: string } & Pick<
 >;
 export type ExperimentUpdatableMetadata = Pick<
   Experiment,
-  | 'avg_latency_p50'
-  | 'avg_latency_p90'
+  | 'latency_p50'
+  | 'latency_p90'
   | 'total_cost'
   | 'total_accuracy'
   | 'total_rows'
+  | 'total_latency'
 >;
 
 export type RowMetadata = {
-  row_latency_p50: number;
-  row_latency_p90: number;
+  row_latency: number;
   row_cost: number;
   row_accuracy: number;
 };
 
 export const DEFAULT_ROW_METADATA_VALUES = {
-  row_latency_p50: 0,
-  row_latency_p90: 0,
   row_latency: 0,
   row_cost: 0,
   row_accuracy: 0,
 };
+
+export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
 
 export const assertIsNumber = (value: string | number) => {
   if (
@@ -48,8 +48,7 @@ export const assertIsNumber = (value: string | number) => {
 export function assertIsMetadataValid(
   metadata: Record<string, string | number>,
 ) {
-  assertIsNumber(metadata.latencyP50);
-  assertIsNumber(metadata.latencyP90);
+  assertIsNumber(metadata.latency);
   assertIsNumber(metadata.cost);
   assertIsNumber(metadata.accuracy);
 }
@@ -65,9 +64,11 @@ export function buildExperimentFields(
     },
   ];
 
+  let rowLatency = 0;
   payload.steps
     .map((step) => {
       assertIsMetadataValid(step.metadata);
+      rowLatency += step.metadata.latency;
       return [
         {
           name: step.name,
@@ -90,6 +91,13 @@ export function buildExperimentFields(
         type: field.type,
       }),
     );
+
+  experimentFields.push({
+    name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+    field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+    type: Enum_Experiment_Column_Type.OUTPUT,
+    value: rowLatency.toString(),
+  });
 
   return experimentFields;
 }
@@ -120,4 +128,30 @@ export function buildExperimentColumnDefinition(
       }
     }),
   );
+}
+
+export function calculatePercentile(
+  data: number[],
+  percentile: number,
+): number {
+  // Step 1: Sort the dataset in ascending order
+  const sortedData = data.sort((a, b) => a - b);
+
+  // Step 2: Calculate the position of the percentile
+  const position = (percentile / 100) * (sortedData.length + 1);
+  // Step 3: Check if position is an integer
+  if (Number.isInteger(position)) {
+    // If position is an integer, return the value at that position
+    return sortedData[position - 1];
+  } else {
+    // If position is not an integer, interpolate between the values at the nearest ranked positions
+    console.log(sortedData);
+    const lowerIndex = Math.floor(position);
+    const upperIndex = Math.min(Math.ceil(position), sortedData.length);
+    const lowerValue = sortedData[lowerIndex - 1];
+    const upperValue = sortedData[upperIndex - 1];
+    const interpolatedValue =
+      lowerValue + (upperValue - lowerValue) * (position - lowerIndex);
+    return interpolatedValue || 0;
+  }
 }
