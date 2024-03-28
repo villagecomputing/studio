@@ -81,8 +81,8 @@ function getExperimentGroupRowData(data: ExperimentList) {
       avgCost: experimentData.totalCost
         ? experimentData.totalCost / experimentData.totalRows
         : 0,
-      p50Latency: experimentData.avgLatencyP50,
-      p90Latency: experimentData.avgLatencyP90,
+      p50Latency: experimentData.latencyP50,
+      p90Latency: experimentData.latencyP90,
       // TODO Fix this
       runtime: '5m 32s',
       ...dynamicData,

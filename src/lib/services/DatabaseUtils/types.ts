@@ -13,6 +13,11 @@ export enum ColumnType {
   INTEGER = 'INTEGER',
 }
 
+export enum ENUM_ORDER_DIRECTION {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 export type ColumnDefinition = {
   name: string;
   type: ColumnType;

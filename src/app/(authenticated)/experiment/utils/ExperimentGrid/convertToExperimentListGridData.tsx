@@ -91,10 +91,9 @@ function getExperimentListRowData(
     dataset: { id: data.Dataset.id, name: data.Dataset.name },
     avgAccuracy: data.totalAccuracy ? data.totalAccuracy / data.totalRows : 0,
     avgCost: data.totalCost ? data.totalCost / data.totalRows : 0,
-    p50Latency: data.avgLatencyP50,
-    p90Latency: data.avgLatencyP90,
-    // TODO Fix this
-    runtime: '5m 32s',
+    p50Latency: data.latencyP50,
+    p90Latency: data.latencyP90,
+    runtime: data.runtime.toString(),
     params: data.pipelineMetadata,
   }));
 }

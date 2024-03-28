@@ -64,10 +64,11 @@ export function buildExperimentFields(
     },
   ];
 
-  const rowLatency = 0;
-  const fieldMap = payload.steps
+  let rowLatency = 0;
+  payload.steps
     .map((step) => {
       assertIsMetadataValid(step.metadata);
+      rowLatency += step.metadata.latency;
       return [
         {
           name: step.name,
@@ -81,22 +82,22 @@ export function buildExperimentFields(
         })),
       ];
     })
-    .flatMap((fields) => fields);
+    .flatMap((fields) => fields)
+    .forEach((field, index) =>
+      experimentFields.push({
+        name: field.name,
+        field: getColumnFieldFromNameAndIndex(field.name, index),
+        value: field.value,
+        type: field.type,
+      }),
+    );
 
-  fieldMap.push({
+  experimentFields.push({
     name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
-    type: Enum_Experiment_Column_Type.METADATA,
+    field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+    type: Enum_Experiment_Column_Type.OUTPUT,
     value: rowLatency.toString(),
   });
-
-  fieldMap.forEach((field, index) =>
-    experimentFields.push({
-      name: field.name,
-      field: getColumnFieldFromNameAndIndex(field.name, index),
-      value: field.value,
-      type: field.type,
-    }),
-  );
 
   return experimentFields;
 }
@@ -127,4 +128,30 @@ export function buildExperimentColumnDefinition(
       }
     }),
   );
+}
+
+export function calculatePercentile(
+  data: number[],
+  percentile: number,
+): number {
+  // Step 1: Sort the dataset in ascending order
+  const sortedData = data.sort((a, b) => a - b);
+
+  // Step 2: Calculate the position of the percentile
+  const position = (percentile / 100) * (sortedData.length + 1);
+  // Step 3: Check if position is an integer
+  if (Number.isInteger(position)) {
+    // If position is an integer, return the value at that position
+    return sortedData[position - 1];
+  } else {
+    // If position is not an integer, interpolate between the values at the nearest ranked positions
+    console.log(sortedData);
+    const lowerIndex = Math.floor(position);
+    const upperIndex = Math.min(Math.ceil(position), sortedData.length);
+    const lowerValue = sortedData[lowerIndex - 1];
+    const upperValue = sortedData[upperIndex - 1];
+    const interpolatedValue =
+      lowerValue + (upperValue - lowerValue) * (position - lowerIndex);
+    return interpolatedValue || 0;
+  }
 }

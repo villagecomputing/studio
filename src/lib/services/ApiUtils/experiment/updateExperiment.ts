@@ -1,39 +1,15 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '../../prisma';
-import {
-  getExperimentDetails,
-  getOrderedExperimentLatencies,
-} from './getExperiment';
+
+import { getExperimentDetails } from './getExperimentDetails';
+import getOrderedExperimentLatencies from './getOrderedExperimentLatencies';
 import {
   DEFAULT_ROW_METADATA_VALUES,
   ExperimentUpdatableMetadata,
   RowMetadata,
   assertIsMetadataValid,
+  calculatePercentile,
 } from './utils';
-
-export default function calculatePercentile(
-  data: number[],
-  percentile: number,
-) {
-  // Step 1: Sort the dataset in ascending order
-  const sortedData = data.sort((a, b) => a - b);
-
-  // Step 2: Calculate the position of the percentile
-  const position = (percentile / 100) * (sortedData.length + 1);
-
-  // Step 3: Check if position is an integer
-  if (Number.isInteger(position)) {
-    // If position is an integer, return the value at that position
-    return sortedData[position - 1];
-  } else {
-    // If position is not an integer, interpolate between the values at the nearest ranked positions
-    const lowerIndex = Math.floor(position);
-    const upperIndex = Math.ceil(position);
-    const lowerValue = sortedData[lowerIndex - 1];
-    const upperValue = sortedData[upperIndex - 1];
-    return lowerValue + (upperValue - lowerValue) * (position - lowerIndex);
-  }
-}
 
 const buildRowMetadata = (
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
