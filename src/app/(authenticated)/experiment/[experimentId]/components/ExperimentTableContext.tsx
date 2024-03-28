@@ -5,16 +5,20 @@ import {
   AGGridExperiment,
   ExperimentRow,
   ExperimentTableContext,
+  FetchExperimentResult,
 } from '../types';
 
 export const useExperimentTableContext = (
-  props: AGGridExperiment,
+  props: FetchExperimentResult,
 ): ExperimentTableContext => {
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
   const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
   const [columnDefs, setColumnDefs] = useState<AGGridExperiment['columnDefs']>(
     props.columnDefs,
   );
+  const [displayableColumnDefs, setDisplayableColumnDefs] = useState<
+    AGGridExperiment['columnDefs']
+  >([]);
   const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
     null,
   );
@@ -27,14 +31,17 @@ export const useExperimentTableContext = (
         column.type === ENUM_Column_type.INPUT
       );
     });
-    setColumnDefs(parsedColumns);
+    setDisplayableColumnDefs(parsedColumns);
+    setColumnDefs(props.columnDefs);
   }, [props.columnDefs]);
 
   return {
+    datasetId: props.dataset.id,
     inspectorRowIndex,
     gridRef,
     rows,
     columnDefs,
+    displayableColumnDefs,
     setInspectorRowIndex,
   };
 };

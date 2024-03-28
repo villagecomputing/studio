@@ -3,7 +3,7 @@ import {
   isGroundTruthCell,
 } from '@/app/(authenticated)/data/utils/commonUtils';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
-import { Enum_Experiment_Column_Type } from '@/lib/types';
+import { ENUM_Column_type, Enum_Experiment_Column_Type } from '@/lib/types';
 import {
   CellClickedEvent,
   GetRowIdParams,
@@ -63,6 +63,11 @@ export function useGridOperations() {
           handleCellClicked(event, event.context.setInspectorRowIndex),
       },
       [Enum_Experiment_Column_Type.OUTPUT]: {
+        editable: false,
+        onCellClicked: (event) =>
+          handleCellClicked(event, event.context.setInspectorRowIndex),
+      },
+      [ENUM_Column_type.INPUT]: {
         editable: false,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
