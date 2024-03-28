@@ -7,12 +7,14 @@ import { useRef } from 'react';
 import { useExperimentRowInspectorContext } from './ExperimentRowInspector';
 import RowInspectorBodyRawData from './components/RowInspectorBodyRawData';
 import { RowInspectorHeaderSteps } from './components/RowInspectorHeaderSteps';
+import useExperimentRowInspectorActions from './hooks/useExperimentRowInspectorActions';
 
 export const RAW_DATA_SECTION = 'RAW_DATA_SECTION';
 
 export default function ExperimentRowInspectorView() {
   const { inspectorRowIndex, setInspectorRowIndex } =
     useExperimentRowInspectorContext();
+  const { navigateTo } = useExperimentRowInspectorActions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const handleStepSelected = (stepColumnField: string) => {
     const section = document.getElementById(stepColumnField);
@@ -28,7 +30,7 @@ export default function ExperimentRowInspectorView() {
         open={inspectorRowIndex !== null}
         onEscape={() => setInspectorRowIndex(null)}
         onEnter={() => undefined}
-        onNavigate={() => undefined}
+        onNavigate={navigateTo}
       >
         <BaseRowInspectorHeader
           title={`Row ${inspectorRowIndex}`}

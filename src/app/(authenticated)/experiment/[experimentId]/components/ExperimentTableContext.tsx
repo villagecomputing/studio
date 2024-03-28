@@ -35,6 +35,30 @@ export const useExperimentTableContext = (
     setColumnDefs(props.columnDefs);
   }, [props.columnDefs]);
 
+  // Handles the row highlighting (selected) to match the inspector row index
+  useEffect(() => {
+    const gridApi = gridRef.current?.api;
+    if (!gridApi) {
+      return;
+    }
+    const visibleNodes = gridApi.getRenderedNodes();
+    const shouldSelectNode = inspectorRowIndex !== null;
+    const selectedNode = visibleNodes.find((node) =>
+      shouldSelectNode
+        ? node.rowIndex === inspectorRowIndex
+        : node.isSelected(),
+    );
+    if (!selectedNode) {
+      return;
+    }
+    gridApi.setNodesSelected({
+      nodes: [selectedNode],
+      newValue: shouldSelectNode,
+    });
+    // Schedule the call to ensureNodeVisible to avoid lifecycle warning
+    setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
+  }, [inspectorRowIndex, gridRef]);
+
   return {
     datasetId: props.dataset.id,
     inspectorRowIndex,

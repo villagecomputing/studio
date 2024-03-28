@@ -11,7 +11,7 @@ export const RowInspectorHeaderSteps: React.FC<
   const { columnDefs } = useExperimentRowInspectorContext();
 
   const metadataColumns = columnDefs.filter(
-    (colDef) => colDef.type === Enum_Experiment_Column_Type.METADATA,
+    (colDef) => colDef.type === Enum_Experiment_Column_Type.STEP_METADATA,
   );
 
   return (
