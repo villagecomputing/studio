@@ -391,7 +391,7 @@
                 "NewExperimentPayload": {
                     "type": "object",
                     "properties": {
-                        "datasetFakeId": {
+                        "datasetId": {
                             "type": "string"
                         },
                         "name": {
@@ -406,7 +406,7 @@
                             "additionalProperties": true
                         }
                     },
-                    "required": ["name", "datasetFakeId", "parameters"]
+                    "required": ["name", "datasetId", "parameters"]
                 },
                 "NewExperimentResponse": {
                     "type": "object",

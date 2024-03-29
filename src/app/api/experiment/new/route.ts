@@ -35,7 +35,7 @@ import { newExperimentPayloadSchema } from './schema';
 export async function POST(request: Request) {
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
-  const datasetId = getDatasetUuidFromFakeId(payload.datasetFakeId);
+  const datasetId = getDatasetUuidFromFakeId(payload.datasetId);
 
   try {
     await getDatasetOrThrow(datasetId);
