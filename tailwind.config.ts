@@ -42,6 +42,8 @@ const config = {
       lightRed: '#FECACA',
       agDataColor: '#49515f',
       agGridHeaderHoverGrey: '#D2DDE580',
+      red080: '#FFE5E5',
+      red500: '#EF4444',
     },
     extend: {
       colors: {
