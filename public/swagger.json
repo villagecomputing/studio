@@ -595,7 +595,7 @@
     }
   ],
   "paths": {
-    "/api/dataset/[datasetId]/addData": {
+    "/api/dataset/{datasetId}/addData": {
       "post": {
         "tags": [
           "Dataset"
@@ -636,7 +636,7 @@
         }
       }
     },
-    "/api/dataset/[datasetId]": {
+    "/api/dataset/{datasetId}": {
       "get": {
         "tags": [
           "Dataset"
@@ -855,7 +855,7 @@
         }
       }
     },
-    "/api/experiment/[experimentId]/insert": {
+    "/api/experiment/{experimentId}/insert": {
       "post": {
         "tags": [
           "Experiment"
@@ -892,7 +892,7 @@
         }
       }
     },
-    "/api/experiment/[experimentId]": {
+    "/api/experiment/{experimentId}": {
       "get": {
         "tags": [
           "Experiment"

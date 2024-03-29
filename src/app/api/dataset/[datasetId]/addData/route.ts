@@ -5,7 +5,7 @@ import { addDataPayloadSchema } from './schema';
 
 /**
  * @swagger
- * /api/dataset/[datasetId]/addData:
+ * /api/dataset/{datasetId}/addData:
  *   post:
  *     tags:
  *      - Dataset

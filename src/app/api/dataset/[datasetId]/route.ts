@@ -5,7 +5,7 @@ import { datasetViewResponseSchema } from './schema';
 
 /**
  * @swagger
- * /api/dataset/[datasetId]:
+ * /api/dataset/{datasetId}:
  *   get:
  *     tags:
  *      - Dataset

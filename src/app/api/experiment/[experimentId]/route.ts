@@ -4,7 +4,7 @@ import { experimentViewResponseSchema } from './schema';
 
 /**
  * @swagger
- * /api/experiment/[experimentId]:
+ * /api/experiment/{experimentId}:
  *   get:
  *     tags:
  *      - Experiment
