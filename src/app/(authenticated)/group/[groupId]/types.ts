@@ -7,7 +7,7 @@ export type ExperimentGroupPageProps = {
 export type ExperimentGroupRowType = {
   id: string;
   experimentName: string;
-  runtime: string;
+  runtime: number;
   date: string;
   avgCost: number;
   avgAccuracy: number;
