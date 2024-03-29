@@ -1,7 +1,7 @@
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import { cn } from '@/lib/utils';
 import { ArrowLeftRightIcon, BanknoteIcon, CrosshairIcon } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 export enum Enum_Metadata_Type {
   COST = 'cost',
@@ -26,7 +26,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
 }) => {
   const disabled = !value;
 
-  const data = (() => {
+  const data = useMemo(() => {
     let iconNode: ReactNode | null = null;
     let backgroundStatusColor: string = '';
     let formattedValue: string = '-';
@@ -100,7 +100,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
         : `p-1 rounded-lg ${backgroundStatusColor}`,
       formattedValue: value ? formattedValue : '-',
     };
-  })();
+  }, [icon, type, value, disabled]);
 
   return (
     <div className={cn(['flex items-center', (label || icon) && 'gap-2'])}>
