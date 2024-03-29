@@ -43,7 +43,9 @@ export async function getExperiment(
     latencyP90: experimentDetails.latency_p90,
     runtime: experimentDetails.total_latency,
     cost: experimentDetails.total_cost,
-    accuracy: experimentDetails.total_accuracy / experimentDetails.total_rows,
+    accuracy: experimentDetails.total_rows
+      ? experimentDetails.total_accuracy / experimentDetails.total_rows
+      : 0,
     dataset: experimentDetails.Dataset,
     parameters: experimentDetails.pipeline_metadata,
     created_at: experimentDetails.created_at,
