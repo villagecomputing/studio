@@ -51,6 +51,7 @@ export type FetchExperimentResult = AGGridExperiment & {
 };
 
 export type ExperimentTableContext = {
+  stepMetadataColumns: { name: string; field: string }[];
   inspectorRowIndex: number | null;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   rows: AGGridDataset['rowData'];
