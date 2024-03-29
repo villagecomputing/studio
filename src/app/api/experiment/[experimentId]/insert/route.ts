@@ -35,8 +35,7 @@ export async function POST(
   const experimentId = params.experimentId;
   const requestBody = await request.json();
   const payload = insertExperimentPayloadSchema.parse(requestBody);
-  console.log('experimentId:', JSON.stringify(experimentId, null, 2));
-  console.log('payload:', JSON.stringify(payload, null, 2));
+
   try {
     // Creates table if it doesn't exist
     await ApiUtils.ensureExperimentTable(experimentId, payload);
