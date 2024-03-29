@@ -45,12 +45,14 @@ export type FetchExperimentResult = AGGridExperiment & {
   };
   latencyP50: number;
   latencyP90: number;
+  runtime: number;
   cost: number;
   accuracy: number;
   parameters: string;
 };
 
 export type ExperimentTableContext = {
+  stepMetadataColumns: { name: string; field: string }[];
   inspectorRowIndex: number | null;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   rows: AGGridDataset['rowData'];
