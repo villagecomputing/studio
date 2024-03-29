@@ -11,6 +11,7 @@ import {
   NavigateToNextCellParams,
 } from 'ag-grid-community';
 import { useCallback } from 'react';
+import RowMetadataCellRenderer from '../components/RowMetadataCellRenderer';
 import { ExperimentRow, ExperimentTableContext } from '../types';
 
 export function useGridOperations() {
@@ -57,10 +58,11 @@ export function useGridOperations() {
     };
 
     return {
-      [Enum_Experiment_Column_Type.METADATA]: {
+      [Enum_Experiment_Column_Type.ROW_METADATA]: {
         editable: false,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
+        cellRenderer: RowMetadataCellRenderer,
       },
       [Enum_Experiment_Column_Type.OUTPUT]: {
         editable: false,

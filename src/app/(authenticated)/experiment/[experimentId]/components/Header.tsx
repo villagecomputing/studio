@@ -1,18 +1,22 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Popover } from '@/components/ui/popover';
+import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { BracesIcon } from 'lucide-react';
 import { DatasetName } from '../../components/DatasetNameCellRenderer';
 import { FetchExperimentResult } from '../types';
-import MetadataElement from './MetadataElement';
+import MetadataElement, { Enum_Metadata_Type } from './MetadataElement';
 
 type HeaderProps = {
   experiment: FetchExperimentResult;
 };
 const Header: React.FC<HeaderProps> = ({ experiment }) => {
   const parameters = JSON.parse(experiment.parameters);
+  const stepsCount = experiment.columnDefs.filter(
+    (col) => col.type === Enum_Experiment_Column_Type.STEP_METADATA,
+  ).length;
 
   return (
     <div className="flex gap-4 px-4 pb-4 pt-2">
@@ -71,48 +75,38 @@ const Header: React.FC<HeaderProps> = ({ experiment }) => {
       </Popover>
 
       <div className="flex h-10 gap-6 rounded-lg border border-gridBorderColor px-4 py-2">
-        {/* TODO: Fix the status based on value */}
         <MetadataElement
-          icon={'price'}
-          value={
-            experiment.rowData.length
-              ? `$${experiment.cost.toString()}`
-              : undefined
-          }
-          status="disabled"
+          type={Enum_Metadata_Type.COST}
+          icon
+          value={experiment.cost}
         />
         <MetadataElement
-          icon={'latency'}
+          type={Enum_Metadata_Type.LATENCY}
+          icon
           label={'P50'}
-          value={
-            experiment.rowData.length
-              ? `${experiment.latencyP50.toString()}s`
-              : undefined
-          }
-          status="disabled"
+          value={experiment.latencyP50}
         />
         <MetadataElement
-          icon={'latency'}
+          type={Enum_Metadata_Type.LATENCY}
+          icon
           label={'P90'}
-          value={
-            experiment.rowData.length
-              ? `${experiment.latencyP90.toString()}s`
-              : undefined
-          }
-          status="disabled"
+          value={experiment.latencyP90}
         />
         <MetadataElement
-          icon={'accuracy'}
-          value={
-            experiment.rowData.length
-              ? `${experiment.accuracy.toString()}%`
-              : undefined
-          }
-          status="disabled"
+          type={Enum_Metadata_Type.ACCURACY}
+          icon
+          value={experiment.accuracy}
         />
-        {/* TODO: add values for runtime and steps */}
-        <MetadataElement icon="none" label="Runtime" status="disabled" />
-        <MetadataElement icon="none" label="Steps" status="disabled" />
+        <MetadataElement
+          type={Enum_Metadata_Type.RUNTIME}
+          label="Runtime"
+          value={experiment.runtime}
+        />
+        <MetadataElement
+          type={Enum_Metadata_Type.LABEL_VALUE}
+          label="Steps"
+          value={stepsCount}
+        />
       </div>
     </div>
   );
