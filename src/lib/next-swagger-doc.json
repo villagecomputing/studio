@@ -391,6 +391,93 @@
                         }
                     },
                     "required": ["steps"]
+                },
+                "NewExperimentPayload": {
+                    "type": "object",
+                    "properties": {
+                        "datasetFakeId": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "required": ["name", "datasetFakeId", "parameters"]
+                },
+                "NewExperimentResponse": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["id"]
+                },           
+                "ListExperimentResponse": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "created_at": {
+                                "type": "string"
+                            },
+                            "groupId": {
+                                "type": "integer"
+                            },
+                            "pipelineMetadata": {
+                                "type": "string"
+                            },
+                            "latencyP50": {
+                                "type": "number"
+                            },
+                            "latencyP90": {
+                                "type": "number"
+                            },
+                            "runtime": {
+                                "type": "number"
+                            },
+                            "totalCost": {
+                                "type": "number"
+                            },
+                            "totalAccuracy": {
+                                "type": "number"
+                            },
+                            "totalRows": {
+                                "type": "number"
+                            },
+                            "Dataset": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["id", "name"]
+                            }
+                        },
+                        "required": ["id", "name", "created_at", "groupId", "pipelineMetadata", "latencyP50", "latencyP90", "runtime", "totalCost", "totalAccuracy", "totalRows", "Dataset"]
+                    }
                 }
             }
         }

@@ -481,6 +481,115 @@
           "required": [
             "steps"
           ]
+        },
+        "NewExperimentPayload": {
+          "type": "object",
+          "properties": {
+            "datasetFakeId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "name",
+            "datasetFakeId",
+            "parameters"
+          ]
+        },
+        "NewExperimentResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "ListExperimentResponse": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "groupId": {
+                "type": "integer"
+              },
+              "pipelineMetadata": {
+                "type": "string"
+              },
+              "latencyP50": {
+                "type": "number"
+              },
+              "latencyP90": {
+                "type": "number"
+              },
+              "runtime": {
+                "type": "number"
+              },
+              "totalCost": {
+                "type": "number"
+              },
+              "totalAccuracy": {
+                "type": "number"
+              },
+              "totalRows": {
+                "type": "number"
+              },
+              "Dataset": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "created_at",
+              "groupId",
+              "pipelineMetadata",
+              "latencyP50",
+              "latencyP90",
+              "runtime",
+              "totalCost",
+              "totalAccuracy",
+              "totalRows",
+              "Dataset"
+            ]
+          }
         }
       }
     }
@@ -844,16 +953,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentListResponse"
+                  "$ref": "#/components/schemas/Experiment/ListExperimentResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input data."
+            "description": "Invalid response datasetList type."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Error processing request."
           }
         }
       }
@@ -871,7 +980,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewExperimentPayload"
+                "$ref": "#/components/schemas/Experiment/NewExperimentPayload"
               }
             }
           }
@@ -882,7 +991,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentResponse"
+                  "$ref": "#/components/schemas/Experiment/ExperimentResponse"
                 }
               }
             }

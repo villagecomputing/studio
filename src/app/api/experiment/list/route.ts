@@ -9,8 +9,21 @@ import { experimentListResponseSchema } from './schema';
  * /api/experiment/list:
  *   get:
  *     tags:
- *      - experiment
- *     description: Lists all experiments (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Experiment
+ *     summary: List all experiments
+ *     description: Retrieves a list of all experiments that have not been deleted.
+ *     operationId: listExperiments
+ *     responses:
+ *       200:
+ *         description: A list of experiments.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Experiment/ListExperimentResponse'
+ *       400:
+ *         description: 'Invalid response datasetList type.'
+ *       500:
+ *         description: 'Error processing request.'
  */
 export async function GET() {
   try {
