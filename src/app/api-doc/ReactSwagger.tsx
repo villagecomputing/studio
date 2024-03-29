@@ -8,7 +8,11 @@ type Props = {
 };
 
 function ReactSwagger({ spec }: Props) {
-  return <SwaggerUI spec={spec} />;
+  return (
+    <div style={{ height: '100vh', overflow: 'auto' }}>
+      <SwaggerUI spec={spec} />
+    </div>
+  );
 }
 
 export default ReactSwagger;
