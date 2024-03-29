@@ -16,7 +16,116 @@
         "scheme": "bearer"
       }
     },
-    "schemas": {}
+    "schemas": {
+      "Dataset": {
+        "AddDataPayload": {
+          "type": "object",
+          "properties": {
+            "datasetId": {
+              "type": "string",
+              "example": "DatasetName-d-262a1966-31f6-43c9-b8a7-f9f583099c2e"
+            },
+            "datasetRows": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Dataset/DatasetRow"
+              }
+            }
+          }
+        },
+        "DatasetRow": {
+          "type": "object",
+          "additionalProperies": true,
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "id": {
+              "type": "number"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "APPROVED"
+              ]
+            }
+          },
+          "example": "{\"Column_1\":\"Value_1\", \"Column_2\", \"Value_2\"}"
+        },
+        "DatasetViewResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "name": {
+              "type": "string"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Dataset/TableColumnProps"
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/components/schemas/DatasetRow"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "id",
+            "created_at",
+            "name",
+            "columns",
+            "rows"
+          ]
+        },
+        "TableColumnProps": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "number"
+            },
+            "field": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "IDENTIFIER",
+                "GROUND_TRUTH",
+                "GROUND_TRUTH_STATUS",
+                "PREDICTIVE_LABEL",
+                "INPUT"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "id",
+            "field",
+            "type"
+          ]
+        }
+      }
+    }
   },
   "tags": [
     {

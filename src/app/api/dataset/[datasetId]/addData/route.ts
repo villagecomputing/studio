@@ -8,8 +8,29 @@ import { addDataPayloadSchema } from './schema';
  * /api/dataset/[datasetId]/addData:
  *   post:
  *     tags:
- *      - dataset
- *     description: Inserts data into a dataset (TODO - add rest body, response and rest of data)
+ *      - Dataset
+ *     description: Inserts data into a dataset
+ *     parameters:
+ *       - in: path
+ *         name: datasetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the dataset.
+ *     requestBody:
+ *       description: Data to be added to the dataset
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Dataset/AddDataPayload'
+ *     responses:
+ *       '200':
+ *         description: Ok
+ *       '400':
+ *         description: Missing required data -or- Invalid request headers type
+ *       '500':
+ *         description: Error processing request
  */
 export async function POST(request: Request) {
   try {

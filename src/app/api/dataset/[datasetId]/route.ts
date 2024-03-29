@@ -8,8 +8,26 @@ import { datasetViewResponseSchema } from './schema';
  * /api/dataset/[datasetId]:
  *   get:
  *     tags:
- *      - dataset
- *     description: Returns a dataset (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     description: Retrieve the details of a specific dataset by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: datasetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the dataset.
+ *     responses:
+ *       '200':
+ *         description: Successfully retrieved the dataset details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Dataset/DatasetViewResponse'
+ *       '400':
+ *         description: Invalid dataset Id provided.
+ *       '500':
+ *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
   request: Request,
