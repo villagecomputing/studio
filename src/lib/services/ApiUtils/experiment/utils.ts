@@ -46,7 +46,6 @@ export function buildExperimentFields(
   let rowLatency = 0;
   payload.steps
     .map((step) => {
-      // experimentStepMetadata.parse(step.metadata);
       rowLatency += step.metadata.latency;
       return [
         {

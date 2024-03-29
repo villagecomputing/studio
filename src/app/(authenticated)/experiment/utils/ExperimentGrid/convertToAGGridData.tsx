@@ -22,7 +22,6 @@ function getTableColumnDefs(
     field: 'metadata',
     headerName: 'Metadata',
     coldId: -1,
-    // TODO: fix this type!!
     type: Enum_Experiment_Column_Type.ROW_METADATA,
   };
   return [metadataColumn, ...columns];

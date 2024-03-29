@@ -14,22 +14,17 @@ const RowMetadataCellRenderer = (
       return null;
     }
     const stepsMetadataColumns = props.context.stepMetadataColumns;
-    // const latencyMetadata = !isGroundTruthCell(
-    //   props.data[DYNAMIC_EXPERIMENT_LATENCY_FIELD],
-    // )
-    //   ? props.data[DYNAMIC_EXPERIMENT_LATENCY_FIELD]
-    //   : 0;
 
     let latencySum = 0;
     let costSum = 0;
     let inputTokensSum = 0;
     let outputTokensSum = 0;
-    let stepError: { stepName: string; error: string | null } | null = null;
+    let stepError: { stepName?: string; error?: string | null } = {};
 
-    stepsMetadataColumns.forEach((column) => {
+    for (const column of stepsMetadataColumns) {
       const value = props.data?.[column.field];
       if (!value || isGroundTruthCell(value)) {
-        return;
+        continue;
       }
       const metadata = JSON.parse(value);
       const {
@@ -43,12 +38,13 @@ const RowMetadataCellRenderer = (
       } = experimentStepMetadata.parse(metadata);
       if (!success) {
         stepError = { stepName: column.name, error };
+        break;
       }
       latencySum += latency;
       costSum += (input_cost ?? 0) + (output_cost ?? 0);
       inputTokensSum += input_tokens ?? 0;
       outputTokensSum += output_tokens ?? 0;
-    });
+    }
 
     return {
       latencySum: parseFloat(latencySum.toFixed(3)),
@@ -62,15 +58,14 @@ const RowMetadataCellRenderer = (
   if (!metadata) {
     return <></>;
   }
-  if (metadata.stepError) {
+  if (metadata.stepError.stepName) {
     return (
       <div className="flex items-center gap-3 whitespace-nowrap">
         <div className="inline-block rounded-lg bg-red080 p-2 text-red500">
           <AlertTriangleIcon size={20} />
         </div>
         <span className="text-red500">
-          Failed step:
-          {/* {metadata.stepError.stepName} */}
+          Failed step: {metadata.stepError.stepName}
         </span>
       </div>
     );
