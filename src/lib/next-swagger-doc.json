@@ -266,6 +266,132 @@
                     },
                     "required": ["id"]
                 }
+            },  
+            "Experiment": {
+                "ExperimentViewResponse": {
+                    "type": "object",
+                    "properties": {
+                        "uuid": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "description": {
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "columns": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/Experiment/ExperimentTableColumnPropsSchema"
+                            }
+                        },
+                        "rows": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "dataset": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "uuid": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "latencyP50": {
+                            "type": "number"
+                        },
+                        "latencyP90": {
+                            "type": "number"
+                        },
+                        "cost": {
+                            "type": "number"
+                        },
+                        "accuracy": {
+                            "type": "number"
+                        },
+                        "parameters": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["uuid", "name", "created_at", "columns", "rows", "dataset"]
+                },
+                "ExperimentTableColumnPropsSchema": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "number"
+                        },
+                        "field": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": ["IDENTIFIER", "OUTPUT", "METADATA"]
+                        }
+                    },
+                    "required": ["name", "id", "field", "type"]
+                },
+                "ExperimentInsertPayload": {
+                    "type": "object",
+                    "properties": {
+                        "steps": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "properties": {
+                                            "latency": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "additionalProperties": {
+                                            "type": ["number", "string"]
+                                        }
+                                    },
+                                    "outputs": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": ["name", "value"]
+                                        }
+                                    }
+                                },
+                                "required": ["name", "metadata", "outputs"]
+                            }
+                        }
+                    },
+                    "required": ["steps"]
+                }
             }
         }
     },

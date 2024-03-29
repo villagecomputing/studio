@@ -328,6 +328,160 @@
             "id"
           ]
         }
+      },
+      "Experiment": {
+        "ExperimentViewResponse": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Experiment/ExperimentTableColumnPropsSchema"
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "dataset": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "uuid": {
+                  "type": "string"
+                }
+              }
+            },
+            "latencyP50": {
+              "type": "number"
+            },
+            "latencyP90": {
+              "type": "number"
+            },
+            "cost": {
+              "type": "number"
+            },
+            "accuracy": {
+              "type": "number"
+            },
+            "parameters": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "uuid",
+            "name",
+            "created_at",
+            "columns",
+            "rows",
+            "dataset"
+          ]
+        },
+        "ExperimentTableColumnPropsSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "number"
+            },
+            "field": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "IDENTIFIER",
+                "OUTPUT",
+                "METADATA"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "id",
+            "field",
+            "type"
+          ]
+        },
+        "ExperimentInsertPayload": {
+          "type": "object",
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "latency": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": {
+                      "type": [
+                        "number",
+                        "string"
+                      ]
+                    }
+                  },
+                  "outputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "metadata",
+                  "outputs"
+                ]
+              }
+            }
+          },
+          "required": [
+            "steps"
+          ]
+        }
       }
     }
   },
@@ -605,34 +759,7 @@
         "tags": [
           "Experiment"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InsertExperimentPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Experiment steps inserted successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InsertExperimentResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        },
+        "description": "Inserts steps into an experiment with the given Id.",
         "parameters": [
           {
             "in": "path",
@@ -644,7 +771,24 @@
             "description": "Unique identifier of the experiment"
           }
         ],
-        "description": "Inserts steps into an experiment with the given ID."
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Experiment/ExperimentInsertPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
       }
     },
     "/api/experiment/[experimentId]": {
@@ -652,7 +796,7 @@
         "tags": [
           "Experiment"
         ],
-        "summary": "Retrieve an experiment by ID",
+        "summary": "Retrieve an experiment by Id",
         "description": "Fetches the details of an experiment with the specified ID.",
         "operationId": "getExperimentById",
         "parameters": [
@@ -672,7 +816,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentViewResponse"
+                  "$ref": "#/components/schemas/Experiment/ExperimentViewResponse"
                 }
               }
             }
@@ -681,7 +825,7 @@
             "description": "Invalid experiment id"
           },
           "500": {
-            "description": "Invalid response experiment view type"
+            "description": "Invalid response experiment view type -or- Error processing request"
           }
         }
       }

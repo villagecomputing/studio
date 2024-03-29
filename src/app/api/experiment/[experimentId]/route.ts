@@ -7,8 +7,28 @@ import { experimentViewResponseSchema } from './schema';
  * /api/experiment/[experimentId]:
  *   get:
  *     tags:
- *      - experiment
- *     description: Gets the experiment details (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Experiment
+ *     summary: Retrieve an experiment by Id
+ *     description: Fetches the details of an experiment with the specified ID.
+ *     operationId: getExperimentById
+ *     parameters:
+ *       - in: path
+ *         name: experimentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the experiment to retrieve.
+ *     responses:
+ *       200:
+ *         description: Experiment data retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Experiment/ExperimentViewResponse'
+ *       400:
+ *         description: Invalid experiment id
+ *       500:
+ *         description: Invalid response experiment view type -or- Error processing request
  */
 export async function GET(
   request: Request,

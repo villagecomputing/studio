@@ -7,8 +7,26 @@ import { insertExperimentPayloadSchema } from './schema';
  * /api/experiment/[experimentId]/insert:
  *   post:
  *     tags:
- *      - experiment
- *     description: Inserts a row of steps inside an experiment (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Experiment
+ *     description: Inserts steps into an experiment with the given Id.
+ *     parameters:
+ *       - in: path
+ *         name: experimentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Unique identifier of the experiment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Experiment/ExperimentInsertPayload'
+ *     responses:
+ *       200:
+ *         description: 'Ok'
+ *       500:
+ *         description: 'Error processing request'
  */
 export async function POST(
   request: Request,
@@ -22,7 +40,7 @@ export async function POST(
     await ApiUtils.ensureExperimentTable(experimentId, payload);
   } catch (error) {
     console.error('Error creating experiment dynamic table:', error);
-    return response('Error processing request', 500);
+    return response('Error processing the request', 500);
   }
   try {
     await ApiUtils.insertExperimentSteps(experimentId, payload);
