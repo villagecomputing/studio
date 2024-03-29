@@ -40,8 +40,8 @@ export async function updateExperiment(
       total_latency:
         experimentDetails.total_latency + payloadMetadata.row_latency,
       total_cost: experimentDetails.total_cost + payloadMetadata.row_cost,
-      // TODO: update accuracy!!
-      total_accuracy: experimentDetails.total_accuracy,
+      total_accuracy:
+        experimentDetails.total_accuracy + (payload.accuracy ?? 0),
       total_rows: experimentDetails.total_rows + 1,
     };
 
