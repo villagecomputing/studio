@@ -369,6 +369,9 @@
             "latencyP90": {
               "type": "number"
             },
+            "runtime": {
+              "type": "number"
+            },
             "cost": {
               "type": "number"
             },
@@ -432,14 +435,34 @@
                     "properties": {
                       "latency": {
                         "type": "number"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "input_tokens": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "output_tokens": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "input_cost": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "output_cost": {
+                        "type": "number",
+                        "nullable": true
                       }
                     },
-                    "additionalProperties": {
-                      "type": [
-                        "number",
-                        "string"
-                      ]
-                    }
+                    "additionalProperties": true
                   },
                   "outputs": {
                     "type": "array",
