@@ -96,8 +96,8 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
     return {
       iconNode: icon ? iconNode : null,
       backgroundStatusColor: disabled
-        ? 'bg-muted rounded p-1'
-        : `p-1 rounded ${backgroundStatusColor}`,
+        ? 'bg-muted rounded-lg p-1'
+        : `p-1 rounded-lg ${backgroundStatusColor}`,
       formattedValue: value ? formattedValue : '-',
     };
   })();
@@ -125,7 +125,8 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
 
       <div
         className={cn([
-          !icon && !label && value && `${data.backgroundStatusColor} px-2`,
+          !icon && !label && value && `${data.backgroundStatusColor}`,
+          !icon && !label && 'px-2',
           disabled && 'text-muted-foreground',
           'text-sm font-normal text-secondary-foreground',
         ])}
