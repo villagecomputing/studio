@@ -13,7 +13,7 @@ export async function GET(
     }
     const result = await ApiUtils.getExperiment(experimentId);
 
-    if (!experimentViewResponseSchema.safeParse(result)) {
+    if (!experimentViewResponseSchema.safeParse(result).success) {
       return response('Invalid response experiment view type', 500);
     }
 

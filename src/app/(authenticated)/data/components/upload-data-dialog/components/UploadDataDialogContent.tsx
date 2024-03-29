@@ -51,7 +51,7 @@ export default function UploadDataDialogContent(
       groundTruthColumnIndex: Number(values.groundTruthColumnIndex),
     };
 
-    if (!uploadDatasetPayloadSchema.safeParse(dataToSend)) {
+    if (!uploadDatasetPayloadSchema.safeParse(dataToSend).success) {
       return;
     }
 
