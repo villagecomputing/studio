@@ -1,6 +1,8 @@
 import { formatDate } from '@/lib/utils';
 import { ColDef } from 'ag-grid-community';
 import { ExperimentGroupRowType } from '../../../group/[groupId]/types';
+import { Enum_Metadata_Type } from '../../[experimentId]/components/MetadataElement';
+import MetadataColumnCellRenderer from '../../components/MetadataColumnCellRenderer';
 import { ExperimentList } from '../../types';
 
 function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
@@ -9,6 +11,8 @@ function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
       headerName: 'Runtime',
       field: 'runtime',
       width: 90,
+      type: Enum_Metadata_Type.RUNTIME,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Date',
@@ -19,25 +23,29 @@ function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
       headerName: 'Avg. Cost',
       field: 'avgCost',
       width: 100,
-      valueFormatter: (params) => `$${params.value}`,
+      type: Enum_Metadata_Type.COST,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P90',
       field: 'p90Latency',
       width: 90,
-      valueFormatter: (params) => `${params.value}s`,
+      type: Enum_Metadata_Type.LATENCY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P50',
       field: 'p50Latency',
       width: 90,
-      valueFormatter: (params) => `${params.value}s`,
+      type: Enum_Metadata_Type.LATENCY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Accuracy',
       field: 'avgAccuracy',
       width: 100,
-      valueFormatter: (params) => `${params.value}%`,
+      type: Enum_Metadata_Type.ACCURACY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
   ];
 }
@@ -83,8 +91,7 @@ function getExperimentGroupRowData(data: ExperimentList) {
         : 0,
       p50Latency: experimentData.latencyP50,
       p90Latency: experimentData.latencyP90,
-      // TODO Fix this
-      runtime: '5m 32s',
+      runtime: experimentData.runtime,
       ...dynamicData,
     };
   });

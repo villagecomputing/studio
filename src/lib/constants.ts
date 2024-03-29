@@ -13,10 +13,10 @@ export const DISPLAYABLE_DATASET_COLUMN_TYPES = [
   ENUM_Column_type.PREDICTIVE_LABEL,
 ];
 export const DISPLAYABLE_EXPERIMENT_COLUMN_TYPES = [
-  Enum_Experiment_Column_Type.METADATA,
+  Enum_Experiment_Column_Type.STEP_METADATA,
   Enum_Experiment_Column_Type.OUTPUT,
 ];
 export const UPDATABLE_EXPERIMENT_COLUMN_TYPES = [
-  Enum_Experiment_Column_Type.METADATA,
+  Enum_Experiment_Column_Type.STEP_METADATA,
   Enum_Experiment_Column_Type.OUTPUT,
 ];
