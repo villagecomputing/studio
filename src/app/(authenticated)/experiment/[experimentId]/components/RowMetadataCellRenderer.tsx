@@ -4,7 +4,7 @@ import { CustomCellRendererProps } from 'ag-grid-react';
 import { AlertTriangleIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { ExperimentRow, ExperimentTableContext } from '../types';
-import MetadataElement from './MetadataElement';
+import MetadataElement, { Enum_Metadata_Type } from './MetadataElement';
 
 const RowMetadataCellRenderer = (
   props: CustomCellRendererProps<ExperimentRow, string, ExperimentTableContext>,
@@ -47,8 +47,8 @@ const RowMetadataCellRenderer = (
     }
 
     return {
-      latencySum: parseFloat(latencySum.toFixed(3)),
-      costSum: parseFloat(costSum.toFixed(3)),
+      latencySum,
+      costSum,
       inputTokensSum,
       outputTokensSum,
       stepError,
@@ -60,8 +60,8 @@ const RowMetadataCellRenderer = (
   }
   if (metadata.stepError.stepName) {
     return (
-      <div className="flex items-center gap-3 whitespace-nowrap">
-        <div className="inline-block rounded-lg bg-red080 p-2 text-red500">
+      <div className="flex h-full items-center gap-2 whitespace-nowrap">
+        <div className="inline-block rounded-xl bg-red080 p-2 text-red500">
           <AlertTriangleIcon size={20} />
         </div>
         <span className="text-red500">
@@ -71,22 +71,30 @@ const RowMetadataCellRenderer = (
     );
   }
   return (
-    <>
-      <div className="flex flex-wrap gap-3">
+    <div className="flex h-full flex-col justify-center">
+      <div className="flex flex-wrap gap-3 pb-2">
         <MetadataElement
-          status="green"
-          icon="latency"
-          value={`${metadata.latencySum}s`}
+          type={Enum_Metadata_Type.LATENCY}
+          icon
+          value={metadata.latencySum}
         />
         <MetadataElement
-          status="green"
-          icon="price"
-          value={`$${metadata.costSum}`}
+          type={Enum_Metadata_Type.COST}
+          icon
+          value={metadata.costSum}
         />
       </div>
-      <div>Input tokens: {metadata.inputTokensSum}</div>
-      <div>Output tokens: {metadata.outputTokensSum}</div>
-    </>
+      <MetadataElement
+        type={Enum_Metadata_Type.LABEL_VALUE}
+        value={metadata.inputTokensSum}
+        label="Input tokens:"
+      />
+      <MetadataElement
+        type={Enum_Metadata_Type.LABEL_VALUE}
+        value={metadata.outputTokensSum}
+        label="Output tokens:"
+      />
+    </div>
   );
 };
 
