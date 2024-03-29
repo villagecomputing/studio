@@ -40,7 +40,7 @@ export async function POST(
     await ApiUtils.ensureExperimentTable(experimentId, payload);
   } catch (error) {
     console.error('Error creating experiment dynamic table:', error);
-    return response('Error processing the request', 500);
+    return response('Error processing request', 500);
   }
   try {
     await ApiUtils.insertExperimentSteps(experimentId, payload);
