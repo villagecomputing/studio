@@ -123,6 +123,119 @@
             "field",
             "type"
           ]
+        },
+        "NewDatasetPayload": {
+          "type": "object",
+          "properties": {
+            "datasetName": {
+              "type": "string"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "Column_1",
+                "Column_2"
+              ]
+            },
+            "groundTruths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "GroundTruth_1",
+                "GroundTruth_2"
+              ]
+            }
+          },
+          "required": [
+            "datasetName",
+            "columns",
+            "rows"
+          ]
+        },
+        "NewDatasetResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "UploadDatasetPayload": {
+          "type": "object",
+          "properties": {
+            "datasetData": {
+              "type": "object",
+              "properties": {
+                "datasetTitle": {
+                  "type": "string",
+                  "description": "The title of the dataset"
+                },
+                "groundTruthColumnIndex": {
+                  "type": "integer",
+                  "description": "Index of the ground truth column"
+                },
+                "blankColumnTitle": {
+                  "type": "string",
+                  "description": "Title for an optional blank column",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "datasetTitle",
+                "groundTruthColumnIndex"
+              ],
+              "description": "Object containing the dataset title, ground truth column index, and an optional blank column title",
+              "example": {
+                "datasetTitle": "Example Title",
+                "groundTruthColumnIndex": 2,
+                "blankColumnTitle": "Optional Column"
+              }
+            },
+            "file": {
+              "type": "string",
+              "format": "binary",
+              "description": "The binary content of the dataset file"
+            }
+          },
+          "required": [
+            "datasetData",
+            "file"
+          ]
+        },
+        "DatasetListResponse": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date"
+              },
+              "total_rows": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "created_at",
+              "total_rows"
+            ]
+          }
         }
       }
     }
@@ -322,7 +435,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DatasetListResponse"
+                  "$ref": "#/components/schemas/Dataset/DatasetListResponse"
                 }
               }
             }
@@ -347,14 +460,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewDatasetPayload"
+                "$ref": "#/components/schemas/Dataset/NewDatasetPayload"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "The ID of the newly created dataset."
+            "description": "Successfully created a new dataset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset/NewDatasetResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid request headers type or Missing required data."
@@ -377,14 +497,14 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UploadDatasetPayload"
+                "$ref": "#/components/schemas/Dataset/UploadDatasetPayload"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "The newly uploaded dataset ID"
+            "description": "The newly uploaded dataset Id"
           },
           "400": {
             "description": "Missing required data -or- Invalid request headers type -or- Invalid request dataset type -or- Column Title required for blank ground truth column"

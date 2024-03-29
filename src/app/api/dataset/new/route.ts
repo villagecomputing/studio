@@ -8,8 +8,25 @@ import { newDatasetPayloadSchema } from './schema';
  * /api/dataset/new:
  *   post:
  *     tags:
- *      - dataset
- *     description: Creates a new dataset (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     description: Create a new dataset with the provided details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Dataset/NewDatasetPayload'
+ *     responses:
+ *       '200':
+ *         description: Successfully created a new dataset.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Dataset/NewDatasetResponse'
+ *       '400':
+ *         description: Invalid request headers type or Missing required data.
+ *       '500':
+ *         description: Error processing request.
  */
 export async function POST(request: Request) {
   try {

@@ -12,8 +12,22 @@ import { uploadDatasetPayloadSchema } from './schema';
  * /api/dataset/upload:
  *   post:
  *     tags:
- *      - dataset
- *     description: Uploads a dataset file (CSV) (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     description: Uploads a dataset file and its associated data
+ *     requestBody:
+ *       description: Dataset file and data to be uploaded
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/Dataset/UploadDatasetPayload'
+ *     responses:
+ *       '200':
+ *         description: The newly uploaded dataset Id
+ *       '400':
+ *         description: Missing required data -or- Invalid request headers type -or- Invalid request dataset type -or- Column Title required for blank ground truth column
+ *       '500':
+ *         description: File content is missing -or- Error processing request
  */
 export async function POST(request: Request) {
   try {
