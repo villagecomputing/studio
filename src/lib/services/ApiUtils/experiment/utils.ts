@@ -4,7 +4,12 @@ import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Experiment, Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
-import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
+import DatabaseUtils from '../../DatabaseUtils';
+import {
+  ColumnDefinition,
+  ColumnType,
+  ENUM_ORDER_DIRECTION,
+} from '../../DatabaseUtils/types';
 
 export type ExperimentField = { value?: string } & Pick<
   Experiment_column,
@@ -30,8 +35,11 @@ export const DEFAULT_ROW_METADATA_VALUES = {
   row_cost: 0,
 };
 
-export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
-export const DYNAMIC_EXPERIMENT_ACCURACY_FIELD = 'accuracy';
+export enum Enum_Dynamic_experiment_metadata_fields {
+  LATENCY = 'latency',
+  ACCURACY = 'accuracy',
+  COST = 'cost',
+}
 
 export function buildExperimentFields(
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
@@ -45,9 +53,12 @@ export function buildExperimentFields(
   ];
 
   let rowLatency = 0;
+  let rowCost = 0;
   payload.steps
     .map((step) => {
       rowLatency += step.metadata.latency;
+      rowCost +=
+        (step.metadata.input_cost ?? 0) + (step.metadata.output_cost ?? 0);
       return [
         {
           name: step.name,
@@ -73,16 +84,22 @@ export function buildExperimentFields(
 
   experimentFields.push(
     {
-      name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
-      field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+      name: Enum_Dynamic_experiment_metadata_fields.LATENCY,
+      field: Enum_Dynamic_experiment_metadata_fields.LATENCY,
       type: Enum_Experiment_Column_Type.METADATA,
       value: rowLatency.toString(),
     },
     {
-      name: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
-      field: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
+      name: Enum_Dynamic_experiment_metadata_fields.ACCURACY,
+      field: Enum_Dynamic_experiment_metadata_fields.ACCURACY,
       type: Enum_Experiment_Column_Type.METADATA,
       value: (payload.accuracy ?? 0).toString(),
+    },
+    {
+      name: Enum_Dynamic_experiment_metadata_fields.COST,
+      field: Enum_Dynamic_experiment_metadata_fields.COST,
+      type: Enum_Experiment_Column_Type.METADATA,
+      value: rowCost.toString(),
     },
   );
 
@@ -136,7 +153,6 @@ export function calculatePercentile(
     return sortedData[position - 1];
   } else {
     // If position is not an integer, interpolate between the values at the nearest ranked positions
-    console.log(sortedData);
     const lowerIndex = Math.floor(position);
     const upperIndex = Math.min(Math.ceil(position), sortedData.length);
     const lowerValue = sortedData[lowerIndex - 1];
@@ -144,5 +160,39 @@ export function calculatePercentile(
     const interpolatedValue =
       lowerValue + (upperValue - lowerValue) * (position - lowerIndex);
     return interpolatedValue || 0;
+  }
+}
+
+export async function getOrderedExperimentMetadata(
+  experimentId: string,
+  metadataField: Enum_Dynamic_experiment_metadata_fields,
+): Promise<number[]> {
+  if (!experimentId) {
+    throw new Error('experimentTableName is required');
+  }
+
+  const selectFields = [metadataField];
+  const orderBy = {
+    field: metadataField,
+    direction: ENUM_ORDER_DIRECTION.ASC,
+  };
+
+  try {
+    const result = await DatabaseUtils.select<Record<string, string>>(
+      experimentId,
+      selectFields,
+      undefined,
+      orderBy,
+    );
+    return result.map((row) => {
+      return Number(row[metadataField]);
+    });
+  } catch (error) {
+    // Check if the error is because the table doesn't exist
+    if (error instanceof Error && 'code' in error && error.code === 'P2010') {
+      return [];
+    } else {
+      throw error;
+    }
   }
 }

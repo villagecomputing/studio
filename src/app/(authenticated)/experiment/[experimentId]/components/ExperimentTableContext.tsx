@@ -6,10 +6,11 @@ import {
   AGGridExperiment,
   ExperimentRow,
   ExperimentTableContext,
+  FetchExperimentResult,
 } from '../types';
 
 export const useExperimentTableContext = (
-  props: AGGridExperiment,
+  props: FetchExperimentResult,
 ): ExperimentTableContext => {
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
   const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
@@ -49,6 +50,10 @@ export const useExperimentTableContext = (
   }, [props.columnDefs]);
 
   return {
+    costP25: props.costP25,
+    costP75: props.costP75,
+    latencyP25: props.latencyP25,
+    latencyP75: props.latencyP75,
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,

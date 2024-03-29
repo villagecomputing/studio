@@ -2,12 +2,13 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '../../prisma';
 
 import { getExperimentDetails } from './getExperimentDetails';
-import getOrderedExperimentLatencies from './getOrderedExperimentLatencies';
 import {
   DEFAULT_ROW_METADATA_VALUES,
+  Enum_Dynamic_experiment_metadata_fields,
   ExperimentUpdatableMetadata,
   RowMetadata,
   calculatePercentile,
+  getOrderedExperimentMetadata,
 } from './utils';
 
 const buildRowMetadata = (
@@ -30,8 +31,10 @@ export async function updateExperiment(
 ) {
   try {
     const experimentDetails = await getExperimentDetails(experimentId);
-    const experimentLatencies =
-      await getOrderedExperimentLatencies(experimentId);
+    const experimentLatencies = await getOrderedExperimentMetadata(
+      experimentId,
+      Enum_Dynamic_experiment_metadata_fields.LATENCY,
+    );
     const payloadMetadata = buildRowMetadata(payload);
 
     const updatedData: ExperimentUpdatableMetadata = {

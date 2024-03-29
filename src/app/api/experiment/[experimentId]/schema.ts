@@ -27,4 +27,8 @@ export const experimentViewResponseSchema = z.object({
   cost: z.number(),
   accuracy: z.number(),
   parameters: z.string(),
+  costP25: z.number(),
+  costP75: z.number(),
+  latencyP25: z.number(),
+  latencyP75: z.number(),
 });
