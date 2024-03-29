@@ -21,6 +21,7 @@ export const fetchExperiment = async (
       dataset: { id: experiment.dataset.uuid, name: experiment.dataset.name },
       latencyP50: experiment.latencyP50,
       latencyP90: experiment.latencyP90,
+      runtime: experiment.runtime,
       cost: experiment.cost,
       parameters: experiment.parameters,
       accuracy: experiment.accuracy,
