@@ -1,0 +1,442 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Labelkit Studio API - OpenAPI 3.0",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {}
+  },
+  "tags": [
+    {
+      "name": "Dataset",
+      "description": "Operations related to datasets including listing, creating, populating and retrieving datasets, approving ground truths, editing cells and columns"
+    },
+    {
+      "name": "Experiment",
+      "description": "Operations related to experiments including creating, updating, retrieving and listing experiments"
+    }
+  ],
+  "paths": {
+    "/api/dataset/[datasetId]/addData": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "description": "Inserts data into a dataset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "datasetId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the dataset."
+          }
+        ],
+        "requestBody": {
+          "description": "Data to be added to the dataset",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dataset/AddDataPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Missing required data -or- Invalid request headers type"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/dataset/[datasetId]": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "description": "Retrieve the details of a specific dataset by its ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "datasetId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the dataset."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the dataset details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset/DatasetViewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid dataset Id provided."
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/api/dataset/edit/approveAll": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "requestBody": {
+          "$ref": "#/components/schemas/ApproveAllGroundTruthsPayload"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Required data is missing."
+          },
+          "500": {
+            "description": "Error processing request."
+          }
+        },
+        "description": "Approves all ground truths for a given dataset."
+      }
+    },
+    "/api/dataset/edit/cell": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditGroundTruthCellPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ground truth cell updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditGroundTruthCellResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error processing request: Invalid input data."
+          },
+          "500": {
+            "description": "Error processing request: Internal server error."
+          }
+        },
+        "description": "Edits a ground truth cell in a dataset."
+      }
+    },
+    "/api/dataset/edit/column": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditDatasetColumnPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error processing request: Invalid input data."
+          },
+          "500": {
+            "description": "Error processing request: Internal server error."
+          }
+        },
+        "description": "Edits a column in a dataset."
+      }
+    },
+    "/api/dataset/list": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "description": "Retrieves a list of datasets with their total row counts",
+        "responses": {
+          "200": {
+            "description": "A list of datasets with their total row counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid response datasetList type"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/dataset/new": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "description": "Create a new dataset with the provided details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewDatasetPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The ID of the newly created dataset."
+          },
+          "400": {
+            "description": "Invalid request headers type or Missing required data."
+          },
+          "500": {
+            "description": "Error processing request."
+          }
+        }
+      }
+    },
+    "/api/dataset/upload": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "description": "Uploads a dataset file and its associated data",
+        "requestBody": {
+          "description": "Dataset file and data to be uploaded",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadDatasetPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly uploaded dataset ID"
+          },
+          "400": {
+            "description": "Missing required data -or- Invalid request headers type -or- Invalid request dataset type -or- Column Title required for blank ground truth column"
+          },
+          "500": {
+            "description": "File content is missing -or- Error processing request"
+          }
+        }
+      }
+    },
+    "/api/experiment/[experimentId]/insert": {
+      "post": {
+        "tags": [
+          "Experiment"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertExperimentPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Experiment steps inserted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsertExperimentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "experimentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique identifier of the experiment"
+          }
+        ],
+        "description": "Inserts steps into an experiment with the given ID."
+      }
+    },
+    "/api/experiment/[experimentId]": {
+      "get": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Retrieve an experiment by ID",
+        "description": "Fetches the details of an experiment with the specified ID.",
+        "operationId": "getExperimentById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "experimentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the experiment to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Experiment data retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentViewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid experiment id"
+          },
+          "500": {
+            "description": "Invalid response experiment view type"
+          }
+        }
+      }
+    },
+    "/api/experiment/list": {
+      "get": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "List all experiments",
+        "description": "Retrieves a list of all experiments that have not been deleted.",
+        "operationId": "listExperiments",
+        "responses": {
+          "200": {
+            "description": "A list of experiments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/experiment/new": {
+      "post": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Create a new experiment",
+        "description": "This endpoint is used to create a new experiment with the provided details.",
+        "operationId": "createExperiment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewExperimentPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Experiment created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid dataset id"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    }
+  }
+}
