@@ -9,7 +9,7 @@ import { addDataPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
- *     description: Inserts data into a dataset
+ *     summary: Inserts data into a dataset
  *     parameters:
  *       - in: path
  *         name: datasetId

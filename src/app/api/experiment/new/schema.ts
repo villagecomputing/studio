@@ -8,5 +8,5 @@ export const newExperimentPayloadSchema = z.object({
 });
 
 export const newExperimentResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
 });

@@ -8,14 +8,14 @@ import { insertExperimentPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Experiment
- *     description: Inserts steps into an experiment with the given Id.
+ *     summary: Inserts steps into an experiment with the given Id.
+ *     description: Ensures the experiment is created and inserts the given steps as a row for the given experiment
  *     parameters:
  *       - in: path
  *         name: experimentId
  *         required: true
  *         schema:
  *           type: string
- *         description: Unique identifier of the experiment
  *     requestBody:
  *       required: true
  *       content:

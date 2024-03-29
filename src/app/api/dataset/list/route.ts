@@ -11,10 +11,9 @@ import { datasetListResponseSchema } from './schema';
  *   get:
  *     tags:
  *      - Dataset
- *     description: Retrieves a list of datasets with their total row counts
+ *     summary: Retrieves a list of datasets and their total row counts
  *     responses:
  *       '200':
- *         description: A list of datasets with their total row counts
  *         content:
  *           application/json:
  *             schema:

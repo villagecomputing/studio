@@ -9,6 +9,7 @@ import { editGroundTruthCellSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
+ *     summary: Edits a specific cell in a dataset's ground truth.
  *     requestBody:
  *       required: true
  *       content:

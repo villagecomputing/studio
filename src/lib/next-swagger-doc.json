@@ -24,8 +24,7 @@
                     "type": "object",
                     "properties": {
                         "datasetId": {
-                            "type":"string",
-                            "example":"DatasetName-d-262a1966-31f6-43c9-b8a7-f9f583099c2e"
+                            "type":"string"
                         },
                         "datasetRows": {
                             "type":"array",
@@ -49,8 +48,7 @@
                           "type": "string",
                           "enum": ["PENDING", "APPROVED"]
                         }
-                    },
-                    "example": "{\"Column_1\":\"Value_1\", \"Column_2\", \"Value_2\"}"
+                    }
                 },               
                 "DatasetViewResponse": {
                     "type": "object",
@@ -115,15 +113,13 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        },
-                        "example": ["Column_1", "Column_2"]
+                        }
                       },
                       "groundTruths": {
                         "type": "array",
                         "items": {
                           "type": "string"
-                        },
-                        "example": ["GroundTruth_1", "GroundTruth_2"]
+                        }
                       }
                     },
                     "required": ["datasetName", "columns", "rows"]
@@ -416,7 +412,7 @@
                     "type": "object",
                     "properties": {
                         "id": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     },
                     "required": ["id"]

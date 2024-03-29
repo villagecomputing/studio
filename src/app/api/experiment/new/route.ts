@@ -14,9 +14,7 @@ import { newExperimentPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Experiment
- *     summary: Create a new experiment
- *     description: This endpoint is used to create a new experiment with the provided details.
- *     operationId: createExperiment
+ *     summary: Declare a new experiment for a given dataset Id
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +23,6 @@ import { newExperimentPayloadSchema } from './schema';
  *             $ref: '#/components/schemas/Experiment/NewExperimentPayload'
  *     responses:
  *       200:
- *         description: Experiment created successfully.
  *         content:
  *           application/json:
  *             schema:

@@ -8,6 +8,7 @@ import { editDatasetColumnSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
+ *     summary: Edits an existing column in a dataset.
  *     requestBody:
  *       required: true
  *       content:

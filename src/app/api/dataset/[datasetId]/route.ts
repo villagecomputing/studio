@@ -9,7 +9,7 @@ import { datasetViewResponseSchema } from './schema';
  *   get:
  *     tags:
  *      - Dataset
- *     description: Retrieve the details of a specific dataset by its ID.
+ *     summary: Retrieve the details of a specific dataset by its Id.
  *     parameters:
  *       - in: path
  *         name: datasetId

@@ -9,7 +9,7 @@ import { newDatasetPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
- *     description: Create a new dataset with the provided details.
+ *     summary: Initializes a new dataset.
  *     requestBody:
  *       required: true
  *       content:

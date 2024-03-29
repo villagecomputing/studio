@@ -13,7 +13,7 @@ import { uploadDatasetPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
- *     description: Uploads a dataset file and its associated data
+ *     summary: Uploads a dataset file and its associated data
  *     requestBody:
  *       description: Dataset file and data to be uploaded
  *       required: true
