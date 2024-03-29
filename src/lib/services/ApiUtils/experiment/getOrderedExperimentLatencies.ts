@@ -1,7 +1,7 @@
 import DatabaseUtils from '../../DatabaseUtils';
 import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 
-import { DYNAMIC_EXPERIMENT_LATENCY_FIELD, assertIsNumber } from './utils';
+import { DYNAMIC_EXPERIMENT_LATENCY_FIELD } from './utils';
 
 export default async function getOrderedExperimentLatencies(
   experimentId: string,
@@ -24,7 +24,6 @@ export default async function getOrderedExperimentLatencies(
       orderBy,
     );
     return result.map((row) => {
-      assertIsNumber(row[DYNAMIC_EXPERIMENT_LATENCY_FIELD]);
       return Number(row[DYNAMIC_EXPERIMENT_LATENCY_FIELD]);
     });
   } catch (error) {
