@@ -45,6 +45,7 @@ export type FetchExperimentResult = AGGridExperiment & {
   };
   latencyP50: number;
   latencyP90: number;
+  runtime: number;
   cost: number;
   accuracy: number;
   parameters: string;

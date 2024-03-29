@@ -23,6 +23,7 @@ export const experimentViewResponseSchema = z.object({
   }),
   latencyP50: z.number(),
   latencyP90: z.number(),
+  runtime: z.number(),
   cost: z.number(),
   accuracy: z.number(),
   parameters: z.string(),

@@ -1,7 +1,9 @@
 import { formatDate } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
+import { Enum_Metadata_Type } from '../../[experimentId]/components/MetadataElement';
 import DatasetNameCellRenderer from '../../components/DatasetNameCellRenderer';
 import GroupIdCellRenderer from '../../components/GroupIdCellRenderer';
+import MetadataColumnCellRenderer from '../../components/MetadataColumnCellRenderer';
 import ParametersCellRenderer from '../../components/ParametersCellRenderer';
 import { ExperimentList, ExperimentListRowType } from '../../types';
 
@@ -34,6 +36,8 @@ function getExperimentListTableColumnDefs(
       field: 'runtime',
       width: 90,
       onCellClicked,
+      type: Enum_Metadata_Type.RUNTIME,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Date',
@@ -46,28 +50,32 @@ function getExperimentListTableColumnDefs(
       field: 'avgCost',
       width: 100,
       onCellClicked,
-      valueFormatter: (params) => `$${params.value}`,
+      type: Enum_Metadata_Type.COST,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P50',
       field: 'p50Latency',
       width: 150,
       onCellClicked,
-      valueFormatter: (params) => `${params.value}s`,
+      type: Enum_Metadata_Type.LATENCY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P90',
       field: 'p90Latency',
       width: 150,
       onCellClicked,
-      valueFormatter: (params) => `${params.value}s`,
+      type: Enum_Metadata_Type.LATENCY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Accuracy',
       field: 'avgAccuracy',
       width: 100,
       onCellClicked,
-      valueFormatter: (params) => `${params.value}%`,
+      type: Enum_Metadata_Type.ACCURACY,
+      cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Parameters',
@@ -93,7 +101,7 @@ function getExperimentListRowData(
     avgCost: data.totalCost ? data.totalCost / data.totalRows : 0,
     p50Latency: data.latencyP50,
     p90Latency: data.latencyP90,
-    runtime: data.runtime.toString(),
+    runtime: data.runtime,
     params: data.pipelineMetadata,
   }));
 }

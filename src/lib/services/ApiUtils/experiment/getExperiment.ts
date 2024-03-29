@@ -41,6 +41,7 @@ export async function getExperiment(
     description: experimentDetails.description || '',
     latencyP50: experimentDetails.latency_p50,
     latencyP90: experimentDetails.latency_p90,
+    runtime: experimentDetails.total_latency,
     cost: experimentDetails.total_cost,
     accuracy: experimentDetails.total_accuracy,
     dataset: experimentDetails.Dataset,
