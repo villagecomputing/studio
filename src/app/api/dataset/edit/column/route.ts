@@ -7,8 +7,23 @@ import { editDatasetColumnSchema } from './schema';
  * /api/dataset/edit/column:
  *   post:
  *     tags:
- *      - dataset
- *     description: Edits dataset column (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Dataset/EditDatasetColumnPayload'
+ *     responses:
+ *       200:
+ *         description: Column updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Dataset/EditDatasetColumnResponse'
+ *       500:
+ *         description: 'Error processing request'
+ *     description: Edits a column in a dataset.
  */
 export async function POST(request: Request) {
   try {

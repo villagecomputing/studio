@@ -194,6 +194,77 @@
                         },
                         "required": ["id", "name", "created_at", "total_rows"]
                     }
+                },
+                "ApproveAllGroundTruthsPayload": {
+                    "type": "object",
+                    "properties": {
+                        "datasetId": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["datasetId"]
+                },
+                "EditCellPayload": {
+                    "type": "object",
+                    "properties": {
+                        "datasetId": {
+                            "type": "string"
+                        },
+                        "rowId": {
+                            "type": "integer"
+                        },
+                        "content": {
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "status": {
+                            "type": "string",
+                            "enum": ["PENDING", "APPROVED"],
+                            "nullable": true
+                        }
+                    },
+                    "required": ["datasetId", "rowId"],
+                    "oneOf": [
+                        {
+                            "required": ["content"]
+                        },
+                        {
+                            "required": ["status"]
+                        }
+                    ]
+                },
+                "EditGroundTruthCellResponse": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["id"]
+                },
+                "EditDatasetColumnPayload": {
+                    "type": "object",
+                    "properties": {
+                        "datasetId": {
+                            "type": "string"
+                        },
+                        "columnId": {
+                            "type": "string"
+                        },
+                        "newName": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["datasetId", "columnId", "newName"]
+                },
+                "EditDatasetColumnResponse": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["id"]
                 }
             }
         }
