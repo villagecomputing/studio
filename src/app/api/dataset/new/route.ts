@@ -9,20 +9,20 @@ import { newDatasetPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
- *     description: Create a new dataset with the provided details.
+ *     summary: Initializes a new dataset.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/NewDatasetPayload'
+ *             $ref: '#/components/schemas/NewDatasetPayload'
  *     responses:
  *       '200':
  *         description: Successfully created a new dataset.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Dataset/NewDatasetResponse'
+ *               $ref: '#/components/schemas/NewDatasetResponse'
  *       '400':
  *         description: Invalid request headers type or Missing required data.
  *       '500':

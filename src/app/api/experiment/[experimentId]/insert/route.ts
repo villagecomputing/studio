@@ -4,18 +4,18 @@ import { insertExperimentPayloadSchema } from './schema';
 
 /**
  * @swagger
- * /api/experiment/[experimentId]/insert:
+ * /api/experiment/{experimentId}/insert:
  *   post:
  *     tags:
  *      - Experiment
- *     description: Inserts steps into an experiment with the given Id.
+ *     summary: Inserts steps into an experiment with the given Id.
+ *     description: Ensures the experiment is created and inserts the given steps as a row for the given experiment
  *     parameters:
  *       - in: path
  *         name: experimentId
  *         required: true
  *         schema:
  *           type: string
- *         description: Unique identifier of the experiment
  *     requestBody:
  *       required: true
  *       content:
@@ -35,6 +35,7 @@ export async function POST(
   const experimentId = params.experimentId;
   const requestBody = await request.json();
   const payload = insertExperimentPayloadSchema.parse(requestBody);
+
   try {
     // Creates table if it doesn't exist
     await ApiUtils.ensureExperimentTable(experimentId, payload);

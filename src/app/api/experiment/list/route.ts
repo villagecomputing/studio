@@ -11,8 +11,6 @@ import { experimentListResponseSchema } from './schema';
  *     tags:
  *      - Experiment
  *     summary: List all experiments
- *     description: Retrieves a list of all experiments that have not been deleted.
- *     operationId: listExperiments
  *     responses:
  *       200:
  *         description: A list of experiments.
