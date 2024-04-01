@@ -1,4 +1,5 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
+import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
@@ -35,6 +36,16 @@ export async function GET() {
     const experimentListResponse: ResultSchemaType[ApiEndpoints.experimentList] =
       await Promise.all(
         experimentList.map(async (experiment) => {
+          let rowsWithAccuracyCount = 0;
+          try {
+            rowsWithAccuracyCount = Number(
+              await DatabaseUtils.selectAggregation(
+                experiment.uuid,
+                { func: 'COUNT' },
+                { accuracy: { isNotNull: true } },
+              ),
+            );
+          } catch (_e) {}
           return {
             ...experiment,
             id: experiment.uuid,
@@ -45,7 +56,9 @@ export async function GET() {
             latencyP50: experiment.latency_p50,
             latencyP90: experiment.latency_p90,
             runtime: experiment.total_latency,
-            totalAccuracy: experiment.total_accuracy,
+            avgAccuracy: rowsWithAccuracyCount
+              ? experiment.total_accuracy / rowsWithAccuracyCount
+              : 0,
             totalCost: experiment.total_cost,
             totalLatency: experiment.total_latency,
             totalRows: experiment.total_rows,

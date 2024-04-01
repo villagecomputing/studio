@@ -58,7 +58,7 @@ function getExperimentListTableColumnDefs(
       field: 'p50Latency',
       width: 150,
       onCellClicked,
-      type: Enum_Metadata_Type.LATENCY,
+      type: Enum_Metadata_Type.LATENCY50,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
@@ -66,7 +66,7 @@ function getExperimentListTableColumnDefs(
       field: 'p90Latency',
       width: 150,
       onCellClicked,
-      type: Enum_Metadata_Type.LATENCY,
+      type: Enum_Metadata_Type.LATENCY50,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
@@ -97,7 +97,7 @@ function getExperimentListRowData(
     groupId: data.groupId,
     date: formatDate(data.created_at),
     dataset: { id: data.Dataset.id, name: data.Dataset.name },
-    avgAccuracy: data.totalAccuracy ? data.totalAccuracy / data.totalRows : 0,
+    avgAccuracy: data.avgAccuracy,
     avgCost: data.totalCost ? data.totalCost / data.totalRows : 0,
     p50Latency: data.latencyP50,
     p90Latency: data.latencyP90,
