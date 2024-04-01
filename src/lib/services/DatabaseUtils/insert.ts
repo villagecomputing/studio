@@ -4,7 +4,7 @@ import PrismaClient from '../prisma';
 
 export async function insert(
   tableName: string,
-  rows: Record<string, string>[],
+  rows: Record<string, string | null>[],
 ): Promise<number> {
   if (rows.length === 0) {
     return 0;

@@ -11,7 +11,7 @@ import {
   ENUM_ORDER_DIRECTION,
 } from '../../DatabaseUtils/types';
 
-export type ExperimentField = { value?: string } & Pick<
+export type ExperimentField = { value?: string | null } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
@@ -93,7 +93,7 @@ export function buildExperimentFields(
       name: Enum_Dynamic_experiment_metadata_fields.ACCURACY,
       field: Enum_Dynamic_experiment_metadata_fields.ACCURACY,
       type: Enum_Experiment_Column_Type.METADATA,
-      value: (payload.accuracy ?? 0).toString(),
+      value: payload.accuracy == null ? null : payload.accuracy.toString(),
     },
     {
       name: Enum_Dynamic_experiment_metadata_fields.COST,

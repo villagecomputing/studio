@@ -62,8 +62,10 @@ export type ExperimentTableContext = {
   latencyP75: number;
   stepMetadataColumns: { name: string; field: string }[];
   inspectorRowIndex: number | null;
+  datasetId: string;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
+  displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
 };

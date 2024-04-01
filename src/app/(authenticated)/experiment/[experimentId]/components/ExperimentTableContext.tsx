@@ -20,6 +20,9 @@ export const useExperimentTableContext = (
   const [columnDefs, setColumnDefs] = useState<AGGridExperiment['columnDefs']>(
     props.columnDefs,
   );
+  const [displayableColumnDefs, setDisplayableColumnDefs] = useState<
+    AGGridExperiment['columnDefs']
+  >([]);
   const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
     null,
   );
@@ -46,19 +49,46 @@ export const useExperimentTableContext = (
         }),
       ),
     );
-    setColumnDefs(parsedColumns);
+    setColumnDefs(props.columnDefs);
+    setDisplayableColumnDefs(parsedColumns);
   }, [props.columnDefs]);
+
+  // Handles the row highlighting (selected) to match the inspector row index
+  useEffect(() => {
+    const gridApi = gridRef.current?.api;
+    if (!gridApi) {
+      return;
+    }
+    const visibleNodes = gridApi.getRenderedNodes();
+    const shouldSelectNode = inspectorRowIndex !== null;
+    const selectedNode = visibleNodes.find((node) =>
+      shouldSelectNode
+        ? node.rowIndex === inspectorRowIndex
+        : node.isSelected(),
+    );
+    if (!selectedNode) {
+      return;
+    }
+    gridApi.setNodesSelected({
+      nodes: [selectedNode],
+      newValue: shouldSelectNode,
+    });
+    // Schedule the call to ensureNodeVisible to avoid lifecycle warning
+    setTimeout(() => gridApi.ensureNodeVisible(selectedNode), 0);
+  }, [inspectorRowIndex, gridRef]);
 
   return {
     costP25: props.costP25,
     costP75: props.costP75,
     latencyP25: props.latencyP25,
     latencyP75: props.latencyP75,
+    datasetId: props.dataset.id,
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,
     rows,
     columnDefs,
+    displayableColumnDefs,
     setInspectorRowIndex,
   };
 };

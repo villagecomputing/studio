@@ -3,6 +3,7 @@ import { DISPLAYABLE_EXPERIMENT_COLUMN_TYPES } from '@/lib/constants';
 import { ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
+import DatabaseUtils from '../../DatabaseUtils';
 import getExperimentContent from './getExperimentContent';
 import { getExperimentDetails } from './getExperimentDetails';
 import {
@@ -52,6 +53,13 @@ export async function getExperiment(
   const costP75 = calculatePercentile(orderedCosts, 75);
   const latencyP25 = calculatePercentile(orderedLatencies, 25);
   const latencyP75 = calculatePercentile(orderedLatencies, 75);
+  const rowsWithAccuracyCount = Number(
+    await DatabaseUtils.selectAggregation(
+      experimentId,
+      { func: 'COUNT' },
+      { accuracy: { isNotNull: true } },
+    ),
+  );
 
   return {
     uuid: experimentDetails.uuid,
@@ -61,8 +69,8 @@ export async function getExperiment(
     latencyP90: experimentDetails.latency_p90,
     runtime: experimentDetails.total_latency,
     cost: experimentDetails.total_cost,
-    accuracy: experimentDetails.total_rows
-      ? experimentDetails.total_accuracy / experimentDetails.total_rows
+    accuracy: rowsWithAccuracyCount
+      ? experimentDetails.total_accuracy / rowsWithAccuracyCount
       : 0,
     dataset: experimentDetails.Dataset,
     parameters: experimentDetails.pipeline_metadata,

@@ -6,7 +6,7 @@ export const BaseRowInspectorBody: React.FC<BaseRowInspectorBodyProps> = (
   const { children } = props;
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto px-6">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto">
       {children}
     </div>
   );
