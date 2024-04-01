@@ -78,6 +78,10 @@ export const useExperimentTableContext = (
   }, [inspectorRowIndex, gridRef]);
 
   return {
+    costP25: props.costP25,
+    costP75: props.costP75,
+    latencyP25: props.latencyP25,
+    latencyP75: props.latencyP75,
     datasetId: props.dataset.id,
     stepMetadataColumns,
     inspectorRowIndex,

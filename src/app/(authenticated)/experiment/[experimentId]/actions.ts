@@ -21,8 +21,12 @@ export const fetchExperiment = async (
       dataset: { id: experiment.dataset.uuid, name: experiment.dataset.name },
       latencyP50: experiment.latencyP50,
       latencyP90: experiment.latencyP90,
+      latencyP25: experiment.latencyP25,
+      latencyP75: experiment.latencyP75,
       runtime: experiment.runtime,
       cost: experiment.cost,
+      costP25: experiment.costP25,
+      costP75: experiment.costP75,
       parameters: experiment.parameters,
       accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({

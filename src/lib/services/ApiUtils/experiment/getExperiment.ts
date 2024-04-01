@@ -6,6 +6,11 @@ import { Enum_Experiment_Column_Type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
 import getExperimentContent from './getExperimentContent';
 import { getExperimentDetails } from './getExperimentDetails';
+import {
+  Enum_Dynamic_experiment_metadata_fields,
+  calculatePercentile,
+  getOrderedExperimentMetadata,
+} from './utils';
 
 export async function getExperiment(
   experimentId: string,
@@ -36,6 +41,18 @@ export async function getExperiment(
     };
   });
 
+  const orderedCosts = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.COST,
+  );
+  const orderedLatencies = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.LATENCY,
+  );
+  const costP25 = calculatePercentile(orderedCosts, 25);
+  const costP75 = calculatePercentile(orderedCosts, 75);
+  const latencyP25 = calculatePercentile(orderedLatencies, 25);
+  const latencyP75 = calculatePercentile(orderedLatencies, 75);
   const rowsWithAccuracyCount = Number(
     await DatabaseUtils.selectAggregation(
       experimentId,
@@ -60,5 +77,9 @@ export async function getExperiment(
     created_at: experimentDetails.created_at,
     columns: columns,
     rows: experimentContent,
+    costP25,
+    costP75,
+    latencyP25,
+    latencyP75,
   };
 }

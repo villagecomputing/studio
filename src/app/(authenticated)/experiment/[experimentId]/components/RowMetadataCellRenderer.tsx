@@ -1,9 +1,8 @@
-import { isGroundTruthCell } from '@/app/(authenticated)/data/utils/commonUtils';
-import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import { AlertTriangleIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { ExperimentRow, ExperimentTableContext } from '../types';
+import { getExperimentRowMetadata } from '../utils';
 import MetadataElement, { Enum_Metadata_Type } from './MetadataElement';
 
 const RowMetadataCellRenderer = (
@@ -13,46 +12,10 @@ const RowMetadataCellRenderer = (
     if (!props.data) {
       return null;
     }
-    const stepsMetadataColumns = props.context.stepMetadataColumns;
-
-    let latencySum = 0;
-    let costSum = 0;
-    let inputTokensSum = 0;
-    let outputTokensSum = 0;
-    let stepError: { stepName?: string; error?: string | null } = {};
-
-    for (const column of stepsMetadataColumns) {
-      const value = props.data?.[column.field];
-      if (!value || isGroundTruthCell(value)) {
-        continue;
-      }
-      const metadata = JSON.parse(value);
-      const {
-        latency,
-        input_cost,
-        output_cost,
-        input_tokens,
-        output_tokens,
-        success,
-        error,
-      } = experimentStepMetadata.parse(metadata);
-      if (!success) {
-        stepError = { stepName: column.name, error };
-        break;
-      }
-      latencySum += latency;
-      costSum += (input_cost ?? 0) + (output_cost ?? 0);
-      inputTokensSum += input_tokens ?? 0;
-      outputTokensSum += output_tokens ?? 0;
-    }
-
-    return {
-      latencySum,
-      costSum,
-      inputTokensSum,
-      outputTokensSum,
-      stepError,
-    };
+    return getExperimentRowMetadata(
+      props.data,
+      props.context.stepMetadataColumns,
+    );
   }, [props.data, props.context]);
 
   if (!metadata) {
@@ -77,11 +40,15 @@ const RowMetadataCellRenderer = (
           type={Enum_Metadata_Type.LATENCY}
           icon
           value={metadata.latencySum}
+          p25={props.context.latencyP25}
+          p75={props.context.latencyP75}
         />
         <MetadataElement
           type={Enum_Metadata_Type.COST}
           icon
           value={metadata.costSum}
+          p25={props.context.costP25}
+          p75={props.context.costP75}
         />
       </div>
       <MetadataElement

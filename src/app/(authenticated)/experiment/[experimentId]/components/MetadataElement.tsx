@@ -16,6 +16,8 @@ type MetadataElementProps = {
   icon?: boolean;
   label?: string;
   value?: number;
+  p25?: number;
+  p75?: number;
 };
 
 const MetadataElement: React.FC<MetadataElementProps> = ({
@@ -23,6 +25,8 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
   label,
   value,
   type,
+  p25,
+  p75,
 }) => {
   const disabled = !value;
 
@@ -32,45 +36,69 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
     let formattedValue: string = '-';
     switch (type) {
       case Enum_Metadata_Type.COST: {
-        if (value) {
-          formattedValue = `$${parseFloat(value.toFixed(3))}`;
-        }
-        // TODO: update this based on value range
-        backgroundStatusColor = 'bg-lightRed';
         iconNode = (
           <BanknoteIcon
             size={16}
             className={cn(disabled && 'text-muted-foreground')}
           />
         );
+        if (value) {
+          formattedValue = `$${parseFloat(value.toFixed(3))}`;
+          if (p25 === undefined || p75 === undefined) {
+            break;
+          }
+          if (value >= p75) {
+            backgroundStatusColor = 'bg-lightRed';
+          } else if (value <= p25) {
+            backgroundStatusColor = 'bg-lightGreen';
+          } else {
+            backgroundStatusColor = 'bg-peach';
+          }
+        }
         break;
       }
       case Enum_Metadata_Type.LATENCY: {
-        if (value) {
-          formattedValue = `${parseFloat(value.toFixed(3))}s`;
-        }
-        // TODO: update this based on value range
-        backgroundStatusColor = 'bg-lightGreen';
         iconNode = (
           <ArrowLeftRightIcon
             size={16}
             className={cn(disabled && 'text-muted-foreground')}
           />
         );
+        if (value) {
+          formattedValue = `${parseFloat(value.toFixed(3))}s`;
+          if (p25 === undefined || p75 === undefined) {
+            break;
+          }
+          if (value >= p75) {
+            backgroundStatusColor = 'bg-lightRed';
+          } else if (value <= p25) {
+            backgroundStatusColor = 'bg-lightGreen';
+          } else {
+            backgroundStatusColor = 'bg-peach';
+          }
+        }
         break;
       }
       case Enum_Metadata_Type.ACCURACY: {
-        if (value) {
-          formattedValue = `${parseFloat(value.toFixed(3))}%`;
-        }
-        // TODO: update this based on value range
-        backgroundStatusColor = 'bg-peach';
         iconNode = (
           <CrosshairIcon
             size={16}
             className={cn(disabled && 'text-muted-foreground')}
           />
         );
+        if (value) {
+          formattedValue = `${parseFloat(value.toFixed(3))}%`;
+          if (p25 === undefined || p75 === undefined) {
+            break;
+          }
+          if (value >= p75) {
+            backgroundStatusColor = 'bg-lightGreen';
+          } else if (value <= p25) {
+            backgroundStatusColor = 'bg-lightRed';
+          } else {
+            backgroundStatusColor = 'bg-peach';
+          }
+        }
         break;
       }
       case Enum_Metadata_Type.RUNTIME: {
@@ -100,13 +128,13 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
         : `p-1 rounded-lg ${backgroundStatusColor}`,
       formattedValue: value ? formattedValue : '-',
     };
-  }, [icon, type, value, disabled]);
+  }, [icon, type, value, disabled, p25, p75]);
 
   return (
     <div className={cn(['flex items-center', (label || icon) && 'gap-2'])}>
       <div
         className={cn([
-          'flex',
+          'flex items-center',
           label && 'gap-1',
           icon && `${data.backgroundStatusColor}`,
         ])}
