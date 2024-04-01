@@ -34,7 +34,7 @@ const DatasetRowInspectorBody = () => {
     return <></>;
   }
   return (
-    <>
+    <div className="px-6">
       {columnDefs
         .filter((colDef) => colDef.type === ENUM_Column_type.INPUT)
         .map((colDef) => {
@@ -114,7 +114,7 @@ const DatasetRowInspectorBody = () => {
             );
           })}
       </div>
-    </>
+    </div>
   );
 };
 

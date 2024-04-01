@@ -45,7 +45,7 @@ export async function GET(
       getDatasetUuidFromFakeId(datasetId),
     );
 
-    if (!datasetViewResponseSchema.safeParse(result)) {
+    if (!datasetViewResponseSchema.safeParse(result).success) {
       return response('Invalid response dataset view type', 500);
     }
 

@@ -11,10 +11,11 @@ export async function insertExperimentSteps(
   const stepFieldAndValues = buildExperimentFields(payload).filter(
     (field) => field.type !== Enum_Experiment_Column_Type.IDENTIFIER,
   );
-  const valuesByField: Record<string, string> = {};
+  const valuesByField: Record<string, string | null> = {};
   stepFieldAndValues.forEach(
     (stepFieldAndValue) =>
-      (valuesByField[stepFieldAndValue.field] = stepFieldAndValue.value || ''),
+      (valuesByField[stepFieldAndValue.field] =
+        stepFieldAndValue.value ?? null),
   );
   try {
     const result = await DatabaseUtils.insert(experimentId, [valuesByField]);

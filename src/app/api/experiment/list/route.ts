@@ -78,7 +78,9 @@ export async function GET() {
         }),
       );
 
-    if (!experimentListResponseSchema.safeParse(experimentListResponse)) {
+    if (
+      !experimentListResponseSchema.safeParse(experimentListResponse).success
+    ) {
       return response('Invalid response datasetList type', 400);
     }
 

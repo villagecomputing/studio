@@ -3,8 +3,14 @@ import { DISPLAYABLE_EXPERIMENT_COLUMN_TYPES } from '@/lib/constants';
 import { ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
+import DatabaseUtils from '../../DatabaseUtils';
 import getExperimentContent from './getExperimentContent';
 import { getExperimentDetails } from './getExperimentDetails';
+import {
+  Enum_Dynamic_experiment_metadata_fields,
+  calculatePercentile,
+  getOrderedExperimentMetadata,
+} from './utils';
 
 export async function getExperiment(
   experimentId: string,
@@ -35,6 +41,26 @@ export async function getExperiment(
     };
   });
 
+  const orderedCosts = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.COST,
+  );
+  const orderedLatencies = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.LATENCY,
+  );
+  const costP25 = calculatePercentile(orderedCosts, 25);
+  const costP75 = calculatePercentile(orderedCosts, 75);
+  const latencyP25 = calculatePercentile(orderedLatencies, 25);
+  const latencyP75 = calculatePercentile(orderedLatencies, 75);
+  const rowsWithAccuracyCount = Number(
+    await DatabaseUtils.selectAggregation(
+      experimentId,
+      { func: 'COUNT' },
+      { accuracy: { isNotNull: true } },
+    ),
+  );
+
   return {
     uuid: experimentDetails.uuid,
     name: experimentDetails.name,
@@ -43,11 +69,17 @@ export async function getExperiment(
     latencyP90: experimentDetails.latency_p90,
     runtime: experimentDetails.total_latency,
     cost: experimentDetails.total_cost,
-    accuracy: experimentDetails.total_accuracy,
+    accuracy: rowsWithAccuracyCount
+      ? experimentDetails.total_accuracy / rowsWithAccuracyCount
+      : 0,
     dataset: experimentDetails.Dataset,
     parameters: experimentDetails.pipeline_metadata,
     created_at: experimentDetails.created_at,
     columns: columns,
     rows: experimentContent,
+    costP25,
+    costP75,
+    latencyP25,
+    latencyP75,
   };
 }

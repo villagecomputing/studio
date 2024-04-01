@@ -55,7 +55,7 @@ export async function GET() {
         }),
       );
 
-    if (!datasetListResponseSchema.safeParse(datasetListResponse)) {
+    if (!datasetListResponseSchema.safeParse(datasetListResponse).success) {
       return response('Invalid response datasetList type', 400);
     }
 

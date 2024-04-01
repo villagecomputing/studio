@@ -49,13 +49,23 @@ export type FetchExperimentResult = AGGridExperiment & {
   cost: number;
   accuracy: number;
   parameters: string;
+  costP25: number;
+  costP75: number;
+  latencyP25: number;
+  latencyP75: number;
 };
 
 export type ExperimentTableContext = {
+  costP25: number;
+  costP75: number;
+  latencyP25: number;
+  latencyP75: number;
   stepMetadataColumns: { name: string; field: string }[];
   inspectorRowIndex: number | null;
+  datasetId: string;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];
+  displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
 };
