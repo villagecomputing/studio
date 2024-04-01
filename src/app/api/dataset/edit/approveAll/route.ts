@@ -10,11 +10,16 @@ import { approveAllSchema } from './schema';
  *     tags:
  *      - Dataset
  *     summary: Approves all ground truths for the specified dataset.
+ *     description: Approves all ground truths for the specified dataset.
+ *     operationId: ApproveAllDatasetGroundTruths
  *     requestBody:
- *       $ref: '#/components/schemas/ApproveAllGroundTruthsPayload'
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ApproveAllGroundTruthsPayload'
  *     responses:
  *       200:
- *         description: OK
+ *         description: Ok
  *       400:
  *         description: Required data is missing.
  *       500:

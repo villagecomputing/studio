@@ -6,9 +6,10 @@ import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
 export async function addData(
+  datasetId: string,
   payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
 ) {
-  const { datasetId, datasetRows } = addDataPayloadSchema.parse(payload);
+  const { datasetRows } = addDataPayloadSchema.parse(payload);
   try {
     await getDatasetOrThrow(datasetId);
     // Get all fields and column names associated with the dataset

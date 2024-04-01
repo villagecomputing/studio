@@ -9,6 +9,8 @@ import { experimentViewResponseSchema } from './schema';
  *     tags:
  *      - Experiment
  *     summary: Fetches the details of an experiment with the specified Id.
+ *     description: Fetches the details of an experiment with the specified Id.
+ *     operationId: GetExperimentData
  *     parameters:
  *       - in: path
  *         name: experimentId

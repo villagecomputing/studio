@@ -10,6 +10,8 @@ import { datasetViewResponseSchema } from './schema';
  *     tags:
  *      - Dataset
  *     summary: Retrieve the details of a specific dataset by its Id.
+ *     description: Retrieve the details of a specific dataset by its Id.
+ *     operationId: GetDatasetData
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -18,15 +20,15 @@ import { datasetViewResponseSchema } from './schema';
  *           type: string
  *         description: The unique identifier of the dataset.
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully retrieved the dataset details.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/DatasetViewResponse'
- *       '400':
+ *       400:
  *         description: Invalid dataset Id provided.
- *       '500':
+ *       500:
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(

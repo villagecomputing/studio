@@ -15,6 +15,8 @@ import { newExperimentPayloadSchema } from './schema';
  *     tags:
  *      - Experiment
  *     summary: Declare a new experiment for a given dataset Id
+ *     description: Declare a new experiment for a given dataset Id
+ *     operationId: DeclareExperiment
  *     requestBody:
  *       required: true
  *       content:
@@ -23,10 +25,11 @@ import { newExperimentPayloadSchema } from './schema';
  *             $ref: '#/components/schemas/NewExperimentPayload'
  *     responses:
  *       200:
+ *         description: Ok
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ExperimentResponse'
+ *               $ref: '#/components/schemas/NewExperimentResponse'
  *       400:
  *         description: 'Invalid dataset id'
  *       500:

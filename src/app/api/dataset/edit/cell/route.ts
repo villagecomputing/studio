@@ -10,6 +10,8 @@ import { editGroundTruthCellSchema } from './schema';
  *     tags:
  *      - Dataset
  *     summary: Edits a specific cell in a dataset's ground truth.
+ *     description: Edits a specific cell in a dataset's ground truth.
+ *     operationId: EditDatasetCell
  *     requestBody:
  *       required: true
  *       content:

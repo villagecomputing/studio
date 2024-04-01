@@ -35,23 +35,7 @@
                         }
                     }
                 }
-            },
-            "DatasetRow": {
-                "type": "object",
-                "additionalProperies": true,                
-                "properties": {
-                    "content": {
-                        "type": "string"
-                    },
-                    "id": {
-                        "type": "number"
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": ["PENDING", "APPROVED"]
-                    }
-                }
-            },                           
+            },                         
             "DatasetViewResponse": {
                 "type": "object",
                 "properties": {
@@ -105,6 +89,22 @@
                 },
                 "required": ["name", "id", "field", "type"]
             },
+            "DatasetRow": {
+                "type": "object",
+                "additionalProperties": true,                
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["PENDING", "APPROVED"]
+                    }
+                }
+            },  
             "NewDatasetPayload": {
                 "type": "object",
                 "properties": {
@@ -363,7 +363,8 @@
                                             "type": "boolean"
                                         },
                                         "error": {
-                                            "type": ["string", "null"]
+                                            "type": "string",
+                                            "nullable": true
                                         },
                                         "input_tokens": {
                                             "type": "number",

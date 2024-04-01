@@ -34,25 +34,6 @@
           }
         }
       },
-      "DatasetRow": {
-        "type": "object",
-        "additionalProperies": true,
-        "properties": {
-          "content": {
-            "type": "string"
-          },
-          "id": {
-            "type": "number"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "APPROVED"
-            ]
-          }
-        }
-      },
       "DatasetViewResponse": {
         "type": "object",
         "properties": {
@@ -123,6 +104,25 @@
           "field",
           "type"
         ]
+      },
+      "DatasetRow": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED"
+            ]
+          }
+        }
       },
       "NewDatasetPayload": {
         "type": "object",
@@ -435,10 +435,8 @@
                       "type": "boolean"
                     },
                     "error": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
+                      "type": "string",
+                      "nullable": true
                     },
                     "input_tokens": {
                       "type": "number",
@@ -618,6 +616,8 @@
           "Dataset"
         ],
         "summary": "Inserts data into a dataset",
+        "description": "Inserts data into a dataset",
+        "operationId": "AddDatasetData",
         "parameters": [
           {
             "in": "path",
@@ -659,6 +659,8 @@
           "Dataset"
         ],
         "summary": "Retrieve the details of a specific dataset by its Id.",
+        "description": "Retrieve the details of a specific dataset by its Id.",
+        "operationId": "GetDatasetData",
         "parameters": [
           {
             "in": "path",
@@ -690,105 +692,17 @@
         }
       }
     },
-    "/api/dataset/edit/approveAll": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Approves all ground truths for the specified dataset.",
-        "requestBody": {
-          "$ref": "#/components/schemas/ApproveAllGroundTruthsPayload"
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Required data is missing."
-          },
-          "500": {
-            "description": "Error processing request."
-          }
-        },
-        "description": "Approves all ground truths for a given dataset."
-      }
-    },
-    "/api/dataset/edit/cell": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Edits a specific cell in a dataset's ground truth.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditCellPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ground truth cell updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EditGroundTruthCellResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error processing result."
-          }
-        },
-        "description": "Edits a ground truth cell in a dataset."
-      }
-    },
-    "/api/dataset/edit/column": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Edits an existing column in a dataset.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditDatasetColumnPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Column updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error processing request"
-          }
-        },
-        "description": "Edits a column in a dataset."
-      }
-    },
     "/api/dataset/list": {
       "get": {
         "tags": [
           "Dataset"
         ],
         "summary": "Retrieves a list of datasets and their total row counts",
+        "description": "Retrieves a list of datasets and their total row counts",
+        "operationId": "ListDatasets",
         "responses": {
           "200": {
+            "description": "Dataset retrieved",
             "content": {
               "application/json": {
                 "schema": {
@@ -812,6 +726,8 @@
           "Dataset"
         ],
         "summary": "Initializes a new dataset.",
+        "description": "Initializes a new dataset.",
+        "operationId": "InitializeDataset",
         "requestBody": {
           "required": true,
           "content": {
@@ -848,6 +764,8 @@
           "Dataset"
         ],
         "summary": "Uploads a dataset file and its associated data",
+        "description": "Uploads a dataset file and its associated data",
+        "operationId": "UploadDataset",
         "requestBody": {
           "description": "Dataset file and data to be uploaded",
           "required": true,
@@ -879,6 +797,7 @@
         ],
         "summary": "Inserts steps into an experiment with the given Id.",
         "description": "Ensures the experiment is created and inserts the given steps as a row for the given experiment",
+        "operationId": "InsertExperimentRow",
         "parameters": [
           {
             "in": "path",
@@ -915,6 +834,8 @@
           "Experiment"
         ],
         "summary": "Fetches the details of an experiment with the specified Id.",
+        "description": "Fetches the details of an experiment with the specified Id.",
+        "operationId": "GetExperimentData",
         "parameters": [
           {
             "in": "path",
@@ -952,6 +873,8 @@
           "Experiment"
         ],
         "summary": "List all experiments",
+        "description": "List all experiments",
+        "operationId": "ListExperiments",
         "responses": {
           "200": {
             "description": "A list of experiments.",
@@ -978,6 +901,8 @@
           "Experiment"
         ],
         "summary": "Declare a new experiment for a given dataset Id",
+        "description": "Declare a new experiment for a given dataset Id",
+        "operationId": "DeclareExperiment",
         "requestBody": {
           "required": true,
           "content": {
@@ -990,10 +915,11 @@
         },
         "responses": {
           "200": {
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentResponse"
+                  "$ref": "#/components/schemas/NewExperimentResponse"
                 }
               }
             }

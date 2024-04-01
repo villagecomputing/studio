@@ -11,6 +11,8 @@ import { experimentListResponseSchema } from './schema';
  *     tags:
  *      - Experiment
  *     summary: List all experiments
+ *     description: List all experiments
+ *     operationId: ListExperiments
  *     responses:
  *       200:
  *         description: A list of experiments.

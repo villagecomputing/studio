@@ -10,6 +10,7 @@ import { insertExperimentPayloadSchema } from './schema';
  *      - Experiment
  *     summary: Inserts steps into an experiment with the given Id.
  *     description: Ensures the experiment is created and inserts the given steps as a row for the given experiment
+ *     operationId: InsertExperimentRow
  *     parameters:
  *       - in: path
  *         name: experimentId

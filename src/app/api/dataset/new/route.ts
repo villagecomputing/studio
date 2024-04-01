@@ -10,6 +10,8 @@ import { newDatasetPayloadSchema } from './schema';
  *     tags:
  *      - Dataset
  *     summary: Initializes a new dataset.
+ *     description: Initializes a new dataset.
+ *     operationId: InitializeDataset
  *     requestBody:
  *       required: true
  *       content:
@@ -17,15 +19,15 @@ import { newDatasetPayloadSchema } from './schema';
  *           schema:
  *             $ref: '#/components/schemas/NewDatasetPayload'
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully created a new dataset.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NewDatasetResponse'
- *       '400':
+ *       400:
  *         description: Invalid request headers type or Missing required data.
- *       '500':
+ *       500:
  *         description: Error processing request.
  */
 export async function POST(request: Request) {
