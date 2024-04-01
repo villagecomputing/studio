@@ -8,8 +8,24 @@ import { editGroundTruthCellSchema } from './schema';
  * /api/dataset/edit/cell:
  *   post:
  *     tags:
- *      - dataset
- *     description: Edits ground truth cell (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     summary: Edits a specific cell in a dataset's ground truth.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/EditCellPayload'
+ *     responses:
+ *       200:
+ *         description: Ground truth cell updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EditGroundTruthCellResponse'
+ *       500:
+ *         description: 'Error processing result.'
+ *     description: Edits a ground truth cell in a dataset.
  */
 export async function POST(request: Request) {
   try {

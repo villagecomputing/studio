@@ -13,13 +13,29 @@ import { newExperimentPayloadSchema } from './schema';
  * /api/experiment/new:
  *   post:
  *     tags:
- *      - experiment
- *     description: Adds a new experiment (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Experiment
+ *     summary: Declare a new experiment for a given dataset Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Experiment/NewExperimentPayload'
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Experiment/ExperimentResponse'
+ *       400:
+ *         description: 'Invalid dataset id'
+ *       500:
+ *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
-  const datasetId = getDatasetUuidFromFakeId(payload.datasetFakeId);
+  const datasetId = getDatasetUuidFromFakeId(payload.datasetId);
 
   try {
     await getDatasetOrThrow(datasetId);
