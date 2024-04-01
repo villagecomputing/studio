@@ -5,6 +5,7 @@ import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { useEffect, useRef } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { ExperimentRow, FetchExperimentResult } from '../types';
+import ExperimentRowInspector from './ExperimentRowInspector/ExperimentRowInspector';
 import { useExperimentTableContext } from './ExperimentTableContext';
 
 const ExperimentTable = (props: FetchExperimentResult) => {
@@ -20,6 +21,7 @@ const ExperimentTable = (props: FetchExperimentResult) => {
 
   return (
     <>
+      <ExperimentRowInspector context={context} />
       <DataTable<ExperimentRow>
         theme="ag-theme-dataset"
         gridRef={gridRef}
@@ -31,7 +33,7 @@ const ExperimentTable = (props: FetchExperimentResult) => {
           getRowId,
           context,
           rowData: props.rowData,
-          columnDefs: context.columnDefs,
+          columnDefs: context.displayableColumnDefs,
           columnTypes,
           navigateToNextCell,
         }}
