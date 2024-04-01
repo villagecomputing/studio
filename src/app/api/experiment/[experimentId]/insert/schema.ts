@@ -26,4 +26,5 @@ export type ExperimentStepMetadata = z.infer<typeof experimentStepMetadata>;
 
 export const insertExperimentPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
+  accuracy: z.union([z.number(), z.null()]).optional(),
 });

@@ -11,7 +11,7 @@
     "no-nested-ternary": "warn",
     "no-useless-escape": "warn",
     "curly": ["error", "all"],
-    "eqeqeq": ["warn", "always"],
+    "eqeqeq": ["warn", "smart"],
     "no-empty": ["error", { "allowEmptyCatch": true }],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error",{

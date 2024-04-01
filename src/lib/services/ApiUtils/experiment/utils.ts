@@ -6,7 +6,7 @@ import { Experiment, Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 
-export type ExperimentField = { value?: string } & Pick<
+export type ExperimentField = { value?: string | null } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
@@ -31,6 +31,7 @@ export const DEFAULT_ROW_METADATA_VALUES = {
 };
 
 export const DYNAMIC_EXPERIMENT_LATENCY_FIELD = 'latency';
+export const DYNAMIC_EXPERIMENT_ACCURACY_FIELD = 'accuracy';
 
 export function buildExperimentFields(
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
@@ -70,12 +71,20 @@ export function buildExperimentFields(
       }),
     );
 
-  experimentFields.push({
-    name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
-    field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
-    type: Enum_Experiment_Column_Type.METADATA,
-    value: rowLatency.toString(),
-  });
+  experimentFields.push(
+    {
+      name: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+      field: DYNAMIC_EXPERIMENT_LATENCY_FIELD,
+      type: Enum_Experiment_Column_Type.METADATA,
+      value: rowLatency.toString(),
+    },
+    {
+      name: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
+      field: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
+      type: Enum_Experiment_Column_Type.METADATA,
+      value: payload.accuracy == null ? null : payload.accuracy.toString(),
+    },
+  );
 
   return experimentFields;
 }
