@@ -21,7 +21,7 @@ import { insertExperimentPayloadSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Experiment/ExperimentInsertPayload'
+ *             $ref: '#/components/schemas/ExperimentInsertPayload'
  *     responses:
  *       200:
  *         description: 'Ok'

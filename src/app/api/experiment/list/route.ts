@@ -17,7 +17,7 @@ import { experimentListResponseSchema } from './schema';
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Experiment/ListExperimentResponse'
+ *               $ref: '#/components/schemas/ListExperimentResponse'
  *       400:
  *         description: 'Invalid response datasetList type.'
  *       500:

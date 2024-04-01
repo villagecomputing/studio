@@ -22,7 +22,7 @@ import { experimentViewResponseSchema } from './schema';
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Experiment/ExperimentViewResponse'
+ *               $ref: '#/components/schemas/ExperimentViewResponse'
  *       400:
  *         description: Invalid experiment id
  *       500:

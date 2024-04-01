@@ -20,13 +20,13 @@ import { newExperimentPayloadSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Experiment/NewExperimentPayload'
+ *             $ref: '#/components/schemas/NewExperimentPayload'
  *     responses:
  *       200:
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Experiment/ExperimentResponse'
+ *               $ref: '#/components/schemas/ExperimentResponse'
  *       400:
  *         description: 'Invalid dataset id'
  *       500:

@@ -335,7 +335,7 @@
           "columns": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Experiment/ExperimentTableColumnPropsSchema"
+              "$ref": "#/components/schemas/ExperimentTableColumnPropsSchema"
             }
           },
           "rows": {
@@ -894,7 +894,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Experiment/ExperimentInsertPayload"
+                "$ref": "#/components/schemas/ExperimentInsertPayload"
               }
             }
           }
@@ -932,7 +932,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Experiment/ExperimentViewResponse"
+                  "$ref": "#/components/schemas/ExperimentViewResponse"
                 }
               }
             }
@@ -958,7 +958,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Experiment/ListExperimentResponse"
+                  "$ref": "#/components/schemas/ListExperimentResponse"
                 }
               }
             }
@@ -983,7 +983,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Experiment/NewExperimentPayload"
+                "$ref": "#/components/schemas/NewExperimentPayload"
               }
             }
           }
@@ -993,7 +993,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Experiment/ExperimentResponse"
+                  "$ref": "#/components/schemas/ExperimentResponse"
                 }
               }
             }
