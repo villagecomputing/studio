@@ -4,13 +4,11 @@ import { experimentViewResponseSchema } from './schema';
 
 /**
  * @swagger
- * /api/experiment/[experimentId]:
+ * /api/experiment/{experimentId}:
  *   get:
  *     tags:
  *      - Experiment
- *     summary: Retrieve an experiment by Id
- *     description: Fetches the details of an experiment with the specified ID.
- *     operationId: getExperimentById
+ *     summary: Fetches the details of an experiment with the specified Id.
  *     parameters:
  *       - in: path
  *         name: experimentId

@@ -5,11 +5,11 @@ import { addDataPayloadSchema } from './schema';
 
 /**
  * @swagger
- * /api/dataset/[datasetId]/addData:
+ * /api/dataset/{datasetId}/addData:
  *   post:
  *     tags:
  *      - Dataset
- *     description: Inserts data into a dataset
+ *     summary: Inserts data into a dataset
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -23,7 +23,7 @@ import { addDataPayloadSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/AddDataPayload'
+ *             $ref: '#/components/schemas/AddDataPayload'
  *     responses:
  *       '200':
  *         description: Ok
