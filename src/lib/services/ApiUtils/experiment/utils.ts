@@ -6,7 +6,7 @@ import { Experiment, Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
 import { ColumnDefinition, ColumnType } from '../../DatabaseUtils/types';
 
-export type ExperimentField = { value?: string } & Pick<
+export type ExperimentField = { value?: string | null } & Pick<
   Experiment_column,
   'name' | 'field' | 'type'
 >;
@@ -82,7 +82,7 @@ export function buildExperimentFields(
       name: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
       field: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
       type: Enum_Experiment_Column_Type.METADATA,
-      value: (payload.accuracy ?? 0).toString(),
+      value: payload.accuracy ? payload.accuracy.toString() : null,
     },
   );
 
