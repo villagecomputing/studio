@@ -13,14 +13,14 @@ import { uploadDatasetPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Dataset
- *     description: Uploads a dataset file and its associated data
+ *     summary: Uploads a dataset file and its associated data
  *     requestBody:
  *       description: Dataset file and data to be uploaded
  *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/UploadDatasetPayload'
+ *             $ref: '#/components/schemas/UploadDatasetPayload'
  *     responses:
  *       '200':
  *         description: The newly uploaded dataset Id

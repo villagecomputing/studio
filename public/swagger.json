@@ -22,13 +22,12 @@
           "type": "object",
           "properties": {
             "datasetId": {
-              "type": "string",
-              "example": "DatasetName-d-262a1966-31f6-43c9-b8a7-f9f583099c2e"
+              "type": "string"
             },
             "datasetRows": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/Dataset/DatasetRow"
+                "$ref": "#/components/schemas/DatasetRow"
               }
             }
           }
@@ -50,8 +49,7 @@
                 "APPROVED"
               ]
             }
-          },
-          "example": "{\"Column_1\":\"Value_1\", \"Column_2\", \"Value_2\"}"
+          }
         },
         "DatasetViewResponse": {
           "type": "object",
@@ -69,7 +67,7 @@
             "columns": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/Dataset/TableColumnProps"
+                "$ref": "#/components/schemas/TableColumnProps"
               }
             },
             "rows": {
@@ -134,21 +132,13 @@
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "example": [
-                "Column_1",
-                "Column_2"
-              ]
+              }
             },
             "groundTruths": {
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "example": [
-                "GroundTruth_1",
-                "GroundTruth_2"
-              ]
+              }
             }
           },
           "required": [
@@ -192,12 +182,7 @@
                 "datasetTitle",
                 "groundTruthColumnIndex"
               ],
-              "description": "Object containing the dataset title, ground truth column index, and an optional blank column title",
-              "example": {
-                "datasetTitle": "Example Title",
-                "groundTruthColumnIndex": 2,
-                "blankColumnTitle": "Optional Column"
-              }
+              "description": "Object containing the dataset title, ground truth column index, and an optional blank column title"
             },
             "file": {
               "type": "string",
@@ -328,6 +313,292 @@
             "id"
           ]
         }
+      },
+      "Experiment": {
+        "ExperimentViewResponse": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Experiment/ExperimentTableColumnPropsSchema"
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "dataset": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "uuid": {
+                  "type": "string"
+                }
+              }
+            },
+            "latencyP50": {
+              "type": "number"
+            },
+            "latencyP90": {
+              "type": "number"
+            },
+            "runtime": {
+              "type": "number"
+            },
+            "cost": {
+              "type": "number"
+            },
+            "accuracy": {
+              "type": "number"
+            },
+            "parameters": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "uuid",
+            "name",
+            "created_at",
+            "columns",
+            "rows",
+            "dataset"
+          ]
+        },
+        "ExperimentTableColumnPropsSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "number"
+            },
+            "field": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "IDENTIFIER",
+                "OUTPUT",
+                "METADATA"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "id",
+            "field",
+            "type"
+          ]
+        },
+        "ExperimentInsertPayload": {
+          "type": "object",
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "latency": {
+                        "type": "number"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "input_tokens": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "output_tokens": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "input_cost": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "output_cost": {
+                        "type": "number",
+                        "nullable": true
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "outputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "metadata",
+                  "outputs"
+                ]
+              }
+            }
+          },
+          "required": [
+            "steps"
+          ]
+        },
+        "NewExperimentPayload": {
+          "type": "object",
+          "properties": {
+            "datasetId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "name",
+            "datasetId",
+            "parameters"
+          ]
+        },
+        "NewExperimentResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "ListExperimentResponse": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "groupId": {
+                "type": "integer"
+              },
+              "pipelineMetadata": {
+                "type": "string"
+              },
+              "latencyP50": {
+                "type": "number"
+              },
+              "latencyP90": {
+                "type": "number"
+              },
+              "runtime": {
+                "type": "number"
+              },
+              "totalCost": {
+                "type": "number"
+              },
+              "totalAccuracy": {
+                "type": "number"
+              },
+              "totalRows": {
+                "type": "number"
+              },
+              "Dataset": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "created_at",
+              "groupId",
+              "pipelineMetadata",
+              "latencyP50",
+              "latencyP90",
+              "runtime",
+              "totalCost",
+              "totalAccuracy",
+              "totalRows",
+              "Dataset"
+            ]
+          }
+        }
       }
     }
   },
@@ -342,12 +613,12 @@
     }
   ],
   "paths": {
-    "/api/dataset/[datasetId]/addData": {
+    "/api/dataset/{datasetId}/addData": {
       "post": {
         "tags": [
           "Dataset"
         ],
-        "description": "Inserts data into a dataset",
+        "summary": "Inserts data into a dataset",
         "parameters": [
           {
             "in": "path",
@@ -365,7 +636,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/AddDataPayload"
+                "$ref": "#/components/schemas/AddDataPayload"
               }
             }
           }
@@ -383,12 +654,12 @@
         }
       }
     },
-    "/api/dataset/[datasetId]": {
+    "/api/dataset/{datasetId}": {
       "get": {
         "tags": [
           "Dataset"
         ],
-        "description": "Retrieve the details of a specific dataset by its ID.",
+        "summary": "Retrieve the details of a specific dataset by its Id.",
         "parameters": [
           {
             "in": "path",
@@ -406,7 +677,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/DatasetViewResponse"
+                  "$ref": "#/components/schemas/DatasetViewResponse"
                 }
               }
             }
@@ -425,8 +696,9 @@
         "tags": [
           "Dataset"
         ],
+        "summary": "Approves all ground truths for the specified dataset.",
         "requestBody": {
-          "$ref": "#/components/schemas/Dataset/ApproveAllGroundTruthsPayload"
+          "$ref": "#/components/schemas/ApproveAllGroundTruthsPayload"
         },
         "responses": {
           "200": {
@@ -447,12 +719,13 @@
         "tags": [
           "Dataset"
         ],
+        "summary": "Edits a specific cell in a dataset's ground truth.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/EditCellPayload"
+                "$ref": "#/components/schemas/EditCellPayload"
               }
             }
           }
@@ -480,12 +753,13 @@
         "tags": [
           "Dataset"
         ],
+        "summary": "Edits an existing column in a dataset.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/EditDatasetColumnPayload"
+                "$ref": "#/components/schemas/EditDatasetColumnPayload"
               }
             }
           }
@@ -496,7 +770,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/EditDatasetColumnResponse"
+                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
                 }
               }
             }
@@ -513,14 +787,13 @@
         "tags": [
           "Dataset"
         ],
-        "description": "Retrieves a list of datasets with their total row counts",
+        "summary": "Retrieves a list of datasets and their total row counts",
         "responses": {
           "200": {
-            "description": "A list of datasets with their total row counts",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/DatasetListResponse"
+                  "$ref": "#/components/schemas/DatasetListResponse"
                 }
               }
             }
@@ -539,13 +812,13 @@
         "tags": [
           "Dataset"
         ],
-        "description": "Create a new dataset with the provided details.",
+        "summary": "Initializes a new dataset.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/NewDatasetPayload"
+                "$ref": "#/components/schemas/NewDatasetPayload"
               }
             }
           }
@@ -556,7 +829,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/NewDatasetResponse"
+                  "$ref": "#/components/schemas/NewDatasetResponse"
                 }
               }
             }
@@ -575,14 +848,14 @@
         "tags": [
           "Dataset"
         ],
-        "description": "Uploads a dataset file and its associated data",
+        "summary": "Uploads a dataset file and its associated data",
         "requestBody": {
           "description": "Dataset file and data to be uploaded",
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/UploadDatasetPayload"
+                "$ref": "#/components/schemas/UploadDatasetPayload"
               }
             }
           }
@@ -600,39 +873,13 @@
         }
       }
     },
-    "/api/experiment/[experimentId]/insert": {
+    "/api/experiment/{experimentId}/insert": {
       "post": {
         "tags": [
           "Experiment"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InsertExperimentPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Experiment steps inserted successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InsertExperimentResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        },
+        "summary": "Inserts steps into an experiment with the given Id.",
+        "description": "Ensures the experiment is created and inserts the given steps as a row for the given experiment",
         "parameters": [
           {
             "in": "path",
@@ -640,21 +887,35 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Unique identifier of the experiment"
+            }
           }
         ],
-        "description": "Inserts steps into an experiment with the given ID."
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Experiment/ExperimentInsertPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
       }
     },
-    "/api/experiment/[experimentId]": {
+    "/api/experiment/{experimentId}": {
       "get": {
         "tags": [
           "Experiment"
         ],
-        "summary": "Retrieve an experiment by ID",
-        "description": "Fetches the details of an experiment with the specified ID.",
-        "operationId": "getExperimentById",
+        "summary": "Fetches the details of an experiment with the specified Id.",
         "parameters": [
           {
             "in": "path",
@@ -672,7 +933,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentViewResponse"
+                  "$ref": "#/components/schemas/Experiment/ExperimentViewResponse"
                 }
               }
             }
@@ -681,7 +942,7 @@
             "description": "Invalid experiment id"
           },
           "500": {
-            "description": "Invalid response experiment view type"
+            "description": "Invalid response experiment view type -or- Error processing request"
           }
         }
       }
@@ -692,24 +953,22 @@
           "Experiment"
         ],
         "summary": "List all experiments",
-        "description": "Retrieves a list of all experiments that have not been deleted.",
-        "operationId": "listExperiments",
         "responses": {
           "200": {
             "description": "A list of experiments.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentListResponse"
+                  "$ref": "#/components/schemas/Experiment/ListExperimentResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input data."
+            "description": "Invalid response datasetList type."
           },
           "500": {
-            "description": "Internal server error."
+            "description": "Error processing request."
           }
         }
       }
@@ -719,26 +978,23 @@
         "tags": [
           "Experiment"
         ],
-        "summary": "Create a new experiment",
-        "description": "This endpoint is used to create a new experiment with the provided details.",
-        "operationId": "createExperiment",
+        "summary": "Declare a new experiment for a given dataset Id",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewExperimentPayload"
+                "$ref": "#/components/schemas/Experiment/NewExperimentPayload"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Experiment created successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExperimentResponse"
+                  "$ref": "#/components/schemas/Experiment/ExperimentResponse"
                 }
               }
             }
