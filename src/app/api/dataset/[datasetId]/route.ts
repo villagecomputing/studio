@@ -5,11 +5,11 @@ import { datasetViewResponseSchema } from './schema';
 
 /**
  * @swagger
- * /api/dataset/[datasetId]:
+ * /api/dataset/{datasetId}:
  *   get:
  *     tags:
  *      - Dataset
- *     description: Retrieve the details of a specific dataset by its ID.
+ *     summary: Retrieve the details of a specific dataset by its Id.
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -23,7 +23,7 @@ import { datasetViewResponseSchema } from './schema';
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Dataset/DatasetViewResponse'
+ *               $ref: '#/components/schemas/DatasetViewResponse'
  *       '400':
  *         description: Invalid dataset Id provided.
  *       '500':

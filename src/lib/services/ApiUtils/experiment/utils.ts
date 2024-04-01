@@ -127,7 +127,6 @@ export function calculatePercentile(
     return sortedData[position - 1];
   } else {
     // If position is not an integer, interpolate between the values at the nearest ranked positions
-    console.log(sortedData);
     const lowerIndex = Math.floor(position);
     const upperIndex = Math.min(Math.ceil(position), sortedData.length);
     const lowerValue = sortedData[lowerIndex - 1];

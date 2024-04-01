@@ -4,11 +4,29 @@ import { insertExperimentPayloadSchema } from './schema';
 
 /**
  * @swagger
- * /api/experiment/[experimentId]/insert:
+ * /api/experiment/{experimentId}/insert:
  *   post:
  *     tags:
- *      - experiment
- *     description: Inserts a row of steps inside an experiment (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Experiment
+ *     summary: Inserts steps into an experiment with the given Id.
+ *     description: Ensures the experiment is created and inserts the given steps as a row for the given experiment
+ *     parameters:
+ *       - in: path
+ *         name: experimentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Experiment/ExperimentInsertPayload'
+ *     responses:
+ *       200:
+ *         description: 'Ok'
+ *       500:
+ *         description: 'Error processing request'
  */
 export async function POST(
   request: Request,
@@ -17,6 +35,7 @@ export async function POST(
   const experimentId = params.experimentId;
   const requestBody = await request.json();
   const payload = insertExperimentPayloadSchema.parse(requestBody);
+
   try {
     // Creates table if it doesn't exist
     await ApiUtils.ensureExperimentTable(experimentId, payload);
