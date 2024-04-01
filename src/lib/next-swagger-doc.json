@@ -1,0 +1,510 @@
+{
+    "apiFolder": "src/app/api",
+    "definition": {
+      "openapi": "3.0.0",
+      "info": {
+        "title": "Labelkit Studio API - OpenAPI 3.0",
+        "version": "1.0"
+      },
+      "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "AddDataPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type":"string"
+                    },
+                    "datasetRows": {
+                        "type":"array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "DatasetRow": {
+                "type": "object",
+                "additionalProperies": true,                
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["PENDING", "APPROVED"]
+                    }
+                }
+            },                           
+            "DatasetViewResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "columns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TableColumnProps"
+                        }
+                    },
+                    "rows": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "$ref": "#/components/schemas/DatasetRow"
+                            }
+                        ]}
+                    }
+                },
+                "required": ["id", "created_at", "name", "columns", "rows"]
+            },
+            "TableColumnProps": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                    "type": "string"
+                    },
+                    "id": {
+                    "type": "number"
+                    },
+                    "field": {
+                    "type": "string"
+                    },
+                    "type": {
+                    "type": "string",
+                    "enum":  ["IDENTIFIER", "GROUND_TRUTH", "GROUND_TRUTH_STATUS", "PREDICTIVE_LABEL", "INPUT" ]
+                    }
+                },
+                "required": ["name", "id", "field", "type"]
+            },
+            "NewDatasetPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetName": {
+                    "type": "string"
+                    },
+                    "columns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                    },
+                    "groundTruths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                    }
+                },
+                "required": ["datasetName", "columns", "rows"]
+            },
+            "NewDatasetResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id"]
+            },
+            "UploadDatasetPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetData": {
+                        "type": "object",
+                        "properties": {
+                            "datasetTitle": {
+                                "type": "string",
+                                "description": "The title of the dataset"
+                            },
+                            "groundTruthColumnIndex": {
+                                "type": "integer",
+                                "description": "Index of the ground truth column"
+                            },
+                            "blankColumnTitle": {
+                                "type": "string",
+                                "description": "Title for an optional blank column",
+                                "nullable": true
+                            }
+                        },
+                        "required": ["datasetTitle", "groundTruthColumnIndex"],
+                        "description": "Object containing the dataset title, ground truth column index, and an optional blank column title"
+                    },
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The binary content of the dataset file"
+                    }
+                },
+                "required": ["datasetData", "file"]
+            },
+            "DatasetListResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "total_rows": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["id", "name", "created_at", "total_rows"]
+                }
+            },
+            "ApproveAllGroundTruthsPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    }
+                },
+                "required": ["datasetId"]
+            },
+            "EditCellPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    },
+                    "rowId": {
+                        "type": "integer"
+                    },
+                    "content": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["PENDING", "APPROVED"],
+                        "nullable": true
+                    }
+                },
+                "required": ["datasetId", "rowId"],
+                "oneOf": [
+                    {
+                        "required": ["content"]
+                    },
+                    {
+                        "required": ["status"]
+                    }
+                ]
+            },
+            "EditGroundTruthCellResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["id"]
+            },
+            "EditDatasetColumnPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    },
+                    "columnId": {
+                        "type": "string"
+                    },
+                    "newName": {
+                        "type": "string"
+                    }
+                },
+                "required": ["datasetId", "columnId", "newName"]
+            },
+            "EditDatasetColumnResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["id"]
+            },
+            "ExperimentViewResponse": {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "columns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Experiment/ExperimentTableColumnPropsSchema"
+                        }
+                    },
+                    "rows": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "dataset": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "uuid": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "latencyP50": {
+                        "type": "number"
+                    },
+                    "latencyP90": {
+                        "type": "number"
+                    },
+                    "runtime": {
+                        "type": "number"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "accuracy": {
+                        "type": "number"
+                    },
+                    "parameters": {
+                        "type": "string"
+                    }
+                },
+                "required": ["uuid", "name", "created_at", "columns", "rows", "dataset"]
+            },
+            "ExperimentTableColumnPropsSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "number"
+                    },
+                    "field": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["IDENTIFIER", "OUTPUT", "METADATA"]
+                    }
+                },
+                "required": ["name", "id", "field", "type"]
+            },
+            "ExperimentInsertPayload": {
+                "type": "object",
+                "properties": {
+                    "steps": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "metadata": {
+                                    "type": "object",
+                                    "properties": {
+                                        "latency": {
+                                            "type": "number"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": ["string", "null"]
+                                        },
+                                        "input_tokens": {
+                                            "type": "number",
+                                            "nullable": true
+                                        },
+                                        "output_tokens": {
+                                            "type": "number",
+                                            "nullable": true
+                                        },
+                                        "input_cost": {
+                                            "type": "number",
+                                            "nullable": true
+                                        },
+                                        "output_cost": {
+                                            "type": "number",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "additionalProperties": true
+                                },
+                                "outputs": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": ["name", "value"]
+                                    }
+                                }
+                            },
+                            "required": ["name", "metadata", "outputs"]
+                        }
+                    }
+                },
+                "required": ["steps"]
+            },
+            "NewExperimentPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "required": ["name", "datasetId", "parameters"]
+            },
+            "NewExperimentResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id"]
+            },           
+            "ListExperimentResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "created_at": {
+                            "type": "string"
+                        },
+                        "groupId": {
+                            "type": "integer"
+                        },
+                        "pipelineMetadata": {
+                            "type": "string"
+                        },
+                        "latencyP50": {
+                            "type": "number"
+                        },
+                        "latencyP90": {
+                            "type": "number"
+                        },
+                        "runtime": {
+                            "type": "number"
+                        },
+                        "totalCost": {
+                            "type": "number"
+                        },
+                        "totalAccuracy": {
+                            "type": "number"
+                        },
+                        "totalRows": {
+                            "type": "number"
+                        },
+                        "Dataset": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["id", "name"]
+                        }
+                    },
+                    "required": ["id", "name", "created_at", "groupId", "pipelineMetadata", "latencyP50", "latencyP90", "runtime", "totalCost", "totalAccuracy", "totalRows", "Dataset"]
+                }
+            }
+            
+        }
+    },
+    "tags":[
+        {
+            "name":"Dataset",
+            "description": "Operations related to datasets including listing, creating, populating and retrieving datasets, approving ground truths, editing cells and columns"
+        },
+        {
+            "name":"Experiment",
+            "description": "Operations related to experiments including creating, updating, retrieving and listing experiments"
+        }
+      ]
+    }
+}

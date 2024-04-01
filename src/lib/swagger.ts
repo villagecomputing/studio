@@ -1,17 +1,7 @@
 import { createSwaggerSpec } from 'next-swagger-doc';
+import swaggerDocument from './next-swagger-doc.json';
 
 export const getApiDocs = async () => {
-  const spec = createSwaggerSpec({
-    apiFolder: 'src/app/api',
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Labelkit Studio API - OpenAPI 3.0',
-        version: '1.0',
-      },
-      components: {},
-      security: [],
-    },
-  });
+  const spec = createSwaggerSpec(swaggerDocument);
   return spec;
 };

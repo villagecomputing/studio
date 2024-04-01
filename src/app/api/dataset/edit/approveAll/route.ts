@@ -8,8 +8,18 @@ import { approveAllSchema } from './schema';
  * /api/dataset/edit/approveAll:
  *   post:
  *     tags:
- *      - dataset
- *     description: Approves all ground truths for a dataset (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     summary: Approves all ground truths for the specified dataset.
+ *     requestBody:
+ *       $ref: '#/components/schemas/ApproveAllGroundTruthsPayload'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Required data is missing.
+ *       500:
+ *         description: Error processing request.
+ *     description: Approves all ground truths for a given dataset.
  */
 export async function POST(request: Request) {
   try {

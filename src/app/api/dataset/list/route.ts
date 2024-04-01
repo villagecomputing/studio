@@ -10,8 +10,18 @@ import { datasetListResponseSchema } from './schema';
  * /api/dataset/list:
  *   get:
  *     tags:
- *      - dataset
- *     description: Returns a list if datasets (TODO - add rest body, response and rest of data - ex [https://editor.swagger.io/](https://editor.swagger.io/) )
+ *      - Dataset
+ *     summary: Retrieves a list of datasets and their total row counts
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DatasetListResponse'
+ *       '400':
+ *         description: Invalid response datasetList type
+ *       '500':
+ *         description: Error processing request
  */
 export async function GET() {
   try {
