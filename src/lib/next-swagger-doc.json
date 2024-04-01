@@ -28,7 +28,10 @@
                     "datasetRows": {
                         "type":"array",
                         "items": {
-                            "$ref": "#/components/schemas/DatasetRow"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -48,7 +51,7 @@
                         "enum": ["PENDING", "APPROVED"]
                     }
                 }
-            },               
+            },                           
             "DatasetViewResponse": {
                 "type": "object",
                 "properties": {
