@@ -11,7 +11,7 @@ import { approveAllSchema } from './schema';
  *      - Dataset
  *     summary: Approves all ground truths for the specified dataset.
  *     requestBody:
- *       $ref: '#/components/schemas/Dataset/ApproveAllGroundTruthsPayload'
+ *       $ref: '#/components/schemas/ApproveAllGroundTruthsPayload'
  *     responses:
  *       200:
  *         description: OK

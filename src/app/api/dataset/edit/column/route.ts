@@ -14,14 +14,14 @@ import { editDatasetColumnSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/EditDatasetColumnPayload'
+ *             $ref: '#/components/schemas/EditDatasetColumnPayload'
  *     responses:
  *       200:
  *         description: Column updated successfully.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Dataset/EditDatasetColumnResponse'
+ *               $ref: '#/components/schemas/EditDatasetColumnResponse'
  *       500:
  *         description: 'Error processing request'
  *     description: Edits a column in a dataset.

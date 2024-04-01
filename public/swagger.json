@@ -27,7 +27,7 @@
             "datasetRows": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/Dataset/DatasetRow"
+                "$ref": "#/components/schemas/DatasetRow"
               }
             }
           }
@@ -67,7 +67,7 @@
             "columns": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/Dataset/TableColumnProps"
+                "$ref": "#/components/schemas/TableColumnProps"
               }
             },
             "rows": {
@@ -182,12 +182,7 @@
                 "datasetTitle",
                 "groundTruthColumnIndex"
               ],
-              "description": "Object containing the dataset title, ground truth column index, and an optional blank column title",
-              "example": {
-                "datasetTitle": "Example Title",
-                "groundTruthColumnIndex": 2,
-                "blankColumnTitle": "Optional Column"
-              }
+              "description": "Object containing the dataset title, ground truth column index, and an optional blank column title"
             },
             "file": {
               "type": "string",
@@ -641,7 +636,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/AddDataPayload"
+                "$ref": "#/components/schemas/AddDataPayload"
               }
             }
           }
@@ -682,7 +677,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/DatasetViewResponse"
+                  "$ref": "#/components/schemas/DatasetViewResponse"
                 }
               }
             }
@@ -703,7 +698,7 @@
         ],
         "summary": "Approves all ground truths for the specified dataset.",
         "requestBody": {
-          "$ref": "#/components/schemas/Dataset/ApproveAllGroundTruthsPayload"
+          "$ref": "#/components/schemas/ApproveAllGroundTruthsPayload"
         },
         "responses": {
           "200": {
@@ -730,7 +725,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/EditCellPayload"
+                "$ref": "#/components/schemas/EditCellPayload"
               }
             }
           }
@@ -764,7 +759,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/EditDatasetColumnPayload"
+                "$ref": "#/components/schemas/EditDatasetColumnPayload"
               }
             }
           }
@@ -775,7 +770,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/EditDatasetColumnResponse"
+                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
                 }
               }
             }
@@ -798,7 +793,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/DatasetListResponse"
+                  "$ref": "#/components/schemas/DatasetListResponse"
                 }
               }
             }
@@ -823,7 +818,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/NewDatasetPayload"
+                "$ref": "#/components/schemas/NewDatasetPayload"
               }
             }
           }
@@ -834,7 +829,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dataset/NewDatasetResponse"
+                  "$ref": "#/components/schemas/NewDatasetResponse"
                 }
               }
             }
@@ -860,7 +855,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Dataset/UploadDatasetPayload"
+                "$ref": "#/components/schemas/UploadDatasetPayload"
               }
             }
           }

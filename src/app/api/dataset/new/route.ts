@@ -15,14 +15,14 @@ import { newDatasetPayloadSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/NewDatasetPayload'
+ *             $ref: '#/components/schemas/NewDatasetPayload'
  *     responses:
  *       '200':
  *         description: Successfully created a new dataset.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Dataset/NewDatasetResponse'
+ *               $ref: '#/components/schemas/NewDatasetResponse'
  *       '400':
  *         description: Invalid request headers type or Missing required data.
  *       '500':

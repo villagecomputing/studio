@@ -15,7 +15,7 @@ import { editGroundTruthCellSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/EditCellPayload'
+ *             $ref: '#/components/schemas/EditCellPayload'
  *     responses:
  *       200:
  *         description: Ground truth cell updated successfully.

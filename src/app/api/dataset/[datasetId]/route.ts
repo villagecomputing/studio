@@ -23,7 +23,7 @@ import { datasetViewResponseSchema } from './schema';
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Dataset/DatasetViewResponse'
+ *               $ref: '#/components/schemas/DatasetViewResponse'
  *       '400':
  *         description: Invalid dataset Id provided.
  *       '500':

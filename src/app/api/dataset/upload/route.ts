@@ -20,7 +20,7 @@ import { uploadDatasetPayloadSchema } from './schema';
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/UploadDatasetPayload'
+ *             $ref: '#/components/schemas/UploadDatasetPayload'
  *     responses:
  *       '200':
  *         description: The newly uploaded dataset Id

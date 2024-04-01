@@ -23,7 +23,7 @@ import { addDataPayloadSchema } from './schema';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Dataset/AddDataPayload'
+ *             $ref: '#/components/schemas/AddDataPayload'
  *     responses:
  *       '200':
  *         description: Ok
