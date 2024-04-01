@@ -146,11 +146,11 @@ export function calculatePercentile(
   const sortedData = data.sort((a, b) => a - b);
 
   // Step 2: Calculate the position of the percentile
-  const position = (percentile / 100) * (sortedData.length + 1);
+  const position = (percentile / 100) * (sortedData.length - 1) + 1;
   // Step 3: Check if position is an integer
   if (Number.isInteger(position)) {
     // If position is an integer, return the value at that position
-    return sortedData[position - 1];
+    return sortedData[position - 1] || 0;
   } else {
     // If position is not an integer, interpolate between the values at the nearest ranked positions
     const lowerIndex = Math.floor(position);
