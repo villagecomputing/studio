@@ -27,7 +27,6 @@ import { editGroundTruthCellSchema } from './schema';
  *               $ref: '#/components/schemas/EditGroundTruthCellResponse'
  *       500:
  *         description: 'Error processing result.'
- *     description: Edits a ground truth cell in a dataset.
  */
 export async function POST(request: Request) {
   try {

@@ -24,7 +24,6 @@ import { approveAllSchema } from './schema';
  *         description: Required data is missing.
  *       500:
  *         description: Error processing request.
- *     description: Approves all ground truths for a given dataset.
  */
 export async function POST(request: Request) {
   try {

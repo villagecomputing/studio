@@ -26,7 +26,6 @@ import { editDatasetColumnSchema } from './schema';
  *               $ref: '#/components/schemas/EditDatasetColumnResponse'
  *       500:
  *         description: 'Error processing request'
- *     description: Edits a column in a dataset.
  */
 export async function POST(request: Request) {
   try {
