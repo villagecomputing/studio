@@ -82,7 +82,7 @@ export function buildExperimentFields(
       name: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
       field: DYNAMIC_EXPERIMENT_ACCURACY_FIELD,
       type: Enum_Experiment_Column_Type.METADATA,
-      value: payload.accuracy ? payload.accuracy.toString() : null,
+      value: payload.accuracy == null ? null : payload.accuracy.toString(),
     },
   );
 

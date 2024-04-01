@@ -36,13 +36,13 @@ export async function getExperiment(
     };
   });
 
-  const rowsWithoutAccuracyCount = await DatabaseUtils.selectAggregation(
-    experimentId,
-    { func: 'COUNT' },
-    { accuracy: null },
+  const rowsWithAccuracyCount = Number(
+    await DatabaseUtils.selectAggregation(
+      experimentId,
+      { func: 'COUNT' },
+      { accuracy: { isNotNull: true } },
+    ),
   );
-  const rowsWithAccuracyCount =
-    experimentDetails.total_rows - Number(rowsWithoutAccuracyCount);
 
   return {
     uuid: experimentDetails.uuid,

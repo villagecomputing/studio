@@ -7,7 +7,7 @@ export async function selectAggregation(
     field?: string;
     func: 'COUNT' | 'SUM' | 'AVG' | 'MIN' | 'MAX';
   },
-  whereConditions?: { [key: string]: string | null },
+  whereConditions?: { [key: string]: string | null | { isNotNull: true } },
 ): Promise<string> {
   const aggField = aggregation.field
     ? Prisma.raw(`"${aggregation.field}"`)
@@ -18,6 +18,8 @@ export async function selectAggregation(
     const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
       if (value === null) {
         return Prisma.raw(`"${key}" IS NULL`);
+      } else if (typeof value === 'object' && value.isNotNull) {
+        return Prisma.raw(`"${key}" IS NOT NULL`);
       } else {
         return Prisma.raw(`"${key}" = "${value}"`);
       }
