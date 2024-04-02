@@ -20,9 +20,6 @@
       "AddDataPayload": {
         "type": "object",
         "properties": {
-          "datasetId": {
-            "type": "string"
-          },
           "datasetRows": {
             "type": "array",
             "items": {
@@ -292,7 +289,7 @@
             "type": "string"
           },
           "columnId": {
-            "type": "string"
+            "type": "integer"
           },
           "newName": {
             "type": "string"
@@ -417,6 +414,10 @@
       "ExperimentInsertPayload": {
         "type": "object",
         "properties": {
+          "accuracy": {
+            "type": "number",
+            "nullable": true
+          },
           "steps": {
             "type": "array",
             "items": {
@@ -615,8 +616,8 @@
         "tags": [
           "Dataset"
         ],
-        "summary": "Inserts data into a dataset",
-        "description": "Inserts data into a dataset",
+        "summary": "Inserts data into a dataset.",
+        "description": "Inserts data into a dataset.",
         "operationId": "AddDatasetData",
         "parameters": [
           {

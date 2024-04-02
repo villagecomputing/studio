@@ -26,6 +26,17 @@ export async function addData(
       },
     });
 
+    const columnNames = existingColumns.map((col) => col.name);
+    const invalidRows = datasetRows.filter(
+      (row) => !Object.keys(row).every((key) => columnNames.includes(key)),
+    );
+
+    if (invalidRows.length > 0) {
+      throw new Error(
+        'Some rows contain keys that do not exist in the existing columns',
+      );
+    }
+
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {
       const sanitizedRow: Record<string, string> = {};
