@@ -55,7 +55,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
           style={{ height: 'calc(100vh - 150px)' }}
         >
           <DataTable<ExperimentGroupRowType>
-            theme="ag-theme-dataset-list"
+            theme="ag-theme-experiment-group-list"
             agGridProps={{
               ...DEFAULT_GRID_OPTIONS,
               onRowClicked: (event) => {

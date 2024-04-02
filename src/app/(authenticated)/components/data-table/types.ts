@@ -5,7 +5,8 @@ export interface DataTableProps<TData> {
   theme?:
     | 'ag-theme-dataset-list'
     | 'ag-theme-dataset'
-    | 'ag-theme-experiment-list';
+    | 'ag-theme-experiment-list'
+    | 'ag-theme-experiment-group-list';
   className?: React.ComponentProps<'div'>['className'];
   gridRef?: React.MutableRefObject<AgGridReact<TData> | null>;
 }

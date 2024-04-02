@@ -48,10 +48,10 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           if (p25 === undefined || p75 === undefined) {
             break;
           }
-          if (value >= p75) {
-            backgroundStatusColor = 'bg-lightRed';
-          } else if (value <= p25) {
+          if (value <= p25) {
             backgroundStatusColor = 'bg-lightGreen';
+          } else if (value >= p75) {
+            backgroundStatusColor = 'bg-lightRed';
           } else {
             backgroundStatusColor = 'bg-peach';
           }
@@ -71,10 +71,10 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           if (p25 === undefined || p75 === undefined) {
             break;
           }
-          if (value >= p75) {
-            backgroundStatusColor = 'bg-lightRed';
-          } else if (value <= p25) {
+          if (value <= p25) {
             backgroundStatusColor = 'bg-lightGreen';
+          } else if (value >= p75) {
+            backgroundStatusColor = 'bg-lightRed';
           } else {
             backgroundStatusColor = 'bg-peach';
           }

@@ -61,7 +61,6 @@ const ExperimentsPage = () => {
                 columnDefs,
                 domLayout: 'autoHeight',
                 quickFilterText,
-                rowStyle: { padding: '8px 0' },
               }}
             />
           </div>
