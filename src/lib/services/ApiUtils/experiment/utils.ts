@@ -68,7 +68,6 @@ export function buildExperimentFields(
           field: getColumnFieldFromNameAndIndex(output.name, fieldIndex),
           type: Enum_Experiment_Column_Type.OUTPUT,
           value: output.value,
-          index: fieldIndex, // Store the index for later reference
         };
       });
 
