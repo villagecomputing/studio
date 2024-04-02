@@ -59,14 +59,8 @@
                     "rows": {
                         "type": "array",
                         "items": {
-                            "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "$ref": "#/components/schemas/DatasetRow"
-                            }
-                        ]}
+                            "$ref": "#/components/schemas/DatasetRow"
+                        }
                     }
                 },
                 "required": ["id", "created_at", "name", "columns", "rows"]
@@ -103,6 +97,14 @@
                     "status": {
                         "type": "string",
                         "enum": ["PENDING", "APPROVED"]
+                    }
+                },
+                "example": {
+                    "Column1": "string",
+                    "Column2": {
+                        "content": "string",
+                        "id": 0,
+                         "status": "PENDING"
                     }
                 }
             },  
