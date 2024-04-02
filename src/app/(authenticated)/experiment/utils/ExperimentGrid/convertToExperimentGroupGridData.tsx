@@ -30,14 +30,14 @@ function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
       headerName: 'Latency P90',
       field: 'p90Latency',
       width: 90,
-      type: Enum_Metadata_Type.LATENCY,
+      type: Enum_Metadata_Type.LATENCY90,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P50',
       field: 'p50Latency',
       width: 90,
-      type: Enum_Metadata_Type.LATENCY,
+      type: Enum_Metadata_Type.LATENCY50,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
@@ -83,9 +83,7 @@ function getExperimentGroupRowData(data: ExperimentList) {
       id: experimentData.id,
       experimentName: experimentData.name,
       date: formatDate(experimentData.created_at),
-      avgAccuracy: experimentData.totalAccuracy
-        ? experimentData.totalAccuracy / experimentData.totalRows
-        : 0,
+      avgAccuracy: experimentData.avgAccuracy,
       avgCost: experimentData.totalCost
         ? experimentData.totalCost / experimentData.totalRows
         : 0,

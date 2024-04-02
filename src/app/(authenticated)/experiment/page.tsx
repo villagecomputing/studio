@@ -3,7 +3,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
 import { CellClickedEvent } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useCallback, useState } from 'react';
+import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
@@ -11,6 +11,7 @@ import { useExperimentListContext } from './components/ExperimentListProvider';
 import ExperimentListZeroState from './components/zero-state/ExperimentListZeroState';
 import { ExperimentListRowType } from './types';
 import ExperimentGrid from './utils/ExperimentGrid';
+import { getExperimentsMetadataColumnsPercentiles } from './utils/utils';
 
 const ExperimentsPage = () => {
   const router = useRouter();
@@ -31,6 +32,9 @@ const ExperimentsPage = () => {
   ) => {
     setQuickFilterText(event.target.value);
   };
+  const experimentsMetadataColumnsPercentiles = useMemo(() => {
+    return getExperimentsMetadataColumnsPercentiles(experiments);
+  }, [experiments]);
 
   return (
     <>
@@ -52,6 +56,7 @@ const ExperimentsPage = () => {
               theme="ag-theme-experiment-list"
               agGridProps={{
                 ...DEFAULT_GRID_OPTIONS,
+                context: experimentsMetadataColumnsPercentiles,
                 rowData,
                 columnDefs,
                 domLayout: 'autoHeight',

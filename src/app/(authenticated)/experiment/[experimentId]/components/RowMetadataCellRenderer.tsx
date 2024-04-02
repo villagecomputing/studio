@@ -37,7 +37,7 @@ const RowMetadataCellRenderer = (
     <div className="flex h-full flex-col justify-center">
       <div className="flex flex-wrap gap-3 pb-2">
         <MetadataElement
-          type={Enum_Metadata_Type.LATENCY}
+          type={Enum_Metadata_Type.LATENCY50}
           icon
           value={metadata.latencySum}
           p25={props.context.latencyP25}

@@ -5,7 +5,8 @@ import { ReactNode, useMemo } from 'react';
 
 export enum Enum_Metadata_Type {
   COST = 'cost',
-  LATENCY = 'latency',
+  LATENCY50 = 'latency50',
+  LATENCY90 = 'latency90',
   ACCURACY = 'accuracy',
   RUNTIME = 'runtime',
   LABEL_VALUE = 'label-value',
@@ -57,7 +58,8 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
         }
         break;
       }
-      case Enum_Metadata_Type.LATENCY: {
+      case Enum_Metadata_Type.LATENCY90:
+      case Enum_Metadata_Type.LATENCY50: {
         iconNode = (
           <ArrowLeftRightIcon
             size={16}

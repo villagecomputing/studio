@@ -26,3 +26,17 @@ export type UseGroupSpecificDataResult = {
   datasetName: string;
   description: string;
 };
+
+export type ExperimentsMetadataColumnsPercentiles = {
+  avgCostColumnP25: number;
+  avgCostColumnP75: number;
+  avgAccuracyColumnP25: number;
+  avgAccuracyColumnP75: number;
+  latencyP50ColumnP25: number;
+  latencyP50ColumnP75: number;
+  latencyP90ColumnP25: number;
+  latencyP90ColumnP75: number;
+};
+
+export type ExperimentsListAGGridContext =
+  ExperimentsMetadataColumnsPercentiles;
