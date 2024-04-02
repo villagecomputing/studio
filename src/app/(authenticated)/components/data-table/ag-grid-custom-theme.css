@@ -2,31 +2,37 @@
   --ag-header-background-color: theme(colors.gridHeaderColor);
   --ag-data-color: theme(colors.agDataColor);
   --ag-range-selection-border-color: theme(colors.gridBorderColor);
+  --ag-border-color: theme(colors.gridBorderColor);
 }
 .ag-theme-dataset-list {
   --ag-foreground-color: theme(colors.gridCellTextColor);
   --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
   --ag-odd-row-background-color: theme(colors.white);
   --ag-row-border-width: 0px;
-  --ag-border-color: theme(colors.gridBorderColor);
   --ag-border-radius: 12px;
-}
-.ag-theme-dataset-list .ag-header-row {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
 }
 
 .ag-theme-experiment-list {
   --ag-foreground-color: theme(colors.gridCellTextColor);
   --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
   --ag-odd-row-background-color: theme(colors.white);
-  --ag-row-border-width: 1px;
-  --ag-border-color: theme(colors.gridBorderColor);
+  --ag-row-border-width: 0px;
   --ag-border-radius: 12px;
   --ag-row-height: 69px;
   --ag-line-height: 18px;
 }
+.ag-theme-experiment-group-list {
+  --ag-foreground-color: theme(colors.gridCellTextColor);
+  --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
+  --ag-odd-row-background-color: theme(colors.white);
+  --ag-row-border-width: 1px;
+  --ag-border-radius: 12px;
+  --ag-row-height: 53px;
+  --ag-line-height: 18px;
+}
+
+.ag-theme-experiment-group-list .ag-header-row,
+.ag-theme-dataset-list .ag-header-row,
 .ag-theme-experiment-list .ag-header-row {
   font-style: normal;
   font-weight: normal;
@@ -36,7 +42,6 @@
 .ag-theme-dataset {
   --ag-row-height: 92px;
   --ag-line-height: 22px;
-  --ag-border-color: theme(colors.gridBorderColor);
   --ag-odd-row-background-color: theme(colors.gridHeaderColor);
   --ag-cell-border-width: 2px;
   --ag-cell-horizontal-border: solid theme(colors.gridBorderColor);
@@ -56,8 +61,20 @@
   bottom: 0 !important;
 }
 
-.ag-theme-dataset .ag-cell {
-  @apply line-clamp-4 whitespace-normal;
+.ag-theme-experiment-group-list .ag-cell-wrapper,
+.ag-theme-experiment-list .ag-cell-wrapper {
+  @apply flex h-full items-center;
+}
+
+.ag-theme-experiment-list .ag-cell-wrapper > span {
+  @apply line-clamp-2 whitespace-normal;
+}
+
+.ag-theme-dataset .ag-cell-wrapper {
+  @apply h-full;
+}
+.ag-theme-dataset .ag-cell-wrapper > span {
+  @apply line-clamp-4 h-full whitespace-normal;
 }
 
 .ag-row {
@@ -79,11 +96,6 @@
 .ag-pinned-right-header,
 .ag-pinned-right-cols-container {
   box-shadow: rgb(0, 0, 0) 5px 0px 15px 1px;
-}
-
-.ag-cell-wrapper,
-.ag-cell-wrapper > span {
-  height: 100%;
 }
 
 .ag-cell[col-id='fakeId'] {

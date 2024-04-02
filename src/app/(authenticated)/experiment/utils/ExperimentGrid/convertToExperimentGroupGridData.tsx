@@ -10,40 +10,34 @@ function getDefaultTableColumnDefs(): ColDef<ExperimentGroupRowType>[] {
     {
       headerName: 'Runtime',
       field: 'runtime',
-      width: 90,
       type: Enum_Metadata_Type.RUNTIME,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Date',
       field: 'date',
-      width: 150,
     },
     {
       headerName: 'Avg. Cost',
       field: 'avgCost',
-      width: 100,
       type: Enum_Metadata_Type.COST,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P90',
       field: 'p90Latency',
-      width: 90,
       type: Enum_Metadata_Type.LATENCY90,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Latency P50',
       field: 'p50Latency',
-      width: 90,
       type: Enum_Metadata_Type.LATENCY50,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {
       headerName: 'Accuracy',
       field: 'avgAccuracy',
-      width: 100,
       type: Enum_Metadata_Type.ACCURACY,
       cellRenderer: MetadataColumnCellRenderer,
     },
@@ -61,7 +55,6 @@ function getDynamicTableColumnDefs(data: ExperimentList): ColDef[] {
     return Object.keys(details as object).map((key) => ({
       headerName: `${step}_${key}`,
       field: `${step}_${key}`,
-      width: 150,
     }));
   });
 }
@@ -100,7 +93,9 @@ export function convertToExperimentGroupGridData(data: ExperimentList) {
     columnDefs: [
       ...getDefaultTableColumnDefs(),
       ...getDynamicTableColumnDefs(data),
-    ],
+    ].map((colDef) => {
+      return { ...colDef, flex: 1 };
+    }) as ColDef[],
     rowData: getExperimentGroupRowData(data),
   };
 }
