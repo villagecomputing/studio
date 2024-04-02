@@ -28,17 +28,14 @@ export async function ensureExperimentTable(
 
   const columnDefinitions = buildExperimentColumnDefinition(experimentFields);
   await DatabaseUtils.create(experimentId, columnDefinitions);
-  await Promise.all(
-    experimentFields.map(
-      async (field) =>
-        await PrismaClient.experiment_column.create({
-          data: {
-            experiment_uuid: experimentId,
-            name: field.name,
-            field: field.field,
-            type: field.type,
-          },
-        }),
-    ),
-  );
+  for (const field of experimentFields) {
+    await PrismaClient.experiment_column.create({
+      data: {
+        experiment_uuid: experimentId,
+        name: field.name,
+        field: field.field,
+        type: field.type,
+      },
+    });
+  }
 }

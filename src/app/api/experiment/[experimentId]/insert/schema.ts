@@ -9,8 +9,13 @@ export const experimentStepMetadata = z
     output_tokens: z.number().optional(),
     input_cost: z.number().optional(),
     output_cost: z.number().optional(),
+    prompt: z.string().optional(),
   })
   .passthrough();
+
+export const experimentStepOutputMapping = experimentStepMetadata.extend({
+  output_column_fields: z.array(z.string()),
+});
 
 export const experimentStepPayloadSchema = z.object({
   name: z.string(),
