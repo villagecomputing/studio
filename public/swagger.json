@@ -692,6 +692,106 @@
         }
       }
     },
+    "/api/dataset/edit/approveAll": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Approves all ground truths for the specified dataset.",
+        "description": "Approves all ground truths for the specified dataset.",
+        "operationId": "ApproveAllDatasetGroundTruths",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveAllGroundTruthsPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Required data is missing."
+          },
+          "500": {
+            "description": "Error processing request."
+          }
+        }
+      }
+    },
+    "/api/dataset/edit/cell": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Edits a specific cell in a dataset's ground truth.",
+        "description": "Edits a specific cell in a dataset's ground truth.",
+        "operationId": "EditDatasetCell",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCellPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ground truth cell updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditGroundTruthCellResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error processing result."
+          }
+        }
+      }
+    },
+    "/api/dataset/edit/column": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Edits an existing column in a dataset.",
+        "description": "Edits an existing column in a dataset.",
+        "operationId": "EditDatasetColumn",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditDatasetColumnPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
     "/api/dataset/list": {
       "get": {
         "tags": [
