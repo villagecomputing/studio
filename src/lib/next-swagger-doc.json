@@ -241,17 +241,20 @@
             "EditDatasetColumnPayload": {
                 "type": "object",
                 "properties": {
-                    "datasetId": {
-                        "type": "string"
-                    },
                     "columnId": {
                         "type": "integer"
                     },
-                    "newName": {
-                        "type": "string"
+                    "type": {
+                        "type": "string",
+                        "enum": ["GROUND_TRUTH", "GROUND_TRUTH_STATUS", "IDENTIFIER", "PREDICTIVE_LABEL", "INPUT"],
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
                     }
                 },
-                "required": ["datasetId", "columnId", "newName"]
+                "required": ["columnId"]
             },
             "EditDatasetColumnResponse": {
                 "type": "object",
