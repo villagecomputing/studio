@@ -1,9 +1,11 @@
 import { getColumnFieldFromNameAndIndex } from '@/app/(authenticated)/data/utils/commonUtils';
+import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import { exhaustiveCheck, guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { Experiment, Experiment_column } from '@prisma/client';
 import { compact } from 'lodash';
+import { z } from 'zod';
 import DatabaseUtils from '../../DatabaseUtils';
 import {
   ColumnDefinition,
@@ -44,43 +46,55 @@ export enum Enum_Dynamic_experiment_metadata_fields {
 export function buildExperimentFields(
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
 ): ExperimentField[] {
+  let rowLatency = 0;
+  let rowCost = 0;
+  let outputCounter = 0; // Initialize a counter for outputs to ensure unique indexing
   const experimentFields: ExperimentField[] = [
     {
       name: 'id',
       field: 'id',
       type: Enum_Experiment_Column_Type.IDENTIFIER,
     },
-  ];
-
-  let rowLatency = 0;
-  let rowCost = 0;
-  payload.steps
-    .map((step) => {
+    ...payload.steps.flatMap((step) => {
       rowLatency += step.metadata.latency;
       rowCost +=
         (step.metadata.input_cost ?? 0) + (step.metadata.output_cost ?? 0);
+
+      // Calculate output fields with indices first
+      const outputFieldsWithIndices = step.outputs.map((output) => {
+        const fieldIndex = outputCounter++;
+        return {
+          name: output.name,
+          field: getColumnFieldFromNameAndIndex(output.name, fieldIndex),
+          type: Enum_Experiment_Column_Type.OUTPUT,
+          value: output.value,
+        };
+      });
+
+      // Use the calculated indices for output_column_fields
+      const stepMetadata: z.infer<typeof experimentStepOutputMapping> =
+        Object.assign(step.metadata, {
+          output_column_fields: outputFieldsWithIndices.map(
+            (outputField) => outputField.field,
+          ),
+        });
+
       return [
         {
           name: step.name,
+          field: getColumnFieldFromNameAndIndex(step.name, outputCounter++),
           type: Enum_Experiment_Column_Type.STEP_METADATA,
-          value: JSON.stringify(step.metadata),
+          value: JSON.stringify(stepMetadata),
         },
-        ...step.outputs.map((output) => ({
-          name: output.name,
-          type: Enum_Experiment_Column_Type.OUTPUT,
-          value: output.value,
+        ...outputFieldsWithIndices.map((outputField) => ({
+          name: outputField.name,
+          field: outputField.field,
+          type: outputField.type,
+          value: outputField.value,
         })),
       ];
-    })
-    .flatMap((fields) => fields)
-    .forEach((field, index) =>
-      experimentFields.push({
-        name: field.name,
-        field: getColumnFieldFromNameAndIndex(field.name, index),
-        value: field.value,
-        type: field.type,
-      }),
-    );
+    }),
+  ];
 
   experimentFields.push(
     {
