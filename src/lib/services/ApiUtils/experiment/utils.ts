@@ -48,40 +48,50 @@ export function buildExperimentFields(
 ): ExperimentField[] {
   let rowLatency = 0;
   let rowCost = 0;
+  let outputCounter = 0; // Initialize a counter for outputs to ensure unique indexing
   const experimentFields: ExperimentField[] = [
     {
       name: 'id',
       field: 'id',
       type: Enum_Experiment_Column_Type.IDENTIFIER,
     },
-    ...payload.steps.flatMap((step, stepIndex) => {
+    ...payload.steps.flatMap((step) => {
       rowLatency += step.metadata.latency;
       rowCost +=
         (step.metadata.input_cost ?? 0) + (step.metadata.output_cost ?? 0);
+
+      // Calculate output fields with indices first
+      const outputFieldsWithIndices = step.outputs.map((output) => {
+        const fieldIndex = outputCounter++;
+        return {
+          name: output.name,
+          field: getColumnFieldFromNameAndIndex(output.name, fieldIndex),
+          type: Enum_Experiment_Column_Type.OUTPUT,
+          value: output.value,
+          index: fieldIndex, // Store the index for later reference
+        };
+      });
+
+      // Use the calculated indices for output_column_fields
       const stepMetadata: z.infer<typeof experimentStepOutputMapping> =
         Object.assign(step.metadata, {
-          output_column_fields: step.outputs.map((output, outputIndex) =>
-            getColumnFieldFromNameAndIndex(
-              output.name,
-              stepIndex + outputIndex + 1,
-            ),
+          output_column_fields: outputFieldsWithIndices.map(
+            (outputField) => outputField.field,
           ),
         });
+
       return [
         {
           name: step.name,
-          field: getColumnFieldFromNameAndIndex(step.name, stepIndex),
+          field: getColumnFieldFromNameAndIndex(step.name, outputCounter++),
           type: Enum_Experiment_Column_Type.STEP_METADATA,
           value: JSON.stringify(stepMetadata),
         },
-        ...step.outputs.map((output, outputIndex) => ({
-          name: output.name,
-          field: getColumnFieldFromNameAndIndex(
-            output.name,
-            stepIndex + outputIndex + 1,
-          ),
-          type: Enum_Experiment_Column_Type.OUTPUT,
-          value: output.value,
+        ...outputFieldsWithIndices.map((outputField) => ({
+          name: outputField.name,
+          field: outputField.field,
+          type: outputField.type,
+          value: outputField.value,
         })),
       ];
     }),
