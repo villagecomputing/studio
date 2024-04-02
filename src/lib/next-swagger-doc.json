@@ -29,7 +29,11 @@
                             "additionalProperties": {
                                 "type": "string"
                             }
-                        }
+                        },
+                        "example": [{
+                            "Column1": "Value1",
+                            "Column2": "Value2"
+                        }]
                     }
                 }
             },                         
