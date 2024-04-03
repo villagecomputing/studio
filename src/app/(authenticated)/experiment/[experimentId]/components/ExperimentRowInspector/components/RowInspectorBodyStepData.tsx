@@ -10,9 +10,16 @@ const RowInspectorBodyStepData = (props: {
   stepMetadataColumn: StepMetadataColumn;
 }) => {
   const { stepMetadataColumn } = props;
-  const { rows, inspectorRowIndex, columnDefs } =
-    useExperimentRowInspectorContext();
-  const [promptCollapsed, setPromptCollapsed] = useState<boolean>(false);
+  const {
+    rows,
+    inspectorRowIndex,
+    columnDefs,
+    costP25,
+    costP75,
+    latencyP25,
+    latencyP75,
+  } = useExperimentRowInspectorContext();
+  const [promptCollapsed, setPromptCollapsed] = useState<boolean>(true);
 
   const currentRow =
     inspectorRowIndex !== null ? rows[inspectorRowIndex] : undefined;
@@ -44,6 +51,8 @@ const RowInspectorBodyStepData = (props: {
               type={Enum_Metadata_Type.LATENCY90}
               icon
               value={stepMetadata.latency}
+              p25={latencyP25}
+              p75={latencyP75}
             />
           )}
           {stepMetadata.input_cost && stepMetadata.output_cost && (
@@ -51,6 +60,8 @@ const RowInspectorBodyStepData = (props: {
               type={Enum_Metadata_Type.COST}
               icon
               value={stepMetadata.input_cost + stepMetadata.output_cost}
+              p25={costP25}
+              p75={costP75}
             />
           )}
         </div>
