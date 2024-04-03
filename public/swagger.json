@@ -103,7 +103,9 @@
       },
       "DatasetRow": {
         "type": "object",
-        "additionalProperties": true,
+        "additionalProperties": {
+          "type": "string"
+        },
         "properties": {
           "content": {
             "type": "string"

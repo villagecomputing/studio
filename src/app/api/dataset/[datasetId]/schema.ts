@@ -10,7 +10,7 @@ const TableColumnPropsSchema = z.object({
 
 const DatasetRowSchema = z.record(
   z.union([
-    z.any(),
+    z.string(),
     z.object({
       content: z.string(),
       id: z.number(),
