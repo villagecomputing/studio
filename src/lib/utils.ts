@@ -83,20 +83,20 @@ export const generateUUID = (prefix?: UUIDPrefixEnum) => {
   const uuid = uuidv4();
   return prefix ? `${prefix}${uuid}` : uuid;
 };
-function sanitizeDatasetName(datasetName: string): string {
-  return datasetName.replace(/[^a-z0-9-_]/gi, '');
+function sanitizeName(name: string): string {
+  return name.replace(/[^a-z0-9-_]/gi, '');
 }
 
 /**
- * Generates a fake ID for a dataset.
+ * Generates a fake ID for a dataset or an experiment.
  *
- * @param {string} datasetName - The name of the dataset.
- * @param {string} uuid - The UUID associated with the dataset.
- * @returns {string} The fake ID for the dataset, which is a sanitized version of the dataset name concatenated with the UUID.
+ * @param {string} name - The name of the dataset/experiment.
+ * @param {string} uuid - The UUID associated with the dataset/experiment.
+ * @returns {string} The fake ID, which is a sanitized version of the name concatenated with the UUID.
  */
-export const createDatasetFakeId = (datasetName: string, uuid: string) => {
-  const sanitizedDatasetName = sanitizeDatasetName(datasetName);
-  return `${sanitizedDatasetName}-${uuid}`;
+export const createFakeId = (name: string, uuid: string): string => {
+  const sanitizedName = sanitizeName(name);
+  return `${sanitizedName}-${uuid}`;
 };
 
 /** 

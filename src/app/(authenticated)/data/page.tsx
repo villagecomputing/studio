@@ -2,7 +2,12 @@
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
-import { cn, createDatasetFakeId, formatDate } from '@/lib/utils';
+import {
+  cn,
+  createFakeId,
+  formatDate,
+  getDatasetUuidFromFakeId,
+} from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
@@ -19,7 +24,9 @@ const getData = async () => {
     method: 'GET',
   });
   const datasetList = await response.json();
-  return datasetListResponseSchema.parse(datasetList);
+  return datasetListResponseSchema.parse(datasetList).map((dataset) => {
+    return { ...dataset, id: getDatasetUuidFromFakeId(dataset.id) };
+  });
 };
 
 type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
@@ -37,7 +44,7 @@ const DataPage = () => {
 
   const rowData: RowType[] = datasetList.map((data) => ({
     id: data.id,
-    fakeId: createDatasetFakeId(data.name, data.id),
+    fakeId: createFakeId(data.name, data.id),
     datasetName: data.name,
     numberOfRecords: data.total_rows,
     uploadDate: formatDate(data.created_at),
