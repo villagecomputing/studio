@@ -62,7 +62,7 @@ const DataPage = () => {
       field: 'fakeId',
       cellRenderer: FakeIdCellRenderer,
       maxWidth: 50,
-      tooltipValueGetter: (props) => `Copy dataset id: ${props.value}`,
+      tooltipValueGetter: (props) => `Copy ID to clipboard: ${props.value}`,
     },
     {
       headerName: 'Dataset Name',

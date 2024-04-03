@@ -84,7 +84,7 @@ export const generateUUID = (prefix?: UUIDPrefixEnum) => {
   return prefix ? `${prefix}${uuid}` : uuid;
 };
 function sanitizeName(name: string): string {
-  return name.replace(/[^a-z0-9-_]/gi, '');
+  return name.toLowerCase().replace(/[^a-z0-9-_]/gi, '');
 }
 
 /**
