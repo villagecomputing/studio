@@ -482,7 +482,7 @@
                         "totalCost": {
                             "type": "number"
                         },
-                        "totalAccuracy": {
+                        "avgAccuracy": {
                             "type": "number"
                         },
                         "totalRows": {
@@ -501,7 +501,7 @@
                             "required": ["id", "name"]
                         }
                     },
-                    "required": ["id", "name", "created_at", "groupId", "pipelineMetadata", "latencyP50", "latencyP90", "runtime", "totalCost", "totalAccuracy", "totalRows", "Dataset"]
+                    "required": ["id", "name", "created_at", "groupId", "pipelineMetadata", "latencyP50", "latencyP90", "runtime", "totalCost", "avgAccuracy", "totalRows", "Dataset"]
                 }
             }
             

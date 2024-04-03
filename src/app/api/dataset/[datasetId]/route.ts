@@ -49,8 +49,7 @@ export async function GET(
       return response('Invalid response dataset view type', 500);
     }
 
-    const res = JSON.stringify(result);
-    return Response.json(res);
+    return Response.json(result);
   } catch (error) {
     console.error('Error in GET dataset view:', error);
     return response('Error processing request', 500);

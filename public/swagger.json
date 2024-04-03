@@ -560,7 +560,7 @@
             "totalCost": {
               "type": "number"
             },
-            "totalAccuracy": {
+            "avgAccuracy": {
               "type": "number"
             },
             "totalRows": {
@@ -592,7 +592,7 @@
             "latencyP90",
             "runtime",
             "totalCost",
-            "totalAccuracy",
+            "avgAccuracy",
             "totalRows",
             "Dataset"
           ]
