@@ -3,6 +3,7 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
+import { createFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
@@ -77,7 +78,9 @@ export async function POST(request: Request) {
       });
     }
 
-    return Response.json({ datasetId });
+    return Response.json({
+      datasetId: createFakeId(dataset.datasetName, datasetId),
+    });
   } catch (error) {
     console.error('Error in POST:', error);
     return response('Error processing request', 500);

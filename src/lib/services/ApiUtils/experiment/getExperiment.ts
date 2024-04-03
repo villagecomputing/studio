@@ -1,6 +1,6 @@
 import { ExperimentTableColumnProps } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { DISPLAYABLE_EXPERIMENT_COLUMN_TYPES } from '@/lib/constants';
-import { ResultSchemaType } from '@/lib/routes/routes';
+import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
@@ -14,7 +14,7 @@ import {
 
 export async function getExperiment(
   experimentId: string,
-): Promise<ResultSchemaType['/api/experiment']> {
+): Promise<ResultSchemaType[ApiEndpoints.experimentView]> {
   if (!experimentId) {
     throw new Error('experimentId is required');
   }
