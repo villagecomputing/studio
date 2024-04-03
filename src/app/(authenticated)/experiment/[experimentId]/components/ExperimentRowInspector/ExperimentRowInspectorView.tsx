@@ -5,6 +5,7 @@ import { BaseRowInspectorHeader } from '@/app/(authenticated)/components/base-ro
 import { RowInspectorType } from '@/app/(authenticated)/components/base-row-inspector/type';
 import { useRef } from 'react';
 import { useExperimentRowInspectorContext } from './ExperimentRowInspector';
+import RowInspectorBodyMetaData from './components/RowInpsectorBodyMetaData';
 import RowInspectorBodyRawData from './components/RowInspectorBodyRawData';
 import RowInspectorBodyStepData from './components/RowInspectorBodyStepData';
 import { RowInspectorHeaderSteps } from './components/RowInspectorHeaderSteps';
@@ -44,6 +45,7 @@ export default function ExperimentRowInspectorView() {
             ref={bodyRef}
             className="flex h-full w-full flex-col gap-2 overflow-y-auto bg-agGridHeaderHoverGrey"
           >
+            <RowInspectorBodyMetaData />
             <RowInspectorBodyRawData />
             {stepMetadataColumns.map((column) => (
               <RowInspectorBodyStepData

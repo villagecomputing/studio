@@ -15,7 +15,7 @@ const getData = async (): Promise<ExperimentList> => {
   const response = await fetch(ApiEndpoints.experimentList, {
     method: 'GET',
   });
-  const experimentList = JSON.parse(await response.json());
+  const experimentList = await response.json();
   return experimentListResponseSchema.parse(experimentList);
 };
 

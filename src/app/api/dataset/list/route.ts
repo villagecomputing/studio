@@ -60,8 +60,7 @@ export async function GET() {
       return response('Invalid response datasetList type', 400);
     }
 
-    const res = JSON.stringify(datasetListResponse);
-    return Response.json(res);
+    return Response.json(datasetListResponse);
   } catch (error) {
     console.error('Error in GET dataset list:', error);
     return response('Error processing request', 500);

@@ -97,8 +97,7 @@ export async function GET() {
       return response('Invalid response datasetList type', 400);
     }
 
-    const res = JSON.stringify(experimentListResponse);
-    return Response.json(res);
+    return Response.json(experimentListResponse);
   } catch (error) {
     console.error('Error in GET experiment list:', error);
     return response('Error processing request', 500);
