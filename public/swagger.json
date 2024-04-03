@@ -331,7 +331,7 @@
       "ExperimentViewResponse": {
         "type": "object",
         "properties": {
-          "uuid": {
+          "id": {
             "type": "string"
           },
           "name": {
@@ -366,7 +366,7 @@
               "name": {
                 "type": "string"
               },
-              "uuid": {
+              "id": {
                 "type": "string"
               }
             }
@@ -391,7 +391,7 @@
           }
         },
         "required": [
-          "uuid",
+          "id",
           "name",
           "created_at",
           "columns",
