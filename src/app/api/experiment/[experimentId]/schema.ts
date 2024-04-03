@@ -11,7 +11,7 @@ const ExperimentTableColumnPropsSchema = z.object({
 const ExperimentRowSchema = z.record(z.string());
 
 export const experimentViewResponseSchema = z.object({
-  uuid: z.string(),
+  id: z.string(),
   created_at: z.date(),
   name: z.string(),
   description: z.string(),
@@ -19,7 +19,7 @@ export const experimentViewResponseSchema = z.object({
   rows: z.array(ExperimentRowSchema),
   dataset: z.object({
     name: z.string(),
-    uuid: z.string(),
+    id: z.string(),
   }),
   latencyP50: z.number(),
   latencyP90: z.number(),

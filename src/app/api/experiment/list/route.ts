@@ -1,6 +1,7 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
+import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
@@ -69,7 +70,7 @@ export async function GET() {
           } catch (_e) {}
           return {
             ...experiment,
-            id: experiment.uuid,
+            id: createFakeId(experiment.name, experiment.uuid),
             description: experiment.description || '',
             groupId: experiment.group_id,
             pipelineMetadata: experiment.pipeline_metadata,
@@ -85,7 +86,10 @@ export async function GET() {
             totalRows: experiment.total_rows,
             Dataset: {
               ...experiment.Dataset,
-              id: experiment.Dataset.uuid,
+              id: createFakeId(
+                experiment.Dataset.name,
+                experiment.Dataset.uuid,
+              ),
             },
           };
         }),

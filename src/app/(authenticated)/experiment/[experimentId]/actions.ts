@@ -14,11 +14,11 @@ export const fetchExperiment = async (
       permanentRedirect('/experiments');
     }
     const experiment = await ApiUtils.getExperiment(experimentId);
-    const dataset = await ApiUtils.getDataset(experiment.dataset.uuid);
+    const dataset = await ApiUtils.getDataset(experiment.dataset.id);
 
     return {
       experimentName: experiment.name,
-      dataset: { id: experiment.dataset.uuid, name: experiment.dataset.name },
+      dataset: experiment.dataset,
       latencyP50: experiment.latencyP50,
       latencyP90: experiment.latencyP90,
       latencyP25: experiment.latencyP25,
@@ -30,7 +30,7 @@ export const fetchExperiment = async (
       parameters: experiment.parameters,
       accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({
-        experimentId: experiment.uuid,
+        experimentId: experiment.id,
         columns: [...dataset.columns, ...experiment.columns],
         rows: experiment.rows.map((row, index) => ({
           ...row,
