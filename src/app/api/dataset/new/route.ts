@@ -3,6 +3,33 @@ import { createFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/new:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Initializes a new dataset.
+ *     description: Initializes a new dataset.
+ *     operationId: InitializeDataset
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewDatasetPayload'
+ *     responses:
+ *       200:
+ *         description: Successfully created a new dataset.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NewDatasetResponse'
+ *       400:
+ *         description: Invalid request headers type or Missing required data.
+ *       500:
+ *         description: Error processing request.
+ */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {

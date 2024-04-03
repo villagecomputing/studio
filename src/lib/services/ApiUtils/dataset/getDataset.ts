@@ -93,7 +93,9 @@ export async function getDataset(
   }
 
   const rows: DatasetRow[] = datasetContent.map((row) => {
-    const rowWithGroundTruth: DatasetRow = { ...row };
+    const rowWithGroundTruth: DatasetRow = Object.fromEntries(
+      Object.entries(row).map(([key, value]) => [key, String(value)]),
+    );
     groundTruthFields.forEach((groundTruthField) => {
       const groundTruthStatus =
         row[getGroundTruthStatusColumnName(groundTruthField)];

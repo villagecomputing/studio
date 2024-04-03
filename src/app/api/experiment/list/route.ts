@@ -5,6 +5,27 @@ import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/experiment/list:
+ *   get:
+ *     tags:
+ *      - Experiment
+ *     summary: List all experiments
+ *     description: List all experiments
+ *     operationId: ListExperiments
+ *     responses:
+ *       200:
+ *         description: A list of experiments.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ListExperimentResponse'
+ *       400:
+ *         description: 'Invalid response datasetList type.'
+ *       500:
+ *         description: 'Error processing request.'
+ */
 export async function GET() {
   try {
     const experimentSelect = {

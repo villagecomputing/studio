@@ -6,6 +6,27 @@ import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/list:
+ *   get:
+ *     tags:
+ *      - Dataset
+ *     summary: Retrieves a list of datasets and their total row counts
+ *     description: Retrieves a list of datasets and their total row counts
+ *     operationId: ListDatasets
+ *     responses:
+ *       200:
+ *          description: Dataset retrieved
+ *          content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DatasetListResponse'
+ *       400:
+ *         description: Invalid response datasetList type
+ *       500:
+ *         description: Error processing request
+ */
 export async function GET() {
   try {
     const datasetSelect = {

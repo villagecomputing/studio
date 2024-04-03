@@ -7,5 +7,5 @@ export const newDatasetPayloadSchema = z.object({
 });
 
 export const newDatasetResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
 });
