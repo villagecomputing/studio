@@ -12,7 +12,7 @@ export const experimentListResponseSchema = z.array(
     latencyP90: z.number(),
     runtime: z.number(),
     totalCost: z.number(),
-    totalAccuracy: z.number(),
+    avgAccuracy: z.number(),
     totalRows: z.number(),
     Dataset: z.object({
       id: z.string(),

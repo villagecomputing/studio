@@ -81,13 +81,13 @@ const Header: React.FC<HeaderProps> = ({ experiment }) => {
           value={experiment.cost}
         />
         <MetadataElement
-          type={Enum_Metadata_Type.LATENCY}
+          type={Enum_Metadata_Type.LATENCY50}
           icon
           label={'P50'}
           value={experiment.latencyP50}
         />
         <MetadataElement
-          type={Enum_Metadata_Type.LATENCY}
+          type={Enum_Metadata_Type.LATENCY90}
           icon
           label={'P90'}
           value={experiment.latencyP90}

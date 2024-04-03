@@ -6,13 +6,14 @@ import { RowInspectorType } from '@/app/(authenticated)/components/base-row-insp
 import { useRef } from 'react';
 import { useExperimentRowInspectorContext } from './ExperimentRowInspector';
 import RowInspectorBodyRawData from './components/RowInspectorBodyRawData';
+import RowInspectorBodyStepData from './components/RowInspectorBodyStepData';
 import { RowInspectorHeaderSteps } from './components/RowInspectorHeaderSteps';
 import useExperimentRowInspectorActions from './hooks/useExperimentRowInspectorActions';
 
 export const RAW_DATA_SECTION = 'RAW_DATA_SECTION';
 
 export default function ExperimentRowInspectorView() {
-  const { inspectorRowIndex, setInspectorRowIndex } =
+  const { inspectorRowIndex, setInspectorRowIndex, stepMetadataColumns } =
     useExperimentRowInspectorContext();
   const { navigateTo } = useExperimentRowInspectorActions();
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -44,6 +45,12 @@ export default function ExperimentRowInspectorView() {
             className="flex h-full w-full flex-col gap-2 overflow-y-auto bg-agGridHeaderHoverGrey"
           >
             <RowInspectorBodyRawData />
+            {stepMetadataColumns.map((column) => (
+              <RowInspectorBodyStepData
+                key={column.field}
+                stepMetadataColumn={column}
+              />
+            ))}
           </div>
         </BaseRowInspectorBody>
       </BaseRowInspector>

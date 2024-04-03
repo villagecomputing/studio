@@ -53,13 +53,16 @@ export async function getExperiment(
   const costP75 = calculatePercentile(orderedCosts, 75);
   const latencyP25 = calculatePercentile(orderedLatencies, 25);
   const latencyP75 = calculatePercentile(orderedLatencies, 75);
-  const rowsWithAccuracyCount = Number(
-    await DatabaseUtils.selectAggregation(
-      experimentId,
-      { func: 'COUNT' },
-      { accuracy: { isNotNull: true } },
-    ),
-  );
+  let rowsWithAccuracyCount = 0;
+  try {
+    rowsWithAccuracyCount = Number(
+      await DatabaseUtils.selectAggregation(
+        experimentId,
+        { func: 'COUNT' },
+        { accuracy: { isNotNull: true } },
+      ),
+    );
+  } catch (_e) {}
 
   return {
     uuid: experimentDetails.uuid,

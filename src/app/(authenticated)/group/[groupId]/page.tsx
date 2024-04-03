@@ -8,6 +8,7 @@ import { DEFAULT_GRID_OPTIONS } from '../../components/data-table/constants';
 import { DatasetName } from '../../experiment/components/DatasetNameCellRenderer';
 import { useExperimentListContext } from '../../experiment/components/ExperimentListProvider';
 import ExperimentGrid from '../../experiment/utils/ExperimentGrid';
+import { getExperimentsMetadataColumnsPercentiles } from '../../experiment/utils/utils';
 import { useGroupSpecificData } from './hooks/useGroupSpecificData';
 import { ExperimentGroupPageProps, ExperimentGroupRowType } from './types';
 
@@ -28,6 +29,10 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
     ExperimentGrid.convertToExperimentGroupGridData(groupSpecificExperiments);
 
   const groupData = useGroupSpecificData(groupSpecificExperiments);
+
+  const experimentsMetadataColumnsPercentiles = useMemo(() => {
+    return getExperimentsMetadataColumnsPercentiles(groupSpecificExperiments);
+  }, [groupSpecificExperiments]);
 
   return (
     <>
@@ -50,7 +55,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
           style={{ height: 'calc(100vh - 150px)' }}
         >
           <DataTable<ExperimentGroupRowType>
-            theme="ag-theme-dataset-list"
+            theme="ag-theme-experiment-group-list"
             agGridProps={{
               ...DEFAULT_GRID_OPTIONS,
               onRowClicked: (event) => {
@@ -59,6 +64,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
                 }
                 router.push(`/experiment/${event.data.id}`);
               },
+              context: experimentsMetadataColumnsPercentiles,
               rowData,
               columnDefs,
               domLayout: 'autoHeight',
