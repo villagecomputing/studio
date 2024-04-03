@@ -27,7 +27,13 @@
               "additionalProperties": {
                 "type": "string"
               }
-            }
+            },
+            "example": [
+              {
+                "Column1": "Value1",
+                "Column2": "Value2"
+              }
+            ]
           }
         }
       },
@@ -53,14 +59,7 @@
           "rows": {
             "type": "array",
             "items": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "$ref": "#/components/schemas/DatasetRow"
-                }
-              ]
+              "$ref": "#/components/schemas/DatasetRow"
             }
           }
         },
@@ -118,6 +117,14 @@
               "PENDING",
               "APPROVED"
             ]
+          }
+        },
+        "example": {
+          "Column1": "string",
+          "Column2": {
+            "content": "string",
+            "id": 0,
+            "status": "PENDING"
           }
         }
       },
@@ -285,20 +292,27 @@
       "EditDatasetColumnPayload": {
         "type": "object",
         "properties": {
-          "datasetId": {
-            "type": "string"
-          },
           "columnId": {
             "type": "integer"
           },
-          "newName": {
-            "type": "string"
+          "type": {
+            "type": "string",
+            "enum": [
+              "GROUND_TRUTH",
+              "GROUND_TRUTH_STATUS",
+              "IDENTIFIER",
+              "PREDICTIVE_LABEL",
+              "INPUT"
+            ],
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
-          "datasetId",
-          "columnId",
-          "newName"
+          "columnId"
         ]
       },
       "EditDatasetColumnResponse": {

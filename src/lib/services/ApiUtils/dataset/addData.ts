@@ -5,10 +5,13 @@ import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
-export async function addData(
-  datasetId: string,
-  payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
-) {
+export async function addData({
+  datasetId,
+  payload,
+}: {
+  datasetId: string;
+  payload: PayloadSchemaType[ApiEndpoints.datasetAddData];
+}) {
   const { datasetRows } = addDataPayloadSchema.parse(payload);
   try {
     await getDatasetOrThrow(datasetId);

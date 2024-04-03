@@ -39,13 +39,13 @@ export async function POST(
 
   try {
     // Creates table if it doesn't exist
-    await ApiUtils.ensureExperimentTable(experimentId, payload);
+    await ApiUtils.ensureExperimentTable({ experimentId, payload });
   } catch (error) {
     console.error('Error creating experiment dynamic table:', error);
     return response('Error processing request', 500);
   }
   try {
-    await ApiUtils.insertExperimentSteps(experimentId, payload);
+    await ApiUtils.insertExperimentSteps({ experimentId, payload });
   } catch (error) {
     console.error('Error inserting experiment steps:', error);
     return response('Error processing request', 500);

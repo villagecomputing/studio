@@ -56,7 +56,7 @@ export async function POST(
     // This will throw if the object doesn't match the schema
     const dataset = addDataPayloadSchema.parse(body);
     const datasetUuid = getDatasetUuidFromFakeId(datasetId);
-    await ApiUtils.addData(datasetUuid, dataset);
+    await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
 
     return response('OK');
   } catch (error) {

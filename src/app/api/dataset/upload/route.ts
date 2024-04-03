@@ -95,9 +95,7 @@ export async function POST(request: Request) {
 
     for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
       const batch = parsedFile.rows.slice(i, i + batchSize);
-      await ApiUtils.addData(datasetId, {
-        datasetRows: batch,
-      });
+      await ApiUtils.addData({ datasetId, payload: { datasetRows: batch } });
     }
 
     return Response.json({ datasetId });
