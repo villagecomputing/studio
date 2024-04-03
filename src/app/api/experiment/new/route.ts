@@ -8,10 +8,37 @@ import {
 import { response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/experiment/new:
+ *   post:
+ *     tags:
+ *      - Experiment
+ *     summary: Declare a new experiment for a given dataset Id
+ *     description: Declare a new experiment for a given dataset Id
+ *     operationId: DeclareExperiment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewExperimentPayload'
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NewExperimentResponse'
+ *       400:
+ *         description: 'Invalid dataset id'
+ *       500:
+ *         description: 'Error processing request'
+ */
 export async function POST(request: Request) {
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
-  const datasetId = getDatasetUuidFromFakeId(payload.datasetFakeId);
+  const datasetId = getDatasetUuidFromFakeId(payload.datasetId);
 
   try {
     await getDatasetOrThrow(datasetId);

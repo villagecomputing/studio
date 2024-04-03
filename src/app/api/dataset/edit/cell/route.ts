@@ -3,6 +3,31 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { editGroundTruthCellSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/edit/cell:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Edits a specific cell in a dataset's ground truth.
+ *     description: Edits a specific cell in a dataset's ground truth.
+ *     operationId: EditDatasetCell
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/EditCellPayload'
+ *     responses:
+ *       200:
+ *         description: Ground truth cell updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EditGroundTruthCellResponse'
+ *       500:
+ *         description: 'Error processing result.'
+ */
 export async function POST(request: Request) {
   try {
     const requestBody = await request.json();

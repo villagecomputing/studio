@@ -7,6 +7,30 @@ import { response } from '../../utils';
 import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/upload:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Uploads a dataset file and its associated data
+ *     description: Uploads a dataset file and its associated data
+ *     operationId: UploadDataset
+ *     requestBody:
+ *       description: Dataset file and data to be uploaded
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/UploadDatasetPayload'
+ *     responses:
+ *       200:
+ *         description: The newly uploaded dataset Id
+ *       400:
+ *         description: Missing required data -or- Invalid request headers type -or- Invalid request dataset type -or- Column Title required for blank ground truth column
+ *       500:
+ *         description: File content is missing -or- Error processing request
+ */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
@@ -71,10 +95,7 @@ export async function POST(request: Request) {
 
     for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
       const batch = parsedFile.rows.slice(i, i + batchSize);
-      await ApiUtils.addData({
-        datasetId: datasetId,
-        datasetRows: batch,
-      });
+      await ApiUtils.addData({ datasetId, payload: { datasetRows: batch } });
     }
 
     return Response.json({ datasetId });

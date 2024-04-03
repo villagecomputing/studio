@@ -3,6 +3,28 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { approveAllSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/edit/approveAll:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Approves all ground truths for the specified dataset.
+ *     description: Approves all ground truths for the specified dataset.
+ *     operationId: ApproveAllDatasetGroundTruths
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ApproveAllGroundTruthsPayload'
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Required data is missing.
+ *       500:
+ *         description: Error processing request.
+ */
 export async function POST(request: Request) {
   try {
     const requestBody = await request.json();

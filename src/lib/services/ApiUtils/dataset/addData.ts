@@ -5,10 +5,14 @@ import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
-export async function addData(
-  payload: PayloadSchemaType[ApiEndpoints.datasetAddData],
-) {
-  const { datasetId, datasetRows } = addDataPayloadSchema.parse(payload);
+export async function addData({
+  datasetId,
+  payload,
+}: {
+  datasetId: string;
+  payload: PayloadSchemaType[ApiEndpoints.datasetAddData];
+}) {
+  const { datasetRows } = addDataPayloadSchema.parse(payload);
   try {
     await getDatasetOrThrow(datasetId);
     // Get all fields and column names associated with the dataset
@@ -24,6 +28,17 @@ export async function addData(
         },
       },
     });
+
+    const columnNames = existingColumns.map((col) => col.name);
+    const invalidRows = datasetRows.filter((row) => {
+      const rowKeys = Object.keys(row);
+      return rowKeys.some((key) => !!key && !columnNames.includes(key));
+    });
+    if (invalidRows.length > 0) {
+      throw new Error(
+        'Some rows contain keys that do not exist in the existing columns',
+      );
+    }
 
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {

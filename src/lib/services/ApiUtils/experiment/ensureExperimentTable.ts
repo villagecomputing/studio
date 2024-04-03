@@ -10,10 +10,13 @@ import {
   buildExperimentFields,
 } from './utils';
 
-export async function ensureExperimentTable(
-  experimentId: string,
-  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
-) {
+export async function ensureExperimentTable({
+  experimentId,
+  payload,
+}: {
+  experimentId: string;
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert];
+}) {
   // Don't create dynamic table if doesn't exist in the Experiments list table
   await assertExperimentExists(experimentId);
   const experimentFields = buildExperimentFields(payload);

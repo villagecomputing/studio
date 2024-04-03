@@ -8,7 +8,7 @@ const ExperimentTableColumnPropsSchema = z.object({
   type: z.nativeEnum(Enum_Experiment_Column_Type),
 });
 
-const ExperimentRowSchema = z.record(z.string(), z.string());
+const ExperimentRowSchema = z.record(z.string());
 
 export const experimentViewResponseSchema = z.object({
   uuid: z.string(),
