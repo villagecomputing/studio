@@ -65,7 +65,7 @@ export async function getExperiment(
   } catch (_e) {}
 
   return {
-    uuid: experimentDetails.uuid,
+    id: experimentDetails.uuid,
     name: experimentDetails.name,
     description: experimentDetails.description || '',
     latencyP50: experimentDetails.latency_p50,
@@ -75,7 +75,10 @@ export async function getExperiment(
     accuracy: rowsWithAccuracyCount
       ? experimentDetails.total_accuracy / rowsWithAccuracyCount
       : 0,
-    dataset: experimentDetails.Dataset,
+    dataset: {
+      ...experimentDetails.Dataset,
+      id: experimentDetails.Dataset.uuid,
+    },
     parameters: experimentDetails.pipeline_metadata,
     created_at: experimentDetails.created_at,
     columns: columns,

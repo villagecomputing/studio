@@ -1,4 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import { createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
@@ -35,17 +36,27 @@ export async function GET(
   { params }: { params: { experimentId: string } },
 ) {
   try {
-    const experimentId = params.experimentId;
-    if (!experimentId) {
+    let experimentId = params.experimentId;
+    try {
+      experimentId = getExperimentUuidFromFakeId(experimentId);
+    } catch (_e) {
       return response('Invalid experiment id', 400);
     }
     const result = await ApiUtils.getExperiment(experimentId);
+    const experiment = {
+      ...result,
+      id: createFakeId(result.name, result.id),
+      dataset: {
+        ...result.dataset,
+        id: createFakeId(result.dataset.name, result.dataset.id),
+      },
+    };
 
-    if (!experimentViewResponseSchema.safeParse(result).success) {
+    if (!experimentViewResponseSchema.safeParse(experiment).success) {
       return response('Invalid response experiment view type', 500);
     }
 
-    return Response.json(result);
+    return Response.json(experiment);
   } catch (error) {
     console.error('Error in GET experiment view:', error);
     return response('Error processing request', 500);

@@ -121,3 +121,16 @@ export const getDatasetUuidFromFakeId = (datasetFakeId: string) => {
   }
   return datasetId;
 };
+
+export const getExperimentUuidFromFakeId = (experimentFakeId: string) => {
+  const experimentId = experimentFakeId.slice(
+    -36 - UUIDPrefixEnum.EXPERIMENT.length,
+  );
+  if (
+    !isValidUUIDv4(experimentId.slice(-36)) ||
+    !experimentId.startsWith(UUIDPrefixEnum.EXPERIMENT)
+  ) {
+    throw new Error('Invalid experiment id');
+  }
+  return experimentId;
+};

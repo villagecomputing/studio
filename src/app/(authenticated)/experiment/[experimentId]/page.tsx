@@ -1,5 +1,5 @@
 import Breadcrumb from '@/components/Breadcrumb';
-import { cn } from '@/lib/utils';
+import { cn, getExperimentUuidFromFakeId } from '@/lib/utils';
 import { InfoIcon } from 'lucide-react';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
@@ -9,7 +9,7 @@ import { ExperimentViewPageProps } from './types';
 export default async function ExperimentViewPage(
   props: ExperimentViewPageProps,
 ) {
-  const experimentId = props.params.experimentId;
+  const experimentId = getExperimentUuidFromFakeId(props.params.experimentId);
   const experiment = await fetchExperiment(experimentId);
 
   return (
