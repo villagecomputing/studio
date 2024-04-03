@@ -30,10 +30,10 @@ export async function addData({
     });
 
     const columnNames = existingColumns.map((col) => col.name);
-    const invalidRows = datasetRows.filter(
-      (row) => !Object.keys(row).every((key) => columnNames.includes(key)),
-    );
-
+    const invalidRows = datasetRows.filter((row) => {
+      const rowKeys = Object.keys(row);
+      return rowKeys.some((key) => !!key && !columnNames.includes(key));
+    });
     if (invalidRows.length > 0) {
       throw new Error(
         'Some rows contain keys that do not exist in the existing columns',
