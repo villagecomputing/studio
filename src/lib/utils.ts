@@ -111,13 +111,13 @@ function isValidUUIDv4(uuid: string): boolean {
   return regex.test(uuid);
 }
 
-export const getDatasetUuidFromFakeId = (datasetId: string) => {
-  const datasetUuid = datasetId.slice(-36 - UUIDPrefixEnum.DATASET.length);
+export const getDatasetUuidFromFakeId = (datasetFakeId: string) => {
+  const datasetId = datasetFakeId.slice(-36 - UUIDPrefixEnum.DATASET.length);
   if (
     !isValidUUIDv4(datasetId.slice(-36)) ||
     !datasetId.startsWith(UUIDPrefixEnum.DATASET)
   ) {
     throw new Error('Invalid dataset id');
   }
-  return datasetUuid;
+  return datasetId;
 };
