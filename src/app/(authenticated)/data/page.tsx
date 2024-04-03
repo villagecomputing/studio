@@ -18,7 +18,7 @@ const getData = async () => {
   const response = await fetch(ApiEndpoints.datasetList, {
     method: 'GET',
   });
-  const datasetList = JSON.parse(await response.json());
+  const datasetList = await response.json();
   return datasetListResponseSchema.parse(datasetList);
 };
 
