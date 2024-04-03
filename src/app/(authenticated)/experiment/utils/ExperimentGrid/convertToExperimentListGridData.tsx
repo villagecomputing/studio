@@ -74,7 +74,7 @@ function getExperimentListTableColumnDefs(
       minWidth: 120,
       flex: 1,
       onCellClicked,
-      type: Enum_Metadata_Type.LATENCY50,
+      type: Enum_Metadata_Type.LATENCY90,
       cellRenderer: MetadataColumnCellRenderer,
     },
     {

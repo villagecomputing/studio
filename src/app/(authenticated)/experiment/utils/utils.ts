@@ -7,17 +7,21 @@ export const getExperimentsMetadataColumnsPercentiles = (
 ): ExperimentsMetadataColumnsPercentiles => {
   const avgCostColumn = experiments
     .map((experiment) =>
-      experiment.totalRows ? experiment.totalCost / experiment.totalRows : 0,
+      experiment.totalRows ? experiment.totalCost / experiment.totalRows : null,
     )
+    .filter((e): e is number => e !== null)
     .sort((a, b) => a - b);
   const avgAccuracyColumn = experiments
-    .map((experiment) => experiment.avgAccuracy)
+    .map((experiment) => (experiment.totalRows ? experiment.avgAccuracy : null))
+    .filter((e): e is number => e !== null)
     .sort((a, b) => a - b);
   const avgLatencyP50Column = experiments
-    .map((experiment) => experiment.latencyP50)
+    .map((experiment) => (experiment.totalRows ? experiment.latencyP50 : null))
+    .filter((e): e is number => e !== null)
     .sort((a, b) => a - b);
   const avgLatencyP90Column = experiments
-    .map((experiment) => experiment.latencyP90)
+    .map((experiment) => (experiment.totalRows ? experiment.latencyP90 : null))
+    .filter((e): e is number => e !== null)
     .sort((a, b) => a - b);
 
   const avgCostColumnP25 = calculatePercentile(avgCostColumn, 25);
