@@ -46,7 +46,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
             name={groupData.datasetName}
             variant="secondary"
           />
-          <p className="line-clamp-2 text-sm text-gridHeaderTextColor">
+          <p className="line-clamp-2 max-w-3xl text-sm text-gridHeaderTextColor">
             {groupData.description}
           </p>
         </div>
