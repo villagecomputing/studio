@@ -1,6 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
-import { cn, getExperimentUuidFromFakeId } from '@/lib/utils';
+import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
 import { InfoIcon } from 'lucide-react';
+import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
 import Header from './components/Header';
@@ -14,11 +15,14 @@ export default async function ExperimentViewPage(
 
   return (
     <div>
-      <div className={cn(['px-6'])}>
+      <div className={cn(['flex items-center gap-2 px-6'])}>
         <Breadcrumb
           customSegments={{
             [experimentId.toString()]: experiment?.experimentName,
           }}
+        />
+        <CopyIdToClipboardButton
+          id={createFakeId(experiment.experimentName, experimentId)}
         />
       </div>
       <Header experiment={experiment} />

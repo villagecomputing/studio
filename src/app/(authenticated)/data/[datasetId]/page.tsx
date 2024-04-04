@@ -1,7 +1,8 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
-import { cn, getDatasetUuidFromFakeId } from '@/lib/utils';
+import { cn, createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
 import { fetchDataSet } from './actions';
+import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
@@ -23,9 +24,12 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
   }
   return (
     <div>
-      <div className={cn(['px-6'])}>
+      <div className={cn(['flex items-center gap-2 px-6'])}>
         <Breadcrumb
           customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
+        />
+        <CopyIdToClipboardButton
+          id={createFakeId(dataSet?.datasetName ?? '', datasetId)}
         />
       </div>
       {dataSet && (
