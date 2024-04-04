@@ -3,6 +3,7 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { ParserError } from '@/lib/services/DatasetParser';
 import { permanentRedirect } from 'next/navigation';
 
+import { Enum_Experiment_Column_Type } from '@/lib/types';
 import ExperimentGrid from '../utils/ExperimentGrid';
 import { FetchExperimentResult } from './types';
 
@@ -15,6 +16,12 @@ export const fetchExperiment = async (
     }
     const experiment = await ApiUtils.getExperiment(experimentId);
     const dataset = await ApiUtils.getDataset(experiment.dataset.id);
+    const metadataColumn = {
+      field: 'metadata',
+      name: 'Metadata',
+      id: -1,
+      type: Enum_Experiment_Column_Type.ROW_METADATA,
+    };
 
     return {
       experimentName: experiment.name,
@@ -31,7 +38,7 @@ export const fetchExperiment = async (
       accuracy: experiment.accuracy,
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.id,
-        columns: [...dataset.columns, ...experiment.columns],
+        columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row, index) => ({
           ...row,
           ...dataset.rows[index],
