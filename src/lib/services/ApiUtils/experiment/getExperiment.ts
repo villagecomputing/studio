@@ -38,18 +38,6 @@ export async function getExperiment(
     },
   );
 
-  const orderedCosts = await getOrderedExperimentMetadata(
-    experimentId,
-    Enum_Dynamic_experiment_metadata_fields.COST,
-  );
-  const orderedLatencies = await getOrderedExperimentMetadata(
-    experimentId,
-    Enum_Dynamic_experiment_metadata_fields.LATENCY,
-  );
-  const costP25 = calculatePercentile(orderedCosts, 25);
-  const costP75 = calculatePercentile(orderedCosts, 75);
-  const latencyP25 = calculatePercentile(orderedLatencies, 25);
-  const latencyP75 = calculatePercentile(orderedLatencies, 75);
   let rowsWithAccuracyCount = 0;
   try {
     rowsWithAccuracyCount = Number(
@@ -60,6 +48,9 @@ export async function getExperiment(
       ),
     );
   } catch (_e) {}
+
+  const experimentMetadataPercentile =
+    await getExperimentMetadataPercentile(experimentId);
 
   return {
     id: experimentDetails.uuid,
@@ -80,9 +71,28 @@ export async function getExperiment(
     created_at: experimentDetails.created_at,
     columns: columns,
     rows: experimentContent,
+    ...experimentMetadataPercentile,
+  };
+}
+
+const getExperimentMetadataPercentile = async (experimentId: string) => {
+  const orderedCosts = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.COST,
+  );
+  const orderedLatencies = await getOrderedExperimentMetadata(
+    experimentId,
+    Enum_Dynamic_experiment_metadata_fields.LATENCY,
+  );
+  const costP25 = calculatePercentile(orderedCosts, 25);
+  const costP75 = calculatePercentile(orderedCosts, 75);
+  const latencyP25 = calculatePercentile(orderedLatencies, 25);
+  const latencyP75 = calculatePercentile(orderedLatencies, 75);
+
+  return {
     costP25,
     costP75,
     latencyP25,
     latencyP75,
   };
-}
+};
