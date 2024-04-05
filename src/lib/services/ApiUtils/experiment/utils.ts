@@ -41,6 +41,7 @@ export enum Enum_Dynamic_experiment_metadata_fields {
   LATENCY = 'latency',
   ACCURACY = 'accuracy',
   COST = 'cost',
+  DATASET_ROW_INDEX = 'dataset_row_index',
 }
 
 export function buildExperimentFields(
@@ -114,6 +115,12 @@ export function buildExperimentFields(
       field: Enum_Dynamic_experiment_metadata_fields.COST,
       type: Enum_Experiment_Column_Type.METADATA,
       value: rowCost.toString(),
+    },
+    {
+      name: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
+      field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
+      type: Enum_Experiment_Column_Type.METADATA,
+      value: payload.index.toString(),
     },
   );
 

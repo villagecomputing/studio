@@ -3,6 +3,7 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { ParserError } from '@/lib/services/DatasetParser';
 import { permanentRedirect } from 'next/navigation';
 
+import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import ExperimentGrid from '../utils/ExperimentGrid';
 import { FetchExperimentResult } from './types';
@@ -39,10 +40,15 @@ export const fetchExperiment = async (
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.id,
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
-        rows: experiment.rows.map((row, index) => ({
-          ...row,
-          ...dataset.rows[index],
-        })),
+        rows: experiment.rows.map((row) => {
+          const datasetRowIndex = Number(
+            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX],
+          );
+          return {
+            ...row,
+            ...dataset.rows[datasetRowIndex],
+          };
+        }),
       }),
     };
   } catch (error) {
