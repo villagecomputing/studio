@@ -53,6 +53,7 @@ export type FetchExperimentResult = AGGridExperiment & {
   costP75: number;
   latencyP25: number;
   latencyP75: number;
+  stepsMetadataPercentiles: StepsMetadataPercentiles;
 };
 export type StepMetadataColumn = { name: string; field: string };
 
@@ -61,6 +62,7 @@ export type ExperimentTableContext = {
   costP75: number;
   latencyP25: number;
   latencyP75: number;
+  stepsMetadataPercentiles: StepsMetadataPercentiles;
   stepMetadataColumns: StepMetadataColumn[];
   inspectorRowIndex: number | null;
   datasetId: string;
@@ -69,4 +71,12 @@ export type ExperimentTableContext = {
   columnDefs: AGGridDataset['columnDefs'];
   displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
+};
+export type StepsMetadataPercentiles = {
+  [stepField: string]: {
+    costP25: number;
+    costP75: number;
+    latencyP25: number;
+    latencyP75: number;
+  };
 };

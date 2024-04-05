@@ -1,10 +1,10 @@
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { isGroundTruthCell } from '../../data/utils/commonUtils';
-import { ExperimentRow } from './types';
+import { ExperimentRow, StepMetadataColumn } from './types';
 
 export const getExperimentRowMetadata = (
   rowData: ExperimentRow,
-  stepMetadataColumns: { name: string; field: string }[],
+  stepMetadataColumns: StepMetadataColumn[],
 ) => {
   let latencySum = 0;
   let costSum = 0;

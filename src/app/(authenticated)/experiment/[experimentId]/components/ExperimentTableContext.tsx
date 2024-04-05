@@ -7,6 +7,7 @@ import {
   ExperimentRow,
   ExperimentTableContext,
   FetchExperimentResult,
+  StepMetadataColumn,
 } from '../types';
 
 export const useExperimentTableContext = (
@@ -15,7 +16,7 @@ export const useExperimentTableContext = (
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
   const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
   const [stepMetadataColumns, setStepMetadataColumn] = useState<
-    { name: string; field: string }[]
+    StepMetadataColumn[]
   >([]);
   const [columnDefs, setColumnDefs] = useState<AGGridExperiment['columnDefs']>(
     props.columnDefs,
@@ -83,6 +84,7 @@ export const useExperimentTableContext = (
     latencyP25: props.latencyP25,
     latencyP75: props.latencyP75,
     datasetId: props.dataset.id,
+    stepsMetadataPercentiles: props.stepsMetadataPercentiles,
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,
