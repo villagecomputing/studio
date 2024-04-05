@@ -1,6 +1,6 @@
 import { ENUM_Column_type, Enum_Experiment_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
-import _ from 'lodash';
+import { compact } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import {
   AGGridExperiment,
@@ -41,7 +41,7 @@ export const useExperimentTableContext = (
       (col) => col.type === Enum_Experiment_Column_Type.STEP_METADATA,
     );
     setStepMetadataColumn(
-      _.compact(
+      compact(
         stepMetadataColumns.map((col) => {
           if (!col.field || !col.headerName) {
             return null;

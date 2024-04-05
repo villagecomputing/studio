@@ -6,7 +6,7 @@ import { permanentRedirect } from 'next/navigation';
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { calculatePercentile } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
-import _ from 'lodash';
+import { compact } from 'lodash';
 import ExperimentGrid from '../utils/ExperimentGrid';
 import {
   FetchExperimentResult,
@@ -75,7 +75,7 @@ const getStepsMetadataPercentiles = (
 ) => {
   const stepsMetadataPercentiles: StepsMetadataPercentiles = {};
   stepMetadataColumns.forEach((column) => {
-    const stepMetadata = _.compact(
+    const stepMetadata = compact(
       rows.map((row) => {
         const metadata = JSON.parse(row[column.field]);
         const { latency, input_cost, output_cost, success } =
