@@ -75,6 +75,7 @@ export async function getExperiment(
     columns: columns,
     rows: experimentContent,
     ...experimentMetadataPercentile,
+    groupId: experimentDetails.group_id,
   };
 }
 
