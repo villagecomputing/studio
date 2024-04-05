@@ -47,7 +47,7 @@ export async function GET(
 
     const validationResult = datasetViewResponseSchema.safeParse(result);
     if (!validationResult.success) {
-      console.log(validationResult.error);
+      console.error(validationResult.error);
       return response('Invalid response dataset view type', 500);
     }
 

@@ -44,8 +44,7 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -215,8 +214,7 @@
               "type": "string"
             },
             "created_at": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
             "total_rows": {
               "type": "integer"
@@ -338,8 +336,7 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "description": {
             "type": "string",
