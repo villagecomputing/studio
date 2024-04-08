@@ -71,3 +71,32 @@ model Experiment {
   Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
   Experiment_column Experiment_column[]
 }
+
+model Logs {
+  uuid              String        @id
+  name              String
+  description       String?
+  pipeline_metadata String
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float         @default(0)
+  latency_p50       Float         @default(0)
+  latency_p90       Float         @default(0)
+  total_cost        Float         @default(0)
+  total_accuracy    Float         @default(0)
+  total_rows        Float         @default(0)
+  Logs_column       Logs_column[]
+}
+
+model Logs_column {
+  id         Int       @id @default(autoincrement())
+  logs_uuid  String
+  name       String
+  field      String
+  type       String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  Logs       Logs      @relation(fields: [logs_uuid], references: [uuid], onDelete: Cascade)
+}
