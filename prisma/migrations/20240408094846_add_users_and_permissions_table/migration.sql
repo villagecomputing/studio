@@ -1,22 +1,4 @@
 -- SQLite compatible changes to the migration file
-CREATE TABLE "User" (
-    "uuid" TEXT NOT NULL PRIMARY KEY,
-    "external_id" TEXT NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL,
-    "deleted_at" TEXT
-);
-
-CREATE TABLE "API_key" (
-    "uuid" TEXT NOT NULL PRIMARY KEY,
-    "user_id" TEXT NOT NULL,
-    "key" TEXT NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL,
-    "deleted_at" DATETIME,
-    CONSTRAINT "API_key_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("uuid") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE "Experiment_User_Permissions" (
     "uuid" TEXT NOT NULL PRIMARY KEY,
     "user_id" TEXT NOT NULL,
