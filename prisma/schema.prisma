@@ -10,9 +10,11 @@ datasource db {
 model Dataset {
   uuid           String           @id
   name           String
+  created_by     String?
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt
+  User           User?            @relation(fields: [created_by], references: [uuid])
   Dataset_column Dataset_column[]
   Experiment     Experiment[]
 }
@@ -56,6 +58,7 @@ model Experiment {
   name              String
   description       String?
   dataset_uuid      String
+  created_by        String?
   group_id          Int
   pipeline_metadata String
   created_at        DateTime            @default(now())
@@ -67,6 +70,7 @@ model Experiment {
   total_cost        Float               @default(0)
   total_accuracy    Float               @default(0)
   total_rows        Float               @default(0)
+  User              User?               @relation(fields: [created_by], references: [uuid])
   Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
   Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
   Experiment_column Experiment_column[]
@@ -76,6 +80,7 @@ model Logs {
   uuid              String        @id
   name              String
   description       String?
+  created_by        String?
   pipeline_metadata String
   created_at        DateTime      @default(now())
   updated_at        DateTime      @updatedAt
@@ -86,6 +91,7 @@ model Logs {
   total_cost        Float         @default(0)
   total_accuracy    Float         @default(0)
   total_rows        Float         @default(0)
+  User              User?         @relation(fields: [created_by], references: [uuid])
   Logs_column       Logs_column[]
 }
 
@@ -99,4 +105,26 @@ model Logs_column {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
   Logs       Logs      @relation(fields: [logs_uuid], references: [uuid], onDelete: Cascade)
+}
+
+model API_key {
+  uuid       String    @id
+  user_id    String
+  key        String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
+}
+
+model User {
+  uuid        String       @id
+  external_id String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  deleted_at  String?
+  API_key     API_key[]
+  Dataset     Dataset[]
+  Experiment  Experiment[]
+  Logs        Logs[]
 }
