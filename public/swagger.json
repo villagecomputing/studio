@@ -681,6 +681,14 @@
         "required": [
           "id"
         ]
+      },
+      "UserApiKeyResponse": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -1153,6 +1161,45 @@
           },
           "500": {
             "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/user/{userId}/getApiKey": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieve the details of a specific user by their Id.",
+        "description": "Retrieve the details of a specific user by their Id.",
+        "operationId": "GetUserApiKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the user details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserApiKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user Id provided."
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request."
           }
         }
       }
