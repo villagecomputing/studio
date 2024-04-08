@@ -1,6 +1,5 @@
 import { DatasetTableColumnProps } from '@/app/(authenticated)/data/[datasetId]/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
-import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import {
   AGGridExperiment,
@@ -18,14 +17,7 @@ function getTableColumnDefs(
     colId: tableColumn.id.toString(),
     type: tableColumn.type,
   }));
-  const metadataColumn = {
-    field: 'metadata',
-    headerName: 'Metadata',
-    coldId: -1,
-    minWidth: 250,
-    type: Enum_Experiment_Column_Type.ROW_METADATA,
-  };
-  return [metadataColumn, ...columns];
+  return columns;
 }
 
 function getTableRows(rows: ExperimentRow[]): ExperimentRow[] {

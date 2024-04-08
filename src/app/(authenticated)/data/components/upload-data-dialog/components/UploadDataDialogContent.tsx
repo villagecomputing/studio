@@ -8,7 +8,11 @@ import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import { TOAST_MESSAGE } from '@/lib/language/toasts';
-import { cn, getFilenameWithoutExtension } from '@/lib/utils';
+import {
+  cn,
+  getDatasetUuidFromFakeId,
+  getFilenameWithoutExtension,
+} from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -46,7 +50,7 @@ export default function UploadDataDialogContent(
       return;
     }
 
-    const dataToSend: PayloadSchemaType['/api/dataset/upload'] = {
+    const dataToSend: PayloadSchemaType[ApiEndpoints.datasetUpload] = {
       datasetTitle: values.datasetTitle,
       groundTruthColumnIndex: Number(values.groundTruthColumnIndex),
     };
@@ -69,8 +73,9 @@ export default function UploadDataDialogContent(
     });
     const responseBody = await response.json();
     const dataset = uploadDatasetResultSchema.parse(responseBody);
+    const datasetId = getDatasetUuidFromFakeId(dataset.datasetId);
 
-    if (response.status !== 200 || !dataset.datasetId) {
+    if (response.status !== 200 || !datasetId) {
       toast({
         title: 'Error',
         description: TOAST_MESSAGE.UPLOAD_DATASET_FAILED,
@@ -79,7 +84,7 @@ export default function UploadDataDialogContent(
       return;
     }
     onCancel();
-    router.push(`/data/${dataset.datasetId}`);
+    router.push(`/data/${datasetId}`);
   }
 
   return (

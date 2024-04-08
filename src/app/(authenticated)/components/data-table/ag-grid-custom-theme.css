@@ -70,6 +70,7 @@
   @apply line-clamp-2 whitespace-normal;
 }
 
+.ag-theme-dataset-list .ag-cell-wrapper,
 .ag-theme-dataset .ag-cell-wrapper {
   @apply h-full;
 }

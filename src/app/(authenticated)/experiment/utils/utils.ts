@@ -1,4 +1,5 @@
 import { calculatePercentile } from '@/lib/services/ApiUtils/experiment/utils';
+import { Record } from '@prisma/client/runtime/library';
 import { ExperimentsMetadataColumnsPercentiles } from '../../group/[groupId]/types';
 import { ExperimentList } from '../types';
 
@@ -42,4 +43,18 @@ export const getExperimentsMetadataColumnsPercentiles = (
     latencyP90ColumnP25,
     latencyP90ColumnP75,
   };
+};
+
+export const parsePipelineParameters = (
+  pipelineParameters: string,
+): Record<string, string>[] => {
+  const parsedParameters = JSON.parse(pipelineParameters);
+
+  const result = Object.entries(parsedParameters).flatMap(([step, details]) => {
+    return Object.entries(details as object).flatMap(([key, value]) => ({
+      [`${step}_${key}`]:
+        typeof value === 'object' ? JSON.stringify(value) : value.toString(),
+    }));
+  });
+  return result;
 };

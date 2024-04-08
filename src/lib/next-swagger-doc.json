@@ -268,7 +268,7 @@
             "ExperimentViewResponse": {
                 "type": "object",
                 "properties": {
-                    "uuid": {
+                    "id": {
                         "type": "string"
                     },
                     "name": {
@@ -302,7 +302,7 @@
                             "name": {
                                 "type": "string"
                             },
-                            "uuid": {
+                            "id": {
                                 "type": "string"
                             }
                         }
@@ -326,7 +326,7 @@
                         "type": "string"
                     }
                 },
-                "required": ["uuid", "name", "created_at", "columns", "rows", "dataset"]
+                "required": ["id", "name", "created_at", "columns", "rows", "dataset"]
             },
             "ExperimentTableColumnPropsSchema": {
                 "type": "object",

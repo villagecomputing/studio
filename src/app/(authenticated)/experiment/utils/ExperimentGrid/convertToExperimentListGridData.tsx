@@ -91,7 +91,6 @@ function getExperimentListTableColumnDefs(
       field: 'params',
       flex: 4,
       minWidth: 300,
-      onCellClicked,
       cellRenderer: ParametersCellRenderer,
     },
   ];

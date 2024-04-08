@@ -1,5 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
@@ -41,17 +41,20 @@ export async function GET(
       return response('Invalid dataset id', 400);
     }
 
-    const result = await ApiUtils.getDataset(
+    const dataset = await ApiUtils.getDataset(
       getDatasetUuidFromFakeId(datasetId),
     );
 
-    const validationResult = datasetViewResponseSchema.safeParse(result);
+    const validationResult = datasetViewResponseSchema.safeParse(dataset);
     if (!validationResult.success) {
       console.error(validationResult.error);
       return response('Invalid response dataset view type', 500);
     }
 
-    return Response.json(result);
+    return Response.json({
+      ...dataset,
+      id: createFakeId(dataset.name, dataset.id),
+    });
   } catch (error) {
     console.error('Error in GET dataset view:', error);
     return response('Error processing request', 500);

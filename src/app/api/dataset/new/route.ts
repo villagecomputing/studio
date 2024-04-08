@@ -1,5 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { createDatasetFakeId } from '@/lib/utils';
+import { createFakeId } from '@/lib/utils';
 import { response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     const dataset = newDatasetPayloadSchema.parse(body);
     const id = await ApiUtils.newDataset(dataset);
 
-    return Response.json({ id: createDatasetFakeId(dataset.datasetName, id) });
+    return Response.json({ id: createFakeId(dataset.datasetName, id) });
   } catch (error) {
     console.error('Error in POST:', error);
     return response('Error processing request', 500);

@@ -1,5 +1,6 @@
 import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getExperimentUuidFromFakeId } from '@/lib/utils';
 import { insertExperimentPayloadSchema } from './schema';
 
 /**
@@ -33,7 +34,12 @@ export async function POST(
   request: Request,
   { params }: { params: { experimentId: string } },
 ) {
-  const experimentId = params.experimentId;
+  let experimentId = params.experimentId;
+  try {
+    experimentId = getExperimentUuidFromFakeId(experimentId);
+  } catch (_e) {
+    return response('Invalid experiment id', 400);
+  }
   const requestBody = await request.json();
   const payload = insertExperimentPayloadSchema.parse(requestBody);
 

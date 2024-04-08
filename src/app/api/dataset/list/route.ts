@@ -1,6 +1,7 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
+import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
@@ -48,7 +49,7 @@ export async function GET() {
 
           return {
             ...dataset,
-            id: dataset.uuid,
+            id: createFakeId(dataset.name, dataset.uuid),
             created_at: dataset.created_at.toDateString(),
             total_rows: result,
           };

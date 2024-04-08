@@ -2,6 +2,7 @@ import { getDatasetOrThrow } from '@/lib/services/DatabaseUtils/common';
 import PrismaClient from '@/lib/services/prisma';
 import {
   UUIDPrefixEnum,
+  createFakeId,
   generateUUID,
   getDatasetUuidFromFakeId,
 } from '@/lib/utils';
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
         group_id: groupId,
       },
     });
-    return Response.json({ id });
+    return Response.json({ id: createFakeId(payload.name, id) });
   } catch (error) {
     console.error('Error in newExperiment:', error);
     return response('Error processing request', 500);

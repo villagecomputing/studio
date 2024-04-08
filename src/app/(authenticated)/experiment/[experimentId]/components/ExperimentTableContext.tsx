@@ -1,12 +1,13 @@
 import { ENUM_Column_type, Enum_Experiment_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
-import _ from 'lodash';
+import { compact } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import {
   AGGridExperiment,
   ExperimentRow,
   ExperimentTableContext,
   FetchExperimentResult,
+  StepMetadataColumn,
 } from '../types';
 
 export const useExperimentTableContext = (
@@ -15,7 +16,7 @@ export const useExperimentTableContext = (
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
   const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
   const [stepMetadataColumns, setStepMetadataColumn] = useState<
-    { name: string; field: string }[]
+    StepMetadataColumn[]
   >([]);
   const [columnDefs, setColumnDefs] = useState<AGGridExperiment['columnDefs']>(
     props.columnDefs,
@@ -40,7 +41,7 @@ export const useExperimentTableContext = (
       (col) => col.type === Enum_Experiment_Column_Type.STEP_METADATA,
     );
     setStepMetadataColumn(
-      _.compact(
+      compact(
         stepMetadataColumns.map((col) => {
           if (!col.field || !col.headerName) {
             return null;
@@ -83,6 +84,7 @@ export const useExperimentTableContext = (
     latencyP25: props.latencyP25,
     latencyP75: props.latencyP75,
     datasetId: props.dataset.id,
+    stepsMetadataPercentiles: props.stepsMetadataPercentiles,
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,
