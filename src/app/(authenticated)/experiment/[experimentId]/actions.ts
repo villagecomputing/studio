@@ -54,6 +54,7 @@ export const fetchExperiment = async (
       parameters: experiment.parameters,
       accuracy: experiment.accuracy,
       stepsMetadataPercentiles,
+      groupId: experiment.groupId,
       ...ExperimentGrid.convertToAGGridData({
         experimentId: experiment.id,
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],

@@ -1,6 +1,8 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { InfoIcon } from 'lucide-react';
+import { ChevronRightIcon, InfoIcon } from 'lucide-react';
+import Link from 'next/link';
+import { colors } from '../../../../../tailwind.config';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
@@ -18,7 +20,21 @@ export default async function ExperimentViewPage(
       <div className={cn(['flex items-center gap-2 px-6'])}>
         <Breadcrumb
           customSegments={{
-            [experimentId.toString()]: experiment?.experimentName,
+            experiment: <Link href={`/experiment`}>Experiments</Link>,
+            [props.params.experimentId.toString()]: (
+              <span className="flex items-center gap-1.5 text-lg">
+                <Link
+                  className="text-slateGray700"
+                  href={`/group/${experiment.groupId.toString()}`}
+                >
+                  {experiment.groupId.toString()}
+                </Link>
+                <ChevronRightIcon color={colors.slateGray500} size={18} />
+                <span className="text-slateGray950">
+                  {experiment.experimentName}
+                </span>
+              </span>
+            ),
           }}
         />
         <CopyIdToClipboardButton

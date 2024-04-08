@@ -1,6 +1,7 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import DataTable from '../../components/data-table/DataTable';
@@ -37,7 +38,11 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
   return (
     <>
       <div className={cn(['px-6'])}>
-        <Breadcrumb />
+        <Breadcrumb
+          customSegments={{
+            group: <Link href={`/experiment`}>Experiments</Link>,
+          }}
+        />
       </div>
       <div className="px-6">
         <div className={'my-6 flex items-center gap-6'}>

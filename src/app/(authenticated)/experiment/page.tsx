@@ -2,6 +2,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
 import { CellClickedEvent } from 'ag-grid-community';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
@@ -39,7 +40,11 @@ const ExperimentsPage = () => {
   return (
     <>
       <div className={cn(['px-6'])}>
-        <Breadcrumb />
+        <Breadcrumb
+          customSegments={{
+            experiment: <Link href={`/experiment`}>Experiments</Link>,
+          }}
+        />
       </div>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>
