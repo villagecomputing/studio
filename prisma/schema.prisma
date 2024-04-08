@@ -108,12 +108,11 @@ model Logs_column {
 }
 
 model API_key {
-  uuid       String    @id
+  id         String    @id
   user_id    String
-  key        String
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-  deleted_at DateTime?
+  revoked_at DateTime?
   User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
 }
 

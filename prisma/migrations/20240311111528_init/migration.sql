@@ -9,12 +9,11 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "API_key" (
-    "uuid" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "user_id" TEXT NOT NULL,
-    "key" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
-    "deleted_at" DATETIME,
+    "revoked_at" DATETIME,
     CONSTRAINT "API_key_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("uuid") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
