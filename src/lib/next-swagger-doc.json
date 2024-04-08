@@ -529,9 +529,40 @@
                         "type": "string"
                     }
                 },
-                "required": [
-                    "id"
-                ]
+                "required": ["id"]
+            },
+            "UserViewResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "external_id": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id", "external_id", "created_at"]
+            },
+            "NewUserPayload": {
+                "type": "object",
+                "properties": {
+                    "userExternalId": {
+                        "type": "string"
+                    }
+                },
+                "required": ["userExternalId"]
+            },
+            "NewUserResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id"]
             }
         }
     },
@@ -543,6 +574,10 @@
         {
             "name":"Experiment",
             "description": "Operations related to experiments including creating, updating, retrieving and listing experiments"
+        },
+        {
+            "name":"User",
+            "description": "Operations related to user including creating, getting user data, permissions and API keys"
         }
       ]
     }

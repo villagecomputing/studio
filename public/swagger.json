@@ -640,6 +640,47 @@
         "required": [
           "id"
         ]
+      },
+      "UserViewResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "external_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "external_id",
+          "created_at"
+        ]
+      },
+      "NewUserPayload": {
+        "type": "object",
+        "properties": {
+          "userExternalId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userExternalId"
+        ]
+      },
+      "NewUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
       }
     }
   },
@@ -651,6 +692,10 @@
     {
       "name": "Experiment",
       "description": "Operations related to experiments including creating, updating, retrieving and listing experiments"
+    },
+    {
+      "name": "User",
+      "description": "Operations related to user including creating, getting user data, permissions and API keys"
     }
   ],
   "paths": {
@@ -1108,6 +1153,83 @@
           },
           "500": {
             "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/user/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieve the details of a specific user by their Id.",
+        "description": "Retrieve the details of a specific user by their Id.",
+        "operationId": "GetUserData",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the user details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserViewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user Id provided."
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/api/user/new": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Creates a new user.",
+        "description": "Creates a new user.",
+        "operationId": "CreateUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUserPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created a new user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request headers type or Missing required data."
+          },
+          "500": {
+            "description": "Error processing request."
           }
         }
       }
