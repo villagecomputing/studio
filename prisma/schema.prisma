@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Dataset {
-  uuid                     String                     @id
-  name                     String
-  created_at               DateTime                   @default(now())
-  deleted_at               DateTime?
-  updated_at               DateTime                   @updatedAt
-  Dataset_User_Permissions Dataset_User_Permissions[]
-  Dataset_column           Dataset_column[]
-  Experiment               Experiment[]
+  uuid           String           @id
+  name           String
+  created_by     String?
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  User           User?            @relation(fields: [created_by], references: [uuid])
+  Dataset_column Dataset_column[]
+  Experiment     Experiment[]
 }
 
 model Dataset_column {
@@ -53,43 +54,45 @@ model Experiment_group {
 }
 
 model Experiment {
-  uuid                        String                        @id
-  name                        String
-  description                 String?
-  dataset_uuid                String
-  group_id                    Int
-  pipeline_metadata           String
-  created_at                  DateTime                      @default(now())
-  updated_at                  DateTime                      @updatedAt
-  deleted_at                  DateTime?
-  total_latency               Float                         @default(0)
-  latency_p50                 Float                         @default(0)
-  latency_p90                 Float                         @default(0)
-  total_cost                  Float                         @default(0)
-  total_accuracy              Float                         @default(0)
-  total_rows                  Float                         @default(0)
-  Experiment_group            Experiment_group              @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  Dataset                     Dataset                       @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
-  Experiment_User_Permissions Experiment_User_Permissions[]
-  Experiment_column           Experiment_column[]
+  uuid              String              @id
+  name              String
+  description       String?
+  dataset_uuid      String
+  created_by        String?
+  group_id          Int
+  pipeline_metadata String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float               @default(0)
+  latency_p50       Float               @default(0)
+  latency_p90       Float               @default(0)
+  total_cost        Float               @default(0)
+  total_accuracy    Float               @default(0)
+  total_rows        Float               @default(0)
+  User              User?               @relation(fields: [created_by], references: [uuid])
+  Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
+  Experiment_column Experiment_column[]
 }
 
 model Logs {
-  uuid                 String                 @id
-  name                 String
-  description          String?
-  pipeline_metadata    String
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-  total_latency        Float                  @default(0)
-  latency_p50          Float                  @default(0)
-  latency_p90          Float                  @default(0)
-  total_cost           Float                  @default(0)
-  total_accuracy       Float                  @default(0)
-  total_rows           Float                  @default(0)
-  Log_User_Permissions Log_User_Permissions[]
-  Logs_column          Logs_column[]
+  uuid              String        @id
+  name              String
+  description       String?
+  created_by        String?
+  pipeline_metadata String
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float         @default(0)
+  latency_p50       Float         @default(0)
+  latency_p90       Float         @default(0)
+  total_cost        Float         @default(0)
+  total_accuracy    Float         @default(0)
+  total_rows        Float         @default(0)
+  User              User?         @relation(fields: [created_by], references: [uuid])
+  Logs_column       Logs_column[]
 }
 
 model Logs_column {
@@ -105,59 +108,22 @@ model Logs_column {
 }
 
 model API_key {
-  uuid       String    @id
+  id         String    @id
   user_id    String
-  key        String
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-  User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
-}
-
-model Dataset_User_Permissions {
-  uuid       String    @id
-  user_id    String
-  dataset_id String
-  permission String
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-  Dataset    Dataset   @relation(fields: [dataset_id], references: [uuid], onDelete: Cascade)
-  User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
-}
-
-model Experiment_User_Permissions {
-  uuid          String     @id
-  user_id       String
-  experiment_id String
-  permission    String
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
-  deleted_at    DateTime?
-  Experiment    Experiment @relation(fields: [experiment_id], references: [uuid], onDelete: Cascade)
-  User          User       @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
-}
-
-model Log_User_Permissions {
-  uuid       String    @id
-  user_id    String
-  log_id     String
-  permission String
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-  Logs       Logs      @relation(fields: [log_id], references: [uuid], onDelete: Cascade)
+  revoked_at DateTime?
   User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
 }
 
 model User {
-  uuid                        String                        @id
-  external_id                 String
-  created_at                  DateTime                      @default(now())
-  updated_at                  DateTime                      @updatedAt
-  deleted_at                  String?
-  API_key                     API_key[]
-  Dataset_User_Permissions    Dataset_User_Permissions[]
-  Experiment_User_Permissions Experiment_User_Permissions[]
-  Log_User_Permissions        Log_User_Permissions[]
+  uuid        String       @id
+  external_id String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  deleted_at  String?
+  API_key     API_key[]
+  Dataset     Dataset[]
+  Experiment  Experiment[]
+  Logs        Logs[]
 }

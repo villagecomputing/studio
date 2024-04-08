@@ -10,6 +10,7 @@ CREATE TABLE "Experiment" (
   "name" TEXT NOT NULL,
   "description" TEXT,
   "dataset_uuid" TEXT NOT NULL,
+  "created_by" TEXT,
   "group_id" INTEGER NOT NULL,
   "pipeline_metadata" TEXT NOT NULL, 
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -22,7 +23,8 @@ CREATE TABLE "Experiment" (
   "total_accuracy" REAL NOT NULL DEFAULT 0,
   "total_rows" REAL NOT NULL DEFAULT 0,
   CONSTRAINT "experiments_dataset_id_fkey" FOREIGN KEY ("dataset_uuid") REFERENCES "Dataset" ("uuid") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "experiment_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "Experiment_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "experiment_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "Experiment_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "Experiment_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
