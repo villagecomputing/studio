@@ -502,8 +502,37 @@
                     },
                     "required": ["id", "name", "created_at", "groupId", "pipelineMetadata", "latencyP50", "latencyP90", "runtime", "totalCost", "avgAccuracy", "totalRows", "Dataset"]
                 }
+            },
+            "NewLogsPayload": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "parameters": {
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "name",
+                    "parameters"
+                ]
+            },
+            "NewLogsResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
             }
-            
         }
     },
     "tags":[
