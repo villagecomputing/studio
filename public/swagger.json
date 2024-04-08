@@ -44,8 +44,7 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -215,8 +214,7 @@
               "type": "string"
             },
             "created_at": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
             "total_rows": {
               "type": "integer"
@@ -338,8 +336,7 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "description": {
             "type": "string",
@@ -613,6 +610,36 @@
             "Dataset"
           ]
         }
+      },
+      "NewLogsPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameters": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "parameters"
+        ]
+      },
+      "NewLogsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
       }
     }
   },
@@ -1043,6 +1070,41 @@
           },
           "400": {
             "description": "Invalid dataset id"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/logs/new": {
+      "post": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Creates a new logs entry",
+        "description": "Creates a new logs entry",
+        "operationId": "CreateLogs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewLogsPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewLogsResponse"
+                }
+              }
+            }
           },
           "500": {
             "description": "Error processing request"

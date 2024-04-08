@@ -77,6 +77,7 @@ export function arrayContainsArray(arr1: string[], arr2: string[]) {
 export enum UUIDPrefixEnum {
   DATASET = 'd-',
   EXPERIMENT = 'e-',
+  LOGS = 'l-',
 }
 
 export const generateUUID = (prefix?: UUIDPrefixEnum) => {
@@ -88,10 +89,10 @@ function sanitizeName(name: string): string {
 }
 
 /**
- * Generates a fake ID for a dataset or an experiment.
+ * Generates a fake ID for a dataset/experiment/logs.
  *
- * @param {string} name - The name of the dataset/experiment.
- * @param {string} uuid - The UUID associated with the dataset/experiment.
+ * @param {string} name - The name of the dataset/experiment/logs.
+ * @param {string} uuid - The UUID associated with the dataset/experiment/logs.
  * @returns {string} The fake ID, which is a sanitized version of the name concatenated with the UUID.
  */
 export const createFakeId = (name: string, uuid: string): string => {
