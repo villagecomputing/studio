@@ -19,9 +19,9 @@ enum CLERK_USER_REQUEST_TYPE {
  *   post:
  *     tags:
  *      - Webhook
- *     summary: Creates a new user.
- *     description: Creates a new user.
- *     operationId: CreateUser
+ *     summary: Creates, deletes or updates a clerk user .
+ *     description: This endpoint is called by clerk when new users are created, deleted, or updated.
+ *     operationId: WebhookClerkUser
  *     requestBody:
  *       required: true
  *       content:
