@@ -35,6 +35,12 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       stepMetadataColumns,
       logs.rows,
     );
+    const inputColumns = logs.columns.filter(
+      (column) => column.type === Enum_Logs_Column_Type.INPUT,
+    );
+    const columns = logs.columns.filter(
+      (column) => column.type !== Enum_Logs_Column_Type.INPUT,
+    );
     return {
       logsName: logs.name,
       latencyP50: logs.latencyP50,
@@ -50,7 +56,7 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       stepsMetadataPercentiles,
       ...LogsGrid.convertToAGGridData({
         logsId: logs.id,
-        columns: [metadataColumn, ...logs.columns],
+        columns: [...inputColumns, metadataColumn, ...columns],
         rows: logs.rows,
       }),
     };
