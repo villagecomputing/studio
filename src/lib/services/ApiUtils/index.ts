@@ -11,6 +11,7 @@ import { getExperiment } from './experiment/getExperiment';
 import { insertExperimentSteps } from './experiment/insertExperimentSteps';
 import { updateExperiment } from './experiment/updateExperiment';
 import { getLogsById } from './logs/getLogsById';
+import { deleteUser } from './user/deleteUser';
 import { getUser } from './user/getUser';
 import { getUserApiKey } from './user/getUserApiKey';
 import { newUser } from './user/newUser';
@@ -29,6 +30,7 @@ export default {
   updateExperiment,
   getUser,
   newUser,
+  deleteUser,
   getUserApiKey,
   revokeUserApiKey,
   getLogsById,

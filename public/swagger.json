@@ -886,6 +886,31 @@
           "userExternalId"
         ]
       },
+      "DeleteUserPayload": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "userExternalId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "id"
+            ]
+          },
+          {
+            "required": [
+              "userExternalId"
+            ]
+          }
+        ]
+      },
       "NewUserResponse": {
         "type": "object",
         "properties": {
@@ -915,6 +940,33 @@
         "required": [
           "api_key"
         ]
+      },
+      "ClerkUserWebhookPayload": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "type",
+          "object"
+        ]
       }
     }
   },
@@ -930,6 +982,10 @@
     {
       "name": "User",
       "description": "Operations related to user including creating, getting user data, permissions and API keys"
+    },
+    {
+      "name": "Webhook",
+      "description": "Any operations that should be exposed as webhook for third party plugins like clerk"
     }
   ],
   "paths": {
@@ -1642,6 +1698,37 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request headers type or Missing required data."
+          },
+          "500": {
+            "description": "Error processing request."
+          }
+        }
+      }
+    },
+    "/api/webhook/clerk/user": {
+      "post": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Creates, deletes or updates a clerk user .",
+        "description": "This endpoint is called by clerk when new users are created, deleted, or updated.",
+        "operationId": "WebhookClerkUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClerkUserWebhookPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
           },
           "400": {
             "description": "Invalid request headers type or Missing required data."
