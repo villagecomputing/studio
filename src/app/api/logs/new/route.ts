@@ -9,8 +9,8 @@ import { newLogsPayloadSchema } from './schema';
  *   post:
  *     tags:
  *      - Logs
- *     summary: Creates a new logs entry
- *     description: Creates a new logs entry
+ *     summary: Creates a new logs entry in the logs list
+ *     description: Creates a new logs entry in the logs list
  *     operationId: CreateLogs
  *     requestBody:
  *       required: true

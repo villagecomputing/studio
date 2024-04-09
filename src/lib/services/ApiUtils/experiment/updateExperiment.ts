@@ -1,6 +1,7 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '../../prisma';
 
+import { ExperimentStep } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { getExperimentDetails } from './getExperimentDetails';
 import {
   DEFAULT_ROW_METADATA_VALUES,
@@ -11,10 +12,8 @@ import {
   getOrderedExperimentMetadata,
 } from './utils';
 
-const buildRowMetadata = (
-  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
-): RowMetadata => {
-  return payload.steps.reduce<RowMetadata>((acc, curr) => {
+export const buildRowMetadata = (steps: ExperimentStep[]): RowMetadata => {
+  return steps.reduce<RowMetadata>((acc, curr) => {
     return {
       row_latency: acc.row_latency + Number(curr.metadata.latency),
       row_cost:
@@ -35,7 +34,7 @@ export async function updateExperiment(
       experimentId,
       Enum_Dynamic_experiment_metadata_fields.LATENCY,
     );
-    const payloadMetadata = buildRowMetadata(payload);
+    const payloadMetadata = buildRowMetadata(payload.steps);
 
     const updatedData: ExperimentUpdatableMetadata = {
       latency_p50: calculatePercentile(experimentLatencies, 50),

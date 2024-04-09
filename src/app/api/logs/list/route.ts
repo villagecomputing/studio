@@ -11,12 +11,12 @@ import { response } from '../../utils';
  *   get:
  *     tags:
  *      - Logs
- *     summary: List all logs entries
- *     description: List all logs entries
+ *     summary: Logs list
+ *     description: Logs list
  *     operationId: ListLogs
  *     responses:
  *       200:
- *         description: A list of logs entries.
+ *         description: Logs list.
  *         content:
  *           application/json:
  *             schema:

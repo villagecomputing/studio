@@ -19,6 +19,7 @@ import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
 } from '@/app/api/experiment/new/schema';
+import { insertLogsPayloadSchema } from '@/app/api/logs/[logsId]/insert/schema';
 import { logsListResponseSchema } from '@/app/api/logs/list/schema';
 import {
   newLogsPayloadSchema,
@@ -48,6 +49,7 @@ export enum ApiEndpoints {
   experimentInsert = 'api/experiments/insert',
   logsNew = 'api/logs/new',
   logsList = '/api/logs/list',
+  logsInsert = 'api/logs/insert',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -121,6 +123,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: logsListResponseSchema,
     method: 'GET',
   },
+  [ApiEndpoints.logsInsert]: {
+    payloadSchema: insertLogsPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -135,6 +142,7 @@ export type PayloadSchemaType = {
     typeof insertExperimentPayloadSchema
   >;
   [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
+  [ApiEndpoints.logsInsert]: z.infer<typeof insertLogsPayloadSchema>;
 };
 
 export type ResultSchemaType = {
