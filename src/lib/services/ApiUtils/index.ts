@@ -10,6 +10,8 @@ import { ensureExperimentTable } from './experiment/ensureExperimentTable';
 import { getExperiment } from './experiment/getExperiment';
 import { insertExperimentSteps } from './experiment/insertExperimentSteps';
 import { updateExperiment } from './experiment/updateExperiment';
+import { getUser } from './user/getUser';
+import { newUser } from './user/newUser';
 
 export default {
   getDataset,
@@ -22,4 +24,6 @@ export default {
   ensureExperimentTable,
   insertExperimentSteps,
   updateExperiment,
+  getUser,
+  newUser,
 };
