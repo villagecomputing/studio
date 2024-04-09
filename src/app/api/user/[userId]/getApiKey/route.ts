@@ -21,7 +21,7 @@ import { userGetApiKeyResponseSchema } from './schema';
  *         description: The unique identifier of the user.
  *     responses:
  *       200:
- *         description: Successfully retrieved the user details.
+ *         description: Successfully retrieved the user's API key.
  *         content:
  *           application/json:
  *             schema:

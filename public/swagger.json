@@ -1514,7 +1514,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the user details.",
+            "description": "Successfully retrieved the user's API key.",
             "content": {
               "application/json": {
                 "schema": {
