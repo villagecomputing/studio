@@ -34,7 +34,7 @@ import { userRevokeApiKeyPayloadSchema } from './schema';
  *       500:
  *         description: Internal server error occurred while processing the request.
  */
-export async function GET(
+export async function POST(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
@@ -43,7 +43,8 @@ export async function GET(
     if (!userId) {
       return response('Invalid user id', 400);
     }
-    const payload = userRevokeApiKeyPayloadSchema.parse(request);
+    const body = await request.json();
+    const payload = userRevokeApiKeyPayloadSchema.parse(body);
     await ApiUtils.revokeUserApiKey({
       userId: userId,
       payload: payload,
