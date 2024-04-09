@@ -38,6 +38,9 @@ enum CLERK_USER_REQUEST_TYPE {
  */
 export async function POST(request: Request) {
   try {
+    // TODO: at some point we might consider verifying the request signature
+    // Doc: https://clerk.com/docs/integrations/webhooks/sync-data
+
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
       return response('Invalid request headers type', 400);
     }
