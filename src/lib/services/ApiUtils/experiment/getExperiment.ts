@@ -76,7 +76,7 @@ export async function getExperiment(
   };
 }
 
-const getExperimentMetadataPercentile = async (experimentId: string) => {
+export const getExperimentMetadataPercentile = async (experimentId: string) => {
   const orderedCosts = await getOrderedExperimentMetadata(
     experimentId,
     Enum_Dynamic_experiment_metadata_fields.COST,
