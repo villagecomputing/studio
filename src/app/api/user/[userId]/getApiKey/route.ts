@@ -51,7 +51,7 @@ export async function GET(
       return response('Invalid response user view type', 500);
     }
 
-    return Response.json({});
+    return Response.json(apiKeyResult);
   } catch (error) {
     console.error('Error in GET user view:', error);
     return response('Error processing request', 500);
