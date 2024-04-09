@@ -10,6 +10,7 @@ import { ensureExperimentTable } from './experiment/ensureExperimentTable';
 import { getExperiment } from './experiment/getExperiment';
 import { insertExperimentSteps } from './experiment/insertExperimentSteps';
 import { updateExperiment } from './experiment/updateExperiment';
+import { getLogsById } from './logs/getLogsById';
 import { deleteUser } from './user/deleteUser';
 import { getUser } from './user/getUser';
 import { getUserApiKey } from './user/getUserApiKey';
@@ -32,4 +33,5 @@ export default {
   deleteUser,
   getUserApiKey,
   revokeUserApiKey,
+  getLogsById,
 };

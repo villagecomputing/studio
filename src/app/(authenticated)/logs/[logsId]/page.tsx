@@ -1,5 +1,10 @@
 import Breadcrumb from '@/components/Breadcrumb';
-import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
+import {
+  UUIDPrefixEnum,
+  cn,
+  createFakeId,
+  getUuidFromFakeId,
+} from '@/lib/utils';
 import { InfoIcon } from 'lucide-react';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
@@ -8,8 +13,7 @@ import LogsTable from './components/LogsTable';
 import { LogsViewPageProps } from './types';
 
 export default async function LogsViewPage(props: LogsViewPageProps) {
-  // TODO Change this
-  const logsId = getExperimentUuidFromFakeId(props.params.logsId);
+  const logsId = getUuidFromFakeId(props.params.logsId, UUIDPrefixEnum.LOGS);
   const logs = await fetchLogs(logsId);
 
   return (

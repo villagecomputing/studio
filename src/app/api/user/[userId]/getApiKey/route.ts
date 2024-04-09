@@ -9,8 +9,8 @@ import { userGetApiKeyResponseSchema } from './schema';
  *   get:
  *     tags:
  *      - User
- *     summary: Retrieve the details of a specific user by their Id.
- *     description: Retrieve the details of a specific user by their Id.
+ *     summary: Retrieves user's API Key.
+ *     description: Retrieves and existing active API key or generates a new one.
  *     operationId: GetUserApiKey
  *     parameters:
  *       - in: path
@@ -21,7 +21,7 @@ import { userGetApiKeyResponseSchema } from './schema';
  *         description: The unique identifier of the user.
  *     responses:
  *       200:
- *         description: Successfully retrieved the user details.
+ *         description: Successfully retrieved the user's API key.
  *         content:
  *           application/json:
  *             schema:
