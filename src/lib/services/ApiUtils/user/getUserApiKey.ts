@@ -12,7 +12,7 @@ export async function getUserApiKey(
   }
 
   const apiKeySelect = {
-    id: true,
+    key: true,
   } satisfies Prisma.API_keySelect;
 
   try {
@@ -21,16 +21,16 @@ export async function getUserApiKey(
       select: apiKeySelect,
     });
 
-    if (apiKeyResult?.id) {
+    if (apiKeyResult?.key) {
       return {
-        api_key: apiKeyResult?.id,
+        api_key: apiKeyResult?.key,
       };
     }
 
     const newApiKey = generateSecureApiKey();
     await PrismaClient.aPI_key.create({
       data: {
-        id: newApiKey,
+        key: newApiKey,
         user_id: userId,
       },
     });

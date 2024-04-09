@@ -21,7 +21,7 @@ export async function revokeUserApiKey({
     await PrismaClient.aPI_key.update({
       where: {
         user_id: userId,
-        id: api_key,
+        key: api_key,
       },
       data: {
         revoked_at: new Date(),
