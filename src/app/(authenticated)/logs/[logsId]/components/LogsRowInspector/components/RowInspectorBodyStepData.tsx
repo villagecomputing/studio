@@ -22,7 +22,6 @@ const RowInspectorBodyStepData = (props: {
       return;
     }
     const metadata = JSON.parse(currentRow[stepMetadataColumn.field] as string);
-    // TODO Change this
     return experimentStepOutputMapping.parse(metadata);
   }, [currentRow, stepMetadataColumn]);
 

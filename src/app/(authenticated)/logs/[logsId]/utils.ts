@@ -27,7 +27,6 @@ export const getLogsRowMetadata = (
       success,
       error,
     } = experimentStepMetadata.parse(metadata);
-    // TODO Change this
     if (!success) {
       stepError = { stepName: column.name, error };
     }
