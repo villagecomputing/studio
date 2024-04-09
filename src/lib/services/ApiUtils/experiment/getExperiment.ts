@@ -3,7 +3,7 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
-import getExperimentContent from './getExperimentContent';
+import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getExperimentDetails } from './getExperimentDetails';
 import {
   Enum_Dynamic_experiment_metadata_fields,
@@ -24,7 +24,7 @@ export async function getExperiment(
   }
 
   // Get database experiment content
-  const experimentContent = await getExperimentContent(experimentId);
+  const experimentContent = await getDynamicTableContent(experimentId);
 
   // Map the columns
   const columns = experimentDetails.Experiment_column.map(
