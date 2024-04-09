@@ -532,6 +532,60 @@
                 "required": [
                     "id"
                 ]
+            },
+            "ListLogsResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "createdAt": {
+                            "type": "string"
+                        },
+                        "pipelineMetadata": {
+                            "type": "string"
+                        },
+                        "latencyP50": {
+                            "type": "number"
+                        },
+                        "latencyP90": {
+                            "type": "number"
+                        },
+                        "runtime": {
+                            "type": "number"
+                        },
+                        "totalCost": {
+                            "type": "number"
+                        },
+                        "avgAccuracy": {
+                            "type": "number"
+                        },
+                        "totalRows": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name",
+                        "createdAt",
+                        "pipelineMetadata",
+                        "latencyP50",
+                        "latencyP90",
+                        "runtime",
+                        "totalCost",
+                        "avgAccuracy",
+                        "totalRows"
+                    ]
+                }
             }
         }
     },
