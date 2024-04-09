@@ -17,6 +17,14 @@ export async function getDatasetOrThrow(datasetId: string) {
   });
 }
 
+export async function getLogsEntryOrThrow(logsEntryId: string) {
+  return await PrismaClient.logs.findUniqueOrThrow({
+    where: {
+      uuid: logsEntryId,
+    },
+  });
+}
+
 export async function assertExperimentExists(experimentId: string) {
   await PrismaClient.experiment.findUniqueOrThrow({
     where: {

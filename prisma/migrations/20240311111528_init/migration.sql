@@ -9,7 +9,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "API_key" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "key" TEXT NOT NULL PRIMARY KEY,
     "user_id" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,

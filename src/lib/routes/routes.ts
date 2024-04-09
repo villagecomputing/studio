@@ -1,3 +1,4 @@
+// Start of Selection
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
 import { approveAllSchema } from '@/app/api/dataset/edit/approveAll/schema';
@@ -19,6 +20,8 @@ import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
 } from '@/app/api/experiment/new/schema';
+import { insertLogsPayloadSchema } from '@/app/api/logs/[logsId]/insert/schema';
+import { logsListResponseSchema } from '@/app/api/logs/list/schema';
 import {
   newLogsPayloadSchema,
   newLogsResponseSchema,
@@ -58,6 +61,8 @@ export enum ApiEndpoints {
   userView = 'api/user',
   userApiKeyView = 'api/user/getApiKey',
   userApiKeyRevoke = 'api/user/revokeApiKey',
+  logsList = '/api/logs/list',
+  logsInsert = 'api/logs/insert',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -126,6 +131,16 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: newLogsResponseSchema,
     method: 'POST',
   },
+  [ApiEndpoints.logsList]: {
+    payloadSchema: emptyObjectSchema,
+    resultSchema: logsListResponseSchema,
+    method: 'GET',
+  },
+  [ApiEndpoints.logsInsert]: {
+    payloadSchema: insertLogsPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
   [ApiEndpoints.userNew]: {
     payloadSchema: newUserPayloadSchema,
     resultSchema: newUserResponseSchema,
@@ -160,6 +175,7 @@ export type PayloadSchemaType = {
     typeof insertExperimentPayloadSchema
   >;
   [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
+  [ApiEndpoints.logsInsert]: z.infer<typeof insertLogsPayloadSchema>;
   [ApiEndpoints.userNew]: z.infer<typeof newUserPayloadSchema>;
   [ApiEndpoints.userApiKeyRevoke]: z.infer<
     typeof userRevokeApiKeyPayloadSchema
@@ -173,4 +189,5 @@ export type ResultSchemaType = {
   [ApiEndpoints.experimentView]: z.infer<typeof experimentViewResponseSchema>;
   [ApiEndpoints.userView]: z.infer<typeof userViewResponseSchema>;
   [ApiEndpoints.userApiKeyView]: z.infer<typeof userGetApiKeyResponseSchema>;
+  [ApiEndpoints.logsList]: z.infer<typeof logsListResponseSchema>;
 };

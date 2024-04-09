@@ -135,3 +135,14 @@ export const getExperimentUuidFromFakeId = (experimentFakeId: string) => {
   }
   return experimentId;
 };
+// TODO: remove getDatasetUuidFromFakeId, getExperimentUuidFromFakeId and use getUuidFromFakeId with the correct prefix
+export const getUuidFromFakeId = (fakeId: string, type: UUIDPrefixEnum) => {
+  const uuidWithPrefix = fakeId.slice(-36 - type.length);
+  if (
+    !isValidUUIDv4(uuidWithPrefix.slice(-36)) ||
+    !uuidWithPrefix.startsWith(type)
+  ) {
+    throw new Error('Invalid uuid id');
+  }
+  return uuidWithPrefix;
+};

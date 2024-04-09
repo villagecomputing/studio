@@ -17,6 +17,19 @@ export enum Enum_Experiment_Column_Type {
   ROW_METADATA = 'ROW_METADATA',
 }
 
+export enum Enum_Logs_Column_Type {
+  IDENTIFIER = 'IDENTIFIER',
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT',
+  /** Step metadata */
+  STEP_METADATA = 'STEP_METADATA',
+  /** Aggregated metadata from all individual steps. */
+  METADATA = 'METADATA',
+  /** For FE use only: Type of 'Metadata' column */
+  ROW_METADATA = 'ROW_METADATA',
+  TIMESTAMP = 'TIMESTAMP',
+}
+
 export enum ENUM_Data_type {
   STRING = 'STRING',
   NUMBER = 'NUMBER',

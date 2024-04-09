@@ -6,7 +6,8 @@ const buildDefinitionString = (columnDefinition: ColumnDefinition): string => {
   let columnString = `${columnDefinition.name} ${columnDefinition.type}`;
   if (columnDefinition.defaultValue) {
     columnString += ` DEFAULT ${
-      columnDefinition.type === ColumnType.INTEGER
+      columnDefinition.type === ColumnType.INTEGER ||
+      columnDefinition.type === ColumnType.DATETIME
         ? columnDefinition.defaultValue
         : `"${columnDefinition.defaultValue}"`
     } `;

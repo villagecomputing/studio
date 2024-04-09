@@ -431,7 +431,31 @@
             "type": "number",
             "nullable": true
           },
+          "index": {
+            "type": "number"
+          },
           "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentStepPayload"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "index"
+        ]
+      },
+      "ExperimentStepPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ExperimentStepMetadata"
+          },
+          "outputs": {
             "type": "array",
             "items": {
               "type": "object",
@@ -439,67 +463,56 @@
                 "name": {
                   "type": "string"
                 },
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "latency": {
-                      "type": "number"
-                    },
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "input_tokens": {
-                      "type": "number",
-                      "nullable": true
-                    },
-                    "output_tokens": {
-                      "type": "number",
-                      "nullable": true
-                    },
-                    "input_cost": {
-                      "type": "number",
-                      "nullable": true
-                    },
-                    "output_cost": {
-                      "type": "number",
-                      "nullable": true
-                    }
-                  },
-                  "additionalProperties": true
-                },
-                "outputs": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "value": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "value"
-                    ]
-                  }
+                "value": {
+                  "type": "string"
                 }
               },
               "required": [
                 "name",
-                "metadata",
-                "outputs"
+                "value"
               ]
             }
           }
         },
         "required": [
-          "steps"
+          "name",
+          "metadata",
+          "outputs"
+        ]
+      },
+      "ExperimentStepMetadata": {
+        "type": "object",
+        "properties": {
+          "latency": {
+            "type": "number"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "input_tokens": {
+            "type": "number",
+            "nullable": true
+          },
+          "output_tokens": {
+            "type": "number",
+            "nullable": true
+          },
+          "input_cost": {
+            "type": "number",
+            "nullable": true
+          },
+          "output_cost": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "latency",
+          "success"
         ]
       },
       "NewExperimentPayload": {
@@ -641,6 +654,97 @@
           "id"
         ]
       },
+      "ListLogsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "pipelineMetadata": {
+              "type": "string"
+            },
+            "latencyP50": {
+              "type": "number"
+            },
+            "latencyP90": {
+              "type": "number"
+            },
+            "runtime": {
+              "type": "number"
+            },
+            "totalCost": {
+              "type": "number"
+            },
+            "avgAccuracy": {
+              "type": "number"
+            },
+            "totalRows": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "createdAt",
+            "pipelineMetadata",
+            "latencyP50",
+            "latencyP90",
+            "runtime",
+            "totalCost",
+            "avgAccuracy",
+            "totalRows"
+          ]
+        }
+      },
+      "LogsInsertPayload": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentStepPayload"
+            }
+          },
+          "accuracy": {
+            "type": "number",
+            "nullable": true
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "inputs"
+        ]
+      },
       "UserViewResponse": {
         "type": "object",
         "properties": {
@@ -680,25 +784,6 @@
         },
         "required": [
           "id"
-        ]
-      },
-      "UserApiKeyResponse": {
-        "type": "object",
-        "properties": {
-          "api_key": {
-            "type": "string"
-          }
-        }
-      },
-      "UserRevokeApiKeyPayload": {
-        "type": "object",
-        "properties": {
-          "api_key": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "api_key"
         ]
       }
     }
@@ -1141,13 +1226,76 @@
         }
       }
     },
+    "/api/logs/{logsId}/insert": {
+      "post": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Inserts data into the logs table with the given Id.",
+        "description": "Ensures the logs table is created and inserts the given steps as a row for the given logs id",
+        "operationId": "InsertLogsRow",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "logsId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogsInsertPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/logs/list": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Logs list",
+        "description": "Logs list",
+        "operationId": "ListLogs",
+        "responses": {
+          "200": {
+            "description": "Logs list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLogsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error processing request."
+          }
+        }
+      }
+    },
     "/api/logs/new": {
       "post": {
         "tags": [
           "Logs"
         ],
-        "summary": "Creates a new logs entry",
-        "description": "Creates a new logs entry",
+        "summary": "Creates a new logs entry in the logs list",
+        "description": "Creates a new logs entry in the logs list",
         "operationId": "CreateLogs",
         "requestBody": {
           "required": true,
@@ -1172,88 +1320,6 @@
           },
           "500": {
             "description": "Error processing request"
-          }
-        }
-      }
-    },
-    "/api/user/{userId}/getApiKey": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Retrieve the details of a specific user by their Id.",
-        "description": "Retrieve the details of a specific user by their Id.",
-        "operationId": "GetUserApiKey",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The unique identifier of the user."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the user details.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserApiKeyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid user Id provided."
-          },
-          "500": {
-            "description": "Internal server error occurred while processing the request."
-          }
-        }
-      }
-    },
-    "/api/user/{userId}/revokeApiKey": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Revokes the specified api key.",
-        "description": "Revokes the specified api key.",
-        "operationId": "RevokeApiKey",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The unique identifier of the user."
-          }
-        ],
-        "requestBody": {
-          "description": "Data to be added to the dataset",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserRevokeApiKeyPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ok"
-          },
-          "400": {
-            "description": "Invalid user Id provided."
-          },
-          "500": {
-            "description": "Internal server error occurred while processing the request."
           }
         }
       }

@@ -185,11 +185,11 @@ export function calculatePercentile(
 }
 
 export async function getOrderedExperimentMetadata(
-  experimentId: string,
+  dynamicTableName: string,
   metadataField: Enum_Dynamic_experiment_metadata_fields,
 ): Promise<number[]> {
-  if (!experimentId) {
-    throw new Error('experimentTableName is required');
+  if (!dynamicTableName) {
+    throw new Error('tableName is required');
   }
 
   const selectFields = [metadataField];
@@ -200,7 +200,7 @@ export async function getOrderedExperimentMetadata(
 
   try {
     const result = await DatabaseUtils.select<Record<string, string>>(
-      experimentId,
+      dynamicTableName,
       selectFields,
       undefined,
       orderBy,

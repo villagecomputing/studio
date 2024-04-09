@@ -11,6 +11,7 @@ export type SelectParams = {
 export enum ColumnType {
   TEXT = 'TEXT',
   INTEGER = 'INTEGER',
+  DATETIME = 'DATETIME',
 }
 
 export enum ENUM_ORDER_DIRECTION {
