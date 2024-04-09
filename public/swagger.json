@@ -681,8 +681,61 @@
         "required": [
           "id"
         ]
+      },
+      "ListLogsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "pipelineMetadata": {
+              "type": "string"
+            },
+            "latencyP50": {
+              "type": "number"
+            },
+            "latencyP90": {
+              "type": "number"
+            },
+            "runtime": {
+              "type": "number"
+            },
+            "totalCost": {
+              "type": "number"
+            },
+            "avgAccuracy": {
+              "type": "number"
+            },
+            "totalRows": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "createdAt",
+            "pipelineMetadata",
+            "latencyP50",
+            "latencyP90",
+            "runtime",
+            "totalCost",
+            "avgAccuracy",
+            "totalRows"
+          ]
+        }
       }
-    }
   },
   "tags": [
     {
@@ -1118,6 +1171,31 @@
           },
           "500": {
             "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/logs/list": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "List all logs entries",
+        "description": "List all logs entries",
+        "operationId": "ListLogs",
+        "responses": {
+          "200": {
+            "description": "A list of logs entries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLogsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error processing request."
           }
         }
       }
