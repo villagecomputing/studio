@@ -13,6 +13,7 @@ import { updateExperiment } from './experiment/updateExperiment';
 import { getUser } from './user/getUser';
 import { getUserApiKey } from './user/getUserApiKey';
 import { newUser } from './user/newUser';
+import { revokeUserApiKey } from './user/revokeUserApiKey';
 
 export default {
   getDataset,
@@ -28,4 +29,5 @@ export default {
   getUser,
   newUser,
   getUserApiKey,
+  revokeUserApiKey,
 };

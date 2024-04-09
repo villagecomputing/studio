@@ -689,6 +689,17 @@
             "type": "string"
           }
         }
+      },
+      "UserRevokeApiKeyPayload": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ]
       }
     }
   },
@@ -1194,6 +1205,49 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid user Id provided."
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/api/user/{userId}/revokeApiKey": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Revokes the specified api key.",
+        "description": "Revokes the specified api key.",
+        "operationId": "RevokeApiKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the user."
+          }
+        ],
+        "requestBody": {
+          "description": "Data to be added to the dataset",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRevokeApiKeyPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
           },
           "400": {
             "description": "Invalid user Id provided."

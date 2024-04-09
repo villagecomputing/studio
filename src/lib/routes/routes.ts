@@ -25,6 +25,7 @@ import {
 } from '@/app/api/logs/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
 import { userGetApiKeyResponseSchema } from '@/app/api/user/[userId]/getApiKey/schema';
+import { userRevokeApiKeyPayloadSchema } from '@/app/api/user/[userId]/revokeApiKey/schema';
 import { userViewResponseSchema } from '@/app/api/user/[userId]/schema';
 
 import {
@@ -56,6 +57,7 @@ export enum ApiEndpoints {
   userNew = 'api/user/new',
   userView = 'api/user',
   userApiKeyView = 'api/user/getApiKey',
+  userApiKeyRevoke = 'api/user/revokeApiKey',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -139,6 +141,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: userGetApiKeyResponseSchema,
     method: 'GET',
   },
+  [ApiEndpoints.userApiKeyRevoke]: {
+    payloadSchema: userRevokeApiKeyPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -154,6 +161,9 @@ export type PayloadSchemaType = {
   >;
   [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
   [ApiEndpoints.userNew]: z.infer<typeof newUserPayloadSchema>;
+  [ApiEndpoints.userApiKeyRevoke]: z.infer<
+    typeof userRevokeApiKeyPayloadSchema
+  >;
 };
 
 export type ResultSchemaType = {

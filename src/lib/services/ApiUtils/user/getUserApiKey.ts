@@ -1,6 +1,8 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
+
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
+import { generateSecureApiKey } from './utils';
 
 export async function getUserApiKey(
   userId: string,
@@ -25,8 +27,7 @@ export async function getUserApiKey(
       };
     }
 
-    //TODO: generate a new one
-    const newApiKey = '';
+    const newApiKey = generateSecureApiKey();
     await PrismaClient.aPI_key.create({
       data: {
         id: newApiKey,
