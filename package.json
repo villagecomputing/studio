@@ -27,6 +27,7 @@
     "ag-grid-react": "^31.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "generate-api-key": "^1.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.330.0",
     "next": "14.1.0",

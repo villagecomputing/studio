@@ -28,7 +28,10 @@ import {
   newLogsResponseSchema,
 } from '@/app/api/logs/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
+import { userGetApiKeyResponseSchema } from '@/app/api/user/[userId]/getApiKey/schema';
+import { userRevokeApiKeyPayloadSchema } from '@/app/api/user/[userId]/revokeApiKey/schema';
 import { userViewResponseSchema } from '@/app/api/user/[userId]/schema';
+
 import {
   newUserPayloadSchema,
   newUserResponseSchema,
@@ -57,6 +60,8 @@ export enum ApiEndpoints {
   logsNew = 'api/logs/new',
   userNew = 'api/user/new',
   userView = 'api/user',
+  userApiKeyView = 'api/user/getApiKey',
+  userApiKeyRevoke = 'api/user/revokeApiKey',
   logsList = '/api/logs/list',
   logsInsert = 'api/logs/insert',
   logsView = '/api/logs',
@@ -148,6 +153,16 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: userViewResponseSchema,
     method: 'GET',
   },
+  [ApiEndpoints.userApiKeyView]: {
+    payloadSchema: emptyObjectSchema,
+    resultSchema: userGetApiKeyResponseSchema,
+    method: 'GET',
+  },
+  [ApiEndpoints.userApiKeyRevoke]: {
+    payloadSchema: userRevokeApiKeyPayloadSchema,
+    resultSchema: emptyObjectSchema,
+    method: 'POST',
+  },
   [ApiEndpoints.logsView]: {
     payloadSchema: emptyObjectSchema,
     resultSchema: logsViewResponseSchema,
@@ -169,6 +184,9 @@ export type PayloadSchemaType = {
   [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
   [ApiEndpoints.logsInsert]: z.infer<typeof insertLogsPayloadSchema>;
   [ApiEndpoints.userNew]: z.infer<typeof newUserPayloadSchema>;
+  [ApiEndpoints.userApiKeyRevoke]: z.infer<
+    typeof userRevokeApiKeyPayloadSchema
+  >;
 };
 
 export type ResultSchemaType = {
@@ -177,6 +195,7 @@ export type ResultSchemaType = {
   [ApiEndpoints.experimentList]: z.infer<typeof experimentListResponseSchema>;
   [ApiEndpoints.experimentView]: z.infer<typeof experimentViewResponseSchema>;
   [ApiEndpoints.userView]: z.infer<typeof userViewResponseSchema>;
+  [ApiEndpoints.userApiKeyView]: z.infer<typeof userGetApiKeyResponseSchema>;
   [ApiEndpoints.logsList]: z.infer<typeof logsListResponseSchema>;
   [ApiEndpoints.logsView]: z.infer<typeof logsViewResponseSchema>;
 };
