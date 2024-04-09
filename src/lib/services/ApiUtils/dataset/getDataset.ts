@@ -10,7 +10,7 @@ import { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
-import getDynamicTableContent from '../common/getDynamicTableContent';
+import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getGroundTruthStatusColumnName } from './utils';
 
 async function getDatasetDetails(datasetId: string) {

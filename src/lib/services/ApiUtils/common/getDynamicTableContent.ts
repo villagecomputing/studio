@@ -1,6 +1,6 @@
 import DatabaseUtils from '../../DatabaseUtils';
 
-export default async function getDynamicTableContent(
+export async function getDynamicTableContent(
   tableName: string,
 ): Promise<Record<string, string>[]> {
   if (!tableName) {
