@@ -1,12 +1,9 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 
-// TODO Change this
-export type LogsList = ResultSchemaType[ApiEndpoints.experimentList];
+export type LogsList = ResultSchemaType[ApiEndpoints.logsList];
 
 export type LogsListRowType = {
   description: string;
-  groupId: number;
-  dataset: { id: string; name: string };
   runtime: number;
   date: string;
   avgCost: number;

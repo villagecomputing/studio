@@ -19,9 +19,7 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
     if (!logsId) {
       permanentRedirect('/logs');
     }
-    // TODO Change this
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const logs: any = await ApiUtils.getExperiment(logsId);
+    const logs = await ApiUtils.getLogsById(logsId);
 
     const metadataColumn = {
       field: 'metadata',
@@ -31,17 +29,20 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
     };
 
     const stepMetadataColumns = logs.columns.filter(
-      // TODO Change this
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (column: any) => column.type === Enum_Logs_Column_Type.STEP_METADATA,
+      (column) => column.type === Enum_Logs_Column_Type.STEP_METADATA,
     );
     const stepsMetadataPercentiles = getStepsMetadataPercentiles(
       stepMetadataColumns,
       logs.rows,
     );
+    const inputColumns = logs.columns.filter(
+      (column) => column.type === Enum_Logs_Column_Type.INPUT,
+    );
+    const columns = logs.columns.filter(
+      (column) => column.type !== Enum_Logs_Column_Type.INPUT,
+    );
     return {
       logsName: logs.name,
-      dataset: logs.dataset,
       latencyP50: logs.latencyP50,
       latencyP90: logs.latencyP90,
       latencyP25: logs.latencyP25,
@@ -55,7 +56,7 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       stepsMetadataPercentiles,
       ...LogsGrid.convertToAGGridData({
         logsId: logs.id,
-        columns: [metadataColumn, ...logs.columns],
+        columns: [...inputColumns, metadataColumn, ...columns],
         rows: logs.rows,
       }),
     };

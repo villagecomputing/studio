@@ -1,10 +1,8 @@
 import { ENUM_Column_type } from '@/lib/types';
-import Link from 'next/link';
 import { useLogsRowInspectorContext } from '../LogsRowInspector';
 
 const RowInspectorBodyRawData = () => {
-  const { rows, inspectorRowIndex, columnDefs, datasetId } =
-    useLogsRowInspectorContext();
+  const { rows, inspectorRowIndex, columnDefs } = useLogsRowInspectorContext();
 
   if (inspectorRowIndex === null) {
     return null;
@@ -19,9 +17,6 @@ const RowInspectorBodyRawData = () => {
     <div className="flex flex-col gap-6 border-y border-border bg-white p-6">
       <div className="flex justify-between text-base">
         <span>Raw Data</span>
-        <Link className="text-primary" href={`/data/${datasetId}`}>
-          Open Dataset
-        </Link>
       </div>
       <div className="flex flex-col gap-4">
         {inputColumns.map((colDef) => {

@@ -745,6 +745,117 @@
           "inputs"
         ]
       },
+      "LogsViewResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogsTableColumnProps"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "latencyP50": {
+            "type": "number"
+          },
+          "latencyP90": {
+            "type": "number"
+          },
+          "runtime": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "accuracy": {
+            "type": "number"
+          },
+          "parameters": {
+            "type": "string"
+          },
+          "costP25": {
+            "type": "number"
+          },
+          "costP75": {
+            "type": "number"
+          },
+          "latencyP25": {
+            "type": "number"
+          },
+          "latencyP75": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "name",
+          "columns",
+          "rows",
+          "latencyP50",
+          "latencyP90",
+          "runtime",
+          "cost",
+          "accuracy",
+          "parameters",
+          "costP25",
+          "costP75",
+          "latencyP25",
+          "latencyP75"
+        ]
+      },
+      "LogsTableColumnProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number"
+          },
+          "field": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "IDENTIFIER",
+              "OUTPUT",
+              "METADATA",
+              "INPUT",
+              "STEP_METADATA",
+              "TIMESTAMP"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "field",
+          "type"
+        ]
+      },
       "UserViewResponse": {
         "type": "object",
         "properties": {
@@ -1276,6 +1387,45 @@
         "responses": {
           "200": {
             "description": "Ok"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/logs/{logsId}": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Fetches the details of the logs view with the specified Id.",
+        "description": "Fetches the details of the logs view with the specified Id.",
+        "operationId": "GetLogsData",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "logsId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the logs view to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logs data retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsViewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid logs id"
           },
           "500": {
             "description": "Error processing request"
