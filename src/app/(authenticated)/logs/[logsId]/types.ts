@@ -24,7 +24,6 @@ export type LogsTableColumnProps = {
   id: number;
   name: string;
   field: string;
-  // TODO change this
   type: Enum_Logs_Column_Type;
 };
 
@@ -40,10 +39,6 @@ export type LogsRow = {
 
 export type FetchLogsResult = AGGridLogs & {
   logsName: string;
-  dataset: {
-    name: string;
-    id: string;
-  };
   latencyP50: number;
   latencyP90: number;
   runtime: number;
@@ -66,7 +61,6 @@ export type LogsTableContext = {
   stepsMetadataPercentiles: StepsMetadataPercentiles;
   stepMetadataColumns: StepMetadataColumn[];
   inspectorRowIndex: number | null;
-  datasetId: string;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   rows: AGGridDataset['rowData'];
   columnDefs: AGGridDataset['columnDefs'];

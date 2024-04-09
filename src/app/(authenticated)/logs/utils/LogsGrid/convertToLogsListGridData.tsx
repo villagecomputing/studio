@@ -82,9 +82,7 @@ function getLogsListRowData(data: LogsList): LogsListRowType[] {
   return data.map((data) => ({
     id: data.id,
     description: data.description || '-',
-    groupId: data.groupId,
-    date: formatDate(data.created_at),
-    dataset: { id: data.Dataset.id, name: data.Dataset.name },
+    date: formatDate(data.createdAt),
     avgAccuracy: data.avgAccuracy,
     avgCost: data.totalCost ? data.totalCost / data.totalRows : 0,
     p50Latency: data.latencyP50,

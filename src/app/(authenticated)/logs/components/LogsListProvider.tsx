@@ -1,11 +1,8 @@
 'use client';
-import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
+import { logsListResponseSchema } from '@/app/api/logs/list/schema';
 import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
-import {
-  getDatasetUuidFromFakeId,
-  getExperimentUuidFromFakeId,
-} from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import React, {
   PropsWithChildren,
   createContext,
@@ -16,20 +13,16 @@ import React, {
 import { LogsList, LogsListContextType } from '../types';
 
 const getData = async (): Promise<LogsList> => {
-  // TODO Change this
-  const response = await fetch(ApiEndpoints.experimentList, {
+  const response = await fetch(ApiEndpoints.logsList, {
     method: 'GET',
   });
   const logsList = await response.json();
-  // TODO Change this
-  return experimentListResponseSchema.parse(logsList).map((logs) => {
+  return logsListResponseSchema.parse(logsList).map((logs) => {
     return {
       ...logs,
-      // TODO Change this
-      id: getExperimentUuidFromFakeId(logs.id),
+      id: getUuidFromFakeId(logs.id, UUIDPrefixEnum.LOGS),
       Dataset: {
-        ...logs.Dataset,
-        id: getDatasetUuidFromFakeId(logs.Dataset.id),
+        ...logs,
       },
     };
   });
@@ -56,7 +49,7 @@ export const LogsListProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const fetchLogsList = async () => {
       try {
         const data = await getData();
         setLogs(data);
@@ -69,7 +62,7 @@ export const LogsListProvider: React.FC<PropsWithChildren> = ({ children }) => {
       }
     };
 
-    fetchLogs();
+    fetchLogsList();
   }, []);
 
   return (
