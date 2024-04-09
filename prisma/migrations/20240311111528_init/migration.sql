@@ -1,4 +1,23 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "uuid" TEXT NOT NULL PRIMARY KEY,
+    "external_id" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
+    "deleted_at" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "API_key" (
+    "key" TEXT NOT NULL PRIMARY KEY,
+    "user_id" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
+    "revoked_at" DATETIME,
+    CONSTRAINT "API_key_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("uuid") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Dataset_column" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "dataset_uuid" TEXT NOT NULL,
@@ -22,7 +41,9 @@ CREATE TABLE "Dataset_column" (
 CREATE TABLE "Dataset" (
     "uuid" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
+    "created_by" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" DATETIME,
-    "updated_at" DATETIME NOT NULL
+    "updated_at" DATETIME NOT NULL,
+    CONSTRAINT "Dataset_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
