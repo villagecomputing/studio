@@ -641,47 +641,6 @@
           "id"
         ]
       },
-      "UserViewResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "external_id": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "external_id",
-          "created_at"
-        ]
-      },
-      "NewUserPayload": {
-        "type": "object",
-        "properties": {
-          "userExternalId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "userExternalId"
-        ]
-      },
-      "NewUserResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
       "ListLogsResponse": {
         "type": "array",
         "items": {
@@ -735,7 +694,49 @@
             "totalRows"
           ]
         }
+      },
+      "UserViewResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "external_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "external_id",
+          "created_at"
+        ]
+      },
+      "NewUserPayload": {
+        "type": "object",
+        "properties": {
+          "userExternalId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userExternalId"
+        ]
+      },
+      "NewUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
       }
+    }
   },
   "tags": [
     {
