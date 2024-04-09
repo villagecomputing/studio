@@ -1,6 +1,11 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { ClipboardListIcon, DatabaseIcon, ListTodoIcon } from 'lucide-react';
+import {
+  ClipboardListIcon,
+  DatabaseIcon,
+  ListTodoIcon,
+  ScrollTextIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import NavbarMenu from './components/NavbarMenu';
 import NavbarMenuCollapsed from './components/NavbarMenuCollapsed';
@@ -16,6 +21,11 @@ export const NavbarItems: NavbarMenuItemProps[] = [
     route: '/experiment',
     name: 'Experiments',
     Icon: <ListTodoIcon size={20} />,
+  },
+  {
+    route: '/logs',
+    name: 'Logs',
+    Icon: <ScrollTextIcon size={20} />,
   },
   {
     route: '/evaluate',

@@ -1,3 +1,4 @@
+// Start of Selection
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { datasetViewResponseSchema } from '@/app/api/dataset/[datasetId]/schema';
 import { approveAllSchema } from '@/app/api/dataset/edit/approveAll/schema';
@@ -26,6 +27,11 @@ import {
   newLogsResponseSchema,
 } from '@/app/api/logs/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
+import { userViewResponseSchema } from '@/app/api/user/[userId]/schema';
+import {
+  newUserPayloadSchema,
+  newUserResponseSchema,
+} from '@/app/api/user/new/schema';
 import { z } from 'zod';
 
 type RouteObject = {
@@ -48,6 +54,8 @@ export enum ApiEndpoints {
   experimentNew = 'api/experiments/new',
   experimentInsert = 'api/experiments/insert',
   logsNew = 'api/logs/new',
+  userNew = 'api/user/new',
+  userView = 'api/user',
   logsList = '/api/logs/list',
   logsInsert = 'api/logs/insert',
 }
@@ -128,6 +136,16 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
+  [ApiEndpoints.userNew]: {
+    payloadSchema: newUserPayloadSchema,
+    resultSchema: newUserResponseSchema,
+    method: 'POST',
+  },
+  [ApiEndpoints.userView]: {
+    payloadSchema: emptyObjectSchema,
+    resultSchema: userViewResponseSchema,
+    method: 'GET',
+  },
 };
 
 export type PayloadSchemaType = {
@@ -143,6 +161,7 @@ export type PayloadSchemaType = {
   >;
   [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
   [ApiEndpoints.logsInsert]: z.infer<typeof insertLogsPayloadSchema>;
+  [ApiEndpoints.userNew]: z.infer<typeof newUserPayloadSchema>;
 };
 
 export type ResultSchemaType = {
@@ -150,5 +169,6 @@ export type ResultSchemaType = {
   [ApiEndpoints.datasetView]: z.infer<typeof datasetViewResponseSchema>;
   [ApiEndpoints.experimentList]: z.infer<typeof experimentListResponseSchema>;
   [ApiEndpoints.experimentView]: z.infer<typeof experimentViewResponseSchema>;
+  [ApiEndpoints.userView]: z.infer<typeof userViewResponseSchema>;
   [ApiEndpoints.logsList]: z.infer<typeof logsListResponseSchema>;
 };
