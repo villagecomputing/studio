@@ -354,68 +354,78 @@
                         "type": "number",
                         "nullable": true
                     },
+                    "index": {
+                        "type": "number"
+                    },
                     "steps": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "metadata": {
-                                    "type": "object",
-                                    "properties": {
-                                        "latency": {
-                                            "type": "number"
-                                        },
-                                        "success": {
-                                            "type": "boolean"
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
-                                        "input_tokens": {
-                                            "type": "number",
-                                            "nullable": true
-                                        },
-                                        "output_tokens": {
-                                            "type": "number",
-                                            "nullable": true
-                                        },
-                                        "input_cost": {
-                                            "type": "number",
-                                            "nullable": true
-                                        },
-                                        "output_cost": {
-                                            "type": "number",
-                                            "nullable": true
-                                        }
-                                    },
-                                    "additionalProperties": true
-                                },
-                                "outputs": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "name": {
-                                                "type": "string"
-                                            },
-                                            "value": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": ["name", "value"]
-                                    }
-                                }
-                            },
-                            "required": ["name", "metadata", "outputs"]
+                          "$ref": "#/components/schemas/ExperimentStepPayload"
                         }
                     }
                 },
-                "required": ["steps"]
+                "required": ["steps", "index"]
             },
+            "ExperimentStepPayload": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "$ref": "#/components/schemas/ExperimentStepMetadata"
+                  },
+                  "outputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "value"]
+                    }
+                  }
+                },
+                "required": ["name", "metadata", "outputs"]
+              },
+              "ExperimentStepMetadata": {
+                "type": "object",
+                "properties": {
+                    "latency": {
+                        "type": "number"
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "error": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "input_tokens": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "output_tokens": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "input_cost": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "output_cost": {
+                        "type": "number",
+                        "nullable": true
+                    }
+                },
+                "required": ["latency", "success"]
+              },
+
             "NewExperimentPayload": {
                 "type": "object",
                 "properties": {
@@ -584,6 +594,43 @@
                         "totalRows"
                     ]
                 }
+            },
+            "LogsInsertPayload": {
+                "type": "object",
+                "properties": {
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ExperimentStepPayload"
+                    }
+                  },
+                  "accuracy": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "steps",
+                  "inputs"
+                ]
             },
             "UserViewResponse": {
                 "type": "object",

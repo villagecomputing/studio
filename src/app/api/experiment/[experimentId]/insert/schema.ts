@@ -28,6 +28,7 @@ export const experimentStepPayloadSchema = z.object({
   ),
 });
 export type ExperimentStepMetadata = z.infer<typeof experimentStepMetadata>;
+export type ExperimentStep = z.infer<typeof experimentStepPayloadSchema>;
 
 export const insertExperimentPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
