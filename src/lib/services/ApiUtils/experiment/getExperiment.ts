@@ -3,7 +3,7 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
-import getExperimentContent from './getExperimentContent';
+import getExperimentContent from '../common/getDynamicTableContent';
 import { getExperimentDetails } from './getExperimentDetails';
 import {
   Enum_Dynamic_experiment_metadata_fields,
