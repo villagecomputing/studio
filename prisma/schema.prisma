@@ -118,7 +118,7 @@ model API_key {
 
 model User {
   uuid        String       @id
-  external_id String
+  external_id String       @unique(map: "sqlite_autoindex_User_2")
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
   deleted_at  String?

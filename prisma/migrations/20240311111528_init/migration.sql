@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "User" (
     "uuid" TEXT NOT NULL PRIMARY KEY,
-    "external_id" TEXT NOT NULL,
+    "external_id" TEXT NOT NULL UNIQUE,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
     "deleted_at" TEXT
