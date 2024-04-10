@@ -13,9 +13,10 @@
     ],
     "components": {
         "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer"
+            "x-api-key": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-Key"
             }
         },
         "schemas": {

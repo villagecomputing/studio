@@ -60,3 +60,12 @@ export async function isExperimentTableCreated(
 
   return true;
 }
+
+export async function assertValidApiKeyExists(key: string) {
+  await PrismaClient.aPI_key.findUniqueOrThrow({
+    where: {
+      key,
+      revoked_at: null,
+    },
+  });
+}

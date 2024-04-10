@@ -32,9 +32,9 @@ export const generateSecureApiKey = (): string => {
   return apiKeyWithChecksum;
 };
 
-export const validateApiKey = (key: string) => {
-  const parts = key.split(API_KEY_PART_DELIMITER);
-  if (parts.length !== 3) {
+export const validateApiKey = (key: string | null) => {
+  const parts = key?.split(API_KEY_PART_DELIMITER);
+  if (parts?.length !== 3) {
     throw new Error('Invalid API key format');
   }
   const apiKeyPart = parts[0] + parts[1];
