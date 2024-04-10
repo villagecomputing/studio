@@ -1,6 +1,7 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getExperimentUuidFromFakeId } from '@/lib/utils';
+import { NextRequest } from 'next/server';
 import { insertExperimentPayloadSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { insertExperimentPayloadSchema } from './schema';
  *     summary: Inserts steps into an experiment with the given Id.
  *     description: Ensures the experiment is created and inserts the given steps as a row for the given experiment
  *     operationId: InsertExperimentRow
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: experimentId
@@ -31,9 +34,13 @@ import { insertExperimentPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { experimentId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   let experimentId = params.experimentId;
   try {
     experimentId = getExperimentUuidFromFakeId(experimentId);

@@ -1,6 +1,7 @@
 import PrismaClient from '@/lib/services/prisma';
 import { UUIDPrefixEnum, createFakeId, generateUUID } from '@/lib/utils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { newLogsPayloadSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { newLogsPayloadSchema } from './schema';
  *     summary: Creates a new logs entry in the logs list
  *     description: Creates a new logs entry in the logs list
  *     operationId: CreateLogs
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -28,7 +31,11 @@ import { newLogsPayloadSchema } from './schema';
  *       500:
  *         description: 'Error processing request'
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   const requestBody = await request.json();
   const payload = newLogsPayloadSchema.parse(requestBody);
 

@@ -1,6 +1,7 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { newDatasetPayloadSchema } from './schema';
  *     summary: Initializes a new dataset.
  *     description: Initializes a new dataset.
  *     operationId: InitializeDataset
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -30,7 +33,11 @@ import { newDatasetPayloadSchema } from './schema';
  *       500:
  *         description: Error processing request.
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
       return response('Invalid request headers type', 400);

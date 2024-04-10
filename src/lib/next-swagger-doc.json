@@ -13,10 +13,10 @@
     ],
     "components": {
         "securitySchemes": {
-            "x-api-key": {
+            "ApiKeyAuth": {
                 "type": "apiKey",
                 "in": "header",
-                "name": "X-API-Key"
+                "name": "x-api-key"
             }
         },
         "schemas": {

@@ -1,6 +1,7 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { experimentViewResponseSchema } from './schema';
  *     summary: Fetches the details of an experiment with the specified Id.
  *     description: Fetches the details of an experiment with the specified Id.
  *     operationId: GetExperimentData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: experimentId
@@ -32,9 +35,13 @@ import { experimentViewResponseSchema } from './schema';
  *         description: Invalid response experiment view type -or- Error processing request
  */
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { experimentId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     let experimentId = params.experimentId;
     try {

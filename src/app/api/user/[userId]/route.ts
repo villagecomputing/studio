@@ -1,5 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { userViewResponseSchema } from './schema';
 
 /**
@@ -11,6 +12,8 @@ import { userViewResponseSchema } from './schema';
  *     summary: Retrieve the details of a specific user by their Id.
  *     description: Retrieve the details of a specific user by their Id.
  *     operationId: GetUserData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -31,9 +34,13 @@ import { userViewResponseSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const userId = params.userId;
     if (!userId) {

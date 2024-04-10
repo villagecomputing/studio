@@ -3,7 +3,8 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
 
 /**
@@ -15,6 +16,8 @@ import { experimentListResponseSchema } from './schema';
  *     summary: List all experiments
  *     description: List all experiments
  *     operationId: ListExperiments
+ *     security:
+ *       - ApiKeyAuth: []
  *     responses:
  *       200:
  *         description: A list of experiments.
@@ -27,7 +30,11 @@ import { experimentListResponseSchema } from './schema';
  *       500:
  *         description: 'Error processing request.'
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const experimentSelect = {
       uuid: true,

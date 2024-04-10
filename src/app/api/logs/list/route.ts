@@ -3,7 +3,8 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 
 /**
  * @swagger
@@ -14,6 +15,8 @@ import { response } from '../../utils';
  *     summary: Logs list
  *     description: Logs list
  *     operationId: ListLogs
+ *     security:
+ *       - ApiKeyAuth: []
  *     responses:
  *       200:
  *         description: Logs list.
@@ -24,7 +27,11 @@ import { response } from '../../utils';
  *       500:
  *         description: 'Error processing request.'
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const logsSelect = {
       uuid: true,

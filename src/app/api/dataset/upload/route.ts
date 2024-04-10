@@ -4,7 +4,8 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
 import { createFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
 
@@ -17,6 +18,8 @@ import { uploadDatasetPayloadSchema } from './schema';
  *     summary: Uploads a dataset file and its associated data
  *     description: Uploads a dataset file and its associated data
  *     operationId: UploadDataset
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       description: Dataset file and data to be uploaded
  *       required: true
@@ -32,7 +35,11 @@ import { uploadDatasetPayloadSchema } from './schema';
  *       500:
  *         description: File content is missing -or- Error processing request
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
       return response('Invalid request headers type', 400);

@@ -1,6 +1,7 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { NextRequest } from 'next/server';
 import { addDataPayloadSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { addDataPayloadSchema } from './schema';
  *     summary: Inserts data into a dataset.
  *     description: Inserts data into a dataset.
  *     operationId: AddDatasetData
+ *     security:
+ *      - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -35,9 +38,12 @@ import { addDataPayloadSchema } from './schema';
  *         description: Error processing request
  */
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { datasetId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {

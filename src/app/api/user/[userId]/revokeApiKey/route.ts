@@ -1,6 +1,7 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
+import { NextRequest } from 'next/server';
 import { userRevokeApiKeyPayloadSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { userRevokeApiKeyPayloadSchema } from './schema';
  *     summary: Revokes the specified api key.
  *     description: Revokes the specified api key.
  *     operationId: RevokeApiKey
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -35,9 +38,13 @@ import { userRevokeApiKeyPayloadSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const userId = params.userId;
     if (!userId) {

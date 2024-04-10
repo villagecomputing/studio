@@ -1,6 +1,7 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { datasetViewResponseSchema } from './schema';
  *     summary: Retrieve the details of a specific dataset by its Id.
  *     description: Retrieve the details of a specific dataset by its Id.
  *     operationId: GetDatasetData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -32,9 +35,13 @@ import { datasetViewResponseSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { datasetId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {

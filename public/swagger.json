@@ -11,9 +11,10 @@
   ],
   "components": {
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
       }
     },
     "schemas": {
@@ -997,6 +998,11 @@
         "summary": "Inserts data into a dataset.",
         "description": "Inserts data into a dataset.",
         "operationId": "AddDatasetData",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1040,6 +1046,11 @@
         "summary": "Retrieve the details of a specific dataset by its Id.",
         "description": "Retrieve the details of a specific dataset by its Id.",
         "operationId": "GetDatasetData",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1079,6 +1090,11 @@
         "summary": "Approves all ground truths for the specified dataset.",
         "description": "Approves all ground truths for the specified dataset.",
         "operationId": "ApproveAllDatasetGroundTruths",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1109,6 +1125,11 @@
         "summary": "Edits a specific cell in a dataset's ground truth.",
         "description": "Edits a specific cell in a dataset's ground truth.",
         "operationId": "EditDatasetCell",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1144,6 +1165,11 @@
         "summary": "Edits an existing column in a dataset.",
         "description": "Edits an existing column in a dataset.",
         "operationId": "EditDatasetColumn",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1179,6 +1205,11 @@
         "summary": "Retrieves a list of datasets and their total row counts",
         "description": "Retrieves a list of datasets and their total row counts",
         "operationId": "ListDatasets",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Dataset retrieved",
@@ -1207,6 +1238,11 @@
         "summary": "Initializes a new dataset.",
         "description": "Initializes a new dataset.",
         "operationId": "InitializeDataset",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1245,6 +1281,11 @@
         "summary": "Uploads a dataset file and its associated data",
         "description": "Uploads a dataset file and its associated data",
         "operationId": "UploadDataset",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "description": "Dataset file and data to be uploaded",
           "required": true,
@@ -1277,6 +1318,11 @@
         "summary": "Inserts steps into an experiment with the given Id.",
         "description": "Ensures the experiment is created and inserts the given steps as a row for the given experiment",
         "operationId": "InsertExperimentRow",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1315,6 +1361,11 @@
         "summary": "Fetches the details of an experiment with the specified Id.",
         "description": "Fetches the details of an experiment with the specified Id.",
         "operationId": "GetExperimentData",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1354,6 +1405,11 @@
         "summary": "List all experiments",
         "description": "List all experiments",
         "operationId": "ListExperiments",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of experiments.",
@@ -1382,6 +1438,11 @@
         "summary": "Declare a new experiment for a given dataset Id",
         "description": "Declare a new experiment for a given dataset Id",
         "operationId": "DeclareExperiment",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1420,6 +1481,11 @@
         "summary": "Inserts data into the logs table with the given Id.",
         "description": "Ensures the logs table is created and inserts the given steps as a row for the given logs id",
         "operationId": "InsertLogsRow",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1458,6 +1524,11 @@
         "summary": "Fetches the details of the logs view with the specified Id.",
         "description": "Fetches the details of the logs view with the specified Id.",
         "operationId": "GetLogsData",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1497,6 +1568,11 @@
         "summary": "Logs list",
         "description": "Logs list",
         "operationId": "ListLogs",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Logs list.",
@@ -1522,6 +1598,11 @@
         "summary": "Creates a new logs entry in the logs list",
         "description": "Creates a new logs entry in the logs list",
         "operationId": "CreateLogs",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1596,6 +1677,11 @@
         "summary": "Revokes the specified api key.",
         "description": "Revokes the specified api key.",
         "operationId": "RevokeApiKey",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1639,6 +1725,11 @@
         "summary": "Retrieve the details of a specific user by their Id.",
         "description": "Retrieve the details of a specific user by their Id.",
         "operationId": "GetUserData",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1678,6 +1769,11 @@
         "summary": "Creates a new user.",
         "description": "Creates a new user.",
         "operationId": "CreateUser",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {

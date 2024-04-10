@@ -1,5 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { response } from '../../utils';
+import { NextRequest } from 'next/server';
+import { hasApiAccess, response } from '../../utils';
 import { deleteUserPayloadSchema } from './schema';
 
 /**
@@ -11,6 +12,8 @@ import { deleteUserPayloadSchema } from './schema';
  *     summary: Delete user.
  *     description: Delete user by id or external id.
  *     operationId: DeleteUser
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +28,11 @@ import { deleteUserPayloadSchema } from './schema';
  *       500:
  *         description: Error processing request.
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
       return response('Invalid request headers type', 400);

@@ -1,4 +1,4 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import { buildRowMetadata } from '@/lib/services/ApiUtils/experiment/updateExperiment';
 import {
   Enum_Dynamic_experiment_metadata_fields,
@@ -16,6 +16,7 @@ import PrismaClient from '@/lib/services/prisma';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
+import { NextRequest } from 'next/server';
 import { insertLogsPayloadSchema } from './schema';
 
 /**
@@ -27,6 +28,8 @@ import { insertLogsPayloadSchema } from './schema';
  *     summary: Inserts data into the logs table with the given Id.
  *     description: Ensures the logs table is created and inserts the given steps as a row for the given logs id
  *     operationId: InsertLogsRow
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: logsId
@@ -46,11 +49,16 @@ import { insertLogsPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { logsId: string } },
 ) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     let logsId = params.logsId;
+
     try {
       logsId = getUuidFromFakeId(logsId, UUIDPrefixEnum.LOGS);
     } catch (_e) {

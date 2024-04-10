@@ -1,6 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { NextRequest } from 'next/server';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { newUserPayloadSchema } from './schema';
 
 /**
@@ -12,6 +12,8 @@ import { newUserPayloadSchema } from './schema';
  *     summary: Creates a new user.
  *     description: Creates a new user.
  *     operationId: CreateUser
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -31,17 +33,9 @@ import { newUserPayloadSchema } from './schema';
  *         description: Error processing request.
  */
 export async function POST(request: NextRequest) {
-  console.log(
-    ` New user> request headers keys:  ${JSON.stringify(request.headers.keys, null, 2)} \n`,
-  );
-  request.headers.forEach((entry) => {
-    console.log(
-      `Header Key: ${entry}, Header Value: ${request.headers.get(entry)}`,
-    );
-  });
-  console.log(
-    ` New user> request x-api-key:  ${JSON.stringify(request.headers.get('x-api-key'), null, 2)} \n`,
-  );
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
 
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {

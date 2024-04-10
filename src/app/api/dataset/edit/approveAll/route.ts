@@ -1,6 +1,7 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { NextRequest } from 'next/server';
 import { approveAllSchema } from './schema';
 
 /**
@@ -12,6 +13,8 @@ import { approveAllSchema } from './schema';
  *     summary: Approves all ground truths for the specified dataset.
  *     description: Approves all ground truths for the specified dataset.
  *     operationId: ApproveAllDatasetGroundTruths
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       content:
  *         application/json:
@@ -25,7 +28,11 @@ import { approveAllSchema } from './schema';
  *       500:
  *         description: Error processing request.
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasApiAccess(request)) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const requestBody = await request.json();
     const { datasetId } = approveAllSchema.parse(requestBody);

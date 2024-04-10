@@ -1,7 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 
 import { response } from '@/app/api/utils';
-import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest } from 'next/server';
 import { userGetApiKeyResponseSchema } from './schema';
 
@@ -37,21 +36,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
-  const auth = getAuth(request);
-  console.log(` > request:  ${JSON.stringify(request, null, 2)} \n`);
-  try {
-    console.log(
-      ` > request body:  ${JSON.stringify(await request.json(), null, 2)} \n`,
-    );
-  } catch {
-    console.log('...json error....');
-  }
-  console.log(
-    ` > request headers:  ${JSON.stringify(request.headers, null, 2)} \n`,
-  );
-  console.log('');
-  console.log(` > getAuth: ${JSON.stringify(auth, null, 2)} \n`);
-
+  //TODO: add access check after UI components are created
   try {
     const userId = params.userId;
     if (!userId) {

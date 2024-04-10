@@ -32,12 +32,12 @@ export const generateSecureApiKey = (): string => {
   return apiKeyWithChecksum;
 };
 
-export const validateApiKey = (key: string | null) => {
+export const assertApiKeyFormat = (key: string | null) => {
   const parts = key?.split(API_KEY_PART_DELIMITER);
   if (parts?.length !== 3) {
     throw new Error('Invalid API key format');
   }
-  const apiKeyPart = parts[0] + parts[1];
+  const apiKeyPart = `${parts[0]}${API_KEY_PART_DELIMITER}${parts[1]}`;
   const providedChecksum = parseInt(parts[2]);
   const calculatedChecksum = calculateChecksum(apiKeyPart);
   if (providedChecksum !== calculatedChecksum) {
