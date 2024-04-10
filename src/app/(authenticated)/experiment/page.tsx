@@ -1,6 +1,7 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
+import { UserButton } from '@clerk/nextjs';
 import { CellClickedEvent } from 'ag-grid-community';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -39,12 +40,13 @@ const ExperimentsPage = () => {
 
   return (
     <>
-      <div className={cn(['px-6'])}>
+      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
         <Breadcrumb
           customSegments={{
             experiment: <Link href={`/experiment`}>Experiments</Link>,
           }}
         />
+        <UserButton />
       </div>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>

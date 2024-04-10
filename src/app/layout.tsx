@@ -1,5 +1,6 @@
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
+import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
@@ -17,11 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={cn(['h-full w-full'])} lang="en">
-      <body className={cn(['h-full w-full', inter.className])}>
-        <Toaster />
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html className={cn(['h-full w-full'])} lang="en">
+        <body className={cn(['h-full w-full', inter.className])}>
+          <Toaster />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
