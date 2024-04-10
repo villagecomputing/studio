@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run generate:sqlite & next dev",
+    "dev:postgres": "npm run generate:postgres & next dev",
     "build": "next build && npx next-swagger-doc-cli src/lib/next-swagger-doc.json",
     "vercel-build": "npm run generate:postgres && npm run migrate-deploy:postgres && next build",
     "migrate-deploy:postgres": "prisma migrate deploy --schema=./prisma_postgres/schema.prisma",
