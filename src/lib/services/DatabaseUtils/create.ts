@@ -16,7 +16,8 @@ const buildDefinitionString = (columnDefinition: ColumnDefinition): string => {
     columnString += ' PRIMARY KEY';
   }
   if (columnDefinition.isAutoincrement) {
-    columnString += ' AUTOINCREMENT';
+    columnString +=
+      process.env.NODE_ENV === 'production' ? ' SERIAL' : ' AUTOINCREMENT';
   }
   if (columnDefinition.isNotNull) {
     columnString += ' NOT NULL';
