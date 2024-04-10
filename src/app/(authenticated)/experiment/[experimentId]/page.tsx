@@ -1,5 +1,6 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
+import { UserButton } from '@clerk/nextjs';
 import { ChevronRightIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { colors } from '../../../../../tailwind.config';
@@ -17,29 +18,32 @@ export default async function ExperimentViewPage(
 
   return (
     <div>
-      <div className={cn(['flex items-center gap-2 px-6'])}>
-        <Breadcrumb
-          customSegments={{
-            experiment: <Link href={`/experiment`}>Experiments</Link>,
-            [props.params.experimentId.toString()]: (
-              <span className="flex items-center gap-1.5 text-lg">
-                <Link
-                  className="text-slateGray700"
-                  href={`/group/${experiment.groupId.toString()}`}
-                >
-                  {experiment.groupId.toString()}
-                </Link>
-                <ChevronRightIcon color={colors.slateGray500} size={18} />
-                <span className="text-slateGray950">
-                  {experiment.experimentName}
+      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+        <div className={cn(['flex items-center gap-2'])}>
+          <Breadcrumb
+            customSegments={{
+              experiment: <Link href={`/experiment`}>Experiments</Link>,
+              [props.params.experimentId.toString()]: (
+                <span className="flex items-center gap-1.5 text-lg">
+                  <Link
+                    className="text-slateGray700"
+                    href={`/group/${experiment.groupId.toString()}`}
+                  >
+                    {experiment.groupId.toString()}
+                  </Link>
+                  <ChevronRightIcon color={colors.slateGray500} size={18} />
+                  <span className="text-slateGray950">
+                    {experiment.experimentName}
+                  </span>
                 </span>
-              </span>
-            ),
-          }}
-        />
-        <CopyIdToClipboardButton
-          id={createFakeId(experiment.experimentName, experimentId)}
-        />
+              ),
+            }}
+          />
+          <CopyIdToClipboardButton
+            id={createFakeId(experiment.experimentName, experimentId)}
+          />
+        </div>
+        <UserButton />
       </div>
       <Header experiment={experiment} />
 

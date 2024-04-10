@@ -5,6 +5,7 @@ import {
   createFakeId,
   getUuidFromFakeId,
 } from '@/lib/utils';
+import { UserButton } from '@clerk/nextjs';
 import { InfoIcon } from 'lucide-react';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
@@ -18,13 +19,16 @@ export default async function LogsViewPage(props: LogsViewPageProps) {
 
   return (
     <div>
-      <div className={cn(['flex items-center gap-2 px-6'])}>
-        <Breadcrumb
-          customSegments={{
-            [logsId.toString()]: logs?.logsName,
-          }}
-        />
-        <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
+      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+        <div className={cn(['flex items-center gap-2'])}>
+          <Breadcrumb
+            customSegments={{
+              [logsId.toString()]: logs?.logsName,
+            }}
+          />
+          <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
+        </div>
+        <UserButton />
       </div>
       <Header logs={logs} />
 

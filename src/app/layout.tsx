@@ -1,4 +1,3 @@
-import Header from '@/components/header/header';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { ClerkProvider } from '@clerk/nextjs';
@@ -23,7 +22,6 @@ export default function RootLayout({
       <html className={cn(['h-full w-full'])} lang="en">
         <body className={cn(['h-full w-full', inter.className])}>
           <Toaster />
-          <Header />
           {children}
         </body>
       </html>
