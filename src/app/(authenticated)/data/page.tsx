@@ -8,6 +8,7 @@ import {
   formatDate,
   getDatasetUuidFromFakeId,
 } from '@/lib/utils';
+import { UserButton } from '@clerk/nextjs';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
@@ -103,8 +104,9 @@ const DataPage = () => {
 
   return (
     <>
-      <div className={cn(['px-6'])}>
+      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
         <Breadcrumb />
+        <UserButton />
       </div>
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
