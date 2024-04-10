@@ -26,7 +26,7 @@ export async function editGroundTruthCell(
     }
 
     const updated = await DatabaseUtils.update(datasetId, updateData, {
-      id: rowId.toString(),
+      id: rowId,
     });
 
     return updated;
