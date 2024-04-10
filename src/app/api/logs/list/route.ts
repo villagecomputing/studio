@@ -4,7 +4,7 @@ import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
-
+export const dynamic = 'force-dynamic';
 /**
  * @swagger
  * /api/logs/list:
