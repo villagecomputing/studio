@@ -71,7 +71,6 @@ export async function GET() {
               ? logsEntry.total_accuracy / rowsWithAccuracyCount
               : 0,
             totalCost: logsEntry.total_cost,
-            totalLatency: logsEntry.total_latency,
             totalRows: logsEntry.total_rows,
           };
         }),
