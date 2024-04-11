@@ -5,6 +5,7 @@ import {
   calculatePercentile,
   getOrderedExperimentMetadata,
 } from '@/lib/services/ApiUtils/experiment/utils';
+import { getLogsUUID } from '@/lib/services/ApiUtils/logs/getLogsUUID';
 import {
   buildLogsColumnDefinition,
   buildLogsFields,
@@ -14,25 +15,18 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import { getLogsEntryOrThrow } from '@/lib/services/DatabaseUtils/common';
 import PrismaClient from '@/lib/services/prisma';
 import { Enum_Logs_Column_Type } from '@/lib/types';
-import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { insertLogsPayloadSchema } from './schema';
 
 /**
  * @swagger
- * /api/logs/{logsId}/insert:
+ * /api/logs/insert:
  *   post:
  *     tags:
  *      - Logs
- *     summary: Inserts data into the logs table with the given Id.
- *     description: Ensures the logs table is created and inserts the given steps as a row for the given logs id
- *     operationId: InsertLogsRow
- *     parameters:
- *       - in: path
- *         name: logsId
- *         required: true
- *         schema:
- *           type: string
+ *     summary: Inserts data into the logs table with the given fingerprint.
+ *     description: Ensures the logs table is created and inserts the given steps as a row for the given logs fingerprint
+ *     operationId: InsertLogs
  *     requestBody:
  *       required: true
  *       content:
@@ -45,19 +39,11 @@ import { insertLogsPayloadSchema } from './schema';
  *       500:
  *         description: 'Error processing request'
  */
-export async function POST(
-  request: Request,
-  { params }: { params: { logsId: string } },
-) {
+export async function POST(request: Request) {
   try {
-    let logsId = params.logsId;
-    try {
-      logsId = getUuidFromFakeId(logsId, UUIDPrefixEnum.LOGS);
-    } catch (_e) {
-      return response('Invalid logs id', 400);
-    }
     const requestBody = await request.json();
     const payload = insertLogsPayloadSchema.parse(requestBody);
+    const logsId = await getLogsUUID(payload);
 
     // create dynamic table if it's first insert
     const logsEntryDetails = await getLogsEntryOrThrow(logsId);

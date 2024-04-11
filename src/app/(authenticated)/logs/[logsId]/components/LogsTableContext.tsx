@@ -1,4 +1,4 @@
-import { ENUM_Column_type, Enum_Logs_Column_Type } from '@/lib/types';
+import { Enum_Logs_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { compact } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
@@ -30,11 +30,11 @@ export const useLogsTableContext = (
 
   useEffect(() => {
     const parsedColumns = props.columnDefs.filter((column) => {
-      // TODO Add the aggregated Meta column here as well
       return (
         column.type === Enum_Logs_Column_Type.OUTPUT ||
-        column.type === ENUM_Column_type.INPUT ||
-        column.type === Enum_Logs_Column_Type.ROW_METADATA
+        column.type === Enum_Logs_Column_Type.INPUT ||
+        column.type === Enum_Logs_Column_Type.ROW_METADATA ||
+        column.type === Enum_Logs_Column_Type.TIMESTAMP
       );
     });
     const stepMetadataColumns = props.columnDefs.filter(
