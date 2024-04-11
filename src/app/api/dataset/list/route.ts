@@ -5,7 +5,7 @@ import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
-
+export const dynamic = 'force-dynamic';
 /**
  * @swagger
  * /api/dataset/list:
