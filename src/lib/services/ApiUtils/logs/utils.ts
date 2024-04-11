@@ -31,7 +31,7 @@ export function buildLogsFields(
       type: Enum_Logs_Column_Type.IDENTIFIER,
     },
     {
-      name: 'created_at',
+      name: 'Timestamp',
       field: 'created_at',
       type: Enum_Logs_Column_Type.TIMESTAMP,
     },

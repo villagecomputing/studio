@@ -10,4 +10,8 @@ export const insertLogsPayloadSchema = z.object({
       value: z.string(),
     }),
   ),
+  fingerprint: z.string(),
+  name: z.string(),
+  description: z.optional(z.string()),
+  parameters: z.record(z.any()),
 });
