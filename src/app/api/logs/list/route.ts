@@ -5,7 +5,7 @@ import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
-
+export const dynamic = 'force-dynamic';
 /**
  * @swagger
  * /api/logs/list:
@@ -78,7 +78,6 @@ export async function GET(request: NextRequest) {
               ? logsEntry.total_accuracy / rowsWithAccuracyCount
               : 0,
             totalCost: logsEntry.total_cost,
-            totalLatency: logsEntry.total_latency,
             totalRows: logsEntry.total_rows,
           };
         }),

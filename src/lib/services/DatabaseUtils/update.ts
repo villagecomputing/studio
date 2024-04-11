@@ -3,7 +3,7 @@ import PrismaClient from '../prisma';
 export async function update<T>(
   tableName: string,
   setValues: { [key: string]: string },
-  whereConditions?: { [key: string]: string },
+  whereConditions?: { [key: string]: string | number },
 ): Promise<number> {
   const setKeys = Object.keys(setValues);
   const setParams = setKeys
@@ -12,7 +12,7 @@ export async function update<T>(
   const setValuesArray = Object.values(setValues);
 
   let sqlQuery = `UPDATE "${tableName}" SET ${setParams}`;
-  let queryParams = [...setValuesArray];
+  let queryParams: (string | number)[] = [...setValuesArray];
 
   if (whereConditions && Object.keys(whereConditions).length > 0) {
     const whereKeys = Object.keys(whereConditions);

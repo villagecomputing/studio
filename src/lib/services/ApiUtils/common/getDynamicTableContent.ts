@@ -1,4 +1,5 @@
 import DatabaseUtils from '../../DatabaseUtils';
+import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 
 export async function getDynamicTableContent(
   tableName: string,
@@ -8,8 +9,12 @@ export async function getDynamicTableContent(
   }
 
   try {
-    const result =
-      await DatabaseUtils.select<Record<string, unknown>>(tableName);
+    const result = await DatabaseUtils.select<Record<string, unknown>>(
+      tableName,
+      undefined,
+      undefined,
+      { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
+    );
     // Convert all values in each record to strings
     const stringifiedResult = result.map((record) =>
       Object.fromEntries(

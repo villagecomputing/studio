@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
-
+export const dynamic = 'force-dynamic';
 /**
  * @swagger
  * /api/dataset/list:

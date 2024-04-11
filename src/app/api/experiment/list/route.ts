@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
-
+export const dynamic = 'force-dynamic';
 /**
  * @swagger
  * /api/experiment/list:
@@ -76,8 +76,8 @@ export async function GET(request: NextRequest) {
             );
           } catch (_e) {}
           return {
-            ...experiment,
             id: createFakeId(experiment.name, experiment.uuid),
+            name: experiment.name,
             description: experiment.description || '',
             groupId: experiment.group_id,
             pipelineMetadata: experiment.pipeline_metadata,
@@ -89,7 +89,6 @@ export async function GET(request: NextRequest) {
               ? experiment.total_accuracy / rowsWithAccuracyCount
               : 0,
             totalCost: experiment.total_cost,
-            totalLatency: experiment.total_latency,
             totalRows: experiment.total_rows,
             Dataset: {
               ...experiment.Dataset,
