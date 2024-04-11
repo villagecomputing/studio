@@ -36,7 +36,7 @@ const buildSQLiteDefinitionString = (
 const buildPostgresDefinitionString = (
   columnDefinition: ColumnDefinition,
 ): string => {
-  let columnString = `"${columnDefinition.name}" ${columnDefinition.type}`;
+  let columnString = `"${columnDefinition.name}" ${columnDefinition.type === ColumnType.DATETIME ? 'TIMESTAMP WITH TIME ZONE' : columnDefinition.type}`;
   if (columnDefinition.defaultValue !== undefined) {
     columnString += ` DEFAULT ${
       columnDefinition.type === ColumnType.INTEGER ||
