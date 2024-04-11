@@ -8,8 +8,8 @@ import './globals.css';
 const inter = DM_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'LabelKit',
-  description: 'LabelKit',
+  title: 'Superpipe',
+  description: 'Superpipe',
 };
 
 export default function RootLayout({
