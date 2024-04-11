@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
@@ -91,6 +91,7 @@ model Logs {
   total_cost        Float         @default(0)
   total_accuracy    Float         @default(0)
   total_rows        Float         @default(0)
+  fingerprint       String
   User              User?         @relation(fields: [created_by], references: [uuid])
   Logs_column       Logs_column[]
 }

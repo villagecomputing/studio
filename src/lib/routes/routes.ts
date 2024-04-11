@@ -20,13 +20,9 @@ import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
 } from '@/app/api/experiment/new/schema';
-import { insertLogsPayloadSchema } from '@/app/api/logs/[logsId]/insert/schema';
 import { logsViewResponseSchema } from '@/app/api/logs/[logsId]/schema';
+import { insertLogsPayloadSchema } from '@/app/api/logs/insert/schema';
 import { logsListResponseSchema } from '@/app/api/logs/list/schema';
-import {
-  newLogsPayloadSchema,
-  newLogsResponseSchema,
-} from '@/app/api/logs/new/schema';
 import { emptyObjectSchema } from '@/app/api/schema';
 import { userGetApiKeyResponseSchema } from '@/app/api/user/[userId]/getApiKey/schema';
 import { userRevokeApiKeyPayloadSchema } from '@/app/api/user/[userId]/revokeApiKey/schema';
@@ -58,7 +54,6 @@ export enum ApiEndpoints {
   experimentView = '/api/experiment',
   experimentNew = 'api/experiments/new',
   experimentInsert = 'api/experiments/insert',
-  logsNew = 'api/logs/new',
   userNew = 'api/user/new',
   userDelete = 'api/user/delete',
   userView = 'api/user',
@@ -130,11 +125,6 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     resultSchema: emptyObjectSchema,
     method: 'POST',
   },
-  [ApiEndpoints.logsNew]: {
-    payloadSchema: newLogsPayloadSchema,
-    resultSchema: newLogsResponseSchema,
-    method: 'POST',
-  },
   [ApiEndpoints.logsList]: {
     payloadSchema: emptyObjectSchema,
     resultSchema: logsListResponseSchema,
@@ -188,7 +178,6 @@ export type PayloadSchemaType = {
   [ApiEndpoints.experimentInsert]: z.infer<
     typeof insertExperimentPayloadSchema
   >;
-  [ApiEndpoints.logsNew]: z.infer<typeof newLogsPayloadSchema>;
   [ApiEndpoints.logsInsert]: z.infer<typeof insertLogsPayloadSchema>;
   [ApiEndpoints.userNew]: z.infer<typeof newUserPayloadSchema>;
   [ApiEndpoints.userDelete]: z.infer<typeof deleteUserPayloadSchema>;

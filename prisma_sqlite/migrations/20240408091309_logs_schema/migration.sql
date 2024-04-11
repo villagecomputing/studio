@@ -15,6 +15,7 @@ CREATE TABLE "Logs" (
   "total_cost" REAL NOT NULL DEFAULT 0,
   "total_accuracy" REAL NOT NULL DEFAULT 0,
   "total_rows" REAL NOT NULL DEFAULT 0,
+  "fingerprint" TEXT NOT NULL,
   CONSTRAINT "Log_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
