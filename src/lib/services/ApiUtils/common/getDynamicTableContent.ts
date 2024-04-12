@@ -3,6 +3,7 @@ import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 
 export async function getDynamicTableContent(
   tableName: string,
+  sortBy?: { field: string; direction: ENUM_ORDER_DIRECTION },
 ): Promise<Record<string, string>[]> {
   if (!tableName) {
     throw new Error('experimentTableName is required');
@@ -13,7 +14,7 @@ export async function getDynamicTableContent(
       tableName,
       undefined,
       undefined,
-      { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
+      sortBy ?? { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
     );
     // Convert all values in each record to strings
     const stringifiedResult = result.map((record) =>
