@@ -1,8 +1,15 @@
+'use client';
 import Breadcrumb from '@/components/Breadcrumb';
+import Loading from '@/components/loading/Loading';
+import { useToast } from '@/components/ui/use-toast';
+import { EXPERIMENT_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
 import { UserButton } from '@clerk/nextjs';
 import { ChevronRightIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
+import useSWR from 'swr';
 import { colors } from '../../../../../tailwind.config';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchExperiment } from './actions';
@@ -10,11 +17,36 @@ import ExperimentTable from './components/ExperimentTable';
 import Header from './components/Header';
 import { ExperimentViewPageProps } from './types';
 
-export default async function ExperimentViewPage(
-  props: ExperimentViewPageProps,
-) {
+export default function ExperimentViewPage(props: ExperimentViewPageProps) {
   const experimentId = getExperimentUuidFromFakeId(props.params.experimentId);
-  const experiment = await fetchExperiment(experimentId);
+  const {
+    data: experiment,
+    error,
+    isLoading,
+  } = useSWR(experimentId, fetchExperiment, {
+    refreshInterval: EXPERIMENT_REFETCH_INTERVAL_MS,
+  });
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    if (error) {
+      toast({
+        value: 'Failed to get experiment details',
+        variant: 'destructive',
+      });
+      console.error(error);
+    }
+    if (!experiment) {
+      redirect('/experiment');
+    }
+  }, [experiment, isLoading, error]);
+
+  if (!experiment) {
+    return <Loading />;
+  }
 
   return (
     <div>

@@ -20,3 +20,5 @@ export const UPDATABLE_EXPERIMENT_COLUMN_TYPES = [
   Enum_Experiment_Column_Type.STEP_METADATA,
   Enum_Experiment_Column_Type.OUTPUT,
 ];
+export const LOGS_REFETCH_INTERVAL_MS = 3000;
+export const EXPERIMENT_REFETCH_INTERVAL_MS = 3000;
