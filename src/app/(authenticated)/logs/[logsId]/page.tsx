@@ -1,4 +1,8 @@
+'use client';
 import Breadcrumb from '@/components/Breadcrumb';
+import Loading from '@/components/loading/Loading';
+import { useToast } from '@/components/ui/use-toast';
+import { LOGS_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import {
   UUIDPrefixEnum,
   cn,
@@ -7,16 +11,42 @@ import {
 } from '@/lib/utils';
 import { UserButton } from '@clerk/nextjs';
 import { InfoIcon } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
+import useSWR from 'swr';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
 import Header from './components/Header';
 import LogsTable from './components/LogsTable';
 import { LogsViewPageProps } from './types';
 
-export default async function LogsViewPage(props: LogsViewPageProps) {
+export default function LogsViewPage(props: LogsViewPageProps) {
   const logsId = getUuidFromFakeId(props.params.logsId, UUIDPrefixEnum.LOGS);
-  const logs = await fetchLogs(logsId);
+  const {
+    data: logs,
+    error,
+    isLoading,
+  } = useSWR(logsId, fetchLogs, {
+    refreshInterval: LOGS_REFETCH_INTERVAL_MS,
+  });
+  const { toast } = useToast();
 
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    if (error) {
+      toast({ value: 'Failed to get logs details', variant: 'destructive' });
+      console.error(error);
+    }
+    if (!logs) {
+      redirect('/logs');
+    }
+  }, [logs, isLoading, error]);
+
+  if (!logs) {
+    return <Loading />;
+  }
   return (
     <div>
       <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
