@@ -46,8 +46,3 @@ If the Migration deploy fails, a failed migration record will be generated in th
 5. Open command line, run `ngrok http 3000` and copy URL
 6. Navigate to Clerk Webhooks page and add the ngrok URL endpoint, with user filter
 7. Access http://localhost:3000/ and log in
-
-
-### Steps for using the API
-
-1. All API endpoints are documented with Swagger and can be used  at: http://localhost:3000/api-doc
