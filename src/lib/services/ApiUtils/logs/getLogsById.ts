@@ -2,6 +2,7 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { guardStringEnum } from '@/lib/typeUtils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
+import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getExperimentMetadataPercentile } from '../experiment/getExperiment';
 import { getLogsDetails } from './getLogsDetails';
@@ -17,7 +18,10 @@ export async function getLogsById(
   if (!logsDetails) {
     throw new Error('No logs for id');
   }
-  const logsContent = await getDynamicTableContent(logsId);
+  const logsContent = await getDynamicTableContent(logsId, {
+    field: 'created_at',
+    direction: ENUM_ORDER_DIRECTION.DESC,
+  });
 
   // Map the columns
   const columns = logsDetails.Logs_column.map((column) => {
