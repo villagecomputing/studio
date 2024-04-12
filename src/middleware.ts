@@ -9,6 +9,7 @@ export default authMiddleware({
     '/api/webhook(.*)',
     // TODO: this endpoint should be removed from public as soon as the UI for getting the API Key is done
     '/api/user/(.*)/getApiKey',
+    '/api/user/new',
   ],
   afterAuth: async (auth, request) => {
     if (auth.isPublicRoute || process.env.ENV_TYPE === 'local') {
