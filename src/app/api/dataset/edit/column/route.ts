@@ -1,4 +1,4 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { editDatasetColumnSchema } from './schema';
 
@@ -11,6 +11,8 @@ import { editDatasetColumnSchema } from './schema';
  *     summary: Edits an existing column in a dataset.
  *     description: Edits an existing column in a dataset.
  *     operationId: EditDatasetColumn
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -28,6 +30,10 @@ import { editDatasetColumnSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const requestBody = await request.json();
     const { columnId, type, name } = editDatasetColumnSchema.parse(requestBody);

@@ -6,7 +6,7 @@ import {
   generateUUID,
   getDatasetUuidFromFakeId,
 } from '@/lib/utils';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
 
 /**
@@ -18,6 +18,8 @@ import { newExperimentPayloadSchema } from './schema';
  *     summary: Declare a new experiment for a given dataset Id
  *     description: Declare a new experiment for a given dataset Id
  *     operationId: DeclareExperiment
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -37,6 +39,10 @@ import { newExperimentPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
   const datasetId = getDatasetUuidFromFakeId(payload.datasetId);

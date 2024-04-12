@@ -3,7 +3,7 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 export const dynamic = 'force-dynamic';
 /**
  * @swagger
@@ -14,6 +14,8 @@ export const dynamic = 'force-dynamic';
  *     summary: Logs list
  *     description: Logs list
  *     operationId: ListLogs
+ *     security:
+ *       - ApiKeyAuth: []
  *     responses:
  *       200:
  *         description: Logs list.
@@ -24,7 +26,11 @@ export const dynamic = 'force-dynamic';
  *       500:
  *         description: 'Error processing request.'
  */
-export async function GET() {
+export async function GET(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const logsSelect = {
       uuid: true,

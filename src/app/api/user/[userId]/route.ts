@@ -1,5 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { userViewResponseSchema } from './schema';
 
 /**
@@ -11,6 +11,8 @@ import { userViewResponseSchema } from './schema';
  *     summary: Retrieve the details of a specific user by their Id.
  *     description: Retrieve the details of a specific user by their Id.
  *     operationId: GetUserData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -34,6 +36,10 @@ export async function GET(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const userId = params.userId;
     if (!userId) {

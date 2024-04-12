@@ -3,7 +3,7 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
 export const dynamic = 'force-dynamic';
 /**
@@ -15,6 +15,8 @@ export const dynamic = 'force-dynamic';
  *     summary: Retrieves a list of datasets and their total row counts
  *     description: Retrieves a list of datasets and their total row counts
  *     operationId: ListDatasets
+ *     security:
+ *      - ApiKeyAuth: []
  *     responses:
  *       200:
  *          description: Dataset retrieved
@@ -27,7 +29,11 @@ export const dynamic = 'force-dynamic';
  *       500:
  *         description: Error processing request
  */
-export async function GET() {
+export async function GET(request: Request) {
+  if (!(await await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const datasetSelect = {
       uuid: true,

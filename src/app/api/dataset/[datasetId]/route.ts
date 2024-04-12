@@ -1,6 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
 /**
@@ -12,6 +12,8 @@ import { datasetViewResponseSchema } from './schema';
  *     summary: Retrieve the details of a specific dataset by its Id.
  *     description: Retrieve the details of a specific dataset by its Id.
  *     operationId: GetDatasetData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -35,6 +37,10 @@ export async function GET(
   request: Request,
   { params }: { params: { datasetId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {

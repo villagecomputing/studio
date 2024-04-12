@@ -1,6 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { logsViewResponseSchema } from './schema';
 
 /**
@@ -12,6 +12,8 @@ import { logsViewResponseSchema } from './schema';
  *     summary: Fetches the details of the logs view with the specified Id.
  *     description: Fetches the details of the logs view with the specified Id.
  *     operationId: GetLogsData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: logsId
@@ -35,6 +37,10 @@ export async function GET(
   request: Request,
   { params }: { params: { logsId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     let logsId = params.logsId;
     try {

@@ -1,4 +1,4 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
 import { addDataPayloadSchema } from './schema';
@@ -12,6 +12,8 @@ import { addDataPayloadSchema } from './schema';
  *     summary: Inserts data into a dataset.
  *     description: Inserts data into a dataset.
  *     operationId: AddDatasetData
+ *     security:
+ *      - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: datasetId
@@ -38,6 +40,9 @@ export async function POST(
   request: Request,
   { params }: { params: { datasetId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {

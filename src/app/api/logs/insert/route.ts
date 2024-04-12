@@ -1,4 +1,4 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import { buildRowMetadata } from '@/lib/services/ApiUtils/experiment/updateExperiment';
 import {
   Enum_Dynamic_experiment_metadata_fields,
@@ -27,6 +27,8 @@ import { insertLogsPayloadSchema } from './schema';
  *     summary: Inserts data into the logs table with the given fingerprint.
  *     description: Ensures the logs table is created and inserts the given steps as a row for the given logs fingerprint
  *     operationId: InsertLogs
+ *     security:
+ *       - ApiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -40,6 +42,10 @@ import { insertLogsPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const requestBody = await request.json();
     const payload = insertLogsPayloadSchema.parse(requestBody);

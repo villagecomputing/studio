@@ -1,6 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
 /**
@@ -12,6 +12,8 @@ import { experimentViewResponseSchema } from './schema';
  *     summary: Fetches the details of an experiment with the specified Id.
  *     description: Fetches the details of an experiment with the specified Id.
  *     operationId: GetExperimentData
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: experimentId
@@ -35,6 +37,10 @@ export async function GET(
   request: Request,
   { params }: { params: { experimentId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     let experimentId = params.experimentId;
     try {

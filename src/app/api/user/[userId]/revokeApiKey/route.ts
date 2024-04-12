@@ -1,6 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import { userRevokeApiKeyPayloadSchema } from './schema';
 
 /**
@@ -12,6 +12,8 @@ import { userRevokeApiKeyPayloadSchema } from './schema';
  *     summary: Revokes the specified api key.
  *     description: Revokes the specified api key.
  *     operationId: RevokeApiKey
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -38,6 +40,10 @@ export async function POST(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const userId = params.userId;
     if (!userId) {

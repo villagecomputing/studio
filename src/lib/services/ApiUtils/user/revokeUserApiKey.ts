@@ -1,7 +1,7 @@
 import { userRevokeApiKeyPayloadSchema } from '@/app/api/user/[userId]/revokeApiKey/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import PrismaClient from '../../prisma';
-import { validateApiKey } from './utils';
+import { assertApiKeyFormat } from './utils';
 
 export async function revokeUserApiKey({
   userId,
@@ -15,7 +15,7 @@ export async function revokeUserApiKey({
   }
 
   const { api_key } = userRevokeApiKeyPayloadSchema.parse(payload);
-  validateApiKey(api_key);
+  assertApiKeyFormat(api_key);
 
   try {
     await PrismaClient.aPI_key.update({

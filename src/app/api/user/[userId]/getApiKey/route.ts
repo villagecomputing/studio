@@ -35,6 +35,7 @@ export async function GET(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
+  //TODO: add access check after UI components are created
   try {
     const userId = params.userId;
     if (!userId) {
