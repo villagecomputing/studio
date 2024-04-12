@@ -1,7 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { editGroundTruthCellSchema } from './schema';
 
 /**
@@ -31,8 +30,8 @@ import { editGroundTruthCellSchema } from './schema';
  *       500:
  *         description: 'Error processing result.'
  */
-export async function POST(request: NextRequest) {
-  if (!hasApiAccess(request)) {
+export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

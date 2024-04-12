@@ -1,7 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 
 import { hasApiAccess, response } from '@/app/api/utils';
-import { NextRequest } from 'next/server';
 import { userRevokeApiKeyPayloadSchema } from './schema';
 
 /**
@@ -38,10 +37,10 @@ import { userRevokeApiKeyPayloadSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function POST(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { userId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

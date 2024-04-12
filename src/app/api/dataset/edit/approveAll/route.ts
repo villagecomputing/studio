@@ -1,7 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDatasetUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { approveAllSchema } from './schema';
 
 /**
@@ -28,8 +27,8 @@ import { approveAllSchema } from './schema';
  *       500:
  *         description: Error processing request.
  */
-export async function POST(request: NextRequest) {
-  if (!hasApiAccess(request)) {
+export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

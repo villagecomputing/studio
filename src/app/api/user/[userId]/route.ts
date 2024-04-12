@@ -1,5 +1,4 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { userViewResponseSchema } from './schema';
 
@@ -34,10 +33,10 @@ import { userViewResponseSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { userId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

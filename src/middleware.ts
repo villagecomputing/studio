@@ -1,5 +1,6 @@
 import { authMiddleware, redirectToSignIn } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
+import { LOGGED_IN_USER_ID, X_API_KEY_HEADER } from './app/api/utils';
 import { assertApiKeyFormat } from './lib/services/ApiUtils/user/utils';
 
 export default authMiddleware({
@@ -10,11 +11,18 @@ export default authMiddleware({
     '/api/user/(.*)/getApiKey',
   ],
   afterAuth: async (auth, request) => {
-    if (auth.userId || auth.isPublicRoute) {
+    if (auth.isPublicRoute) {
       return NextResponse.next();
     }
 
-    const xApiKey = request.headers.get('x-api-key');
+    if (auth.userId) {
+      // Endpoints need to be agnostic of clerk so instead of its using getAuth function to validate
+      // we should add a user id header
+      request.headers.set(LOGGED_IN_USER_ID, auth.userId || '');
+      return NextResponse.next();
+    }
+
+    const xApiKey = request.headers.get(X_API_KEY_HEADER);
     if (xApiKey) {
       assertApiKeyFormat(xApiKey);
       return NextResponse.next();

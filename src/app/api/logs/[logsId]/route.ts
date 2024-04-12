@@ -1,6 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { logsViewResponseSchema } from './schema';
 
@@ -35,10 +34,10 @@ import { logsViewResponseSchema } from './schema';
  *         description: Error processing request
  */
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { logsId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

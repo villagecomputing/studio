@@ -1,5 +1,4 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { newUserPayloadSchema } from './schema';
 
@@ -32,8 +31,8 @@ import { newUserPayloadSchema } from './schema';
  *       500:
  *         description: Error processing request.
  */
-export async function POST(request: NextRequest) {
-  if (!hasApiAccess(request)) {
+export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

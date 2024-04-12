@@ -1,7 +1,6 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 
 import { response } from '@/app/api/utils';
-import { NextRequest } from 'next/server';
 import { userGetApiKeyResponseSchema } from './schema';
 
 /**
@@ -33,7 +32,7 @@ import { userGetApiKeyResponseSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { userId: string } },
 ) {
   //TODO: add access check after UI components are created

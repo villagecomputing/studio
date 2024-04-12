@@ -1,6 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
@@ -35,10 +34,10 @@ import { experimentViewResponseSchema } from './schema';
  *         description: Invalid response experiment view type -or- Error processing request
  */
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { experimentId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

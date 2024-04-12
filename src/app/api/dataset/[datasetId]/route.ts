@@ -1,6 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
 import { createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
@@ -35,10 +34,10 @@ import { datasetViewResponseSchema } from './schema';
  *         description: Internal server error occurred while processing the request.
  */
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { datasetId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

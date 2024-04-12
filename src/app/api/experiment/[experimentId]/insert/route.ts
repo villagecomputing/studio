@@ -1,7 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getExperimentUuidFromFakeId } from '@/lib/utils';
-import { NextRequest } from 'next/server';
 import { insertExperimentPayloadSchema } from './schema';
 
 /**
@@ -34,10 +33,10 @@ import { insertExperimentPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { experimentId: string } },
 ) {
-  if (!hasApiAccess(request)) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

@@ -3,7 +3,6 @@ import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { NextRequest } from 'next/server';
 import { hasApiAccess, response } from '../../utils';
 export const dynamic = 'force-dynamic';
 /**
@@ -27,8 +26,8 @@ export const dynamic = 'force-dynamic';
  *       500:
  *         description: 'Error processing request.'
  */
-export async function GET(request: NextRequest) {
-  if (!hasApiAccess(request)) {
+export async function GET(request: Request) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 

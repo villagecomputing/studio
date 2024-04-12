@@ -16,7 +16,6 @@ import { getLogsEntryOrThrow } from '@/lib/services/DatabaseUtils/common';
 import PrismaClient from '@/lib/services/prisma';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { Prisma } from '@prisma/client';
-import { NextRequest } from 'next/server';
 import { insertLogsPayloadSchema } from './schema';
 
 /**
@@ -42,8 +41,8 @@ import { insertLogsPayloadSchema } from './schema';
  *       500:
  *         description: 'Error processing request'
  */
-export async function POST(request: NextRequest) {
-  if (!hasApiAccess(request)) {
+export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
     return response('Unauthorized', 401);
   }
 
