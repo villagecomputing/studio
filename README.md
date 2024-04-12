@@ -44,5 +44,5 @@ If the Migration deploy fails, a failed migration record will be generated in th
 3. `npm run dev`
 4. [Download/Install ngrok]
 5. Open command line, run `ngrok http 3000` and copy URL
-6. Navigate to Clerk Webhooks page and add the ngrok URL endpoint, with user filter
+6. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
 7. Access http://localhost:3000/ and log in
