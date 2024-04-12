@@ -15,6 +15,10 @@ export function response(message: string, status: 200 | 400 | 401 | 500 = 200) {
 
 export async function hasApiAccess(request: Request) {
   try {
+    if (process.env.ENV_TYPE === 'local') {
+      return true;
+    }
+
     const userId = request.headers.get(LOGGED_IN_USER_ID);
     if (userId) {
       await assertUserExists(userId);

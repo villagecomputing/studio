@@ -37,7 +37,12 @@ If the Migration deploy fails, a failed migration record will be generated in th
 2. Run the following command which will mark the broken record as rolled-back and allow us to insert a new record with the same name. Don't forget to replace the name of the migration folder and the database provider accordingly
 `npx prisma migrate resolve --rolled-back ${MIGRATION_FOLDER_NAME} --schema=./prisma_${postgres or sqlite}/schema.prisma`
 
-### Steps for authenticating
+### Running locally without authentication
+1. To run locally without the need to authenticate add ENV_TYPE=local to the .env.local file
+
+### Steps for authenticating with Clerk
+
+Make sure ENV_TYPE is not local
 
 1. Create a Clerk organization and navigate to the API Keys page
 2. Add the NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY variables to the .env.local file

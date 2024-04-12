@@ -17,6 +17,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ignoreAuthentication = process.env.ENV_TYPE === 'local';
+
+  if (ignoreAuthentication) {
+    return (
+      <html className={cn(['h-full w-full'])} lang="en">
+        <body className={cn(['h-full w-full', inter.className])}>
+          <Toaster />
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   return (
     <ClerkProvider>
       <html className={cn(['h-full w-full'])} lang="en">

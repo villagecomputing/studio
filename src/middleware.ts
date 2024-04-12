@@ -11,7 +11,7 @@ export default authMiddleware({
     '/api/user/(.*)/getApiKey',
   ],
   afterAuth: async (auth, request) => {
-    if (auth.isPublicRoute) {
+    if (auth.isPublicRoute || process.env.ENV_TYPE === 'local') {
       return NextResponse.next();
     }
 
