@@ -8,11 +8,13 @@ import {
   CellClickedEvent,
   GetRowIdParams,
   GridOptions,
+  IRowNode,
   NavigateToNextCellParams,
 } from 'ag-grid-community';
+import { isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
 import RowMetadataCellRenderer from '../components/RowMetadataCellRenderer';
-import { LogsRow, LogsTableContext } from '../types';
+import { DateRangeFilter, LogsRow, LogsTableContext } from '../types';
 
 export function useGridOperations() {
   const navigateToNextCell = useCallback(
@@ -83,9 +85,37 @@ export function useGridOperations() {
     };
   }, []);
 
+  const isExternalFilterPresent = (dateRange: DateRangeFilter['dateRange']) => {
+    return dateRange !== undefined;
+  };
+  const doesExternalFilterPass = (
+    node: IRowNode<LogsRow>,
+    dateRange: DateRangeFilter['dateRange'],
+  ) => {
+    if (!dateRange || !dateRange.from) {
+      return true;
+    }
+    if (!node.data?.['created_at']) {
+      return false;
+    }
+
+    const createdAt = startOfDay(new Date(node.data['created_at']));
+    if (
+      isEqual(createdAt, dateRange.from) ||
+      (!!dateRange.to &&
+        isAfter(createdAt, dateRange.from) &&
+        (isBefore(createdAt, dateRange.to) || isEqual(createdAt, dateRange.to)))
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   return {
     getRowId,
     navigateToNextCell,
     columnTypes: getColumnTypes(),
+    isExternalFilterPresent,
+    doesExternalFilterPass,
   };
 }
