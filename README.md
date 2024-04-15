@@ -39,6 +39,7 @@ If the Migration deploy fails, a failed migration record will be generated in th
 
 ### Running locally without authentication
 1. To run locally without the need to authenticate add ENV_TYPE=local to the .env.local file
+2. Add the NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY variables from the .env.example file 
 
 ### Steps for authenticating with Clerk
 
