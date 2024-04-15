@@ -1,5 +1,4 @@
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
-import { isGroundTruthCell } from '../../data/utils/commonUtils';
 import { LogsRow, StepMetadataColumn } from './types';
 
 export const getLogsRowMetadata = (
@@ -14,7 +13,7 @@ export const getLogsRowMetadata = (
 
   for (const column of stepMetadataColumns) {
     const value = rowData[column.field];
-    if (!value || isGroundTruthCell(value)) {
+    if (!value) {
       continue;
     }
     const metadata = JSON.parse(value);
