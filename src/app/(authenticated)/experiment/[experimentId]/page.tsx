@@ -4,13 +4,13 @@ import Loading from '@/components/loading/Loading';
 import { useToast } from '@/components/ui/use-toast';
 import { EXPERIMENT_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { ChevronRightIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { colors } from '../../../../../tailwind.config';
+import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
@@ -75,7 +75,7 @@ export default function ExperimentViewPage(props: ExperimentViewPageProps) {
             id={createFakeId(experiment.experimentName, experimentId)}
           />
         </div>
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       <Header experiment={experiment} />
 

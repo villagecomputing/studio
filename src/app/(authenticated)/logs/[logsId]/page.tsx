@@ -9,11 +9,11 @@ import {
   createFakeId,
   getUuidFromFakeId,
 } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { InfoIcon } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import useSWR from 'swr';
+import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
 import Header from './components/Header';
@@ -58,7 +58,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
           />
           <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
         </div>
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       <Header logs={logs} />
 

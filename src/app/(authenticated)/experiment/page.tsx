@@ -1,7 +1,6 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { CellClickedEvent } from 'ag-grid-community';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -9,6 +8,8 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
+
+import ProfileManagementButton from '../components/user-button/ProfileManagementButton';
 import { useExperimentListContext } from './components/ExperimentListProvider';
 import ExperimentListZeroState from './components/zero-state/ExperimentListZeroState';
 import { ExperimentListRowType } from './types';
@@ -46,7 +47,7 @@ const ExperimentsPage = () => {
             experiment: <Link href={`/experiment`}>Experiments</Link>,
           }}
         />
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>

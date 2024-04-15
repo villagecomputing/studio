@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
 import { cn, createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
+import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
 import { fetchDataSet } from './actions';
 import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
@@ -34,7 +34,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
             id={createFakeId(dataSet?.datasetName ?? '', datasetId)}
           />
         </div>
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>

@@ -5,11 +5,16 @@ import PrismaClient from '../../prisma';
 import { generateSecureApiKey } from './utils';
 
 export async function getUserApiKey(
-  userId: string,
+  externalUserId: string,
 ): Promise<ResultSchemaType[ApiEndpoints.userApiKeyView]> {
-  if (!userId) {
-    throw new Error('DatasetId is required');
+  if (!externalUserId) {
+    throw new Error('User Id is required');
   }
+
+  const user = await PrismaClient.user.findFirstOrThrow({
+    where: { external_id: externalUserId, deleted_at: null },
+    select: { uuid: true },
+  });
 
   const apiKeySelect = {
     key: true,
@@ -17,7 +22,7 @@ export async function getUserApiKey(
 
   try {
     const apiKeyResult = await PrismaClient.aPI_key.findFirst({
-      where: { user_id: userId, revoked_at: null },
+      where: { user_id: user.uuid, revoked_at: null },
       select: apiKeySelect,
     });
 
@@ -31,7 +36,7 @@ export async function getUserApiKey(
     await PrismaClient.aPI_key.create({
       data: {
         key: newApiKey,
-        user_id: userId,
+        user_id: user.uuid,
       },
     });
 

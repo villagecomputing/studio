@@ -1,12 +1,12 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import { cn } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import DataTable from '../../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../../components/data-table/constants';
+import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
 import { DatasetName } from '../../experiment/components/DatasetNameCellRenderer';
 import { useExperimentListContext } from '../../experiment/components/ExperimentListProvider';
 import ExperimentGrid from '../../experiment/utils/ExperimentGrid';
@@ -44,7 +44,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
             group: <Link href={`/experiment`}>Experiments</Link>,
           }}
         />
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       <div className="px-6">
         <div className={'my-6 flex items-center gap-6'}>

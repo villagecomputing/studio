@@ -12,6 +12,8 @@ import { userGetApiKeyResponseSchema } from './schema';
  *     summary: Retrieves user's API Key.
  *     description: Retrieves and existing active API key or generates a new one.
  *     operationId: GetUserApiKey
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId

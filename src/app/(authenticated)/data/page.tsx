@@ -8,13 +8,13 @@ import {
   formatDate,
   getDatasetUuidFromFakeId,
 } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
 import { SearchInput } from '../components/search-input/SearchInput';
+import ProfileManagementButton from '../components/user-button/ProfileManagementButton';
 import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
@@ -106,7 +106,7 @@ const DataPage = () => {
     <>
       <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
         <Breadcrumb />
-        <UserButton />
+        <ProfileManagementButton />
       </div>
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
