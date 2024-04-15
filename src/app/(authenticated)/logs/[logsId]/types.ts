@@ -2,10 +2,10 @@ import { Enum_Logs_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { DateRange } from 'react-day-picker';
 import {
   AGGridDataset,
   DatasetTableColumnProps,
-  GroundTruthCell,
 } from '../../data/[datasetId]/types';
 
 export type LogsViewPageProps = {
@@ -34,7 +34,7 @@ export type ConvertToAGGridDataProps = {
 };
 
 export type LogsRow = {
-  [k: string]: string | GroundTruthCell;
+  [k: string]: string;
 };
 
 export type FetchLogsResult = AGGridLogs & {
@@ -62,7 +62,7 @@ export type LogsTableContext = {
   stepMetadataColumns: StepMetadataColumn[];
   inspectorRowIndex: number | null;
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
-  rows: AGGridDataset['rowData'];
+  rows: LogsRow[];
   columnDefs: AGGridDataset['columnDefs'];
   displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<LogsRow> | undefined>;
@@ -74,4 +74,9 @@ export type StepsMetadataPercentiles = {
     latencyP25: number;
     latencyP75: number;
   };
+};
+
+export type DateRangeFilter = {
+  dateRange: DateRange | undefined;
+  setDateRange: (date: DateRange | undefined) => void;
 };

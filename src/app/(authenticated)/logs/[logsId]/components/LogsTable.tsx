@@ -2,16 +2,27 @@
 import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '@/app/(authenticated)/components/data-table/constants';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
-import { FetchLogsResult, LogsRow } from '../types';
+import { DateRangeFilter, FetchLogsResult, LogsRow } from '../types';
 
+import { IRowNode } from 'ag-grid-community';
 import LogsRowInspector from './LogsRowInspector/LogsRowInspector';
 import { useLogsTableContext } from './LogsTableContext';
 
-const LogsTable = (props: FetchLogsResult) => {
+type LogsTableProps = FetchLogsResult & {
+  dateRange: DateRangeFilter['dateRange'];
+};
+
+const LogsTable = (props: LogsTableProps) => {
   const context = useLogsTableContext(props);
-  const { columnTypes, getRowId, navigateToNextCell } = useGridOperations();
+  const {
+    columnTypes,
+    getRowId,
+    navigateToNextCell,
+    isExternalFilterPresent,
+    doesExternalFilterPass,
+  } = useGridOperations();
   const gridRef = useRef<AgGridReactType<LogsRow>>(null);
   useEffect(() => {
     if (!gridRef.current) {
@@ -37,6 +48,15 @@ const LogsTable = (props: FetchLogsResult) => {
           columnDefs: context.displayableColumnDefs,
           columnTypes,
           navigateToNextCell,
+          isExternalFilterPresent: useCallback(
+            () => isExternalFilterPresent(props.dateRange),
+            [props.dateRange, isExternalFilterPresent],
+          ),
+          doesExternalFilterPass: useCallback(
+            (node: IRowNode<LogsRow>) =>
+              doesExternalFilterPass(node, props.dateRange),
+            [props.dateRange, doesExternalFilterPass],
+          ),
         }}
       />
     </>

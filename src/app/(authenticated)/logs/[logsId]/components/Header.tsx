@@ -1,22 +1,27 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { BracesIcon } from 'lucide-react';
 import React from 'react';
-import { FetchLogsResult } from '../types';
+import { DateRangeFilter, FetchLogsResult } from '../types';
 import MetadataElement, { Enum_Metadata_Type } from './MetadataElement';
 import PipelineParametersPopover from './PipelineParametersPopover';
 
 type HeaderProps = {
   logs: FetchLogsResult;
-};
-const Header: React.FC<HeaderProps> = ({ logs }) => {
+} & DateRangeFilter;
+const Header: React.FC<HeaderProps> = ({ logs, dateRange, setDateRange }) => {
   const stepsCount = logs.columnDefs.filter(
     (col) => col.type === Enum_Logs_Column_Type.STEP_METADATA,
   ).length;
 
   return (
     <div className="flex gap-4 px-4 pb-4 pt-2">
+      <DatePickerWithRange
+        selectedDateRange={dateRange}
+        setDateRange={setDateRange}
+      />
       <PipelineParametersPopover pipelineParameters={logs.parameters}>
         <Button variant={'secondary'}>
           <span className="flex items-center gap-2.5">

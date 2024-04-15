@@ -12,7 +12,8 @@ import {
 import { UserButton } from '@clerk/nextjs';
 import { InfoIcon } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { DateRange } from 'react-day-picker';
 import useSWR from 'swr';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
@@ -30,6 +31,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
     refreshInterval: LOGS_REFETCH_INTERVAL_MS,
   });
   const { toast } = useToast();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   useEffect(() => {
     if (isLoading) {
@@ -60,7 +62,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
         </div>
         <UserButton />
       </div>
-      <Header logs={logs} />
+      <Header logs={logs} dateRange={dateRange} setDateRange={setDateRange} />
 
       {!logs.rowData.length ? (
         <div className="border-t border-gridBorderColor pt-6">
@@ -71,7 +73,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
         </div>
       ) : (
         <div style={{ height: 'calc(100vh - 130px)' }}>
-          <LogsTable {...logs} />
+          <LogsTable {...logs} dateRange={dateRange} />
         </div>
       )}
     </div>
