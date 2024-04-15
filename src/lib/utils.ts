@@ -146,3 +146,7 @@ export const getUuidFromFakeId = (fakeId: string, type: UUIDPrefixEnum) => {
   }
   return uuidWithPrefix;
 };
+
+export const isAuthEnabled = () => {
+  return !process.env.ENV_TYPE || process.env.ENV_TYPE !== 'local';
+};

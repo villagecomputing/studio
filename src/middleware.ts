@@ -2,16 +2,18 @@ import { authMiddleware, redirectToSignIn } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
 import { LOGGED_IN_USER_ID, X_API_KEY_HEADER } from './app/api/utils';
 import { assertApiKeyFormat } from './lib/services/ApiUtils/user/utils';
+import { isAuthEnabled } from './lib/utils';
 
 export default authMiddleware({
   publicRoutes: [
+    isAuthEnabled() ? '/api-doc' : '/(.*)',
     '/api/webhook(.*)',
-    '/api-doc',
     // TODO: this endpoint should be removed from public as soon as the UI for getting the API Key is done
     '/api/user/(.*)/getApiKey',
+    '/api/user/new',
   ],
   afterAuth: async (auth, request) => {
-    if (auth.isPublicRoute) {
+    if (auth.isPublicRoute || !isAuthEnabled()) {
       return NextResponse.next();
     }
 
