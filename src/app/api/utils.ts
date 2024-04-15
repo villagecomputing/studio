@@ -2,6 +2,7 @@ import {
   assertApiKeyExists,
   assertUserExists,
 } from '@/lib/services/DatabaseUtils/common';
+import { isAuthEnabled } from '@/lib/utils';
 
 export const X_API_KEY_HEADER = 'x-api-key';
 export const LOGGED_IN_USER_ID = 'logged_in_user_id';
@@ -15,7 +16,7 @@ export function response(message: string, status: 200 | 400 | 401 | 500 = 200) {
 
 export async function hasApiAccess(request: Request) {
   try {
-    if (process.env.ENV_TYPE === 'local') {
+    if (!isAuthEnabled()) {
       return true;
     }
 
