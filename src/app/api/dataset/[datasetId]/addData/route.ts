@@ -1,6 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { addDataPayloadSchema } from './schema';
 
 /**
@@ -60,7 +60,7 @@ export async function POST(
     // Parse the dataset data object using the defined schema
     // This will throw if the object doesn't match the schema
     const dataset = addDataPayloadSchema.parse(body);
-    const datasetUuid = getDatasetUuidFromFakeId(datasetId);
+    const datasetUuid = getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET);
     await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
 
     return response('OK');

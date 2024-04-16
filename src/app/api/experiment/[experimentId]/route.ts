@@ -1,5 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
@@ -44,7 +44,7 @@ export async function GET(
   try {
     let experimentId = params.experimentId;
     try {
-      experimentId = getExperimentUuidFromFakeId(experimentId);
+      experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
     } catch (_e) {
       return response('Invalid experiment id', 400);
     }

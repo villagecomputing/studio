@@ -1,5 +1,5 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
@@ -48,7 +48,7 @@ export async function GET(
     }
 
     const dataset = await ApiUtils.getDataset(
-      getDatasetUuidFromFakeId(datasetId),
+      getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET),
     );
 
     const validationResult = datasetViewResponseSchema.safeParse(dataset);

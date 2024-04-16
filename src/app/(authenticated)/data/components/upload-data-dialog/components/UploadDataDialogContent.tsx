@@ -9,9 +9,10 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import { TOAST_MESSAGE } from '@/lib/language/toasts';
 import {
+  UUIDPrefixEnum,
   cn,
-  getDatasetUuidFromFakeId,
   getFilenameWithoutExtension,
+  getUuidFromFakeId,
 } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -73,7 +74,10 @@ export default function UploadDataDialogContent(
     });
     const responseBody = await response.json();
     const dataset = uploadDatasetResultSchema.parse(responseBody);
-    const datasetId = getDatasetUuidFromFakeId(dataset.datasetId);
+    const datasetId = getUuidFromFakeId(
+      dataset.datasetId,
+      UUIDPrefixEnum.DATASET,
+    );
 
     if (response.status !== 200 || !datasetId) {
       toast({

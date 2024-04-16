@@ -2,10 +2,7 @@
 import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
 import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
-import {
-  getDatasetUuidFromFakeId,
-  getExperimentUuidFromFakeId,
-} from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import React, {
   PropsWithChildren,
   createContext,
@@ -25,10 +22,10 @@ const getData = async (): Promise<ExperimentList> => {
     .map((experiment) => {
       return {
         ...experiment,
-        id: getExperimentUuidFromFakeId(experiment.id),
+        id: getUuidFromFakeId(experiment.id, UUIDPrefixEnum.EXPERIMENT),
         Dataset: {
           ...experiment.Dataset,
-          id: getDatasetUuidFromFakeId(experiment.Dataset.id),
+          id: getUuidFromFakeId(experiment.Dataset.id, UUIDPrefixEnum.DATASET),
         },
       };
     });
