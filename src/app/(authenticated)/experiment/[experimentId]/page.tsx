@@ -4,13 +4,13 @@ import Loading from '@/components/loading/Loading';
 import { useToast } from '@/components/ui/use-toast';
 import { EXPERIMENT_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { ChevronRightIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { colors } from '../../../../../tailwind.config';
+import PageHeader from '../../components/page-header/PageHeader';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
@@ -50,7 +50,7 @@ export default function ExperimentViewPage(props: ExperimentViewPageProps) {
 
   return (
     <div>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <div className={cn(['flex items-center gap-2'])}>
           <Breadcrumb
             customSegments={{
@@ -75,10 +75,8 @@ export default function ExperimentViewPage(props: ExperimentViewPageProps) {
             id={createFakeId(experiment.experimentName, experimentId)}
           />
         </div>
-        <UserButton />
-      </div>
+      </PageHeader>
       <Header experiment={experiment} />
-
       {!experiment.rowData.length ? (
         <div className="border-t border-gridBorderColor pt-6">
           <div className="flex w-full items-center justify-center gap-2 text-muted-foreground">
