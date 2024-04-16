@@ -2,7 +2,7 @@
 import { cn, isAuthEnabled } from '@/lib/utils';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import fetchApiKey from './actions';
+import fetchApiKeyByExternalUserId from './actions';
 
 const DotIcon = () => {
   return (
@@ -17,19 +17,19 @@ const DotIcon = () => {
 };
 
 const ProfileManagementButton = () => {
-  const { user } = useUser();
+  const { user: clerkUser } = useUser();
   const [apiKey, setApiKey] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!user?.id) {
+    if (!clerkUser?.id) {
       return;
     }
 
     (async () => {
-      const key = await fetchApiKey(user.id);
+      const key = await fetchApiKeyByExternalUserId(clerkUser.id);
       setApiKey(key?.api_key);
     })();
-  }, [user?.id]);
+  }, [clerkUser?.id]);
 
   if (!isAuthEnabled()) {
     return <></>;

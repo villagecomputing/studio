@@ -4,9 +4,11 @@ import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
 import { generateSecureApiKey } from './utils';
 
-export async function getUserApiKey(
-  externalUserId: string,
-): Promise<ResultSchemaType[ApiEndpoints.userApiKeyView]> {
+export async function getUserApiKey({
+  externalUserId,
+}: {
+  externalUserId: string;
+}): Promise<ResultSchemaType[ApiEndpoints.userApiKeyView]> {
   if (!externalUserId) {
     throw new Error('User Id is required');
   }
