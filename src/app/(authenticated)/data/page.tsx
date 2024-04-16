@@ -3,18 +3,18 @@ import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import {
-  cn,
+  UUIDPrefixEnum,
   createFakeId,
   formatDate,
-  getDatasetUuidFromFakeId,
+  getUuidFromFakeId,
 } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
-import ProfileManagementButton from '../components/user-button/ProfileManagementButton';
 import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
@@ -26,7 +26,10 @@ const getData = async () => {
   });
   const datasetList = await response.json();
   return datasetListResponseSchema.parse(datasetList).map((dataset) => {
-    return { ...dataset, id: getDatasetUuidFromFakeId(dataset.id) };
+    return {
+      ...dataset,
+      id: getUuidFromFakeId(dataset.id, UUIDPrefixEnum.DATASET),
+    };
   });
 };
 
@@ -104,10 +107,9 @@ const DataPage = () => {
 
   return (
     <>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <Breadcrumb />
-        <ProfileManagementButton />
-      </div>
+      </PageHeader>
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
           <div className={'my-6 flex items-center justify-between gap-5'}>

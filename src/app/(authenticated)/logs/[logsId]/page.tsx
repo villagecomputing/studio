@@ -14,7 +14,7 @@ import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import useSWR from 'swr';
-import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
+import PageHeader from '../../components/page-header/PageHeader';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import { fetchLogs } from './actions';
 import Header from './components/Header';
@@ -51,7 +51,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
   }
   return (
     <div>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <div className={cn(['flex items-center gap-2'])}>
           <Breadcrumb
             customSegments={{
@@ -60,10 +60,8 @@ export default function LogsViewPage(props: LogsViewPageProps) {
           />
           <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
         </div>
-        <ProfileManagementButton />
-      </div>
+      </PageHeader>
       <Header logs={logs} dateRange={dateRange} setDateRange={setDateRange} />
-
       {!logs.rowData.length ? (
         <div className="border-t border-gridBorderColor pt-6">
           <div className="flex w-full items-center justify-center gap-2 text-muted-foreground">

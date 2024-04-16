@@ -40,6 +40,7 @@ export const fetchExperiment = async (
       stepMetadataColumns,
       experiment.rows,
     );
+    const rowsMap = new Map(dataset.rows.map((row) => [row['id'], row]));
     return {
       experimentName: experiment.name,
       dataset: experiment.dataset,
@@ -59,12 +60,12 @@ export const fetchExperiment = async (
         experimentId: experiment.id,
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row) => {
-          const datasetRowIndex = Number(
+          const datasetRowId = Number(
             row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX],
           );
           return {
             ...row,
-            ...dataset.rows[datasetRowIndex],
+            ...rowsMap.get(datasetRowId.toString()),
           };
         }),
       }),

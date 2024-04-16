@@ -11,7 +11,7 @@ import {
   IRowNode,
   NavigateToNextCellParams,
 } from 'ag-grid-community';
-import { isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
+import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
 import RowMetadataCellRenderer from '../components/RowMetadataCellRenderer';
 import { DateRangeFilter, LogsRow, LogsTableContext } from '../types';
@@ -76,8 +76,11 @@ export function useGridOperations() {
       },
       [Enum_Logs_Column_Type.TIMESTAMP]: {
         editable: false,
+        valueGetter: (params) => {
+          return new Date(params.data['created_at']);
+        },
         valueFormatter: (params) => {
-          return `${new Date(params.value).toLocaleTimeString()} ${new Date(params.value).toLocaleDateString()}`;
+          return formatDate(params.value, "HH:mm ss's' dd/MM/yyyy");
         },
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),

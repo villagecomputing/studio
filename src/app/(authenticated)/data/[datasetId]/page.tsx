@@ -1,14 +1,22 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
-import { cn, createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import ProfileManagementButton from '../../components/user-button/ProfileManagementButton';
+import {
+  UUIDPrefixEnum,
+  cn,
+  createFakeId,
+  getUuidFromFakeId,
+} from '@/lib/utils';
+import PageHeader from '../../components/page-header/PageHeader';
 import { fetchDataSet } from './actions';
 import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
 export default async function DatasetViewPage(props: DatasetViewPageProps) {
-  const datasetId = getDatasetUuidFromFakeId(props.params.datasetId);
+  const datasetId = getUuidFromFakeId(
+    props.params.datasetId,
+    UUIDPrefixEnum.DATASET,
+  );
   const dataSet = await fetchDataSet(datasetId);
 
   // Filter out the 'ground truth' columnDef
@@ -25,7 +33,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
   }
   return (
     <div>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <div className={cn(['flex items-center gap-2'])}>
           <Breadcrumb
             customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
@@ -34,8 +42,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
             id={createFakeId(dataSet?.datasetName ?? '', datasetId)}
           />
         </div>
-        <ProfileManagementButton />
-      </div>
+      </PageHeader>
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
           <DataSetTable

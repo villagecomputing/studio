@@ -1,13 +1,12 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
-import { cn } from '@/lib/utils';
 import { CellClickedEvent } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
-import ProfileManagementButton from '../components/user-button/ProfileManagementButton';
 import { useLogsListContext } from './components/LogsListProvider';
 import LogsListZeroState from './components/zero-state/LogsListZeroState';
 import { LogsListRowType } from './types';
@@ -39,10 +38,9 @@ const LogsPage = () => {
 
   return (
     <>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <Breadcrumb />
-        <ProfileManagementButton />
-      </div>
+      </PageHeader>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>
           <SearchInput onChange={searchInLogsList} />

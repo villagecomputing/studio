@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { formatDate as format, isToday } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -6,24 +7,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// TODO: use date-fns
 export const formatDate = (date: string | Date): string => {
   const dateToFormat = new Date(date);
-  const todayDate = new Date();
-  if (
-    dateToFormat.getFullYear() === todayDate.getFullYear() &&
-    dateToFormat.getMonth() === todayDate.getMonth() &&
-    dateToFormat.getDate() === todayDate.getDate()
-  ) {
-    return 'Today';
-  }
-  const formattedDate = dateToFormat.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  return formattedDate;
+  return isToday(dateToFormat) ? 'Today' : format(dateToFormat, 'MMMM d, yyyy');
 };
 
 export function getFilenameWithoutExtension(filename: string) {
@@ -112,30 +98,6 @@ function isValidUUIDv4(uuid: string): boolean {
   return regex.test(uuid);
 }
 
-export const getDatasetUuidFromFakeId = (datasetFakeId: string) => {
-  const datasetId = datasetFakeId.slice(-36 - UUIDPrefixEnum.DATASET.length);
-  if (
-    !isValidUUIDv4(datasetId.slice(-36)) ||
-    !datasetId.startsWith(UUIDPrefixEnum.DATASET)
-  ) {
-    throw new Error('Invalid dataset id');
-  }
-  return datasetId;
-};
-
-export const getExperimentUuidFromFakeId = (experimentFakeId: string) => {
-  const experimentId = experimentFakeId.slice(
-    -36 - UUIDPrefixEnum.EXPERIMENT.length,
-  );
-  if (
-    !isValidUUIDv4(experimentId.slice(-36)) ||
-    !experimentId.startsWith(UUIDPrefixEnum.EXPERIMENT)
-  ) {
-    throw new Error('Invalid experiment id');
-  }
-  return experimentId;
-};
-// TODO: remove getDatasetUuidFromFakeId, getExperimentUuidFromFakeId and use getUuidFromFakeId with the correct prefix
 export const getUuidFromFakeId = (fakeId: string, type: UUIDPrefixEnum) => {
   const uuidWithPrefix = fakeId.slice(-36 - type.length);
   if (

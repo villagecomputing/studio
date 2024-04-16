@@ -1,6 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { approveAllSchema } from './schema';
 
 /**
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       return response('Required data is missing', 400);
     }
     await ApiUtils.approveAll({
-      datasetId: getDatasetUuidFromFakeId(datasetId),
+      datasetId: getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET),
     });
     return response('OK');
   } catch (error) {

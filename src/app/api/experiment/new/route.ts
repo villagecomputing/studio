@@ -4,7 +4,7 @@ import {
   UUIDPrefixEnum,
   createFakeId,
   generateUUID,
-  getDatasetUuidFromFakeId,
+  getUuidFromFakeId,
 } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
@@ -45,7 +45,10 @@ export async function POST(request: Request) {
 
   const requestBody = await request.json();
   const payload = newExperimentPayloadSchema.parse(requestBody);
-  const datasetId = getDatasetUuidFromFakeId(payload.datasetId);
+  const datasetId = getUuidFromFakeId(
+    payload.datasetId,
+    UUIDPrefixEnum.DATASET,
+  );
 
   try {
     await getDatasetOrThrow(datasetId);
