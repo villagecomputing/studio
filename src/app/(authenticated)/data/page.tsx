@@ -3,17 +3,16 @@ import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import {
-  cn,
   createFakeId,
   formatDate,
   getDatasetUuidFromFakeId,
 } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
 import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
@@ -104,10 +103,9 @@ const DataPage = () => {
 
   return (
     <>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <Breadcrumb />
-        <UserButton />
-      </div>
+      </PageHeader>
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
           <div className={'my-6 flex items-center justify-between gap-5'}>

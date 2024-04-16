@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { formatDate as format, isToday } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -6,24 +7,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// TODO: use date-fns
 export const formatDate = (date: string | Date): string => {
   const dateToFormat = new Date(date);
-  const todayDate = new Date();
-  if (
-    dateToFormat.getFullYear() === todayDate.getFullYear() &&
-    dateToFormat.getMonth() === todayDate.getMonth() &&
-    dateToFormat.getDate() === todayDate.getDate()
-  ) {
-    return 'Today';
-  }
-  const formattedDate = dateToFormat.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  return formattedDate;
+  return isToday(dateToFormat) ? 'Today' : format(dateToFormat, 'MMMM d, yyyy');
 };
 
 export function getFilenameWithoutExtension(filename: string) {

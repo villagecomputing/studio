@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
 import { cn, createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
+import PageHeader from '../../components/page-header/PageHeader';
 import { fetchDataSet } from './actions';
 import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
@@ -25,7 +25,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
   }
   return (
     <div>
-      <div className={cn(['flex items-center justify-between gap-2 px-6'])}>
+      <PageHeader>
         <div className={cn(['flex items-center gap-2'])}>
           <Breadcrumb
             customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
@@ -34,8 +34,7 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
             id={createFakeId(dataSet?.datasetName ?? '', datasetId)}
           />
         </div>
-        <UserButton />
-      </div>
+      </PageHeader>
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
           <DataSetTable
