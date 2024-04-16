@@ -1,7 +1,8 @@
 'use client';
-import { isAuthEnabled } from '@/lib/utils';
+import { cn, isAuthEnabled } from '@/lib/utils';
 import { UserButton, useUser } from '@clerk/nextjs';
-import ApiManagement from '../../apiManagement/page';
+import { useEffect, useState } from 'react';
+import fetchApiKey from './actions';
 
 const DotIcon = () => {
   return (
@@ -17,8 +18,20 @@ const DotIcon = () => {
 
 const ProfileManagementButton = () => {
   const { user } = useUser();
+  const [apiKey, setApiKey] = useState<string | undefined>();
 
-  if (!isAuthEnabled() || !user?.id) {
+  useEffect(() => {
+    if (!user?.id) {
+      return;
+    }
+
+    (async () => {
+      const key = await fetchApiKey(user.id);
+      setApiKey(key?.api_key);
+    })();
+  }, [user?.id]);
+
+  if (!isAuthEnabled()) {
     return <></>;
   }
 
@@ -31,11 +44,12 @@ const ProfileManagementButton = () => {
         url="apiManagement"
         labelIcon={<DotIcon />}
       >
-        <ApiManagement
-          params={{
-            userId: user.id,
-          }}
-        />
+        <div>
+          <h1 className={cn(['mb-4 text-4xl'])}>API Management</h1>
+          <p className={cn(['text-gray-800 my-4 text-base'])}>
+            API key: {apiKey}
+          </p>
+        </div>
       </UserButton.UserProfilePage>
     </UserButton>
   );
