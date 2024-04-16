@@ -12,6 +12,8 @@ import { userGetApiKeyResponseSchema } from './schema';
  *     summary: Retrieves user's API Key.
  *     description: Retrieves and existing active API key or generates a new one.
  *     operationId: GetUserApiKey
+ *     security:
+ *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -41,8 +43,10 @@ export async function GET(
     if (!userId) {
       return response('Invalid user id', 400);
     }
-
-    const apiKeyResult = await ApiUtils.getUserApiKey(userId);
+    const user = await ApiUtils.getUser(userId);
+    const apiKeyResult = await ApiUtils.getUserApiKey({
+      externalUserId: user.external_id,
+    });
     const parsedApiKeyResult =
       userGetApiKeyResponseSchema.safeParse(apiKeyResult);
     if (!parsedApiKeyResult.success) {

@@ -774,14 +774,6 @@
                 },
                 "required": ["id"]
             },
-            "UserApiKeyResponse": {
-                "type": "object",
-                "properties": {
-                    "api_key": {
-                        "type": "string"
-                    }
-                }
-            },
             "UserRevokeApiKeyPayload": {
                 "type": "object",
                 "properties": {

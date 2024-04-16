@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { UserButton } from '@clerk/nextjs';
+import ProfileManagementButton from '../user-button/ProfileManagementButton';
 
 const PageHeader = ({ children }: { children?: React.ReactNode }) => {
   return (
@@ -10,7 +10,7 @@ const PageHeader = ({ children }: { children?: React.ReactNode }) => {
       ])}
     >
       {children}
-      <UserButton />
+      <ProfileManagementButton />
     </div>
   );
 };

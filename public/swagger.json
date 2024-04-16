@@ -625,36 +625,6 @@
           ]
         }
       },
-      "NewLogsPayload": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "parameters": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "name",
-          "parameters"
-        ]
-      },
-      "NewLogsResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
       "ListLogsResponse": {
         "type": "array",
         "items": {
@@ -739,11 +709,27 @@
                 "value"
               ]
             }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "fingerprint": {
+            "type": "string"
           }
         },
         "required": [
           "steps",
-          "inputs"
+          "inputs",
+          "name",
+          "parameters",
+          "fingerprint"
         ]
       },
       "LogsViewResponse": {
@@ -922,14 +908,6 @@
         "required": [
           "id"
         ]
-      },
-      "UserApiKeyResponse": {
-        "type": "object",
-        "properties": {
-          "api_key": {
-            "type": "string"
-          }
-        }
       },
       "UserRevokeApiKeyPayload": {
         "type": "object",
@@ -1473,49 +1451,6 @@
         }
       }
     },
-    "/api/logs/{logsId}/insert": {
-      "post": {
-        "tags": [
-          "Logs"
-        ],
-        "summary": "Inserts data into the logs table with the given Id.",
-        "description": "Ensures the logs table is created and inserts the given steps as a row for the given logs id",
-        "operationId": "InsertLogsRow",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "logsId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LogsInsertPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ok"
-          },
-          "500": {
-            "description": "Error processing request"
-          }
-        }
-      }
-    },
     "/api/logs/{logsId}": {
       "get": {
         "tags": [
@@ -1560,6 +1495,39 @@
         }
       }
     },
+    "/api/logs/insert": {
+      "post": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Inserts data into the logs table with the given fingerprint.",
+        "description": "Ensures the logs table is created and inserts the given steps as a row for the given logs fingerprint",
+        "operationId": "InsertLogs",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogsInsertPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
     "/api/logs/list": {
       "get": {
         "tags": [
@@ -1590,46 +1558,6 @@
         }
       }
     },
-    "/api/logs/new": {
-      "post": {
-        "tags": [
-          "Logs"
-        ],
-        "summary": "Creates a new logs entry in the logs list",
-        "description": "Creates a new logs entry in the logs list",
-        "operationId": "CreateLogs",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewLogsPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NewLogsResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error processing request"
-          }
-        }
-      }
-    },
     "/api/user/{userId}/getApiKey": {
       "get": {
         "tags": [
@@ -1638,6 +1566,11 @@
         "summary": "Retrieves user's API Key.",
         "description": "Retrieves and existing active API key or generates a new one.",
         "operationId": "GetUserApiKey",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",

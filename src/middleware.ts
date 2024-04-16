@@ -5,13 +5,7 @@ import { assertApiKeyFormat } from './lib/services/ApiUtils/user/utils';
 import { isAuthEnabled } from './lib/utils';
 
 export default authMiddleware({
-  publicRoutes: [
-    isAuthEnabled() ? '/api-doc' : '/(.*)',
-    '/api/webhook(.*)',
-    // TODO: this endpoint should be removed from public as soon as the UI for getting the API Key is done
-    '/api/user/(.*)/getApiKey',
-    '/api/user/new',
-  ],
+  publicRoutes: [isAuthEnabled() ? '/api-doc' : '/(.*)', '/api/webhook(.*)'],
   afterAuth: async (auth, request) => {
     if (auth.isPublicRoute || !isAuthEnabled()) {
       return NextResponse.next();
