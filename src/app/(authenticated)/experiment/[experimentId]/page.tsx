@@ -3,7 +3,12 @@ import Breadcrumb from '@/components/Breadcrumb';
 import Loading from '@/components/loading/Loading';
 import { useToast } from '@/components/ui/use-toast';
 import { EXPERIMENT_REFETCH_INTERVAL_MS } from '@/lib/constants';
-import { cn, createFakeId, getExperimentUuidFromFakeId } from '@/lib/utils';
+import {
+  UUIDPrefixEnum,
+  cn,
+  createFakeId,
+  getUuidFromFakeId,
+} from '@/lib/utils';
 import { ChevronRightIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -18,7 +23,10 @@ import Header from './components/Header';
 import { ExperimentViewPageProps } from './types';
 
 export default function ExperimentViewPage(props: ExperimentViewPageProps) {
-  const experimentId = getExperimentUuidFromFakeId(props.params.experimentId);
+  const experimentId = getUuidFromFakeId(
+    props.params.experimentId,
+    UUIDPrefixEnum.EXPERIMENT,
+  );
   const {
     data: experiment,
     error,

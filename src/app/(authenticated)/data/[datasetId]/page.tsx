@@ -1,6 +1,11 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
-import { cn, createFakeId, getDatasetUuidFromFakeId } from '@/lib/utils';
+import {
+  UUIDPrefixEnum,
+  cn,
+  createFakeId,
+  getUuidFromFakeId,
+} from '@/lib/utils';
 import PageHeader from '../../components/page-header/PageHeader';
 import { fetchDataSet } from './actions';
 import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
@@ -8,7 +13,10 @@ import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
 export default async function DatasetViewPage(props: DatasetViewPageProps) {
-  const datasetId = getDatasetUuidFromFakeId(props.params.datasetId);
+  const datasetId = getUuidFromFakeId(
+    props.params.datasetId,
+    UUIDPrefixEnum.DATASET,
+  );
   const dataSet = await fetchDataSet(datasetId);
 
   // Filter out the 'ground truth' columnDef

@@ -98,30 +98,6 @@ function isValidUUIDv4(uuid: string): boolean {
   return regex.test(uuid);
 }
 
-export const getDatasetUuidFromFakeId = (datasetFakeId: string) => {
-  const datasetId = datasetFakeId.slice(-36 - UUIDPrefixEnum.DATASET.length);
-  if (
-    !isValidUUIDv4(datasetId.slice(-36)) ||
-    !datasetId.startsWith(UUIDPrefixEnum.DATASET)
-  ) {
-    throw new Error('Invalid dataset id');
-  }
-  return datasetId;
-};
-
-export const getExperimentUuidFromFakeId = (experimentFakeId: string) => {
-  const experimentId = experimentFakeId.slice(
-    -36 - UUIDPrefixEnum.EXPERIMENT.length,
-  );
-  if (
-    !isValidUUIDv4(experimentId.slice(-36)) ||
-    !experimentId.startsWith(UUIDPrefixEnum.EXPERIMENT)
-  ) {
-    throw new Error('Invalid experiment id');
-  }
-  return experimentId;
-};
-// TODO: remove getDatasetUuidFromFakeId, getExperimentUuidFromFakeId and use getUuidFromFakeId with the correct prefix
 export const getUuidFromFakeId = (fakeId: string, type: UUIDPrefixEnum) => {
   const uuidWithPrefix = fakeId.slice(-36 - type.length);
   if (

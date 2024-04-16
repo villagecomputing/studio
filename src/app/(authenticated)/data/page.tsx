@@ -3,9 +3,10 @@ import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import {
+  UUIDPrefixEnum,
   createFakeId,
   formatDate,
-  getDatasetUuidFromFakeId,
+  getUuidFromFakeId,
 } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
@@ -25,7 +26,10 @@ const getData = async () => {
   });
   const datasetList = await response.json();
   return datasetListResponseSchema.parse(datasetList).map((dataset) => {
-    return { ...dataset, id: getDatasetUuidFromFakeId(dataset.id) };
+    return {
+      ...dataset,
+      id: getUuidFromFakeId(dataset.id, UUIDPrefixEnum.DATASET),
+    };
   });
 };
 

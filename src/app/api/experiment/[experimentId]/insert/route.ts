@@ -1,6 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getExperimentUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { insertExperimentPayloadSchema } from './schema';
 
 /**
@@ -42,7 +42,7 @@ export async function POST(
 
   let experimentId = params.experimentId;
   try {
-    experimentId = getExperimentUuidFromFakeId(experimentId);
+    experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
   } catch (_e) {
     return response('Invalid experiment id', 400);
   }

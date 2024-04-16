@@ -1,6 +1,6 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDatasetUuidFromFakeId } from '@/lib/utils';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { editGroundTruthCellSchema } from './schema';
 
 /**
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
     const updatedCellId = await ApiUtils.editGroundTruthCell({
       ...payload,
-      datasetId: getDatasetUuidFromFakeId(payload.datasetId),
+      datasetId: getUuidFromFakeId(payload.datasetId, UUIDPrefixEnum.DATASET),
     });
 
     return Response.json({ id: updatedCellId });
