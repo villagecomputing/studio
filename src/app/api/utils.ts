@@ -32,7 +32,7 @@ export async function hasApiAccess(request: Request) {
       return true;
     }
   } catch (error) {
-    console.error('Error checking validating API key:', error);
+    console.error('Error checking api access:', error);
   }
 
   return false;
