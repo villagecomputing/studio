@@ -71,7 +71,11 @@ export default function LogsViewPage(props: LogsViewPageProps) {
         </div>
       ) : (
         <div style={{ height: 'calc(100vh - 130px)' }}>
-          <LogsTable {...logs} dateRange={dateRange} />
+          <LogsTable
+            {...logs}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+          />
         </div>
       )}
     </div>
