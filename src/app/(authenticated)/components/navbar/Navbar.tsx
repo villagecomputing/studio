@@ -1,6 +1,11 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { ClipboardListIcon, DatabaseIcon, ListTodoIcon } from 'lucide-react';
+import {
+  ClipboardListIcon,
+  DatabaseIcon,
+  ListTodoIcon,
+  ScrollTextIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import NavbarMenu from './components/NavbarMenu';
 import NavbarMenuCollapsed from './components/NavbarMenuCollapsed';
@@ -13,10 +18,14 @@ export const NavbarItems: NavbarMenuItemProps[] = [
     Icon: <DatabaseIcon size={20} />,
   },
   {
-    route: '/jobs',
-    name: 'Jobs',
+    route: '/experiment',
+    name: 'Experiments',
     Icon: <ListTodoIcon size={20} />,
-    disabled: true,
+  },
+  {
+    route: '/logs',
+    name: 'Logs',
+    Icon: <ScrollTextIcon size={20} />,
   },
   {
     route: '/evaluate',
@@ -34,7 +43,7 @@ export default function Navbar() {
       className={cn([
         'flex h-full flex-col bg-paleBlueGrey drop-shadow',
         'transition-all duration-300 ease-in-out',
-        collapsed ? 'w-16' : ' w-48',
+        collapsed ? 'w-16' : 'w-52',
       ])}
     >
       {collapsed ? (

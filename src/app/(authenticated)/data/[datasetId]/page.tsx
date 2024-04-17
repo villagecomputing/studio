@@ -1,12 +1,22 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { ENUM_Column_type } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import {
+  UUIDPrefixEnum,
+  cn,
+  createFakeId,
+  getUuidFromFakeId,
+} from '@/lib/utils';
+import PageHeader from '../../components/page-header/PageHeader';
 import { fetchDataSet } from './actions';
+import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
 export default async function DatasetViewPage(props: DatasetViewPageProps) {
-  const datasetId = Number(props.params.datasetId);
+  const datasetId = getUuidFromFakeId(
+    props.params.datasetId,
+    UUIDPrefixEnum.DATASET,
+  );
   const dataSet = await fetchDataSet(datasetId);
 
   // Filter out the 'ground truth' columnDef
@@ -23,11 +33,16 @@ export default async function DatasetViewPage(props: DatasetViewPageProps) {
   }
   return (
     <div>
-      <div className={cn(['px-6'])}>
-        <Breadcrumb
-          customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
-        />
-      </div>
+      <PageHeader>
+        <div className={cn(['flex items-center gap-2'])}>
+          <Breadcrumb
+            customSegments={{ [datasetId.toString()]: dataSet?.datasetName }}
+          />
+          <CopyIdToClipboardButton
+            id={createFakeId(dataSet?.datasetName ?? '', datasetId)}
+          />
+        </div>
+      </PageHeader>
       {dataSet && (
         <div style={{ height: 'calc(100vh - 130px)' }}>
           <DataSetTable

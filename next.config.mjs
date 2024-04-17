@@ -10,6 +10,11 @@ const nextConfig = {
         destination: '/data',
         permanent: true,
       },
+      {
+        source: '/group',
+        destination: '/experiment',
+        permanent: true,
+      },
     ];
   },
 };

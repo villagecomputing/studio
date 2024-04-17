@@ -2,25 +2,22 @@
 import { ParserError } from '@/lib/services/DatasetParser';
 
 import ApiUtils from '@/lib/services/ApiUtils';
-import { getDataset } from '@/lib/services/ApiUtils/dataset';
+
 import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { permanentRedirect } from 'next/navigation';
+
+import DatasetGrid from '../utils/DatasetGrid';
 import { FetchDatasetResult } from './types';
-import { convertToAGGridData } from './utils/gridUtils';
 
 export const fetchDataSet = async (
-  datasetId: number,
+  datasetId: string,
 ): Promise<FetchDatasetResult | null> => {
   try {
-    if (!Number(datasetId)) {
-      permanentRedirect('/data');
-    }
-    const dataset = await getDataset(datasetId);
+    const dataset = await ApiUtils.getDataset(datasetId);
 
     return {
-      datasetName: dataset.file_name,
-      ...convertToAGGridData({
+      datasetName: dataset.name,
+      ...DatasetGrid.convertToAGGridData({
         datasetId: dataset.id,
         columns: dataset.columns,
         rows: dataset.rows,
@@ -55,7 +52,8 @@ export const markColumnAsType = async (
 };
 
 export const updateGTCell = async (
-  id: number,
+  datasetId: string,
+  rowId: number,
   content: string,
   status: string,
 ) => {
@@ -63,19 +61,21 @@ export const updateGTCell = async (
     throw new Error('Wrong cell status');
   }
   try {
-    const updatedCellId = await ApiUtils.editDatasetCell({
-      groundTruthCellId: id,
+    const updatedCellId = await ApiUtils.editGroundTruthCell({
+      datasetId,
+      rowId,
       content,
       status,
     });
 
     return updatedCellId;
   } catch (error) {
-    return null;
+    console.error(error);
+    throw new Error('Error updating ground truth cell');
   }
 };
 
-export const approveAll = async (datasetId: number) => {
+export const approveAll = async (datasetId: string) => {
   try {
     await ApiUtils.approveAll({ datasetId });
   } catch (error) {

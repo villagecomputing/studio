@@ -1,16 +1,49 @@
-import FileUpload from '@/lib/services/FileHandler';
-
+import { MAX_SQL_VARIABLES } from '@/lib/constants';
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
-import { response } from '../../utils';
+import FileHandler from '@/lib/services/FileHandler';
+import { createFakeId } from '@/lib/utils';
+import { hasApiAccess, response } from '../../utils';
+import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/upload:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Uploads a dataset file and its associated data
+ *     description: Uploads a dataset file and its associated data
+ *     operationId: UploadDataset
+ *     security:
+ *       - ApiKeyAuth: []
+ *     requestBody:
+ *       description: Dataset file and data to be uploaded
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/UploadDatasetPayload'
+ *     responses:
+ *       200:
+ *         description: The newly uploaded dataset Id
+ *       400:
+ *         description: Missing required data -or- Invalid request headers type -or- Invalid request dataset type -or- Column Title required for blank ground truth column
+ *       500:
+ *         description: File content is missing -or- Error processing request
+ */
 export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
       return response('Invalid request headers type', 400);
     }
-    // Parse the FormData from the request
+
     const formData = await request.formData();
     const file = formData.get('file');
     const requestDatasetData = formData.get('datasetData');
@@ -22,69 +55,59 @@ export async function POST(request: Request) {
       return response('Invalid request dataset type', 400);
     }
 
-    // Parse the dataset data object using the defined schema
-    // This will throw if the object doesn't match the schema
+    // Validates 'datasetData' against the schema
     const dataToSend = uploadDatasetPayloadSchema.parse(
       JSON.parse(requestDatasetData),
     );
 
-    if (!(await ApiUtils.isFilenameAvailable(dataToSend.datasetTitle))) {
-      return response('Filename already exists', 400);
-    }
-
-    // Save file handles the saving method based on env
-    const saveFileResult = await FileUpload.saveFile(
-      file,
-      dataToSend.datasetTitle,
-    );
-    if (!saveFileResult) {
-      return response('File upload failed', 500);
-    }
-
-    const fileContent = await FileUpload.getFile(saveFileResult.filePath);
-
+    // Attempts to read the file content
+    const fileContent = await FileHandler.readFileAsStream(file);
     if (!fileContent) {
       return response('File content is missing', 500);
     }
 
-    const parsedFile = await DatasetParser.parseAsArray(fileContent);
-    const groundTruthColumnContent = DatasetParser.getColumnFromArrayFormatData(
-      parsedFile.rows,
-      dataToSend.groundTruthColumnIndex,
-    );
+    // Converts file content to a structured format
+    const parsedFile = await DatasetParser.parseAsObject(fileContent);
 
-    let gtColumnContent = groundTruthColumnContent;
-    let gtColumnIndex = dataToSend.groundTruthColumnIndex;
-    // Ground truth column is a new blank column or an existing one
+    // Handles the addition of a new blank column for ground truth data
+    const gtColumnIndex = dataToSend.groundTruthColumnIndex;
+    const newGTColumnTitle = dataToSend.blankColumnTitle?.trim();
+    let groundTruths = [parsedFile.headers[dataToSend.groundTruthColumnIndex]];
     if (gtColumnIndex >= parsedFile['headers'].length) {
-      if (!dataToSend.blankColumnTitle) {
+      if (!newGTColumnTitle) {
         return response(
           'Column Title required for blank ground truth column',
           400,
         );
       }
-      parsedFile['headers'].push(dataToSend.blankColumnTitle.trim());
-      gtColumnContent = Array(parsedFile.rows.length).fill(' ');
-    } else {
-      // Duplicate the existing column
-      const gtColumnHeader =
-        parsedFile['headers'][dataToSend.groundTruthColumnIndex];
-      parsedFile['headers'].push(`${gtColumnHeader}`);
-      gtColumnIndex = parsedFile['headers'].length - 1;
+      groundTruths = [newGTColumnTitle];
+      parsedFile.rows.map((row) => ({
+        ...row,
+        [newGTColumnTitle]: '',
+      }));
     }
 
-    const result = await ApiUtils.saveDatasetDetails({
-      columnHeaders: parsedFile['headers'].map((header, index) =>
-        header ? header : `Column_${index}`,
-      ),
-      groundTruthColumnContent: gtColumnContent,
-      fileTitle: dataToSend.datasetTitle,
-      groundTruthColumnIndex: gtColumnIndex,
-      totalNumberOfRows: parsedFile.rows.length,
-      ...saveFileResult,
-    });
+    // Prepares the dataset object for creation
+    const dataset = newDatasetPayloadSchema.parse({
+      datasetName: dataToSend.datasetTitle,
+      columns: parsedFile.headers,
+      groundTruths,
+    } as PayloadSchemaType[ApiEndpoints.datasetNew]);
 
-    return Response.json(result);
+    // Creates a new dataset record
+    const datasetId = await ApiUtils.newDataset(dataset);
+
+    const columnsPerRow = parsedFile.headers.length;
+    const batchSize = Math.floor(MAX_SQL_VARIABLES / columnsPerRow);
+
+    for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
+      const batch = parsedFile.rows.slice(i, i + batchSize);
+      await ApiUtils.addData({ datasetId, payload: { datasetRows: batch } });
+    }
+
+    return Response.json({
+      datasetId: createFakeId(dataset.datasetName, datasetId),
+    });
   } catch (error) {
     console.error('Error in POST:', error);
     return response('Error processing request', 500);

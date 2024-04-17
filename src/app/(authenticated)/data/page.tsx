@@ -2,12 +2,20 @@
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
-import { cn, formatDate } from '@/lib/utils';
-import { GridOptions } from 'ag-grid-community';
+import {
+  UUIDPrefixEnum,
+  createFakeId,
+  formatDate,
+  getUuidFromFakeId,
+} from '@/lib/utils';
+import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import DataTable from '../components/data-table/DataTable';
+import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
+import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
 import UploadDataButton from './components/upload-data-button/UploadDataButton';
 import { UploadDataProvider } from './components/upload-data-dialog/UploadDataProvider';
 import ZeroState from './components/zero-state/ZeroState';
@@ -16,15 +24,21 @@ const getData = async () => {
   const response = await fetch(ApiEndpoints.datasetList, {
     method: 'GET',
   });
-  const datasetList = JSON.parse(await response.json());
-  return datasetListResponseSchema.parse(datasetList);
+  const datasetList = await response.json();
+  return datasetListResponseSchema.parse(datasetList).map((dataset) => {
+    return {
+      ...dataset,
+      id: getUuidFromFakeId(dataset.id, UUIDPrefixEnum.DATASET),
+    };
+  });
 };
 
 type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
 type RowType = {
-  id: number;
+  id: string;
+  fakeId: string;
   datasetName: string;
-  numberOfRecords: number;
+  numberOfRecords: string;
   uploadDate: string;
 };
 const DataPage = () => {
@@ -34,28 +48,46 @@ const DataPage = () => {
 
   const rowData: RowType[] = datasetList.map((data) => ({
     id: data.id,
-    datasetName: data.file_name,
+    fakeId: createFakeId(data.name, data.id),
+    datasetName: data.name,
     numberOfRecords: data.total_rows,
     uploadDate: formatDate(data.created_at),
   }));
+  const onCellClicked = (event: CellClickedEvent<RowType, string>) => {
+    if (!event.data) {
+      return;
+    }
+    router.push(`/data/${event.data.id}`);
+  };
   const colDef: GridOptions['columnDefs'] = [
+    {
+      headerName: 'ID',
+      // The 'fakeId' field is also referenced in the ag-grid-custom-theme. Any changes here should be reflected there.
+      field: 'fakeId',
+      cellRenderer: FakeIdCellRenderer,
+      maxWidth: 50,
+      tooltipValueGetter: (props) => `Copy ID to clipboard: ${props.value}`,
+    },
     {
       headerName: 'Dataset Name',
       field: 'datasetName',
       flex: 5,
       minWidth: 200,
+      onCellClicked,
     },
     {
       headerName: 'Rows',
       field: 'numberOfRecords',
       flex: 1,
       minWidth: 90,
+      onCellClicked,
     },
     {
       headerName: 'Upload Date',
       field: 'uploadDate',
       flex: 1,
       minWidth: 200,
+      onCellClicked,
     },
   ];
 
@@ -75,9 +107,9 @@ const DataPage = () => {
 
   return (
     <>
-      <div className={cn(['px-6'])}>
+      <PageHeader>
         <Breadcrumb />
-      </div>
+      </PageHeader>
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
           <div className={'my-6 flex items-center justify-between gap-5'}>
@@ -94,17 +126,14 @@ const DataPage = () => {
               <DataTable<RowType>
                 theme="ag-theme-dataset-list"
                 agGridProps={{
-                  onRowClicked: (event) => {
-                    if (!event.data) {
-                      return;
-                    }
-                    router.push(`/data/${event.data.id}`);
-                  },
+                  ...DEFAULT_GRID_OPTIONS,
                   rowData,
                   columnDefs: colDef,
-                  rowSelection: 'single',
                   domLayout: 'autoHeight',
                   quickFilterText,
+                  rowSelection: undefined,
+                  tooltipShowDelay: 100,
+                  tooltipHideDelay: 2000,
                 }}
               />
             </div>

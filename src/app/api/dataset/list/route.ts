@@ -1,28 +1,72 @@
+import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
+import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import PrismaClient from '@/lib/services/prisma';
+import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
-import { response } from '../../utils';
+import { hasApiAccess, response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
+export const dynamic = 'force-dynamic';
+/**
+ * @swagger
+ * /api/dataset/list:
+ *   get:
+ *     tags:
+ *      - Dataset
+ *     summary: Retrieves a list of datasets and their total row counts
+ *     description: Retrieves a list of datasets and their total row counts
+ *     operationId: ListDatasets
+ *     security:
+ *      - ApiKeyAuth: []
+ *     responses:
+ *       200:
+ *          description: Dataset retrieved
+ *          content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DatasetListResponse'
+ *       400:
+ *         description: Invalid response datasetList type
+ *       500:
+ *         description: Error processing request
+ */
+export async function GET(request: Request) {
+  if (!(await await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
 
-export async function GET() {
   try {
     const datasetSelect = {
-      id: true,
+      uuid: true,
       created_at: true,
-      file_location: true,
-      file_name: true,
-      total_rows: true,
+      name: true,
     } satisfies Prisma.DatasetSelect;
 
     const datasetList = await PrismaClient.dataset.findMany({
       select: datasetSelect,
       where: { deleted_at: null },
     });
-    if (!datasetListResponseSchema.safeParse(datasetList)) {
+
+    const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
+      await Promise.all(
+        datasetList.map(async (dataset) => {
+          const result = await DatabaseUtils.selectAggregation(dataset.uuid, {
+            func: 'COUNT',
+          });
+
+          return {
+            ...dataset,
+            id: createFakeId(dataset.name, dataset.uuid),
+            created_at: dataset.created_at.toDateString(),
+            total_rows: result,
+          };
+        }),
+      );
+
+    if (!datasetListResponseSchema.safeParse(datasetListResponse).success) {
       return response('Invalid response datasetList type', 400);
     }
 
-    const res = JSON.stringify(datasetList);
-    return Response.json(res);
+    return Response.json(datasetListResponse);
   } catch (error) {
     console.error('Error in GET dataset list:', error);
     return response('Error processing request', 500);

@@ -1,19 +1,37 @@
-import {
-  approveAll,
-  editDatasetCell,
-  editDatasetColumn,
-  getDataset,
-} from './dataset';
+import { addData } from './dataset/addData';
 
-import { isFilenameAvailable, saveDatasetDetails } from './dataset/upload';
-import { saveDatasetDetailsAsTable } from './dataset/uploadToDb';
+import { newDataset } from './dataset/newDataset';
+
+import { approveAll } from './dataset/approveAll';
+import { editDatasetColumn } from './dataset/editDatasetColumn';
+import { editGroundTruthCell } from './dataset/editGroundTruthCell';
+import { getDataset } from './dataset/getDataset';
+import { ensureExperimentTable } from './experiment/ensureExperimentTable';
+import { getExperiment } from './experiment/getExperiment';
+import { insertExperimentSteps } from './experiment/insertExperimentSteps';
+import { updateExperiment } from './experiment/updateExperiment';
+import { getLogsById } from './logs/getLogsById';
+import { deleteUser } from './user/deleteUser';
+import { getUser } from './user/getUser';
+import { getUserApiKey } from './user/getUserApiKey';
+import { newUser } from './user/newUser';
+import { revokeUserApiKey } from './user/revokeUserApiKey';
 
 export default {
   getDataset,
   editDatasetColumn,
-  editDatasetCell,
-  saveDatasetDetails,
-  isFilenameAvailable,
-  saveDatasetDetailsAsTable,
+  newDataset,
+  addData,
+  editGroundTruthCell,
   approveAll,
+  getExperiment,
+  ensureExperimentTable,
+  insertExperimentSteps,
+  updateExperiment,
+  getUser,
+  newUser,
+  deleteUser,
+  getUserApiKey,
+  revokeUserApiKey,
+  getLogsById,
 };

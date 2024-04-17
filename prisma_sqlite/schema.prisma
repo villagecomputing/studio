@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Dataset {
+  uuid           String           @id
+  name           String
+  created_by     String?
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  User           User?            @relation(fields: [created_by], references: [uuid])
+  Dataset_column Dataset_column[]
+  Experiment     Experiment[]
+}
+
+model Dataset_column {
+  id                Int                 @id @default(autoincrement())
+  dataset_uuid      String
+  name              String
+  field             String
+  index             Int
+  type              String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  deleted_at        DateTime?
+  Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
+  Experiment_column Experiment_column[]
+}
+
+model Experiment_column {
+  id                     Int             @id @default(autoincrement())
+  experiment_uuid        String
+  name                   String
+  field                  String
+  type                   String
+  ground_truth_column_id Int?
+  created_at             DateTime        @default(now())
+  updated_at             DateTime        @updatedAt
+  deleted_at             DateTime?
+  Dataset_column         Dataset_column? @relation(fields: [ground_truth_column_id], references: [id])
+  Experiment             Experiment      @relation(fields: [experiment_uuid], references: [uuid], onDelete: Cascade)
+}
+
+model Experiment_group {
+  id         Int          @id @default(autoincrement())
+  created_at DateTime     @default(now())
+  Experiment Experiment[]
+}
+
+model Experiment {
+  uuid              String              @id
+  name              String
+  description       String?
+  dataset_uuid      String
+  created_by        String?
+  group_id          Int
+  pipeline_metadata String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float               @default(0)
+  latency_p50       Float               @default(0)
+  latency_p90       Float               @default(0)
+  total_cost        Float               @default(0)
+  total_accuracy    Float               @default(0)
+  total_rows        Float               @default(0)
+  User              User?               @relation(fields: [created_by], references: [uuid])
+  Experiment_group  Experiment_group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  Dataset           Dataset             @relation(fields: [dataset_uuid], references: [uuid], onDelete: Cascade)
+  Experiment_column Experiment_column[]
+}
+
+model Logs {
+  uuid              String        @id
+  name              String
+  description       String?
+  created_by        String?
+  pipeline_metadata String
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float         @default(0)
+  latency_p50       Float         @default(0)
+  latency_p90       Float         @default(0)
+  total_cost        Float         @default(0)
+  total_accuracy    Float         @default(0)
+  total_rows        Float         @default(0)
+  fingerprint       String
+  User              User?         @relation(fields: [created_by], references: [uuid])
+  Logs_column       Logs_column[]
+}
+
+model Logs_column {
+  id         Int       @id @default(autoincrement())
+  logs_uuid  String
+  name       String
+  field      String
+  type       String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  Logs       Logs      @relation(fields: [logs_uuid], references: [uuid], onDelete: Cascade)
+}
+
+model API_key {
+  key        String    @id
+  user_id    String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  revoked_at DateTime?
+  User       User      @relation(fields: [user_id], references: [uuid], onDelete: Cascade)
+}
+
+model User {
+  uuid        String       @id
+  external_id String       @unique(map: "sqlite_autoindex_User_2")
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  deleted_at  String?
+  API_key     API_key[]
+  Dataset     Dataset[]
+  Experiment  Experiment[]
+  Logs        Logs[]
+}

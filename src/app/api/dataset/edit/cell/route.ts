@@ -1,16 +1,48 @@
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
-import { editDatasetCellSchema } from './schema';
+import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
+import { editGroundTruthCellSchema } from './schema';
 
+/**
+ * @swagger
+ * /api/dataset/edit/cell:
+ *   post:
+ *     tags:
+ *      - Dataset
+ *     summary: Edits a specific cell in a dataset's ground truth.
+ *     description: Edits a specific cell in a dataset's ground truth.
+ *     operationId: EditDatasetCell
+ *     security:
+ *       - ApiKeyAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/EditCellPayload'
+ *     responses:
+ *       200:
+ *         description: Ground truth cell updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EditGroundTruthCellResponse'
+ *       500:
+ *         description: 'Error processing result.'
+ */
 export async function POST(request: Request) {
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
-    const payload = editDatasetCellSchema.parse(request.body);
+    const requestBody = await request.json();
+    const payload = editGroundTruthCellSchema.parse(requestBody);
 
-    if (!payload.groundTruthCellId) {
-      throw new Error('Ground Truth Cell Id is required');
-    }
-
-    const updatedCellId = await ApiUtils.editDatasetCell(payload);
+    const updatedCellId = await ApiUtils.editGroundTruthCell({
+      ...payload,
+      datasetId: getUuidFromFakeId(payload.datasetId, UUIDPrefixEnum.DATASET),
+    });
 
     return Response.json({ id: updatedCellId });
   } catch (error) {

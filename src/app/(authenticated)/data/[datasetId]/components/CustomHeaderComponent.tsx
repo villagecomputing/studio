@@ -1,4 +1,5 @@
 'use client';
+import { getTableColumnSortIcon } from '@/app/(authenticated)/common/gridUtils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,14 +12,13 @@ import { CustomHeaderProps } from 'ag-grid-react';
 import { sortBy } from 'lodash';
 import { MoreVerticalIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { ROW_ID_FIELD_NAME } from '../../utils/commonUtils';
 import { markColumnAsType } from '../actions';
 import {
   DatasetRow,
   DatasetTableContext,
   DatasetTableViewModeEnum,
 } from '../types';
-import { ROW_ID_FIELD_NAME } from '../utils/commonUtils';
-import { getTableColumnSortIcon } from '../utils/gridUtils';
 
 export type HeaderComponentParams =
   | {

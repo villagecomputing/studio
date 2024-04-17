@@ -27,7 +27,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   );
 
   return (
-    <ul className="flex w-full items-center gap-1.5">
+    <ul className="flex items-center gap-1.5">
       {pathNames.map((segment, index) => {
         const element =
           customSegments && customSegments[segment] ? (

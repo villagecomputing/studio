@@ -9,17 +9,12 @@ import {
   ValueParserParams,
 } from 'ag-grid-community';
 import { useCallback } from 'react';
+import DatasetGrid from '../../utils/DatasetGrid';
+import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../../utils/commonUtils';
 import { HeaderComponentParams } from '../components/CustomHeaderComponent';
 import GroundTruthCellRenderer from '../components/GroundTruthCellRenderer';
 import PredictiveLabelCellRenderer from '../components/PredictiveLabelCellRenderer';
 import { DatasetRow, DatasetTableContext, GroundTruthCell } from '../types';
-import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../utils/commonUtils';
-import {
-  getTableColumnIcon,
-  isEditableGroundTruth,
-  predictiveLabelCellClass,
-  predictiveLabelComparator,
-} from '../utils/gridUtils';
 
 export function useGridOperations() {
   const navigateToNextCell = useCallback(
@@ -104,22 +99,26 @@ export function useGridOperations() {
         editable: false,
         pinned: 'right',
         headerComponentParams: {
-          leftSideIcon: getTableColumnIcon(ENUM_Column_type.PREDICTIVE_LABEL),
+          leftSideIcon: DatasetGrid.getTableColumnIcon(
+            ENUM_Column_type.PREDICTIVE_LABEL,
+          ),
         } as HeaderComponentParams,
-        comparator: predictiveLabelComparator,
+        comparator: DatasetGrid.predictiveLabelComparator,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
         cellRendererSelector: (params) =>
           params.node.isRowPinned() && params.node.rowPinned === 'bottom'
             ? { component: PredictiveLabelCellRenderer }
             : undefined,
-        cellClass: predictiveLabelCellClass,
+        cellClass: DatasetGrid.predictiveLabelCellClass,
       },
       [ENUM_Column_type.GROUND_TRUTH]: {
-        editable: isEditableGroundTruth,
+        editable: DatasetGrid.isEditableGroundTruth,
         pinned: 'right',
         headerComponentParams: {
-          leftSideIcon: getTableColumnIcon(ENUM_Column_type.GROUND_TRUTH),
+          leftSideIcon: DatasetGrid.getTableColumnIcon(
+            ENUM_Column_type.GROUND_TRUTH,
+          ),
         } as HeaderComponentParams,
         cellRenderer: GroundTruthCellRenderer,
         onCellClicked: (event) =>
@@ -144,8 +143,7 @@ export function useGridOperations() {
           valueFormatter: (params) => {
             return params.value.content;
           },
-          dataTypeMatcher: (value) =>
-            value && !!value.content && !!value.id && !!value.status,
+          dataTypeMatcher: (value) => value && isGroundTruthCell(value),
         },
       };
     }, []);

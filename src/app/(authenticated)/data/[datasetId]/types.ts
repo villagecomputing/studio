@@ -10,13 +10,13 @@ export type DatasetViewPageProps = {
 };
 
 export type AGGridDataset = {
-  datasetId: number;
+  datasetId: string;
   columnDefs: ColDef[];
   rowData: DatasetRow[];
   pinnedBottomRowData: GridOptions['pinnedBottomRowData'];
 };
 
-export type TableColumnProps = {
+export type DatasetTableColumnProps = {
   id: number;
   name: string;
   field: string;
@@ -24,8 +24,8 @@ export type TableColumnProps = {
 };
 
 export type ConvertToAGGridDataProps = {
-  datasetId: number;
-  columns: TableColumnProps[];
+  datasetId: string;
+  columns: DatasetTableColumnProps[];
   rows: DatasetRow[];
 };
 

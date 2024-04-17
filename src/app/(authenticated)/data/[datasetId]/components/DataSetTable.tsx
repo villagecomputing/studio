@@ -1,5 +1,6 @@
 'use client';
 import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
+import { DEFAULT_GRID_OPTIONS } from '@/app/(authenticated)/components/data-table/constants';
 import { SearchInput } from '@/app/(authenticated)/components/search-input/SearchInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,8 +11,8 @@ import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
-import { mapFieldNameToHeaderName } from '../utils/commonUtils';
-import DatasetRowInspectorView from './DatasetRowInspector/DatasetRowInspectorView';
+import { mapFieldNameToHeaderName } from '../../utils/commonUtils';
+import DatasetRowInspector from './DatasetRowInspector/DatasetRowInspector';
 import { useDatasetTableContext } from './DatasetTableContext';
 
 export default function DataSetTable(props: FetchDatasetResult) {
@@ -60,7 +61,7 @@ export default function DataSetTable(props: FetchDatasetResult) {
           Download
         </Button>
       </div>
-      <DatasetRowInspectorView context={context} />
+      <DatasetRowInspector context={context} />
       <DataTable<DatasetRow>
         theme="ag-theme-dataset"
         gridRef={gridRef}
@@ -68,6 +69,7 @@ export default function DataSetTable(props: FetchDatasetResult) {
           context.inspectorRowIndex !== null ? 'small-dataset-table-view' : ''
         }
         agGridProps={{
+          ...DEFAULT_GRID_OPTIONS,
           getRowId,
           context,
           rowData: context.rows,
@@ -75,11 +77,8 @@ export default function DataSetTable(props: FetchDatasetResult) {
           pinnedBottomRowData: context.pinnedBottomRow,
           columnTypes,
           dataTypeDefinitions,
-          reactiveCustomComponents: true,
           quickFilterText,
           onCellValueChanged,
-          enableCellTextSelection: true,
-          rowSelection: 'single',
           navigateToNextCell,
         }}
       />

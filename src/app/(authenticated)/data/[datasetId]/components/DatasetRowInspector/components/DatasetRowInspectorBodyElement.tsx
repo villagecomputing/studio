@@ -1,3 +1,4 @@
+import DatasetGrid from '@/app/(authenticated)/data/utils/DatasetGrid';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +11,8 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { MoreVerticalIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { isGroundTruthCell } from '../../../../utils/commonUtils';
 import { GroundTruthCell } from '../../../types';
-import { isGroundTruthCell } from '../../../utils/commonUtils';
-import { getTableColumnIcon } from '../../../utils/gridUtils';
 import { DatasetRowInspectorBodyElementProps } from '../types';
 
 export const INSPECTOR_DROPDOWN_ATTRIBUTE = 'inspector-dropdown-open';
@@ -159,7 +159,7 @@ const GroundTruthColumn: React.FC<GroundTruthColumnProps> = ({
   onGroundTruthChange,
 }) => {
   const { register } = useForm<{ gtContent: string }>({
-    defaultValues: {
+    values: {
       gtContent: isGroundTruthCell(content) ? content.content : '',
     },
   });
@@ -190,7 +190,7 @@ export const DatasetRowInspectorBodyElement: React.FC<
   DatasetRowInspectorBodyElementProps
 > = (props) => {
   const { colType, content, header, updateCol } = props;
-  const icon = getTableColumnIcon(colType) || undefined;
+  const icon = DatasetGrid.getTableColumnIcon(colType) || undefined;
 
   switch (colType) {
     case ENUM_Column_type.INPUT:

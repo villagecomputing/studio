@@ -1,15 +1,22 @@
-import { uploadDatasetPayloadSchema } from '@/app/api/dataset/upload/schema';
+import {
+  uploadDatasetPayloadSchema,
+  uploadDatasetResultSchema,
+} from '@/app/api/dataset/upload/schema';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import { TOAST_MESSAGE } from '@/lib/language/toasts';
-import { cn, getFilenameWithoutExtension } from '@/lib/utils';
+import {
+  UUIDPrefixEnum,
+  cn,
+  getFilenameWithoutExtension,
+  getUuidFromFakeId,
+} from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { isFilenameAvailable } from '../../../actions';
 import { useUploadDataContext } from '../UploadDataProvider';
 import {
   UploadDataDialogContentProps,
@@ -43,24 +50,13 @@ export default function UploadDataDialogContent(
     if (!selectedFile) {
       return;
     }
-    if (
-      values.datasetTitle.trim() &&
-      !(await isFilenameAvailable(values.datasetTitle))
-    ) {
-      uploadDataForm.reset(values);
-      uploadDataForm.setError('datasetTitle', {
-        message:
-          'This title is already used in another dataset, please enter a new one.',
-      });
-      return true;
-    }
 
-    const dataToSend: PayloadSchemaType['/api/dataset/upload'] = {
+    const dataToSend: PayloadSchemaType[ApiEndpoints.datasetUpload] = {
       datasetTitle: values.datasetTitle,
       groundTruthColumnIndex: Number(values.groundTruthColumnIndex),
     };
 
-    if (!uploadDatasetPayloadSchema.safeParse(dataToSend)) {
+    if (!uploadDatasetPayloadSchema.safeParse(dataToSend).success) {
       return;
     }
 
@@ -76,9 +72,14 @@ export default function UploadDataDialogContent(
       method: 'POST',
       body: formData,
     });
-    const datasetId = (await response.json()).datasetId;
+    const responseBody = await response.json();
+    const dataset = uploadDatasetResultSchema.parse(responseBody);
+    const datasetId = getUuidFromFakeId(
+      dataset.datasetId,
+      UUIDPrefixEnum.DATASET,
+    );
 
-    if (response.status !== 200 || !Number(datasetId)) {
+    if (response.status !== 200 || !datasetId) {
       toast({
         title: 'Error',
         description: TOAST_MESSAGE.UPLOAD_DATASET_FAILED,
