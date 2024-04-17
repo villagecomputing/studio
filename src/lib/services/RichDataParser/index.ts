@@ -1,14 +1,17 @@
-import { ReactElement } from 'react';
 import { getComponentForURL } from './getComponentForURL';
 import { getURLsFromText } from './getURLsFromText';
+import { ComponentProps } from './types';
 
-export const urlHeadRequestCache = new Map<string, ReactElement | null>();
+export const urlHeadRequestCache = new Map<
+  string,
+  ((props: ComponentProps<object>) => JSX.Element) | null
+>();
 
-export default async function parseData(data: string): Promise<void> {
+async function parseData(data: string): Promise<string[]> {
   const textURLs = getURLsFromText(data);
 
   if (!textURLs.length) {
-    return;
+    return [];
   }
 
   await Promise.all(
@@ -29,4 +32,8 @@ export default async function parseData(data: string): Promise<void> {
       }
     }),
   );
+
+  return textURLs;
 }
+
+export default { parseData };

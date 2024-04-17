@@ -1,4 +1,5 @@
-import { MimeTypeToComponent } from './types';
+import Image from 'next/image';
+import { ComponentProps, MimeTypeToComponent } from './types';
 
 export enum SupportedFormat {
   'PDF' = 'PDF',
@@ -13,8 +14,12 @@ export const MimeTypes = {
 
 // Mapping of MIME types to content descriptions
 export const mimeTypeToComponent: MimeTypeToComponent = {
-  [MimeTypes[SupportedFormat.IMAGE]]: <span>Image</span>,
-  [MimeTypes[SupportedFormat.PDF]]: <span>PDF</span>,
+  [MimeTypes[SupportedFormat.IMAGE]]: (
+    props: ComponentProps<{ alt?: string }>,
+  ) => <Image src={props.src} alt={props.alt || props.src} />,
+  [MimeTypes[SupportedFormat.PDF]]: (props: ComponentProps<object>) => (
+    <span>PDF at {props.src}</span>
+  ),
 };
 
 // Regex patterns for file extensions

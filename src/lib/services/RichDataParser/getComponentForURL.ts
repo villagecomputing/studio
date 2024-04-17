@@ -1,22 +1,24 @@
 import { guardStringEnum } from '@/lib/typeUtils';
-import { ReactElement } from 'react';
 import {
   MimeTypes,
   SupportedFormat,
   fileExtensionRegex,
   mimeTypeToComponent,
 } from './constants';
+import { ComponentProps } from './types';
 
 export async function getComponentForURL(
   url: string,
-): Promise<ReactElement | undefined | Error> {
+): Promise<
+  ((props: ComponentProps<object>) => JSX.Element) | undefined | Error
+> {
   try {
     const response = await fetch(url);
     const contentType = response.headers.get('content-type');
     if (contentType) {
-      for (const [format, type] of Object.entries(MimeTypes)) {
+      for (const type of Object.values(MimeTypes)) {
         if (contentType.includes(type)) {
-          return mimeTypeToComponent[format];
+          return mimeTypeToComponent[type];
         }
       }
     }
