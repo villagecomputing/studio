@@ -777,27 +777,6 @@
                     }
                 },
                 "required": ["api_key"]
-            },
-            "ClerkUserWebhookPayload": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "string"
-                            }
-                        },
-                        "required": ["id"]
-                    },
-                    "type": {
-                        "type": "string"
-                    },
-                    "object": {
-                        "type": "string"
-                    }
-                },
-                "required": ["data", "type", "object"]
             }
         }
     },
@@ -813,10 +792,6 @@
         {
             "name":"User",
             "description": "Operations related to user including creating, getting user data, permissions and API keys"
-        },
-        {
-            "name":"Webhook",
-            "description": "Any operations that should be exposed as webhook for third party plugins like clerk"
         }
       ]
     }
