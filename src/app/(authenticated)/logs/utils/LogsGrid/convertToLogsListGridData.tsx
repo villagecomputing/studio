@@ -10,7 +10,7 @@ function getLogsListTableColumnDefs(
 ): GridOptions<LogsListRowType>['columnDefs'] {
   return [
     {
-      headerName: 'Nme',
+      headerName: 'Name',
       field: 'name',
       minWidth: 150,
       flex: 3,

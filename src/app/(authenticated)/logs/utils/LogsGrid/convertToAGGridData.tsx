@@ -1,5 +1,6 @@
 import { DatasetTableColumnProps } from '@/app/(authenticated)/data/[datasetId]/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
+import { Enum_Logs_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import {
   AGGridLogs,
@@ -11,12 +12,17 @@ import {
 function getTableColumnDefs(
   tableColumns: (LogsTableColumnProps | DatasetTableColumnProps)[],
 ): ColDef[] {
-  const columns = tableColumns.map((tableColumn) => ({
-    field: tableColumn.field,
-    headerName: tableColumn.name,
-    colId: tableColumn.id.toString(),
-    type: tableColumn.type,
-  }));
+  const columns = tableColumns.map(
+    (tableColumn): ColDef => ({
+      field: tableColumn.field,
+      headerName: tableColumn.name,
+      colId: tableColumn.id.toString(),
+      type: tableColumn.type,
+      ...(tableColumn.type === Enum_Logs_Column_Type.ROW_METADATA
+        ? { minWidth: 210 }
+        : {}),
+    }),
+  );
   return columns;
 }
 
