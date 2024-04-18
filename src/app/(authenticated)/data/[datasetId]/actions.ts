@@ -4,7 +4,7 @@ import { ParserError } from '@/lib/services/DatasetParser';
 import ApiUtils from '@/lib/services/ApiUtils';
 
 import { isSomeStringEnum } from '@/lib/typeUtils';
-import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
+import { ENUM_Ground_truth_status } from '@/lib/types';
 
 import DatasetGrid from '../utils/DatasetGrid';
 import { FetchDatasetResult } from './types';
@@ -29,25 +29,6 @@ export const fetchDataSet = async (
       throw new Error(error.message);
     }
     throw new Error((error as ParserError).message);
-  }
-};
-
-export const markColumnAsType = async (
-  columnId: number,
-  type: ENUM_Column_type,
-): Promise<number | null> => {
-  if (!columnId || !isSomeStringEnum(ENUM_Column_type, type)) {
-    return null;
-  }
-  try {
-    const updatedColumnId = await ApiUtils.editDatasetColumn({
-      columnId,
-      type,
-    });
-
-    return updatedColumnId;
-  } catch (error) {
-    return null;
   }
 };
 

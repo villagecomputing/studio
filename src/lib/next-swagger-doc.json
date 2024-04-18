@@ -74,7 +74,7 @@
                     },
                     "type": {
                     "type": "string",
-                    "enum":  ["IDENTIFIER", "GROUND_TRUTH", "GROUND_TRUTH_STATUS", "PREDICTIVE_LABEL", "INPUT" ]
+                    "enum":  ["IDENTIFIER", "GROUND_TRUTH", "GROUND_TRUTH_STATUS", "INPUT" ]
                     }
                 },
                 "required": ["name", "id", "field", "type"]
@@ -226,33 +226,6 @@
                 ]
             },
             "EditGroundTruthCellResponse": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    }
-                },
-                "required": ["id"]
-            },
-            "EditDatasetColumnPayload": {
-                "type": "object",
-                "properties": {
-                    "columnId": {
-                        "type": "integer"
-                    },
-                    "type": {
-                        "type": "string",
-                        "enum": ["GROUND_TRUTH", "GROUND_TRUTH_STATUS", "IDENTIFIER", "PREDICTIVE_LABEL", "INPUT"],
-                        "nullable": true
-                    },
-                    "name": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "required": ["columnId"]
-            },
-            "EditDatasetColumnResponse": {
                 "type": "object",
                 "properties": {
                     "id": {

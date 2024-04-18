@@ -47,7 +47,7 @@ const LogsTable = (props: LogsTableProps) => {
           ...DEFAULT_GRID_OPTIONS,
           getRowId,
           context,
-          rowData: props.rowData,
+          rowData: context.rows,
           columnDefs: context.displayableColumnDefs,
           columnTypes,
           navigateToNextCell,

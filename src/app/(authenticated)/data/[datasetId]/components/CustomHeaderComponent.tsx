@@ -13,7 +13,6 @@ import { sortBy } from 'lodash';
 import { MoreVerticalIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ROW_ID_FIELD_NAME } from '../../utils/commonUtils';
-import { markColumnAsType } from '../actions';
 import {
   DatasetRow,
   DatasetTableContext,
@@ -87,42 +86,15 @@ export default function CustomHeaderComponent(
           {!!sortIcon && sortIcon}
         </div>
         <div className="flex-shrink-0">
-          {(colDef.type !== ENUM_Column_type.GROUND_TRUTH ||
-            props.context.tableViewMode !==
-              DatasetTableViewModeEnum.PREVIEW) && (
-            <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
-              <MoreVerticalIcon size={14} />
-            </DropdownMenuTrigger>
-          )}
+          {colDef.type === ENUM_Column_type.GROUND_TRUTH &&
+            props.context.tableViewMode === DatasetTableViewModeEnum.EDIT && (
+              <DropdownMenuTrigger className="flex h-full cursor-pointer items-center">
+                <MoreVerticalIcon size={14} />
+              </DropdownMenuTrigger>
+            )}
         </div>
       </div>
       <DropdownMenuContent className="border-border">
-        {colDef.type !== ENUM_Column_type.GROUND_TRUTH && (
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={async () => {
-              if (!colDef.colId) {
-                return;
-              }
-              const type =
-                colDef.type === ENUM_Column_type.INPUT
-                  ? ENUM_Column_type.PREDICTIVE_LABEL
-                  : ENUM_Column_type.INPUT;
-              const pinned =
-                type === ENUM_Column_type.PREDICTIVE_LABEL ? 'right' : false;
-
-              await markColumnAsType(Number(colDef.colId), type);
-              props.context.updateCol(Number(colDef.colId), {
-                type,
-                pinned,
-              });
-            }}
-          >
-            {colDef.type === ENUM_Column_type.INPUT
-              ? 'Set as Predicted Label'
-              : 'Remove Predicted Label'}
-          </DropdownMenuItem>
-        )}
         {colDef.type === ENUM_Column_type.GROUND_TRUTH && (
           <DropdownMenuItem
             className="cursor-pointer"
