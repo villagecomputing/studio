@@ -16,6 +16,7 @@ const DatasetRowInspectorBody = () => {
   }
   return (
     <div className="px-6">
+      {/* TODO: remove predictive label check */}
       {columnDefs
         .filter(
           (colDef) =>
