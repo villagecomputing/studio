@@ -111,7 +111,7 @@ export const getUuidFromFakeId = (fakeId: string, type: UUIDPrefixEnum) => {
 
 export const isAuthEnabled = () => {
   return (
-    !process.env.NEXT_PUBLIC_ENV_TYPE ||
-    process.env.NEXT_PUBLIC_ENV_TYPE !== 'local'
+    !process.env.NEXT_PUBLIC_AUTHENTICATION ||
+    process.env.NEXT_PUBLIC_AUTHENTICATION === 'enabled'
   );
 };
