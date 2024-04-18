@@ -9,7 +9,7 @@
 - `npm run dev`
 
 ### Postgres:
-- Create a `.env.local` file in root and add `APP_DATABASE_PROVIDER=postgres`
+- Create a `.env.local` file in root and add `NEXT_PUBLIC_APP_DATABASE_PROVIDER=postgres`
 - Create a `.env` file inside `prisma-postgres` folder
 - Add `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` with the URL of your postgres database
 - `npm run migrate-deploy:postgres`
@@ -36,16 +36,16 @@ If the Migration deploy fails, a failed migration record will be generated in th
 
 ### Disable Authentication
 1. The `.env` file should be set for running the project locally with authentication disabled. This means:
-    - **NEXT_NEXT_AUTHENTICATION**=disabled
+    - **NEXT_PUBLIC_AUTHENTICATION**=disabled
     - **NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY**=pk_test_cHJvcGVyLWR1Y2stOTQuY2xlcmsuYWNjb3VudHMuZGV2JA
     - **CLERK_SECRET_KEY**=CLERK_SECRET_KEY
 
 ### Enable Authentication with Clerk
 
-Make sure NEXT_AUTHENTICATION is 'enabled'
+Make sure NEXT_PUBLIC_AUTHENTICATION is 'enabled'
 
 1. Create a Clerk organization and navigate to the API Keys page
-2. Create a `.env.local` file in root and add `NEXT_AUTHENTICATION=enabled`
+2. Create a `.env.local` file in root and add `NEXT_PUBLIC_AUTHENTICATION=enabled`
 3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the .env.local file
 4. `npm run dev` or `npm run dev:postgres`
 5. [Download/Install ngrok]

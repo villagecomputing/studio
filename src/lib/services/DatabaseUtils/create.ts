@@ -65,7 +65,7 @@ const buildPostgresDefinitionString = (
 };
 
 const buildColumnDefinitionString = (columnDefinition: ColumnDefinition) => {
-  if (process.env.APP_DATABASE_PROVIDER === 'sqlite') {
+  if (process.env.NEXT_PUBLIC_APP_DATABASE_PROVIDER === 'sqlite') {
     return buildSQLiteDefinitionString(columnDefinition);
   } else {
     return buildPostgresDefinitionString(columnDefinition);
