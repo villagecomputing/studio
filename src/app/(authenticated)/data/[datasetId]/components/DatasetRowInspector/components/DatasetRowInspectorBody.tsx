@@ -16,13 +16,8 @@ const DatasetRowInspectorBody = () => {
   }
   return (
     <div className="px-6">
-      {/* TODO: remove predictive label check */}
       {columnDefs
-        .filter(
-          (colDef) =>
-            colDef.type === ENUM_Column_type.INPUT ||
-            colDef.type === ENUM_Column_type.PREDICTIVE_LABEL,
-        )
+        .filter((colDef) => colDef.type === ENUM_Column_type.INPUT)
         .map((colDef) => {
           if (!colDef.field || !colDef.headerName || !colDef.colId) {
             return <></>;

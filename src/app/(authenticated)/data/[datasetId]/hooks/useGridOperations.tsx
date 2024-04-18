@@ -94,13 +94,6 @@ export function useGridOperations() {
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
       },
-      // TODO: remove this type
-      [ENUM_Column_type.PREDICTIVE_LABEL]: {
-        editable: false,
-        pinned: false,
-        onCellClicked: (event) =>
-          handleCellClicked(event, event.context.setInspectorRowIndex),
-      },
       [ENUM_Column_type.GROUND_TRUTH]: {
         editable: DatasetGrid.isEditableGroundTruth,
         pinned: 'right',
