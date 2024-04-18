@@ -19,7 +19,7 @@ function getTableColumnDefs(
       colId: tableColumn.id.toString(),
       type: tableColumn.type,
       ...(tableColumn.type === Enum_Experiment_Column_Type.ROW_METADATA
-        ? { width: 210 }
+        ? { minWidth: 210 }
         : {}),
     }),
   );
