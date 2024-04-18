@@ -1,5 +1,4 @@
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
-import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -21,9 +20,7 @@ export const useDatasetTableContext = (
   const datasetId = props.datasetId;
   const gridRef = useRef<AgGridReactType<DatasetRow>>();
   const [rows, setRows] = useState<AGGridDataset['rowData']>(props.rowData);
-  const [columnDefs, setColumnDefs] = useState<AGGridDataset['columnDefs']>(
-    props.columnDefs,
-  );
+  const [columnDefs] = useState<AGGridDataset['columnDefs']>(props.columnDefs);
   const [pinnedBottomRow, setPinnedBottomRow] = useState<
     AGGridDataset['pinnedBottomRowData']
   >(props.pinnedBottomRowData);
@@ -127,44 +124,6 @@ export const useDatasetTableContext = (
     );
   };
 
-  const calculateMatchPercentage = (
-    predictiveLabelColumnField: string,
-  ): { allMatchesPercentage: number; reviewedMatchesPercentage: number } => {
-    let reviewedMatches = 0;
-    let allMatches = 0;
-    let reviewedRowsCount = 0;
-    if (!groundTruthColumnField) {
-      throw new Error('No ground truth column');
-    }
-
-    rows.forEach((row) => {
-      const cellData = row[groundTruthColumnField];
-      if (!isGroundTruthCell(cellData)) {
-        return;
-      }
-      if (cellData.status === ENUM_Ground_truth_status.APPROVED) {
-        reviewedRowsCount += 1;
-      }
-      if (row[predictiveLabelColumnField] === cellData.content) {
-        allMatches += 1;
-        if (cellData.status === ENUM_Ground_truth_status.APPROVED) {
-          reviewedMatches += 1;
-        }
-      }
-    });
-
-    return {
-      allMatchesPercentage:
-        rows.length > 0
-          ? Number(((allMatches / rows.length) * 100).toFixed(1))
-          : 0,
-      reviewedMatchesPercentage:
-        reviewedRowsCount > 0
-          ? Number(((reviewedMatches / reviewedRowsCount) * 100).toFixed(1))
-          : 0,
-    };
-  };
-
   const updateRow = (index: number, rowData: DatasetRow) => {
     if (!rows) {
       return;
@@ -179,21 +138,6 @@ export const useDatasetTableContext = (
     });
   };
 
-  const updateCol = (colId: number, colDef: ColDef) => {
-    if (!columnDefs || !colId) {
-      return;
-    }
-    const colIndex = columnDefs.findIndex((col) => Number(col.colId) === colId);
-    setColumnDefs((currentColumnDefs) => {
-      const result = [
-        ...currentColumnDefs.slice(0, colIndex),
-        { ...currentColumnDefs[colIndex], ...colDef },
-        ...currentColumnDefs.slice(colIndex + 1),
-      ];
-      return result;
-    });
-  };
-
   const updatePinnedBottomRow = () => {
     const newRow: DatasetRow = {};
     columnDefs.forEach((column) => {
@@ -203,22 +147,6 @@ export const useDatasetTableContext = (
       newRow[column.field] = '';
     });
 
-    const predictiveLabelColumns = columnDefs.filter(
-      (column) =>
-        column.type === ENUM_Column_type.PREDICTIVE_LABEL && column.field,
-    );
-
-    predictiveLabelColumns.map((col) => {
-      if (!col.field) {
-        return;
-      }
-      const percentages = calculateMatchPercentage(col.field);
-      const reviewedRowsPercentage =
-        percentages.reviewedMatchesPercentage.toString();
-      const allRowsPercentage = percentages.allMatchesPercentage.toString();
-      newRow[col.field] =
-        `${reviewedRowsPercentage}% (reviewed) | ${allRowsPercentage}% (total)`;
-    });
     if (groundTruthColumnField) {
       newRow[groundTruthColumnField] = {
         id: -1,
@@ -271,7 +199,6 @@ export const useDatasetTableContext = (
     setInspectorRowIndex,
     updateGroundTruthCell,
     toggleViewMode,
-    updateCol,
     approveAll,
     updateRows,
   };

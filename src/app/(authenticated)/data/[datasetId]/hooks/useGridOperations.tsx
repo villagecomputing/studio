@@ -13,7 +13,6 @@ import DatasetGrid from '../../utils/DatasetGrid';
 import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../../utils/commonUtils';
 import { HeaderComponentParams } from '../components/CustomHeaderComponent';
 import GroundTruthCellRenderer from '../components/GroundTruthCellRenderer';
-import PredictiveLabelCellRenderer from '../components/PredictiveLabelCellRenderer';
 import { DatasetRow, DatasetTableContext, GroundTruthCell } from '../types';
 
 export function useGridOperations() {
@@ -95,22 +94,12 @@ export function useGridOperations() {
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
       },
+      // TODO: remove this type
       [ENUM_Column_type.PREDICTIVE_LABEL]: {
         editable: false,
-        pinned: 'right',
-        headerComponentParams: {
-          leftSideIcon: DatasetGrid.getTableColumnIcon(
-            ENUM_Column_type.PREDICTIVE_LABEL,
-          ),
-        } as HeaderComponentParams,
-        comparator: DatasetGrid.predictiveLabelComparator,
+        pinned: false,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
-        cellRendererSelector: (params) =>
-          params.node.isRowPinned() && params.node.rowPinned === 'bottom'
-            ? { component: PredictiveLabelCellRenderer }
-            : undefined,
-        cellClass: DatasetGrid.predictiveLabelCellClass,
       },
       [ENUM_Column_type.GROUND_TRUTH]: {
         editable: DatasetGrid.isEditableGroundTruth,
