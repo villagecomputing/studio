@@ -10,8 +10,8 @@ function getLogsListTableColumnDefs(
 ): GridOptions<LogsListRowType>['columnDefs'] {
   return [
     {
-      headerName: 'Description',
-      field: 'description',
+      headerName: 'Nme',
+      field: 'name',
       minWidth: 150,
       flex: 3,
       onCellClicked,
@@ -81,7 +81,7 @@ function getLogsListTableColumnDefs(
 function getLogsListRowData(data: LogsList): LogsListRowType[] {
   return data.map((data) => ({
     id: data.id,
-    description: data.description || '-',
+    name: data.name || '-',
     date: formatDate(data.createdAt),
     avgAccuracy: data.avgAccuracy,
     avgCost: data.totalCost ? data.totalCost / data.totalRows : 0,

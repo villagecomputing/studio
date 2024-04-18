@@ -3,7 +3,7 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 export type LogsList = ResultSchemaType[ApiEndpoints.logsList];
 
 export type LogsListRowType = {
-  description: string;
+  name: string;
   runtime: number;
   date: string;
   avgCost: number;
