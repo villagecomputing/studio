@@ -27,7 +27,6 @@ CREATE TABLE "Dataset_column" (
     "type" TEXT NOT NULL CHECK ( "type" IN (
         'GROUND_TRUTH',
         'GROUND_TRUTH_STATUS',
-        'PREDICTIVE_LABEL',
         'INPUT',
         'IDENTIFIER'
     ) ),

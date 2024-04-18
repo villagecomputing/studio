@@ -95,8 +95,6 @@ export function buildDatasetColumnDefinition(
             typeCheckValues: Object.values(ENUM_Ground_truth_status),
             defaultValue: ENUM_Ground_truth_status.PENDING,
           };
-        case ENUM_Column_type.PREDICTIVE_LABEL:
-          throw new Error(`Unupported field type: ${field.type}`);
         default:
           exhaustiveCheck(type);
       }
