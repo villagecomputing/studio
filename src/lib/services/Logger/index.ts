@@ -1,5 +1,10 @@
+import getDefaultILoggerImplementation from './DefaultLogger/defaultLogger';
 import getWinstonILoggerImplementation from './WinstonLogger/winstonLogger';
 
+export enum LOGGER_TYPE {
+  WINSTON = 'winston',
+  DEFAULT = 'default',
+}
 export interface ILogger {
   info: (message: string, ...meta: unknown[]) => void;
   error: (message: string, ...meta: unknown[]) => void;
@@ -8,8 +13,15 @@ export interface ILogger {
   log: (level: string, message: string, ...meta: unknown[]) => void;
 }
 
-const getLogger = (source: string | undefined): ILogger => {
-  return getWinstonILoggerImplementation(source);
+const getLogger = ({
+  type = LOGGER_TYPE.DEFAULT,
+  source,
+}: { type?: LOGGER_TYPE; source?: string } = {}): ILogger => {
+  if (type === LOGGER_TYPE.DEFAULT) {
+    return getDefaultILoggerImplementation(source);
+  } else {
+    return getWinstonILoggerImplementation(source);
+  }
 };
 
 export default { getLogger };
