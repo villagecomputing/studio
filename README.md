@@ -4,22 +4,19 @@
 
 - `npm install`
 
-- Create a `.env.local` at root level
-
 ### SQLite:
-- Add `APP_DATABASE_PROVIDER=sqlite` in `.env.local`
 - `npm run migrate-deploy:sqlite`
 - `npm run dev`
 
 ### Postgres:
-
+- Create a `.env.local` file in root and add `APP_DATABASE_PROVIDER=postgres`
 - Create a `.env` file inside `prisma-postgres` folder
-- Add `POSTGRES_PRISMA_URL=""` and `POSTGRES_URL_NON_POOLING=""` with the URL of your postgres database
+- Add `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` with the URL of your postgres database
 - `npm run migrate-deploy:postgres`
 - `npm run dev:postgres`
 
 ## Updating DB schema migration steps
-The app is using Prisma with two different providers: SQLite and Postgres. 
+The app is using Prisma with two different providers: **SQLite** and **Postgres**. 
 
 There are two different folders for each `prisma_postgres` and `prisma_sqlite`. Whenever you run an individual prisma command to have to specify which schema to use with `--schema=./prisma_postgres/schema.prisma` or `--schema=./prisma_sqlite/schema.prisma`
 
@@ -37,18 +34,21 @@ If the Migration deploy fails, a failed migration record will be generated in th
 2. Run the following command which will mark the broken record as rolled-back and allow us to insert a new record with the same name. Don't forget to replace the name of the migration folder and the database provider accordingly
 `npx prisma migrate resolve --rolled-back ${MIGRATION_FOLDER_NAME} --schema=./prisma_${postgres or sqlite}/schema.prisma`
 
-### Running locally without authentication
-1. To run locally without the need to authenticate add NEXT_PUBLIC_ENV_TYPE=local to the .env.local file
-2. Add the NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY variables from the .env.example file 
+### Disable Authentication
+1. The `.env` file should be set for running the project locally with authentication disabled. This means:
+    - **NEXT_NEXT_AUTHENTICATION**=disabled
+    - **NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY**=pk_test_cHJvcGVyLWR1Y2stOTQuY2xlcmsuYWNjb3VudHMuZGV2JA
+    - **CLERK_SECRET_KEY**=CLERK_SECRET_KEY
 
-### Steps for authenticating with Clerk
+### Enable Authentication with Clerk
 
-Make sure NEXT_PUBLIC_ENV_TYPE is not local
+Make sure NEXT_AUTHENTICATION is 'enabled'
 
 1. Create a Clerk organization and navigate to the API Keys page
-2. Add the NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY variables to the .env.local file
-3. `npm run dev`
-4. [Download/Install ngrok]
-5. Open command line, run `ngrok http 3000` and copy URL
-6. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
-7. Access http://localhost:3000/ and log in
+2. Create a `.env.local` file in root and add `NEXT_AUTHENTICATION=enabled`
+3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the .env.local file
+4. `npm run dev` or `npm run dev:postgres`
+5. [Download/Install ngrok]
+6. Open command line, run `ngrok http 3000` and copy URL
+7. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
+8. Access http://localhost:3000/ and log in
