@@ -1,7 +1,9 @@
+import { logsStepInputs } from '@/app/api/logs/insert/schema';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { compact } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
+import { z } from 'zod';
 import {
   AGGridLogs,
   FetchLogsResult,
@@ -14,7 +16,7 @@ export const useLogsTableContext = (
   props: FetchLogsResult,
 ): LogsTableContext => {
   const gridRef = useRef<AgGridReactType<LogsRow>>();
-  const [rows] = useState<AGGridLogs['rowData']>(props.rowData);
+  const [rows, setRows] = useState<AGGridLogs['rowData']>(props.rowData);
   const [stepMetadataColumns, setStepMetadataColumn] = useState<
     StepMetadataColumn[]
   >([]);
@@ -27,6 +29,45 @@ export const useLogsTableContext = (
   const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
     null,
   );
+
+  /**
+   * Transform the input columns from
+   * [{name: 'FIELD_NAME', value: 'FIELD_VALUE'}...]
+   * to: [{'FIELD_NAME': 'FIELD_VALUE'}...]
+   */
+  useEffect(() => {
+    const inputColumnsFields = compact(
+      displayableColumnDefs
+        .filter((column) => column.type === Enum_Logs_Column_Type.INPUT)
+        .map((colDef) => colDef.field),
+    );
+    const transformedRows = props.rowData.map((row) => {
+      const transformedRow = { ...row };
+      for (const [key, value] of Object.entries(row)) {
+        if (!inputColumnsFields.includes(key)) {
+          continue;
+        }
+        const parsedValue = logsStepInputs.safeParse(JSON.parse(value));
+        if (!parsedValue.success) {
+          continue;
+        }
+        transformedRow[key] = JSON.stringify(
+          parsedValue.data.reduce(
+            (
+              acc: Record<string, string>,
+              { name, value }: z.infer<typeof logsStepInputs>[number],
+            ) => {
+              acc[name] = value;
+              return acc;
+            },
+            {},
+          ),
+        );
+      }
+      return transformedRow;
+    });
+    setRows(transformedRows);
+  }, [props.rowData, displayableColumnDefs]);
 
   useEffect(() => {
     const parsedColumns = props.columnDefs.filter((column) => {
