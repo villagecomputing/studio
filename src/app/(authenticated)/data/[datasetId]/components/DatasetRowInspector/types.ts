@@ -12,12 +12,10 @@ export type UseDatasetRowInspectorData = {
 
 export type DatasetRowInspectorBodyElementProps = {
   header: string;
-  updateCol: (colTypeUpdated: ENUM_Column_type) => Promise<void>;
 } & (
   | {
-      colType: ENUM_Column_type.INPUT | ENUM_Column_type.PREDICTIVE_LABEL;
+      colType: ENUM_Column_type.INPUT;
       content: string;
-      gtContent: GroundTruthCell | null;
     }
   | {
       colType: ENUM_Column_type.GROUND_TRUTH;
