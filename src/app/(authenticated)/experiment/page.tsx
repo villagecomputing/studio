@@ -3,9 +3,14 @@ import Breadcrumb from '@/components/Breadcrumb';
 import { CellClickedEvent } from 'ag-grid-community';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { onFilterChanged } from '../common/gridUtils';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import {
+  CustomNoRowsOverlay,
+  CustomNoRowsOverlayParams,
+} from '../components/no-rows-overlay/NoRowsOverlay';
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
 
@@ -29,11 +34,6 @@ const ExperimentsPage = () => {
   const { columnDefs, rowData } =
     ExperimentGrid.convertToExperimentListGridData(experiments, onCellClicked);
 
-  const searchInExperimentList: ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    setQuickFilterText(event.target.value);
-  };
   const experimentsMetadataColumnsPercentiles = useMemo(() => {
     return getExperimentsMetadataColumnsPercentiles(experiments);
   }, [experiments]);
@@ -49,7 +49,7 @@ const ExperimentsPage = () => {
       </PageHeader>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>
-          <SearchInput onChange={searchInExperimentList} />
+          <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
         {!experiments.length ? (
           <ExperimentListZeroState />
@@ -67,6 +67,15 @@ const ExperimentsPage = () => {
                 columnDefs,
                 domLayout: 'autoHeight',
                 quickFilterText,
+                onFilterChanged: onFilterChanged,
+                noRowsOverlayComponent: CustomNoRowsOverlay,
+                noRowsOverlayComponentParams: {
+                  resetFilter: () => {
+                    setQuickFilterText('');
+                  },
+                  isFilterPresent: quickFilterText !== '',
+                  text: 'No results matching your search',
+                } as CustomNoRowsOverlayParams,
               }}
             />
           </div>

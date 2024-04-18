@@ -1,5 +1,5 @@
 import { exhaustiveCheck } from '@/lib/typeUtils';
-import { SortDirection } from 'ag-grid-community';
+import { FilterChangedEvent, SortDirection } from 'ag-grid-community';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 
 export function getTableColumnSortIcon(sort: SortDirection) {
@@ -15,3 +15,11 @@ export function getTableColumnSortIcon(sort: SortDirection) {
     }
   }
 }
+
+export const onFilterChanged = (event: FilterChangedEvent) => {
+  if (event.api.getDisplayedRowCount() === 0) {
+    event.api.showNoRowsOverlay();
+    return;
+  }
+  event.api.hideOverlay();
+};
