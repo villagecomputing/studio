@@ -58,7 +58,6 @@ export type DatasetTableContext = {
   setInspectorRowIndex: Dispatch<SetStateAction<number | null>>;
   updateGroundTruthCell: (props: UpdateGroundTruthCellParams) => void;
   toggleViewMode: () => void;
-  updateCol: (colId: number, colDef: ColDef) => void;
   updateRows: (rows: DatasetRow[]) => void;
   approveAll: () => Promise<void>;
 };

@@ -84,7 +84,6 @@
               "IDENTIFIER",
               "GROUND_TRUTH",
               "GROUND_TRUTH_STATUS",
-              "PREDICTIVE_LABEL",
               "INPUT"
             ]
           }
@@ -275,43 +274,6 @@
         ]
       },
       "EditGroundTruthCellResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
-      "EditDatasetColumnPayload": {
-        "type": "object",
-        "properties": {
-          "columnId": {
-            "type": "integer"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "GROUND_TRUTH",
-              "GROUND_TRUTH_STATUS",
-              "IDENTIFIER",
-              "PREDICTIVE_LABEL",
-              "INPUT"
-            ],
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "columnId"
-        ]
-      },
-      "EditDatasetColumnResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -1095,46 +1057,6 @@
           },
           "500": {
             "description": "Error processing result."
-          }
-        }
-      }
-    },
-    "/api/dataset/edit/column": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Edits an existing column in a dataset.",
-        "description": "Edits an existing column in a dataset.",
-        "operationId": "EditDatasetColumn",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditDatasetColumnPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Column updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error processing request"
           }
         }
       }
