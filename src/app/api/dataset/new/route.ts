@@ -39,13 +39,13 @@ const logger = loggerFactory.getLogger({
  *         description: Error processing request.
  */
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
     logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
   try {
-    const startTime = performance.now();
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
       logger.warn('Invalid request headers type', 400);
     }
