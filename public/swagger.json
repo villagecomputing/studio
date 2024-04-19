@@ -466,6 +466,10 @@
           "output_cost": {
             "type": "number",
             "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
