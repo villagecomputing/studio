@@ -4,11 +4,6 @@
     "title": "Labelkit Studio API - OpenAPI 3.0",
     "version": "1.0"
   },
-  "servers": [
-    {
-      "url": "http://localhost:3000"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "ApiKeyAuth": {
@@ -89,7 +84,6 @@
               "IDENTIFIER",
               "GROUND_TRUTH",
               "GROUND_TRUTH_STATUS",
-              "PREDICTIVE_LABEL",
               "INPUT"
             ]
           }
@@ -290,43 +284,6 @@
           "id"
         ]
       },
-      "EditDatasetColumnPayload": {
-        "type": "object",
-        "properties": {
-          "columnId": {
-            "type": "integer"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "GROUND_TRUTH",
-              "GROUND_TRUTH_STATUS",
-              "IDENTIFIER",
-              "PREDICTIVE_LABEL",
-              "INPUT"
-            ],
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "columnId"
-        ]
-      },
-      "EditDatasetColumnResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
       "ExperimentViewResponse": {
         "type": "object",
         "properties": {
@@ -508,6 +465,10 @@
           },
           "output_cost": {
             "type": "number",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -919,33 +880,6 @@
         "required": [
           "api_key"
         ]
-      },
-      "ClerkUserWebhookPayload": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id"
-            ]
-          },
-          "type": {
-            "type": "string"
-          },
-          "object": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "data",
-          "type",
-          "object"
-        ]
       }
     }
   },
@@ -961,10 +895,6 @@
     {
       "name": "User",
       "description": "Operations related to user including creating, getting user data, permissions and API keys"
-    },
-    {
-      "name": "Webhook",
-      "description": "Any operations that should be exposed as webhook for third party plugins like clerk"
     }
   ],
   "paths": {
@@ -1131,46 +1061,6 @@
           },
           "500": {
             "description": "Error processing result."
-          }
-        }
-      }
-    },
-    "/api/dataset/edit/column": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Edits an existing column in a dataset.",
-        "description": "Edits an existing column in a dataset.",
-        "operationId": "EditDatasetColumn",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditDatasetColumnPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Column updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EditDatasetColumnResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error processing request"
           }
         }
       }

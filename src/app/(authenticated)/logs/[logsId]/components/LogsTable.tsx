@@ -6,13 +6,16 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DateRangeFilter, FetchLogsResult, LogsRow } from '../types';
 
+import { onFilterChanged } from '@/app/(authenticated)/common/gridUtils';
+import {
+  CustomNoRowsOverlay,
+  CustomNoRowsOverlayParams,
+} from '@/app/(authenticated)/components/no-rows-overlay/NoRowsOverlay';
 import { IRowNode } from 'ag-grid-community';
 import LogsRowInspector from './LogsRowInspector/LogsRowInspector';
 import { useLogsTableContext } from './LogsTableContext';
 
-type LogsTableProps = FetchLogsResult & {
-  dateRange: DateRangeFilter['dateRange'];
-};
+type LogsTableProps = FetchLogsResult & DateRangeFilter;
 
 const LogsTable = (props: LogsTableProps) => {
   const context = useLogsTableContext(props);
@@ -44,7 +47,7 @@ const LogsTable = (props: LogsTableProps) => {
           ...DEFAULT_GRID_OPTIONS,
           getRowId,
           context,
-          rowData: props.rowData,
+          rowData: context.rows,
           columnDefs: context.displayableColumnDefs,
           columnTypes,
           navigateToNextCell,
@@ -57,6 +60,13 @@ const LogsTable = (props: LogsTableProps) => {
               doesExternalFilterPass(node, props.dateRange),
             [props.dateRange, doesExternalFilterPass],
           ),
+          onFilterChanged: onFilterChanged,
+          noRowsOverlayComponent: CustomNoRowsOverlay,
+          noRowsOverlayComponentParams: {
+            resetFilter: () => props.setDateRange(undefined),
+            isFilterPresent: isExternalFilterPresent(props.dateRange),
+            text: 'No records found. Adjust your filters or reset them to view more results.',
+          } as CustomNoRowsOverlayParams,
         }}
       />
     </>

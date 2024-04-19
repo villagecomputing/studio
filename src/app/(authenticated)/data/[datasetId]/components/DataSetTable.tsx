@@ -7,10 +7,15 @@ import { cn } from '@/lib/utils';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 
 import DatasetParser from '@/lib/services/DatasetParser';
-import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
+import { onFilterChanged } from '@/app/(authenticated)/common/gridUtils';
+import {
+  CustomNoRowsOverlay,
+  CustomNoRowsOverlayParams,
+} from '../../../components/no-rows-overlay/NoRowsOverlay';
 import { mapFieldNameToHeaderName } from '../../utils/commonUtils';
 import DatasetRowInspector from './DatasetRowInspector/DatasetRowInspector';
 import { useDatasetTableContext } from './DatasetTableContext';
@@ -26,10 +31,6 @@ export default function DataSetTable(props: FetchDatasetResult) {
     columnTypes,
     dataTypeDefinitions,
   } = useGridOperations();
-
-  const searchInDatasetList: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setQuickFilterText(event.target.value);
-  };
 
   useEffect(() => {
     if (!gridRef.current) {
@@ -56,7 +57,7 @@ export default function DataSetTable(props: FetchDatasetResult) {
   return (
     <>
       <div className={cn(['flex items-center justify-between p-6'])}>
-        <SearchInput onChange={searchInDatasetList} />
+        <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         <Button variant={'outline'} onClick={downloadCSV}>
           Download
         </Button>
@@ -80,6 +81,14 @@ export default function DataSetTable(props: FetchDatasetResult) {
           quickFilterText,
           onCellValueChanged,
           navigateToNextCell,
+          onFilterChanged: onFilterChanged,
+          noRowsOverlayComponent: CustomNoRowsOverlay,
+          noRowsOverlayComponentParams: {
+            resetFilter: () => {
+              setQuickFilterText('');
+            },
+            isFilterPresent: quickFilterText !== '',
+          } as CustomNoRowsOverlayParams,
         }}
       />
     </>

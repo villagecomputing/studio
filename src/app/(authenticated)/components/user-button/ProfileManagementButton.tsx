@@ -21,7 +21,7 @@ const ProfileManagementButton = () => {
   const [apiKey, setApiKey] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!clerkUser?.id) {
+    if (!clerkUser?.id || !isAuthEnabled()) {
       return;
     }
 

@@ -10,9 +10,14 @@ import {
 } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { onFilterChanged } from '../common/gridUtils';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import {
+  CustomNoRowsOverlay,
+  CustomNoRowsOverlayParams,
+} from '../components/no-rows-overlay/NoRowsOverlay';
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
 import FakeIdCellRenderer from './[datasetId]/components/FakeIdCellRenderer';
@@ -101,10 +106,6 @@ const DataPage = () => {
     setDatasetList(await getData());
   };
 
-  const searchInDatasetList: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setQuickFilterText(event.target.value);
-  };
-
   return (
     <>
       <PageHeader>
@@ -113,7 +114,10 @@ const DataPage = () => {
       <div className="px-6">
         <UploadDataProvider refetchData={refetchData}>
           <div className={'my-6 flex items-center justify-between gap-5'}>
-            <SearchInput onChange={searchInDatasetList} />
+            <SearchInput
+              onChange={setQuickFilterText}
+              value={quickFilterText}
+            />
             <UploadDataButton />
           </div>
           {!datasetList.length ? (
@@ -134,6 +138,15 @@ const DataPage = () => {
                   rowSelection: undefined,
                   tooltipShowDelay: 100,
                   tooltipHideDelay: 2000,
+                  onFilterChanged: onFilterChanged,
+                  noRowsOverlayComponent: CustomNoRowsOverlay,
+                  noRowsOverlayComponentParams: {
+                    resetFilter: () => {
+                      setQuickFilterText('');
+                    },
+                    isFilterPresent: quickFilterText !== '',
+                    text: 'No results matching your search',
+                  } as CustomNoRowsOverlayParams,
                 }}
               />
             </div>

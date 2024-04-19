@@ -1,7 +1,7 @@
 import generateApiKey from 'generate-api-key';
 
 const API_KEY_CHARACTER_POOL =
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_&*^-+';
 
 export const API_KEY_PART_DELIMITER = '.';
 
@@ -17,6 +17,7 @@ export const generateSecureApiKey = (): string => {
   const prefix = generateApiKey({
     method: 'string',
     length: 6,
+    pool: API_KEY_CHARACTER_POOL,
     batch: 1,
   })[0];
 

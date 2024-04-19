@@ -1,9 +1,4 @@
 'use client';
-import { format, isAfter, isBefore, subMonths } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import * as React from 'react';
-import { DateRange } from 'react-day-picker';
-
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -12,16 +7,24 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { format, isAfter, isBefore, subMonths } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { HTMLAttributes, useEffect, useState } from 'react';
+import { DateRange } from 'react-day-picker';
 
 export function DatePickerWithRange(props: {
-  className?: React.HTMLAttributes<HTMLDivElement>['className'];
+  className?: HTMLAttributes<HTMLDivElement>['className'];
   selectedDateRange: DateRange | undefined;
   setDateRange: (date: DateRange | undefined) => void;
 }) {
-  const [date, setDate] = React.useState<DateRange | undefined>(
+  const [date, setDate] = useState<DateRange | undefined>(
     props.selectedDateRange,
   );
-  const [popoverOpen, setPopoverOpen] = React.useState<boolean>(false);
+  const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setDate(props.selectedDateRange);
+  }, [props.selectedDateRange]);
 
   const onSubmit = () => {
     props.setDateRange(date);

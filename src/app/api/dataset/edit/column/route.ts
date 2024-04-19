@@ -1,36 +1,18 @@
 import { hasApiAccess, response } from '@/app/api/utils';
+
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { editDatasetColumnSchema } from './schema';
 
-/**
- * @swagger
- * /api/dataset/edit/column:
- *   post:
- *     tags:
- *      - Dataset
- *     summary: Edits an existing column in a dataset.
- *     description: Edits an existing column in a dataset.
- *     operationId: EditDatasetColumn
- *     security:
- *       - ApiKeyAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/EditDatasetColumnPayload'
- *     responses:
- *       200:
- *         description: Column updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/EditDatasetColumnResponse'
- *       500:
- *         description: 'Error processing request'
- */
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'EditDatasetColumn',
+});
+
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -44,9 +26,16 @@ export async function POST(request: Request) {
       columnId,
     });
 
+    logger.info('Dataset column edited', {
+      elapsedTimeMs: performance.now() - startTime,
+      type,
+      name,
+      columnId,
+    });
+
     return Response.json({ id: updatedColumnId });
   } catch (error) {
-    console.error('Error in EditDatasetColumn:', error);
+    logger.error('Error edditing dataset column:', error);
     return response('Error processing request', 500);
   }
 }

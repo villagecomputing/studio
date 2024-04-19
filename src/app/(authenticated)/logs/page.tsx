@@ -2,9 +2,14 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import { CellClickedEvent } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { onFilterChanged } from '../common/gridUtils';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
+import {
+  CustomNoRowsOverlay,
+  CustomNoRowsOverlayParams,
+} from '../components/no-rows-overlay/NoRowsOverlay';
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
 import { useLogsListContext } from './components/LogsListProvider';
@@ -29,9 +34,6 @@ const LogsPage = () => {
     onCellClicked,
   );
 
-  const searchInLogsList: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setQuickFilterText(event.target.value);
-  };
   const logsMetadataColumnsPercentiles = useMemo(() => {
     return getLogsMetadataColumnsPercentiles(logs);
   }, [logs]);
@@ -43,7 +45,7 @@ const LogsPage = () => {
       </PageHeader>
       <div className="px-6">
         <div className={'my-6 flex items-center justify-between gap-5'}>
-          <SearchInput onChange={searchInLogsList} />
+          <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
         {!logs.length ? (
           <LogsListZeroState />
@@ -61,6 +63,15 @@ const LogsPage = () => {
                 columnDefs,
                 domLayout: 'autoHeight',
                 quickFilterText,
+                onFilterChanged: onFilterChanged,
+                noRowsOverlayComponent: CustomNoRowsOverlay,
+                noRowsOverlayComponentParams: {
+                  resetFilter: () => {
+                    setQuickFilterText('');
+                  },
+                  isFilterPresent: quickFilterText !== '',
+                  text: 'No results matching your search',
+                } as CustomNoRowsOverlayParams,
               }}
             />
           </div>

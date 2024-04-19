@@ -3,10 +3,16 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import DatasetParser from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { createFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { newDatasetPayloadSchema } from '../new/schema';
 import { uploadDatasetPayloadSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'UploadDataset',
+});
 
 /**
  * @swagger
@@ -35,12 +41,15 @@ import { uploadDatasetPayloadSchema } from './schema';
  *         description: File content is missing -or- Error processing request
  */
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
   try {
     if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
+      logger.warn('Invalid request headers');
       return response('Invalid request headers type', 400);
     }
 
@@ -49,9 +58,11 @@ export async function POST(request: Request) {
     const requestDatasetData = formData.get('datasetData');
 
     if (!file || !requestDatasetData) {
+      logger.warn('Missing required data');
       return response('Missing required data', 400);
     }
     if (typeof requestDatasetData !== 'string') {
+      logger.warn('Invalid request dataset');
       return response('Invalid request dataset type', 400);
     }
 
@@ -63,6 +74,7 @@ export async function POST(request: Request) {
     // Attempts to read the file content
     const fileContent = await FileHandler.readFileAsStream(file);
     if (!fileContent) {
+      logger.error('File content is missing');
       return response('File content is missing', 500);
     }
 
@@ -75,6 +87,9 @@ export async function POST(request: Request) {
     let groundTruths = [parsedFile.headers[dataToSend.groundTruthColumnIndex]];
     if (gtColumnIndex >= parsedFile['headers'].length) {
       if (!newGTColumnTitle) {
+        logger.warn(
+          'Column Title required for blank ground truth column in POST',
+        );
         return response(
           'Column Title required for blank ground truth column',
           400,
@@ -96,6 +111,10 @@ export async function POST(request: Request) {
 
     // Creates a new dataset record
     const datasetId = await ApiUtils.newDataset(dataset);
+    logger.debug('Created a new dataset', {
+      id: datasetId,
+      dataset,
+    });
 
     const columnsPerRow = parsedFile.headers.length;
     const batchSize = Math.floor(MAX_SQL_VARIABLES / columnsPerRow);
@@ -104,12 +123,20 @@ export async function POST(request: Request) {
       const batch = parsedFile.rows.slice(i, i + batchSize);
       await ApiUtils.addData({ datasetId, payload: { datasetRows: batch } });
     }
+    logger.debug('Populated dataset', {
+      id: datasetId,
+      rows: parsedFile.rows,
+    });
 
+    logger.info('Dataset uploaded successfully', {
+      datasetId,
+      elapsedTimeMs: performance.now() - startTime,
+    });
     return Response.json({
       datasetId: createFakeId(dataset.datasetName, datasetId),
     });
   } catch (error) {
-    console.error('Error in POST:', error);
+    logger.error('Error uploading dataset', error);
     return response('Error processing request', 500);
   }
 }
