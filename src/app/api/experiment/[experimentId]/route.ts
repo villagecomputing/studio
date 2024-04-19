@@ -53,8 +53,8 @@ export async function GET(
     let experimentId = params.experimentId;
     try {
       experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
-    } catch (_e) {
-      logger.warn('Invalid experiment id', { experimentId });
+    } catch (error) {
+      logger.warn('Invalid experiment id', { experimentId, error });
       return response('Invalid experiment id', 400);
     }
     const result = await ApiUtils.getExperiment(experimentId);
@@ -76,9 +76,11 @@ export async function GET(
       return response('Invalid response experiment view type', 500);
     }
 
-    logger.info('Experiment data retrieved successfully', {
+    const { rows, ...experimentSummary } = experiment;
+    logger.info('Experiment data retrieved', {
       elapsedTimeMs: performance.now() - startTime,
-      experiment,
+      ...experimentSummary,
+      rowCount: rows.length,
     });
 
     return Response.json(experiment);
