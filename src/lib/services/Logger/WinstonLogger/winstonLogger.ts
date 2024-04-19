@@ -1,10 +1,10 @@
 import { createLogger, format, transports } from 'winston';
 import { ILogger } from '..';
 
-let winstonILoggerImplementation: ILogger | null = null;
+let winstonLoggerWrapper: ILogger | null = null;
 
 const getWinstonILoggerImplementation = (source: string | undefined) => {
-  if (!winstonILoggerImplementation) {
+  if (!winstonLoggerWrapper) {
     const winstonLogger = createLogger({
       level: process.env.LOG_LEVEL || 'info',
       format: format.combine(
@@ -33,7 +33,7 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
       transports: [new transports.Console()],
     });
 
-    winstonILoggerImplementation = {
+    winstonLoggerWrapper = {
       info: (message: string, ...meta: unknown[]) =>
         winstonLogger.info(message, ...meta),
       error: (message: string, ...meta: unknown[]) =>
@@ -47,10 +47,7 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
     };
   }
 
-  if (!winstonILoggerImplementation) {
-    throw new Error('Unable to initialize logger');
-  }
-  const logger: ILogger = winstonILoggerImplementation;
+  const logger: ILogger = winstonLoggerWrapper;
 
   return {
     info: (message: string, ...meta: unknown[]) =>
@@ -64,8 +61,6 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
     log: (level: string, message: string, ...meta: unknown[]) =>
       logger.log(level, message, ...[{ source }, ...meta]),
   };
-
-  return logger;
 };
 
 export default getWinstonILoggerImplementation;
