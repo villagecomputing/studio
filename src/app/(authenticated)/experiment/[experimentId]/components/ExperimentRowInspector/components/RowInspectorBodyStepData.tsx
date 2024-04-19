@@ -61,15 +61,17 @@ const RowInspectorBodyStepData = (props: {
           )}
         </div>
       </div>
-      {!!stepMetadata.prompt && !!stepMetadata.input_tokens && (
+      {!!stepMetadata.prompt && (
         <div className="flex flex-col gap-4">
           <div>
             <span className="mr-4 rounded-2xl border-[thin] border-border bg-paleGrey px-2 py-1">
               Input Prompt
             </span>
-            <span className="text-muted-foreground">
-              <b className="mr-1">{stepMetadata.input_tokens}</b>Tokens
-            </span>
+            {!!stepMetadata.input_tokens && (
+              <span className="text-muted-foreground">
+                <b className="mr-1">{stepMetadata.input_tokens}</b>Tokens
+              </span>
+            )}
           </div>
           <div className="flex flex-col gap-1 border-l border-border px-2">
             <CollapsibleText text={stepMetadata.prompt} />
@@ -77,14 +79,16 @@ const RowInspectorBodyStepData = (props: {
         </div>
       )}
       <div className="flex flex-col gap-4">
-        {!!stepMetadata.output_tokens && (
+        {!!stepMetadata.output_column_fields.length && (
           <div>
             <span className="mr-4 rounded-2xl border-[thin] border-border bg-paleGrey px-2 py-1">
               Output
             </span>
-            <span className="text-muted-foreground">
-              <b className="mr-1">{stepMetadata.output_tokens}</b>Tokens
-            </span>
+            {!!stepMetadata.output_tokens && (
+              <span className="text-muted-foreground">
+                <b className="mr-1">{stepMetadata.output_tokens}</b>Tokens
+              </span>
+            )}
           </div>
         )}
         {stepMetadata.output_column_fields.map((outputColumnField) => {
