@@ -55,4 +55,4 @@ Make sure NEXT_PUBLIC_AUTHENTICATION is 'enabled'
 
 ### Logging 
 
-To change log level set the LOG_LEVEL value inside the env file to one of: error, warn, info, debug
+To change log level set the LOG_LEVEL value inside the env file to one of: error, warn, info, debug (default is error)

@@ -8,8 +8,9 @@ import { isAuthEnabled } from '@/lib/utils';
 export const X_API_KEY_HEADER = 'x-api-key';
 export const LOGGED_IN_USER_ID = 'logged_in_user_id';
 
+// Cannot use Winston logger here - it doesn't work in the Edge Runtime
 const logger = loggerFactory.getLogger({
-  type: LOGGER_TYPE.WINSTON,
+  type: LOGGER_TYPE.DEFAULT,
   source: 'apiAccessCheck',
 });
 

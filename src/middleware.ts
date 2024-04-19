@@ -14,16 +14,17 @@ export default authMiddleware({
   publicRoutes: [isAuthEnabled() ? '/api-doc' : '/(.*)', '/api/webhook(.*)'],
   afterAuth: async (auth, request) => {
     const xApiKey = request.headers.get(X_API_KEY_HEADER);
+    const shouldCheckAuth = isAuthEnabled();
     logger.debug('Incoming request:', {
       method: request.method,
       url: request.url,
-      isAuthEnabled,
-      isPublisRoute: auth.isPublicRoute,
-      userId: auth.userId,
+      isAuthEnabled: shouldCheckAuth,
+      isPublicRoute: auth.isPublicRoute,
+      hasUserId: !!auth.userId,
       hasApiKey: !!xApiKey,
     });
 
-    if (auth.isPublicRoute || !isAuthEnabled()) {
+    if (auth.isPublicRoute || !shouldCheckAuth) {
       return NextResponse.next();
     }
 
