@@ -1,11 +1,10 @@
+import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
 import MetadataElement, {
   Enum_Metadata_Type,
 } from '@/app/(authenticated)/experiment/[experimentId]/components/MetadataElement';
 import { StepMetadataColumn } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
-import { cn } from '@/lib/utils';
-import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useLogsRowInspectorContext } from '../LogsRowInspector';
 
 const RowInspectorBodyStepData = (props: {
@@ -14,7 +13,6 @@ const RowInspectorBodyStepData = (props: {
   const { stepMetadataColumn } = props;
   const { rows, inspectorRowIndex, columnDefs, stepsMetadataPercentiles } =
     useLogsRowInspectorContext();
-  const [promptCollapsed, setPromptCollapsed] = useState<boolean>(true);
 
   const currentRow =
     inspectorRowIndex !== null ? rows[inspectorRowIndex] : undefined;
@@ -45,7 +43,7 @@ const RowInspectorBodyStepData = (props: {
       <div className="flex justify-between text-base">
         <span>{stepName}</span>
         <div className="flex items-center gap-4">
-          {stepMetadata.latency && (
+          {!!stepMetadata.latency && (
             <MetadataElement
               type={Enum_Metadata_Type.LATENCY90}
               icon
@@ -54,7 +52,7 @@ const RowInspectorBodyStepData = (props: {
               p75={stepMetadataPercentiles?.latencyP75}
             />
           )}
-          {stepMetadata.input_cost && stepMetadata.output_cost && (
+          {!!stepMetadata.input_cost && !!stepMetadata.output_cost && (
             <MetadataElement
               type={Enum_Metadata_Type.COST}
               icon
@@ -65,7 +63,7 @@ const RowInspectorBodyStepData = (props: {
           )}
         </div>
       </div>
-      {stepMetadata.prompt && stepMetadata.input_tokens && (
+      {!!stepMetadata.prompt && !!stepMetadata.input_tokens && (
         <div className="flex flex-col gap-4">
           <div>
             <span className="mr-4 rounded-2xl border-[thin] border-border bg-paleGrey px-2 py-1">
@@ -76,33 +74,12 @@ const RowInspectorBodyStepData = (props: {
             </span>
           </div>
           <div className="flex flex-col gap-1 border-l border-border px-2">
-            <p
-              className={cn([
-                'text-base text-slateGray950',
-                promptCollapsed && 'line-clamp-[10]',
-              ])}
-            >
-              {stepMetadata.prompt}
-            </p>
-            <span
-              className="flex w-fit cursor-pointer items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-primary"
-              onClick={() => setPromptCollapsed((prev) => !prev)}
-            >
-              {promptCollapsed ? (
-                <>
-                  View all <ChevronRightIcon size={16} />
-                </>
-              ) : (
-                <>
-                  Collapse <ChevronUpIcon size={16} />
-                </>
-              )}
-            </span>
+            <CollapsibleText text={stepMetadata.prompt} />
           </div>
         </div>
       )}
       <div className="flex flex-col gap-4">
-        {stepMetadata.output_tokens && (
+        {!!stepMetadata.output_tokens && (
           <div>
             <span className="mr-4 rounded-2xl border-[thin] border-border bg-paleGrey px-2 py-1">
               Output
@@ -127,9 +104,9 @@ const RowInspectorBodyStepData = (props: {
               <span className={'text-sm text-muted-foreground'}>
                 {outputColumn.headerName}:
               </span>
-              <p className="text-base text-slateGray950">
-                {(currentRow[outputColumnField] as string) || '-'}
-              </p>
+              <CollapsibleText
+                text={(currentRow[outputColumnField] as string) || '-'}
+              />
             </div>
           );
         })}

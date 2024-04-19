@@ -1,7 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { createFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'InitializeDataset',
+});
 
 /**
  * @swagger
@@ -34,15 +40,18 @@ import { newDatasetPayloadSchema } from './schema';
  */
 export async function POST(request: Request) {
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
   try {
+    const startTime = performance.now();
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
-      return response('Invalid request headers type', 400);
+      logger.warn('Invalid request headers type', 400);
     }
     const body = await request.json();
     if (!body) {
+      logger.warn('Missing required data');
       return response('Missing required data', 400);
     }
 
@@ -51,9 +60,15 @@ export async function POST(request: Request) {
     const dataset = newDatasetPayloadSchema.parse(body);
     const id = await ApiUtils.newDataset(dataset);
 
-    return Response.json({ id: createFakeId(dataset.datasetName, id) });
+    const fakeId = createFakeId(dataset.datasetName, id);
+    logger.info('Created a new dataset', {
+      id: fakeId,
+      dataset,
+      elapsedTimeMs: performance.now() - startTime,
+    });
+    return Response.json({ id: fakeId });
   } catch (error) {
-    console.error('Error in POST:', error);
+    logger.error('Error creating a new Dataset:', error);
     return response('Error processing request', 500);
   }
 }
