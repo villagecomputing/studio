@@ -1,7 +1,6 @@
+import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
-import { cn } from '@/lib/utils';
-import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { StepMetadataColumn } from '../../../types';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
 import { useExperimentRowInspectorContext } from '../ExperimentRowInspector';
@@ -12,7 +11,6 @@ const RowInspectorBodyStepData = (props: {
   const { stepMetadataColumn } = props;
   const { rows, inspectorRowIndex, columnDefs, stepsMetadataPercentiles } =
     useExperimentRowInspectorContext();
-  const [promptCollapsed, setPromptCollapsed] = useState<boolean>(true);
 
   const currentRow =
     inspectorRowIndex !== null ? rows[inspectorRowIndex] : undefined;
@@ -63,7 +61,7 @@ const RowInspectorBodyStepData = (props: {
           )}
         </div>
       </div>
-      {stepMetadata.prompt && stepMetadata.input_tokens && (
+      {stepMetadata.prompt && (
         <div className="flex flex-col gap-4">
           <div>
             <span className="mr-4 rounded-2xl border-[thin] border-border bg-paleGrey px-2 py-1">
@@ -74,28 +72,7 @@ const RowInspectorBodyStepData = (props: {
             </span>
           </div>
           <div className="flex flex-col gap-1 border-l border-border px-2">
-            <p
-              className={cn([
-                'text-base text-slateGray950',
-                promptCollapsed && 'line-clamp-[10]',
-              ])}
-            >
-              {stepMetadata.prompt}
-            </p>
-            <span
-              className="flex w-fit cursor-pointer items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-primary"
-              onClick={() => setPromptCollapsed((prev) => !prev)}
-            >
-              {promptCollapsed ? (
-                <>
-                  View all <ChevronRightIcon size={16} />
-                </>
-              ) : (
-                <>
-                  Collapse <ChevronUpIcon size={16} />
-                </>
-              )}
-            </span>
+            <CollapsibleText text={stepMetadata.prompt} />
           </div>
         </div>
       )}
@@ -125,9 +102,9 @@ const RowInspectorBodyStepData = (props: {
               <span className={'text-sm text-muted-foreground'}>
                 {outputColumn.headerName}:
               </span>
-              <p className="text-base text-slateGray950">
-                {(currentRow[outputColumnField] as string) || '-'}
-              </p>
+              <CollapsibleText
+                text={(currentRow[outputColumnField] as string) || '-'}
+              />
             </div>
           );
         })}
