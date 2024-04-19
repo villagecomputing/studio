@@ -1,3 +1,4 @@
+import { StepMetadataColumn } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { logsStepInputs } from '@/app/api/logs/insert/schema';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
@@ -9,7 +10,6 @@ import {
   FetchLogsResult,
   LogsRow,
   LogsTableContext,
-  StepMetadataColumn,
 } from '../types';
 
 export const useLogsTableContext = (

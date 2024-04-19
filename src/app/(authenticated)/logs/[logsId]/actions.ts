@@ -7,12 +7,12 @@ import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/inse
 import { calculatePercentile } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { compact } from 'lodash';
-import LogsGrid from '../utils/LogsGrid';
 import {
-  FetchLogsResult,
   StepMetadataColumn,
   StepsMetadataPercentiles,
-} from './types';
+} from '../../experiment/[experimentId]/types';
+import LogsGrid from '../utils/LogsGrid';
+import { FetchLogsResult } from './types';
 
 export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
   try {

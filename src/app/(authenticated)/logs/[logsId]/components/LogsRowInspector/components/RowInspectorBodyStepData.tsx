@@ -1,9 +1,11 @@
+import MetadataElement, {
+  Enum_Metadata_Type,
+} from '@/app/(authenticated)/experiment/[experimentId]/components/MetadataElement';
+import { StepMetadataColumn } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { cn } from '@/lib/utils';
 import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { StepMetadataColumn } from '../../../types';
-import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
 import { useLogsRowInspectorContext } from '../LogsRowInspector';
 
 const RowInspectorBodyStepData = (props: {

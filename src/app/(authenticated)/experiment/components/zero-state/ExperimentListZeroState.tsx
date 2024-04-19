@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const ExperimentListZeroState = () => {
+const ExperimentListZeroState = ({ text }: { text: string }) => {
   return (
     <div className="flex flex-col items-center rounded-xl border border-border px-10 py-12">
       <Image
@@ -10,7 +10,7 @@ const ExperimentListZeroState = () => {
         height={76}
         className="mb-9"
       />
-      <span className="my-4 text-base text-gray800">No experiments added</span>
+      <span className="my-4 text-base text-gray800">{text}</span>
     </div>
   );
 };

@@ -1,6 +1,8 @@
+import MetadataElement, {
+  Enum_Metadata_Type,
+} from '@/app/(authenticated)/experiment/[experimentId]/components/MetadataElement';
 import { useMemo } from 'react';
 import { getLogsRowMetadata } from '../../../utils';
-import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
 import { useLogsRowInspectorContext } from '../LogsRowInspector';
 import { RAW_DATA_SECTION } from '../LogsRowInspectorView';
 

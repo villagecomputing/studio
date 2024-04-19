@@ -1,5 +1,6 @@
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
-import { LogsRow, StepMetadataColumn } from './types';
+import { StepMetadataColumn } from '../../experiment/[experimentId]/types';
+import { LogsRow } from './types';
 
 export const getLogsRowMetadata = (
   rowData: LogsRow,
