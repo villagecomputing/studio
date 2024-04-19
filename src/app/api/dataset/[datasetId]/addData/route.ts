@@ -1,7 +1,13 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { addDataPayloadSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'AddDatasetData',
+});
 
 /**
  * @swagger
@@ -40,20 +46,25 @@ export async function POST(
   request: Request,
   { params }: { params: { datasetId: string } },
 ) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {
+      logger.warn('Invalid dataset id provided');
       return response('Invalid dataset id', 400);
     }
 
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
+      logger.warn('Invalid request headers type');
       return response('Invalid request headers type', 400);
     }
     const body = await request.json();
     if (!body) {
+      logger.warn('Missing required data');
       return response('Missing required data', 400);
     }
 
@@ -63,9 +74,14 @@ export async function POST(
     const datasetUuid = getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET);
     await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
 
+    logger.info('Data added to dataset successfully', {
+      elapsedTimeMs: performance.now() - startTime,
+      datasetId,
+      rowsAdded: dataset.datasetRows.length,
+    });
     return response('OK');
   } catch (error) {
-    console.error('Error in POST:', error);
+    logger.error('Error adding dataset data', error);
     return response('Error processing request', 500);
   }
 }

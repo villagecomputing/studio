@@ -1,7 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'GetDatasetData',
+});
 
 /**
  * @swagger
@@ -32,18 +38,22 @@ import { datasetViewResponseSchema } from './schema';
  *         description: Invalid dataset Id provided.
  *       500:
  *         description: Internal server error occurred while processing the request.
+ *
  */
 export async function GET(
   request: Request,
   { params }: { params: { datasetId: string } },
 ) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
   try {
     const datasetId = params.datasetId;
     if (!datasetId) {
+      logger.warn('Invalid dataset id provided');
       return response('Invalid dataset id', 400);
     }
 
@@ -53,16 +63,30 @@ export async function GET(
 
     const validationResult = datasetViewResponseSchema.safeParse(dataset);
     if (!validationResult.success) {
-      console.error(validationResult.error);
+      logger.error(
+        'Error parsing response dataset view type',
+        validationResult.error,
+      );
       return response('Invalid response dataset view type', 500);
     }
+
+    logger.info(`Dataset details retrieved`, {
+      elapsedTimeMs: performance.now() - startTime,
+      dataset: {
+        id: dataset.id,
+        created_at: dataset.created_at,
+        name: dataset.name,
+        columns: dataset.columns,
+        numberOfRows: dataset.rows.length,
+      },
+    });
 
     return Response.json({
       ...dataset,
       id: createFakeId(dataset.name, dataset.id),
     });
   } catch (error) {
-    console.error('Error in GET dataset view:', error);
+    logger.error('Error getting dataset view:', error);
     return response('Error processing request', 500);
   }
 }

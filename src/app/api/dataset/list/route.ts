@@ -1,11 +1,17 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { hasApiAccess, response } from '../../utils';
 import { datasetListResponseSchema } from './schema';
 export const dynamic = 'force-dynamic';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'ListDatasets',
+});
 /**
  * @swagger
  * /api/dataset/list:
@@ -30,7 +36,10 @@ export const dynamic = 'force-dynamic';
  *         description: Error processing request
  */
 export async function GET(request: Request) {
-  if (!(await await hasApiAccess(request))) {
+  const startTime = performance.now();
+
+  if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -49,26 +58,42 @@ export async function GET(request: Request) {
     const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =
       await Promise.all(
         datasetList.map(async (dataset) => {
-          const result = await DatabaseUtils.selectAggregation(dataset.uuid, {
-            func: 'COUNT',
-          });
+          const totalRows = await DatabaseUtils.selectAggregation(
+            dataset.uuid,
+            {
+              func: 'COUNT',
+            },
+          );
 
-          return {
+          const result = {
             ...dataset,
             id: createFakeId(dataset.name, dataset.uuid),
             created_at: dataset.created_at.toDateString(),
-            total_rows: result,
+            total_rows: totalRows,
           };
+          logger.debug(`Dataset data`, result);
+          return result;
         }),
       );
 
-    if (!datasetListResponseSchema.safeParse(datasetListResponse).success) {
-      return response('Invalid response datasetList type', 400);
+    const parsedDatasetListResponse =
+      datasetListResponseSchema.safeParse(datasetListResponse);
+    if (!parsedDatasetListResponse.success) {
+      logger.error(
+        'Error parsing dataset list response type',
+        parsedDatasetListResponse.error,
+      );
+      return response('Invalid response type', 500);
     }
+
+    logger.info(`Datasets retrieved.`, {
+      elapsedTimeMs: performance.now() - startTime,
+      count: datasetListResponse.length,
+    });
 
     return Response.json(datasetListResponse);
   } catch (error) {
-    console.error('Error in GET dataset list:', error);
+    logger.error('Error getting dataset list:', error);
     return response('Error processing request', 500);
   }
 }

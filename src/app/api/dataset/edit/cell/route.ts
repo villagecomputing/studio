@@ -1,7 +1,13 @@
 import { hasApiAccess, response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { editGroundTruthCellSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'EditDatasetCell',
+});
 
 /**
  * @swagger
@@ -31,7 +37,9 @@ import { editGroundTruthCellSchema } from './schema';
  *         description: 'Error processing result.'
  */
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -44,9 +52,14 @@ export async function POST(request: Request) {
       datasetId: getUuidFromFakeId(payload.datasetId, UUIDPrefixEnum.DATASET),
     });
 
+    logger.info('Ground truth cell updated', {
+      elapsedTimeMs: performance.now() - startTime,
+      payload,
+      cellId: updatedCellId,
+    });
     return Response.json({ id: updatedCellId });
   } catch (error) {
-    console.error('Error in EditDatasetCell:', error);
+    logger.error('Error editing Dataset cell', error);
     return response('Error processing request', 500);
   }
 }
