@@ -47,7 +47,8 @@ export async function POST(request: Request) {
 
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {
-      logger.warn('Invalid request headers type', 400);
+      logger.warn('Invalid request headers type');
+      return response('Invalid request headers type', 400);
     }
     const body = await request.json();
     if (!body) {
