@@ -1,11 +1,18 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { hasApiAccess, response } from '../../utils';
 import { experimentListResponseSchema } from './schema';
 export const dynamic = 'force-dynamic';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'ListExperiments',
+});
+
 /**
  * @swagger
  * /api/experiment/list:
@@ -30,7 +37,9 @@ export const dynamic = 'force-dynamic';
  *         description: 'Error processing request.'
  */
 export async function GET(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -74,7 +83,7 @@ export async function GET(request: Request) {
               ),
             );
           } catch (_e) {}
-          return {
+          const result = {
             id: createFakeId(experiment.name, experiment.uuid),
             name: experiment.name,
             description: experiment.description || '',
@@ -97,18 +106,29 @@ export async function GET(request: Request) {
               ),
             },
           };
+          logger.debug(`Experiment data`, result);
+          return result;
         }),
       );
 
-    if (
-      !experimentListResponseSchema.safeParse(experimentListResponse).success
-    ) {
-      return response('Invalid response datasetList type', 400);
+    const parsedExperimentListResponseSchema =
+      experimentListResponseSchema.safeParse(experimentListResponse);
+    if (!parsedExperimentListResponseSchema.success) {
+      logger.error('Invalid response datasetList type', {
+        experimentListResponse,
+        error: parsedExperimentListResponseSchema.error,
+      });
+      return response('Invalid response datasetList type', 500);
     }
+
+    logger.info('Experiment list retrieved successfully', {
+      elapsedTimeMs: performance.now() - startTime,
+      count: experimentListResponse.length,
+    });
 
     return Response.json(experimentListResponse);
   } catch (error) {
-    console.error('Error in GET experiment list:', error);
+    logger.error('Error getting experiment list', error);
     return response('Error processing request', 500);
   }
 }

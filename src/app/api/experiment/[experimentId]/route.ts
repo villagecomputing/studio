@@ -1,7 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'GetExperimentData',
+});
 
 /**
  * @swagger
@@ -37,7 +43,9 @@ export async function GET(
   request: Request,
   { params }: { params: { experimentId: string } },
 ) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -46,6 +54,7 @@ export async function GET(
     try {
       experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
     } catch (_e) {
+      logger.warn('Invalid experiment id', { experimentId });
       return response('Invalid experiment id', 400);
     }
     const result = await ApiUtils.getExperiment(experimentId);
@@ -58,13 +67,23 @@ export async function GET(
       },
     };
 
-    if (!experimentViewResponseSchema.safeParse(experiment).success) {
+    const parsedExperiment = experimentViewResponseSchema.safeParse(experiment);
+    if (!parsedExperiment.success) {
+      logger.error('Experiment view response validation failed', {
+        experimentId,
+        error: parsedExperiment.error,
+      });
       return response('Invalid response experiment view type', 500);
     }
 
+    logger.info('Experiment data retrieved successfully', {
+      elapsedTimeMs: performance.now() - startTime,
+      experiment,
+    });
+
     return Response.json(experiment);
   } catch (error) {
-    console.error('Error in GET experiment view:', error);
+    logger.error('Error in getting experiment', error);
     return response('Error processing request', 500);
   }
 }
