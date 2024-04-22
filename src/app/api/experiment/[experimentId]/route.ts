@@ -73,7 +73,7 @@ export async function GET(
         experimentId,
         error: parsedExperiment.error,
       });
-      return response('Error processing request', 500);
+      return response('Invalid response experiment view type', 500);
     }
 
     const { rows, ...experimentSummary } = experiment;

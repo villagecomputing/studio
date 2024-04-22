@@ -67,7 +67,7 @@ export async function GET(
         'Error parsing response dataset view type',
         validationResult.error,
       );
-      return response('Error processing request', 500);
+      return response('Invalid response dataset view type', 500);
     }
 
     logger.info(`Dataset details retrieved`, {
