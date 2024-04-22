@@ -1,8 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { logsViewResponseSchema } from './schema';
 
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'GetLogsData',
+});
 /**
  * @swagger
  * /api/logs/{logsId}:
@@ -37,7 +42,9 @@ export async function GET(
   request: Request,
   { params }: { params: { logsId: string } },
 ) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -45,7 +52,8 @@ export async function GET(
     let logsId = params.logsId;
     try {
       logsId = getUuidFromFakeId(logsId, UUIDPrefixEnum.LOGS);
-    } catch (_e) {
+    } catch (error) {
+      logger.warn('Invalid logs id', { logsId, error });
       return response('Invalid logs id', 400);
     }
 
@@ -56,10 +64,17 @@ export async function GET(
     };
 
     logsViewResponseSchema.parse(logs);
+    const { rows, ...logsSummary } = logs;
+
+    logger.info('Logs data retrieved', {
+      elapsedTimeMs: performance.now() - startTime,
+      ...logsSummary,
+      rowCount: rows.length,
+    });
 
     return Response.json(logs);
   } catch (error) {
-    console.error('Error in GET logs view:', error);
+    logger.error('Error getting logs data', error);
     return response('Error processing request', 500);
   }
 }
