@@ -69,7 +69,7 @@ export async function POST(
       error,
       experimentId,
     });
-    return response('Error creating experiment dynamic table', 500);
+    return response('Error processing request', 500);
   }
   try {
     await ApiUtils.insertExperimentSteps({ experimentId, payload });
@@ -79,7 +79,7 @@ export async function POST(
     });
   } catch (error) {
     logger.error('Error inserting experiment steps', { error, experimentId });
-    return response('Error inserting experiment steps', 500);
+    return response('Error processing request', 500);
   }
 
   try {
@@ -89,7 +89,7 @@ export async function POST(
     });
   } catch (error) {
     logger.error('Error updating experiment details', { error, experimentId });
-    return response('Error updating experiment details', 500);
+    return response('Error processing request', 500);
   }
 
   logger.info(`Experiment steps inserted successfully`, {

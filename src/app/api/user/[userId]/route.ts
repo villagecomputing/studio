@@ -51,7 +51,7 @@ export async function GET(
     const parsedUser = userViewResponseSchema.safeParse(user);
     if (!parsedUser.success) {
       console.error(`Error while parsing user result: ${parsedUser.error}`);
-      return response('Invalid response user view type', 500);
+      return response('Error processing request', 500);
     }
 
     return Response.json(user);
