@@ -13,10 +13,16 @@ import {
 } from '@/lib/services/ApiUtils/logs/utils';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import { getLogsEntryOrThrow } from '@/lib/services/DatabaseUtils/common';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import { insertLogsPayloadSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'InsertLogs',
+});
 
 /**
  * @swagger
@@ -42,7 +48,9 @@ import { insertLogsPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -59,8 +67,12 @@ export async function POST(request: Request) {
       const columnDefinitions = buildLogsColumnDefinition(logsFields);
       try {
         await DatabaseUtils.create(logsId, columnDefinitions);
+        logger.debug('Created dynamic logs table', {
+          logsId,
+          columnDefinitions: columnDefinitions,
+        });
       } catch (error) {
-        console.error('Error creating logs dynamic table:', error);
+        logger.error('Error creating logs dynamic table:', error);
         return response('Error processing request', 500);
       }
       for (const field of logsFields) {
@@ -90,8 +102,9 @@ export async function POST(request: Request) {
       );
     try {
       await DatabaseUtils.insert(logsId, [valuesByField]);
+      logger.debug('Inserted logs values', { logsId, values: valuesByField });
     } catch (error) {
-      console.error('Error inserting log in dynamic table:', error);
+      logger.error('Error inserting log in dynamic table:', error);
       return response('Error processing request', 500);
     }
 
@@ -113,9 +126,15 @@ export async function POST(request: Request) {
       where: { uuid: logsId },
       data: updatedData,
     });
+    logger.debug('Logs metadata updated', { data: updatedData });
+
+    logger.info('Logs inserted', {
+      logsId,
+      elapsedTimeMs: performance.now() - startTime,
+    });
     return response('Ok');
   } catch (error) {
-    console.error('Error on POST insert log:', error);
+    logger.error('Error insert logs:', error);
     return response('Error processing request', 500);
   }
 }

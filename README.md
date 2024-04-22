@@ -52,3 +52,7 @@ Make sure NEXT_PUBLIC_AUTHENTICATION is 'enabled'
 6. Open command line, run `ngrok http 3000` and copy URL
 7. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
 8. Access http://localhost:3000/ and log in
+
+### Logging 
+
+To change log level set the LOG_LEVEL value inside the env file to one of: error, warn, info, debug (default is error)

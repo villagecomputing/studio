@@ -5,6 +5,13 @@ export enum LOGGER_TYPE {
   WINSTON = 'winston',
   DEFAULT = 'default',
 }
+
+export enum LOG_LEVEL {
+  ERROR = 'error',
+  WARN = 'warn',
+  INFO = 'info',
+  DEBUG = 'debug',
+}
 export interface ILogger {
   info: (message: string, ...meta: unknown[]) => void;
   error: (message: string, ...meta: unknown[]) => void;

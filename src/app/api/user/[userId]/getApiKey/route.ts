@@ -1,7 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 
-import { response } from '@/app/api/utils';
+import { hasApiAccess, response } from '@/app/api/utils';
 import { userGetApiKeyResponseSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'GetUserApiKey',
+});
 
 /**
  * @swagger
@@ -37,10 +43,15 @@ export async function GET(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
-  //TODO: add access check after UI components are created
+  const startTime = performance.now();
+  if (!(await hasApiAccess(request))) {
+    return response('Unauthorized', 401);
+  }
+
   try {
     const userId = params.userId;
     if (!userId) {
+      logger.warn('Invalid user id provided');
       return response('Invalid user id', 400);
     }
     const user = await ApiUtils.getUser(userId);
@@ -50,15 +61,22 @@ export async function GET(
     const parsedApiKeyResult =
       userGetApiKeyResponseSchema.safeParse(apiKeyResult);
     if (!parsedApiKeyResult.success) {
-      console.error(
+      logger.error(
         `Error while parsing user result: ${parsedApiKeyResult.error}`,
       );
       return response('Invalid response user view type', 500);
     }
 
+    logger.info("Successfully retrieved the user's API key", {
+      userId,
+      elapsedTimeMs: performance.now() - startTime,
+    });
     return Response.json(apiKeyResult);
   } catch (error) {
-    console.error('Error in GET user view:', error);
+    logger.error('Error getting user API key:', {
+      error,
+      userId: params.userId,
+    });
     return response('Error processing request', 500);
   }
 }
