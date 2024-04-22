@@ -14,8 +14,14 @@ import useExperimentRowInspectorActions from './hooks/useExperimentRowInspectorA
 export const RAW_DATA_SECTION = 'RAW_DATA_SECTION';
 
 export default function ExperimentRowInspectorView() {
-  const { inspectorRowIndex, setInspectorRowIndex, stepMetadataColumns } =
-    useExperimentRowInspectorContext();
+  const context = useExperimentRowInspectorContext();
+  const {
+    inspectorRowIndex,
+    setInspectorRowIndex,
+    stepMetadataColumns,
+    columnDefs,
+    datasetId,
+  } = context;
   const { navigateTo } = useExperimentRowInspectorActions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const handleStepSelected = (stepColumnField: string) => {
@@ -38,19 +44,23 @@ export default function ExperimentRowInspectorView() {
           title={`Row ${inspectorRowIndex}`}
           onClose={() => setInspectorRowIndex(null)}
         >
-          <RowInspectorHeaderSteps onStepSelected={handleStepSelected} />
+          <RowInspectorHeaderSteps
+            onStepSelected={handleStepSelected}
+            columnDefs={columnDefs}
+          />
         </BaseRowInspectorHeader>
         <BaseRowInspectorBody>
           <div
             ref={bodyRef}
             className="flex h-full w-full flex-col gap-2 overflow-y-auto bg-agGridHeaderHoverGrey"
           >
-            <RowInspectorBodyMetaData />
-            <RowInspectorBodyRawData />
+            <RowInspectorBodyMetaData context={context} />
+            <RowInspectorBodyRawData context={context} datasetId={datasetId} />
             {stepMetadataColumns.map((column) => (
               <RowInspectorBodyStepData
                 key={column.field}
                 stepMetadataColumn={column}
+                context={context}
               />
             ))}
           </div>
