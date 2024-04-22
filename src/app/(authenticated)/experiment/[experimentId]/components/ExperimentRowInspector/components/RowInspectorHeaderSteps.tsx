@@ -1,15 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import React from 'react';
-import { useExperimentRowInspectorContext } from '../ExperimentRowInspector';
 import { RAW_DATA_SECTION } from '../ExperimentRowInspectorView';
 import { RowInspectorHeaderStepsProps } from '../types';
 
 export const RowInspectorHeaderSteps: React.FC<
   RowInspectorHeaderStepsProps
-> = ({ onStepSelected }) => {
-  const { columnDefs } = useExperimentRowInspectorContext();
-
+> = ({ onStepSelected, columnDefs }) => {
   const metadataColumns = columnDefs.filter(
     (colDef) => colDef.type === Enum_Experiment_Column_Type.STEP_METADATA,
   );

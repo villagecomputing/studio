@@ -12,8 +12,8 @@ import {
 } from '../components/no-rows-overlay/NoRowsOverlay';
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
+import ExperimentListZeroState from '../experiment/components/zero-state/ExperimentListZeroState';
 import { useLogsListContext } from './components/LogsListProvider';
-import LogsListZeroState from './components/zero-state/LogsListZeroState';
 import { LogsListRowType } from './types';
 import LogsGrid from './utils/LogsGrid';
 import { getLogsMetadataColumnsPercentiles } from './utils/utils';
@@ -48,7 +48,7 @@ const LogsPage = () => {
           <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
         {!logs.length ? (
-          <LogsListZeroState />
+          <ExperimentListZeroState text="No logs added" />
         ) : (
           <div
             className="overflow-y-auto"

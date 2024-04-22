@@ -1,16 +1,17 @@
 import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
+import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { useMemo } from 'react';
-import { StepMetadataColumn } from '../../../types';
+import { ExperimentTableContext, StepMetadataColumn } from '../../../types';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
-import { useExperimentRowInspectorContext } from '../ExperimentRowInspector';
 
 const RowInspectorBodyStepData = (props: {
   stepMetadataColumn: StepMetadataColumn;
+  context: ExperimentTableContext | LogsTableContext;
 }) => {
-  const { stepMetadataColumn } = props;
+  const { stepMetadataColumn, context } = props;
   const { rows, inspectorRowIndex, columnDefs, stepsMetadataPercentiles } =
-    useExperimentRowInspectorContext();
+    context;
 
   const currentRow =
     inspectorRowIndex !== null ? rows[inspectorRowIndex] : undefined;

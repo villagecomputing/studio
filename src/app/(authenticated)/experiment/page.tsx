@@ -52,7 +52,7 @@ const ExperimentsPage = () => {
           <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
         {!experiments.length ? (
-          <ExperimentListZeroState />
+          <ExperimentListZeroState text="No experiments added" />
         ) : (
           <div
             className="overflow-y-auto"

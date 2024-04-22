@@ -1,3 +1,4 @@
+import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import { AlertTriangleIcon } from 'lucide-react';
 import { useMemo } from 'react';
@@ -6,7 +7,11 @@ import { getExperimentRowMetadata } from '../utils';
 import MetadataElement, { Enum_Metadata_Type } from './MetadataElement';
 
 const RowMetadataCellRenderer = (
-  props: CustomCellRendererProps<ExperimentRow, string, ExperimentTableContext>,
+  props: CustomCellRendererProps<
+    ExperimentRow,
+    string,
+    ExperimentTableContext | LogsTableContext
+  >,
 ) => {
   const metadata = useMemo(() => {
     if (!props.data) {
