@@ -34,9 +34,10 @@ const PipelineParametersPopover: React.FC<PipelineParametersPopoverProps> = ({
             <span className="text-sm text-muted-foreground">No parameters</span>
           ) : (
             <div
-              className={`grid grid-flow-row`}
+              className={`grid grid-flow-row overflow-y-auto`}
               style={{
                 gridTemplateColumns: `repeat(2, max-content)`,
+                maxHeight: 'calc(100vh - 200px)',
               }}
             >
               {parameters.map((parameter, index) =>
@@ -53,7 +54,7 @@ const PipelineParametersPopover: React.FC<PipelineParametersPopoverProps> = ({
                       </div>
                       <div
                         className={cn([
-                          'py-2',
+                          'max-w-80 py-2',
                           index > 0 && 'border-t border-border',
                         ])}
                       >

@@ -13,13 +13,18 @@ const logger = loggerFactory.getLogger({
 export default authMiddleware({
   publicRoutes: [isAuthEnabled() ? '/api-doc' : '/(.*)', '/api/webhook(.*)'],
   afterAuth: async (auth, request) => {
+    const xApiKey = request.headers.get(X_API_KEY_HEADER);
+    const shouldCheckAuth = isAuthEnabled();
     logger.debug('Incoming request:', {
       method: request.method,
       url: request.url,
-      headers: Object.fromEntries(request.headers.entries()),
+      isAuthEnabled: shouldCheckAuth,
+      isPublicRoute: auth.isPublicRoute,
+      hasUserId: !!auth.userId,
+      hasApiKey: !!xApiKey,
     });
 
-    if (auth.isPublicRoute || !isAuthEnabled()) {
+    if (auth.isPublicRoute || !shouldCheckAuth) {
       return NextResponse.next();
     }
 
@@ -30,7 +35,6 @@ export default authMiddleware({
       return NextResponse.next();
     }
 
-    const xApiKey = request.headers.get(X_API_KEY_HEADER);
     if (xApiKey) {
       assertApiKeyFormat(xApiKey);
       return NextResponse.next();

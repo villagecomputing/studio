@@ -1,4 +1,5 @@
 import { getDatasetOrThrow } from '@/lib/services/DatabaseUtils/common';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import {
   UUIDPrefixEnum,
@@ -8,6 +9,11 @@ import {
 } from '@/lib/utils';
 import { hasApiAccess, response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'DeclareExperiment',
+});
 
 /**
  * @swagger
@@ -39,7 +45,9 @@ import { newExperimentPayloadSchema } from './schema';
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -53,6 +61,7 @@ export async function POST(request: Request) {
   try {
     await getDatasetOrThrow(datasetId);
   } catch (error) {
+    logger.warn('Invalid dataset id', error);
     return response('Invalid dataset id', 400);
   }
   try {
@@ -79,9 +88,14 @@ export async function POST(request: Request) {
         group_id: groupId,
       },
     });
+    logger.info('New experiment created', {
+      elapsedTimeMs: performance.now() - startTime,
+      experimentId: id,
+      payload,
+    });
     return Response.json({ id: createFakeId(payload.name, id) });
   } catch (error) {
-    console.error('Error in newExperiment:', error);
+    logger.error('Error declaring new experiment', error);
     return response('Error processing request', 500);
   }
 }
