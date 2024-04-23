@@ -55,7 +55,7 @@ const DataPage = () => {
     mutate,
     isLoading,
   } = useSWR('datasetList', getData);
-  const rowData: RowType[] = datasetList?.map((data) => ({
+  const rowData: RowType[] = datasetList.map((data) => ({
     id: data.id,
     fakeId: createFakeId(data.name, data.id),
     datasetName: data.name,
