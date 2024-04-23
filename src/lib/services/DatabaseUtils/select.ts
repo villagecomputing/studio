@@ -1,11 +1,12 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
-import { ENUM_ORDER_DIRECTION } from './types';
+import { buildPrismaWhereClause } from './common';
+import { ENUM_ORDER_DIRECTION, WhereConditions } from './types';
 
 export async function select<T>(
   tableName: string,
   selectFields?: string[],
-  whereConditions?: { [key: string]: string },
+  whereConditions?: WhereConditions,
   orderBy?: { field: string; direction: ENUM_ORDER_DIRECTION },
   limit?: number,
 ): Promise<T[]> {
@@ -20,11 +21,9 @@ export async function select<T>(
 
   sqlQuery = Prisma.sql`${sqlQuery} FROM "${Prisma.raw(tableName)}"`;
 
-  if (whereConditions) {
-    const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
-      return `"${key}" = ${Prisma.raw(value)}`;
-    });
-    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${Prisma.join(whereClauses)}`;
+  if (whereConditions && Object.keys(whereConditions).length > 0) {
+    const whereClause = buildPrismaWhereClause(whereConditions);
+    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${whereClause}`;
   }
 
   if (orderBy) {

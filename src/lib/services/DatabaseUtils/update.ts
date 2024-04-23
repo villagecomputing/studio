@@ -1,36 +1,30 @@
+import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
+import { buildPrismaWhereClause } from './common';
+import { WhereConditions } from './types';
 
 export async function update<T>(
   tableName: string,
   setValues: { [key: string]: string },
-  whereConditions?: { [key: string]: string | number },
+  whereConditions?: WhereConditions,
 ): Promise<number> {
-  const setKeys = Object.keys(setValues);
-  const setParams = setKeys
-    .map((key, index) => `"${key}" = $${index + 1}`)
-    .join(', ');
-  const setValuesArray = Object.values(setValues);
+  const setParams = Prisma.join(
+    Object.entries(setValues).map(([key, value]) => {
+      // Prisma.raw will not escape the value.
+      // Because we are putting the values between single quotes we need to escape any single quotes inside it
+      return Prisma.sql`${Prisma.raw(`"${key}" = '${value.replaceAll("'", "''")}'`)}`;
+    }),
+  );
 
-  let sqlQuery = `UPDATE "${tableName}" SET ${setParams}`;
-  let queryParams: (string | number)[] = [...setValuesArray];
+  let sqlQuery = Prisma.sql`UPDATE "${Prisma.raw(tableName)}" SET ${setParams}`;
 
   if (whereConditions && Object.keys(whereConditions).length > 0) {
-    const whereKeys = Object.keys(whereConditions);
-    const whereParams = whereKeys
-      .map((key, index) => `"${key}" = $${setValuesArray.length + index + 1}`)
-      .join(' AND ');
-    const whereValuesArray = Object.values(whereConditions);
-
-    sqlQuery += ` WHERE ${whereParams}`;
-    queryParams = [...queryParams, ...whereValuesArray];
+    const whereClause = buildPrismaWhereClause(whereConditions);
+    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${whereClause}`;
   }
 
   try {
-    // TODO change to executeRaw
-    const result = await PrismaClient.$executeRawUnsafe<T>(
-      sqlQuery,
-      ...queryParams,
-    );
+    const result = await PrismaClient.$executeRaw<T>(sqlQuery);
     return result;
   } catch (error) {
     console.error('Error executing raw SQL update:', error);

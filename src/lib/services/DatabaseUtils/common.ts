@@ -1,5 +1,7 @@
 import { arrayContainsArray } from '@/lib/utils';
+import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
+import { WhereConditions } from './types';
 
 export async function getExperimentOrThrow(experimentId: string) {
   return await PrismaClient.experiment.findUniqueOrThrow({
@@ -76,4 +78,17 @@ export async function assertUserExists(externalId: string) {
       external_id: externalId,
     },
   });
+}
+
+export function buildPrismaWhereClause(whereConditions: WhereConditions) {
+  const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
+    if (value === null) {
+      return Prisma.sql`${Prisma.raw(`"${key}" IS NULL`)}`;
+    } else if (typeof value === 'object' && value.isNotNull) {
+      return Prisma.sql`${Prisma.raw(`"${key}" IS NOT NULL`)}`;
+    } else {
+      return Prisma.sql`${Prisma.raw(`"${key}" = '${value.toString().replaceAll("'", "''")}'`)}`;
+    }
+  });
+  return Prisma.join(whereClauses);
 }
