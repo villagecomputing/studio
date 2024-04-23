@@ -26,7 +26,7 @@ There are two different folders for each `prisma_postgres` and `prisma_sqlite`. 
 3. Modify the generated migrations
     - Remove SQL instructions to drop the dynamic tables
     - Modify the rest of the instructions to try to avoid unnecessary table drops
-4. `npm run migrate-deploy:postgres` or `npm run migrate-deploy:postgres`
+4. `npm run migrate-deploy:postgres` or `npm run migrate-deploy:sqlite`
 5. `npm run dev` or `npm run dev:postgres`
 
 If the Migration deploy fails, a failed migration record will be generated in the `_prisma_migrations` table. Re-running the deploy command will fail even if the migration error is fixed. In order to resolve this there are two options:
