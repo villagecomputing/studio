@@ -36,6 +36,7 @@ CREATE TABLE "Experiment_column" (
   "type" TEXT NOT NULL CHECK ( "type" IN (
       'INPUT',
       'OUTPUT',
+      'INTERMEDIARY_OUTPUT',
       'STEP_METADATA',
       'METADATA',
       'IDENTIFIER'
