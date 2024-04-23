@@ -62,7 +62,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
           <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
         </div>
       </PageHeader>
-      <Header {...logs}>
+      <Header {...logs} parametersButtonVariant="outline">
         <DatePickerWithRange
           selectedDateRange={dateRange}
           setDateRange={setDateRange}
