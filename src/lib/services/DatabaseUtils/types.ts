@@ -30,5 +30,5 @@ export type ColumnDefinition = {
 };
 
 export type WhereConditions = {
-  [key: string]: string | null | { isNotNull: true };
+  [key: string]: string | number | null | { isNotNull: boolean };
 };

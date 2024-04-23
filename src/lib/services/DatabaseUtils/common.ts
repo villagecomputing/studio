@@ -87,7 +87,9 @@ export function buildPrismaWhereClause(whereConditions: WhereConditions) {
     } else if (typeof value === 'object' && value.isNotNull) {
       return Prisma.sql`${Prisma.raw(`"${key}" IS NOT NULL`)}`;
     } else {
-      return Prisma.sql`${Prisma.raw(`"${key}" = '${value.toString().replaceAll("'", "''")}'`)}`;
+      return typeof value === 'number'
+        ? Prisma.sql`${Prisma.raw(`"${key}" = ${value}`)}`
+        : Prisma.sql`${Prisma.raw(`"${key}" = '${value.toString().replaceAll("'", "''")}'`)}`;
     }
   });
   return Prisma.join(whereClauses);
