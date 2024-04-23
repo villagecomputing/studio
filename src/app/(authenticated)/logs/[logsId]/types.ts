@@ -43,6 +43,7 @@ export type LogsRow = {
 
 export type FetchLogsResult = AGGridLogs & {
   logsName: string;
+  description?: string;
   latencyP50: number;
   latencyP90: number;
   runtime: number;

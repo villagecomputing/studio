@@ -73,7 +73,7 @@ export function useGridOperations() {
           return new Date(params.data['created_at']);
         },
         valueFormatter: (params) => {
-          return formatDate(params.value, "HH:mm ss's' dd/MM/yyyy");
+          return formatDate(params.value, "HH:mm s's' MM/dd/yyyy");
         },
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),

@@ -48,6 +48,7 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
     );
     return {
       logsName: logs.name,
+      description: logs.description || undefined,
       latencyP50: logs.latencyP50,
       latencyP90: logs.latencyP90,
       latencyP25: logs.latencyP25,
