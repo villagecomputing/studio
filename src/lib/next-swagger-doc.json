@@ -109,19 +109,19 @@
                 "type": "object",
                 "properties": {
                     "datasetName": {
-                    "type": "string"
+                        "type": "string"
                     },
                     "columns": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "groundTruths": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "required": ["datasetName", "columns", "rows"]
@@ -326,6 +326,12 @@
                     "index": {
                         "type": "number"
                     },
+                    "final_output_columns": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "steps": {
                         "type": "array",
                         "items": {
@@ -354,10 +360,7 @@
                         },
                         "value": {
                           "type": "string"
-                        },
-                        "isIntermediary": {
-                            "type": "boolean"
-                          }
+                        }
                       },
                       "required": ["name", "value"]
                     }
@@ -550,6 +553,12 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/ExperimentStepPayload"
+                        }
+                    },
+                    "final_output_columns": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
                         }
                     },
                     "accuracy": {

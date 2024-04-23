@@ -393,6 +393,12 @@
           "index": {
             "type": "number"
           },
+          "final_output_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "steps": {
             "type": "array",
             "items": {
@@ -424,9 +430,6 @@
                 },
                 "value": {
                   "type": "string"
-                },
-                "isIntermediary": {
-                  "type": "boolean"
                 }
               },
               "required": [
@@ -651,6 +654,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ExperimentStepPayload"
+            }
+          },
+          "final_output_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "accuracy": {

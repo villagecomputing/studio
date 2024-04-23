@@ -10,6 +10,7 @@ export const logsStepInputs = z.array(
 
 export const insertLogsPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
+  final_output_columns: z.array(z.string()).optional(),
   accuracy: z.union([z.number(), z.null()]).optional(),
   inputs: logsStepInputs,
   fingerprint: z.string(),

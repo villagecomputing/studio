@@ -52,9 +52,13 @@ export function buildLogsFields(
         return {
           name: output.name,
           field: getColumnFieldFromNameAndIndex(output.name, fieldIndex),
-          type: output?.isIntermediary
-            ? Enum_Logs_Column_Type.INTERMEDIARY_OUTPUT
-            : Enum_Logs_Column_Type.OUTPUT,
+          type:
+            !payload.final_output_columns ||
+            payload.final_output_columns.some(
+              (column) => column.toLowerCase() === output.name.toLowerCase(),
+            )
+              ? Enum_Logs_Column_Type.OUTPUT
+              : Enum_Logs_Column_Type.INTERMEDIARY_OUTPUT,
           value: output.value,
         };
       });
