@@ -17,4 +17,5 @@ export type ExperimentListRowType = {
 
 export interface ExperimentListContextType {
   experiments: ExperimentList;
+  isLoading: boolean;
 }

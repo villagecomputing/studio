@@ -1,7 +1,8 @@
 'use client';
 import { datasetListResponseSchema } from '@/app/api/dataset/list/schema';
 import Breadcrumb from '@/components/Breadcrumb';
-import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
+import Loading from '@/components/loading/Loading';
+import { ApiEndpoints } from '@/lib/routes/routes';
 import {
   UUIDPrefixEnum,
   createFakeId,
@@ -10,7 +11,8 @@ import {
 } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 import { onFilterChanged } from '../common/gridUtils';
 import DataTable from '../components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '../components/data-table/constants';
@@ -38,7 +40,6 @@ const getData = async () => {
   });
 };
 
-type DatasetList = ResultSchemaType[ApiEndpoints.datasetList];
 type RowType = {
   id: string;
   fakeId: string;
@@ -49,9 +50,12 @@ type RowType = {
 const DataPage = () => {
   const router = useRouter();
   const [quickFilterText, setQuickFilterText] = useState<string>('');
-  const [datasetList, setDatasetList] = useState<DatasetList>([]);
-
-  const rowData: RowType[] = datasetList.map((data) => ({
+  const {
+    data: datasetList = [],
+    mutate,
+    isLoading,
+  } = useSWR('datasetList', getData);
+  const rowData: RowType[] = datasetList?.map((data) => ({
     id: data.id,
     fakeId: createFakeId(data.name, data.id),
     datasetName: data.name,
@@ -96,23 +100,17 @@ const DataPage = () => {
     },
   ];
 
-  useEffect(() => {
-    (async () => {
-      setDatasetList(await getData());
-    })();
-  }, []);
-
-  const refetchData = async () => {
-    setDatasetList(await getData());
-  };
-
   return (
     <>
       <PageHeader>
         <Breadcrumb />
       </PageHeader>
       <div className="px-6">
-        <UploadDataProvider refetchData={refetchData}>
+        <UploadDataProvider
+          refetchData={async () => {
+            mutate();
+          }}
+        >
           <div className={'my-6 flex items-center justify-between gap-5'}>
             <SearchInput
               onChange={setQuickFilterText}
@@ -120,9 +118,9 @@ const DataPage = () => {
             />
             <UploadDataButton />
           </div>
-          {!datasetList.length ? (
-            <ZeroState />
-          ) : (
+          {isLoading && <Loading />}
+          {!isLoading && !datasetList.length && <ZeroState />}
+          {!isLoading && !!datasetList.length && (
             <div
               className="overflow-y-auto"
               style={{ height: 'calc(100vh - 150px)' }}
