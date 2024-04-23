@@ -1,15 +1,9 @@
 'use client';
 import { experimentListResponseSchema } from '@/app/api/experiment/list/schema';
-import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { PropsWithChildren, createContext, useContext } from 'react';
+import useSWR from 'swr';
 import { ExperimentList, ExperimentListContextType } from '../types';
 
 const getData = async (): Promise<ExperimentList> => {
@@ -34,6 +28,7 @@ const getData = async (): Promise<ExperimentList> => {
 // Create the context
 export const ExperimentListContext = createContext<ExperimentListContextType>({
   experiments: [],
+  isLoading: true,
 });
 
 export const useExperimentListContext = () => {
@@ -50,28 +45,13 @@ export const useExperimentListContext = () => {
 export const ExperimentListProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const [experiments, setExperiments] = useState<ExperimentList>([]);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchExperiments = async () => {
-      try {
-        const data = await getData();
-        setExperiments(data);
-      } catch (err) {
-        toast({
-          duration: 5000,
-          variant: 'destructive',
-          description: 'Error getting the experiments list',
-        });
-      }
-    };
-
-    fetchExperiments();
-  }, []);
+  const { data: experiments = [], isLoading } = useSWR(
+    'experimentList',
+    getData,
+  );
 
   return (
-    <ExperimentListContext.Provider value={{ experiments }}>
+    <ExperimentListContext.Provider value={{ experiments, isLoading }}>
       {children}
     </ExperimentListContext.Provider>
   );
