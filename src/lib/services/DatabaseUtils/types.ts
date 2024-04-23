@@ -28,3 +28,7 @@ export type ColumnDefinition = {
   typeCheckValues?: string[];
   defaultValue?: string;
 };
+
+export type WhereConditions = {
+  [key: string]: string | number | null | { isNotNull: boolean };
+};
