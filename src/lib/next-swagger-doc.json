@@ -311,7 +311,7 @@
                     },
                     "type": {
                         "type": "string",
-                        "enum": ["IDENTIFIER", "OUTPUT", "METADATA"]
+                        "enum": ["IDENTIFIER", "OUTPUT", "INTERMEDIARY_OUTPUT", "METADATA"]
                     }
                 },
                 "required": ["name", "id", "field", "type"]
@@ -354,7 +354,10 @@
                         },
                         "value": {
                           "type": "string"
-                        }
+                        },
+                        "isIntermediary": {
+                            "type": "boolean"
+                          }
                       },
                       "required": ["name", "value"]
                     }
@@ -687,7 +690,7 @@
                   },
                   "type": {
                     "type": "string",
-                    "enum": ["IDENTIFIER", "OUTPUT", "METADATA", "INPUT", "STEP_METADATA", "TIMESTAMP"]
+                    "enum": ["IDENTIFIER", "OUTPUT", "INTERMEDIARY_OUTPUT", "METADATA", "INPUT", "STEP_METADATA", "TIMESTAMP"]
                   }
                 },
                 "required": ["name", "id", "field", "type"]

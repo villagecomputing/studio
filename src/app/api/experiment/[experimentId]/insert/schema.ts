@@ -24,6 +24,7 @@ export const experimentStepPayloadSchema = z.object({
     z.object({
       name: z.string(),
       value: z.string(),
+      isIntermediary: z.boolean().optional(),
     }),
   ),
 });

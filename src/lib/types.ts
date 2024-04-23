@@ -8,6 +8,7 @@ export enum ENUM_Column_type {
 export enum Enum_Experiment_Column_Type {
   IDENTIFIER = 'IDENTIFIER',
   OUTPUT = 'OUTPUT',
+  INTERMEDIARY_OUTPUT = 'INTERMEDIARY_OUTPUT',
   /** Step metadata */
   STEP_METADATA = 'STEP_METADATA',
   /** Aggregated metadata from all individual steps. */
@@ -20,6 +21,7 @@ export enum Enum_Logs_Column_Type {
   IDENTIFIER = 'IDENTIFIER',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
+  INTERMEDIARY_OUTPUT = 'INTERMEDIARY_OUTPUT',
   /** Step metadata */
   STEP_METADATA = 'STEP_METADATA',
   /** Aggregated metadata from all individual steps. */

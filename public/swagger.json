@@ -371,6 +371,7 @@
             "enum": [
               "IDENTIFIER",
               "OUTPUT",
+              "INTERMEDIARY_OUTPUT",
               "METADATA"
             ]
           }
@@ -423,6 +424,9 @@
                 },
                 "value": {
                   "type": "string"
+                },
+                "isIntermediary": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -790,6 +794,7 @@
             "enum": [
               "IDENTIFIER",
               "OUTPUT",
+              "INTERMEDIARY_OUTPUT",
               "METADATA",
               "INPUT",
               "STEP_METADATA",
