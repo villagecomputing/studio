@@ -16,6 +16,7 @@ type HeaderProps = {
   parameters: string;
   columnDefs: ColDef[];
   description?: string;
+  parametersButtonVariant?: 'outline' | 'secondary';
 };
 const Header: React.FC<HeaderProps> = ({
   cost,
@@ -27,6 +28,7 @@ const Header: React.FC<HeaderProps> = ({
   parameters,
   children,
   description,
+  parametersButtonVariant = 'secondary',
 }) => {
   const stepsCount = columnDefs.filter(
     (col) => col.type === Enum_Experiment_Column_Type.STEP_METADATA,
@@ -37,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className="flex gap-4">
         {children}
         <PipelineParametersPopover pipelineParameters={parameters}>
-          <Button variant={'secondary'}>
+          <Button variant={parametersButtonVariant}>
             <span className="flex items-center gap-2.5">
               <BracesIcon size={16} />
               View Parameters
