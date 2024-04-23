@@ -83,9 +83,13 @@ export async function POST(
   }
 
   try {
-    await ApiUtils.updateExperiment(experimentId, payload);
+    const updatedExperiment = await ApiUtils.updateExperiment(
+      experimentId,
+      payload,
+    );
     logger.debug('Updated experiment metadata', {
       experimentId,
+      updatedExperiment,
     });
   } catch (error) {
     logger.error('Error updating experiment details', { error, experimentId });
@@ -95,6 +99,7 @@ export async function POST(
   logger.info(`Experiment steps inserted successfully`, {
     elapsedTimeMs: performance.now() - startTime,
     experimentId,
+    stepNumber: payload.steps.length,
     accuracy: payload.accuracy,
     index: payload.index,
   });

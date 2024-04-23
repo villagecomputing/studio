@@ -52,7 +52,13 @@ export function buildLogsFields(
         return {
           name: output.name,
           field: getColumnFieldFromNameAndIndex(output.name, fieldIndex),
-          type: Enum_Logs_Column_Type.OUTPUT,
+          type:
+            !payload.final_output_columns ||
+            payload.final_output_columns.some(
+              (column) => column.toLowerCase() === output.name.toLowerCase(),
+            )
+              ? Enum_Logs_Column_Type.OUTPUT
+              : Enum_Logs_Column_Type.INTERMEDIARY_OUTPUT,
           value: output.value,
         };
       });
@@ -130,6 +136,7 @@ export function buildLogsColumnDefinition(
           };
         case Enum_Logs_Column_Type.INPUT:
         case Enum_Logs_Column_Type.OUTPUT:
+        case Enum_Logs_Column_Type.INTERMEDIARY_OUTPUT:
         case Enum_Logs_Column_Type.STEP_METADATA:
         case Enum_Logs_Column_Type.METADATA:
           return {

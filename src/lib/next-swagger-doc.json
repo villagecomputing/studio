@@ -109,19 +109,19 @@
                 "type": "object",
                 "properties": {
                     "datasetName": {
-                    "type": "string"
+                        "type": "string"
                     },
                     "columns": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "groundTruths": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "required": ["datasetName", "columns", "rows"]
@@ -311,7 +311,7 @@
                     },
                     "type": {
                         "type": "string",
-                        "enum": ["IDENTIFIER", "OUTPUT", "METADATA"]
+                        "enum": ["IDENTIFIER", "OUTPUT", "INTERMEDIARY_OUTPUT", "METADATA"]
                     }
                 },
                 "required": ["name", "id", "field", "type"]
@@ -325,6 +325,12 @@
                     },
                     "index": {
                         "type": "number"
+                    },
+                    "final_output_columns": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "steps": {
                         "type": "array",
@@ -549,6 +555,12 @@
                             "$ref": "#/components/schemas/ExperimentStepPayload"
                         }
                     },
+                    "final_output_columns": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "accuracy": {
                         "type": "number",
                         "nullable": true
@@ -687,7 +699,7 @@
                   },
                   "type": {
                     "type": "string",
-                    "enum": ["IDENTIFIER", "OUTPUT", "METADATA", "INPUT", "STEP_METADATA", "TIMESTAMP"]
+                    "enum": ["IDENTIFIER", "OUTPUT", "INTERMEDIARY_OUTPUT", "METADATA", "INPUT", "STEP_METADATA", "TIMESTAMP"]
                   }
                 },
                 "required": ["name", "id", "field", "type"]
