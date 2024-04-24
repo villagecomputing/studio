@@ -15,6 +15,7 @@ export type LogsListRowType = {
 
 export interface LogsListContextType {
   logs: LogsList;
+  isLoading: boolean;
 }
 
 export type LogsMetadataColumnsPercentiles = {

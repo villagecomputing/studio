@@ -79,6 +79,7 @@ export async function create(
   const columnDefinitionStringArray = columnDefinitions.map((definition) =>
     buildColumnDefinitionString(definition),
   );
+
   const sqlQuery = Prisma.sql`CREATE TABLE "${Prisma.raw(tableName)}"
   (${Prisma.raw(columnDefinitionStringArray.join(', '))})`;
 

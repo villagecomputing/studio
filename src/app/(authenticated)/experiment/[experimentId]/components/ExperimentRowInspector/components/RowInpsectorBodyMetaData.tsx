@@ -1,10 +1,15 @@
+import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { useMemo } from 'react';
+import { ExperimentTableContext } from '../../../types';
 import { getExperimentRowMetadata } from '../../../utils';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
-import { useExperimentRowInspectorContext } from '../ExperimentRowInspector';
 import { RAW_DATA_SECTION } from '../ExperimentRowInspectorView';
 
-const RowInspectorBodyMetaData = () => {
+const RowInspectorBodyMetaData = ({
+  context,
+}: {
+  context: ExperimentTableContext | LogsTableContext;
+}) => {
   const {
     rows,
     inspectorRowIndex,
@@ -13,7 +18,7 @@ const RowInspectorBodyMetaData = () => {
     costP75,
     latencyP25,
     latencyP75,
-  } = useExperimentRowInspectorContext();
+  } = context;
 
   const metadata = useMemo(() => {
     if (inspectorRowIndex === null) {

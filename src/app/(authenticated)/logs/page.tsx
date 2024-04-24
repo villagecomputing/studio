@@ -1,5 +1,6 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
+import Loading from '@/components/loading/Loading';
 import { CellClickedEvent } from 'ag-grid-community';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
@@ -12,8 +13,8 @@ import {
 } from '../components/no-rows-overlay/NoRowsOverlay';
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
+import ExperimentListZeroState from '../experiment/components/zero-state/ExperimentListZeroState';
 import { useLogsListContext } from './components/LogsListProvider';
-import LogsListZeroState from './components/zero-state/LogsListZeroState';
 import { LogsListRowType } from './types';
 import LogsGrid from './utils/LogsGrid';
 import { getLogsMetadataColumnsPercentiles } from './utils/utils';
@@ -21,7 +22,7 @@ import { getLogsMetadataColumnsPercentiles } from './utils/utils';
 const LogsPage = () => {
   const router = useRouter();
   const [quickFilterText, setQuickFilterText] = useState<string>('');
-  const { logs } = useLogsListContext();
+  const { logs, isLoading } = useLogsListContext();
   const onCellClicked = useCallback((event: CellClickedEvent) => {
     if (!event.data) {
       return;
@@ -47,9 +48,11 @@ const LogsPage = () => {
         <div className={'my-6 flex items-center justify-between gap-5'}>
           <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
-        {!logs.length ? (
-          <LogsListZeroState />
-        ) : (
+        {isLoading && <Loading />}
+        {!isLoading && !logs.length && (
+          <ExperimentListZeroState text="No logs added" />
+        )}
+        {!isLoading && !!logs.length && (
           <div
             className="overflow-y-auto"
             style={{ height: 'calc(100vh - 150px)' }}

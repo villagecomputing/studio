@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import { colors } from '../../../../../tailwind.config';
 import PageHeader from '../../components/page-header/PageHeader';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
+import { DatasetName } from '../components/DatasetNameCellRenderer';
 import { fetchExperiment } from './actions';
 import ExperimentTable from './components/ExperimentTable';
 import Header from './components/Header';
@@ -84,7 +85,13 @@ export default function ExperimentViewPage(props: ExperimentViewPageProps) {
           />
         </div>
       </PageHeader>
-      <Header experiment={experiment} />
+      <Header {...experiment}>
+        <DatasetName
+          name={experiment.dataset.name}
+          id={experiment.dataset.id}
+          variant="secondary"
+        />
+      </Header>
       {!experiment.rowData.length ? (
         <div className="border-t border-gridBorderColor pt-6">
           <div className="flex w-full items-center justify-center gap-2 text-muted-foreground">

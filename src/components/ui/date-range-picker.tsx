@@ -43,7 +43,7 @@ export function DatePickerWithRange(props: {
           <Button
             id="date"
             variant={'outline'}
-            className={cn('w-fit justify-start text-left font-normal')}
+            className={cn('w-fit justify-start text-left')}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (

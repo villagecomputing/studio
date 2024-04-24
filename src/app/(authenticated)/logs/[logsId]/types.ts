@@ -7,6 +7,10 @@ import {
   AGGridDataset,
   DatasetTableColumnProps,
 } from '../../data/[datasetId]/types';
+import {
+  StepMetadataColumn,
+  StepsMetadataPercentiles,
+} from '../../experiment/[experimentId]/types';
 
 export type LogsViewPageProps = {
   params: {
@@ -39,6 +43,7 @@ export type LogsRow = {
 
 export type FetchLogsResult = AGGridLogs & {
   logsName: string;
+  description?: string;
   latencyP50: number;
   latencyP90: number;
   runtime: number;
@@ -51,7 +56,6 @@ export type FetchLogsResult = AGGridLogs & {
   latencyP75: number;
   stepsMetadataPercentiles: StepsMetadataPercentiles;
 };
-export type StepMetadataColumn = { name: string; field: string };
 
 export type LogsTableContext = {
   costP25: number;
@@ -66,14 +70,6 @@ export type LogsTableContext = {
   columnDefs: AGGridDataset['columnDefs'];
   displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<LogsRow> | undefined>;
-};
-export type StepsMetadataPercentiles = {
-  [stepField: string]: {
-    costP25: number;
-    costP75: number;
-    latencyP25: number;
-    latencyP75: number;
-  };
 };
 
 export type DateRangeFilter = {

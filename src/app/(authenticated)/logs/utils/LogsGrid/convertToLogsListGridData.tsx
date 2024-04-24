@@ -1,8 +1,8 @@
+import { Enum_Metadata_Type } from '@/app/(authenticated)/experiment/[experimentId]/components/MetadataElement';
+import MetadataColumnCellRenderer from '@/app/(authenticated)/experiment/components/MetadataColumnCellRenderer';
+import ParametersCellRenderer from '@/app/(authenticated)/experiment/components/ParametersCellRenderer';
 import { formatDate } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
-import { Enum_Metadata_Type } from '../../[logsId]/components/MetadataElement';
-import MetadataColumnCellRenderer from '../../components/MetadataColumnCellRenderer';
-import ParametersCellRenderer from '../../components/ParametersCellRenderer';
 import { LogsList, LogsListRowType } from '../../types';
 
 function getLogsListTableColumnDefs(

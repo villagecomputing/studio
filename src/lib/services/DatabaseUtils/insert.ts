@@ -20,9 +20,11 @@ export async function insert(
     }
     return columns.map((column) => row[column]);
   });
-  const sqlQuery = Prisma.sql`INSERT INTO ${Prisma.raw(`"${tableName}"`)} (${Prisma.raw(firstRowColumns.join(', '))}) 
+  const sqlQuery = Prisma.sql`INSERT INTO "${Prisma.raw(tableName)}" (${Prisma.raw(firstRowColumns.join(', '))}) 
     VALUES ${Prisma.join(
-      rowValuesArray.map((row) => Prisma.sql`(${Prisma.join(row)})`),
+      rowValuesArray.map(
+        (rowValues) => Prisma.sql`(${Prisma.join(rowValues)})`,
+      ),
     )}`;
 
   try {

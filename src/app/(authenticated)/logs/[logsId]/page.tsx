@@ -1,6 +1,7 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import Loading from '@/components/loading/Loading';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { useToast } from '@/components/ui/use-toast';
 import { LOGS_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import {
@@ -16,8 +17,8 @@ import { DateRange } from 'react-day-picker';
 import useSWR from 'swr';
 import PageHeader from '../../components/page-header/PageHeader';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
+import Header from '../../experiment/[experimentId]/components/Header';
 import { fetchLogs } from './actions';
-import Header from './components/Header';
 import LogsTable from './components/LogsTable';
 import { LogsViewPageProps } from './types';
 
@@ -61,7 +62,12 @@ export default function LogsViewPage(props: LogsViewPageProps) {
           <CopyIdToClipboardButton id={createFakeId(logs.logsName, logsId)} />
         </div>
       </PageHeader>
-      <Header logs={logs} dateRange={dateRange} setDateRange={setDateRange} />
+      <Header {...logs} parametersButtonVariant="outline">
+        <DatePickerWithRange
+          selectedDateRange={dateRange}
+          setDateRange={setDateRange}
+        />
+      </Header>
       {!logs.rowData.length ? (
         <div className="border-t border-gridBorderColor pt-6">
           <div className="flex w-full items-center justify-center gap-2 text-muted-foreground">

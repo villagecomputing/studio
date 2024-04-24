@@ -14,6 +14,7 @@ import {
 import PageHeader from '../components/page-header/PageHeader';
 import { SearchInput } from '../components/search-input/SearchInput';
 
+import Loading from '@/components/loading/Loading';
 import { useExperimentListContext } from './components/ExperimentListProvider';
 import ExperimentListZeroState from './components/zero-state/ExperimentListZeroState';
 import { ExperimentListRowType } from './types';
@@ -23,7 +24,7 @@ import { getExperimentsMetadataColumnsPercentiles } from './utils/utils';
 const ExperimentsPage = () => {
   const router = useRouter();
   const [quickFilterText, setQuickFilterText] = useState<string>('');
-  const { experiments } = useExperimentListContext();
+  const { experiments, isLoading } = useExperimentListContext();
   const onCellClicked = useCallback((event: CellClickedEvent) => {
     if (!event.data) {
       return;
@@ -51,9 +52,11 @@ const ExperimentsPage = () => {
         <div className={'my-6 flex items-center justify-between gap-5'}>
           <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
         </div>
-        {!experiments.length ? (
-          <ExperimentListZeroState />
-        ) : (
+        {isLoading && <Loading />}
+        {!isLoading && !experiments.length && (
+          <ExperimentListZeroState text="No experiments added" />
+        )}
+        {!isLoading && !!experiments.length && (
           <div
             className="overflow-y-auto"
             style={{ height: 'calc(100vh - 150px)' }}

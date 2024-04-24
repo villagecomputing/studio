@@ -32,6 +32,7 @@ export type ExperimentStep = z.infer<typeof experimentStepPayloadSchema>;
 
 export const insertExperimentPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
+  final_output_columns: z.array(z.string()).optional(),
   index: z.number(),
   accuracy: z.union([z.number(), z.null()]).optional(),
 });

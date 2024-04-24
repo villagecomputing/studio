@@ -17,16 +17,19 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
         format.align(),
         format.metadata(),
         format.printf(({ level, message, metadata }) => {
-          const { timestamp, source, stack, ...customMetadata } = metadata;
+          const { timestamp, source, stack, error, ...customMetadata } =
+            metadata;
           const stackLog = stack
             ? `\nStack trace: ${stack.replace('at', '\nat')}`
             : '';
+
+          const errorLog = error ? `\nError: ${error}` : '';
           const customMetadataLog =
             Object.keys(customMetadata).length > 0
               ? `\n Custom metadata: ${JSON.stringify(customMetadata, null, 2)}`
               : '';
 
-          return `[${timestamp}][${source}][${level}]: ${message} ${stackLog} ${customMetadataLog}`;
+          return `[${timestamp}][${source}][${level}]: ${message} ${customMetadataLog} ${errorLog} ${stackLog}`;
         }),
       ),
 

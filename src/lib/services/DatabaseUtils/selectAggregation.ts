@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
+import { buildPrismaWhereClause } from './common';
+import { WhereConditions } from './types';
 
 export async function selectAggregation(
   tableName: string,
@@ -7,24 +9,16 @@ export async function selectAggregation(
     field?: string;
     func: 'COUNT' | 'SUM' | 'AVG' | 'MIN' | 'MAX';
   },
-  whereConditions?: { [key: string]: string | null | { isNotNull: true } },
+  whereConditions?: WhereConditions,
 ): Promise<string> {
   const aggField = aggregation.field
     ? Prisma.raw(`"${aggregation.field}"`)
     : '*';
   let sqlQuery = Prisma.sql`SELECT ${Prisma.raw(aggregation.func)}(${aggField}) AS result FROM "${Prisma.raw(tableName)}"`;
 
-  if (whereConditions) {
-    const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
-      if (value === null) {
-        return Prisma.raw(`"${key}" IS NULL`);
-      } else if (typeof value === 'object' && value.isNotNull) {
-        return Prisma.raw(`"${key}" IS NOT NULL`);
-      } else {
-        return Prisma.raw(`"${key}" = "${value}"`);
-      }
-    });
-    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${Prisma.join(whereClauses)}`;
+  if (whereConditions && Object.keys(whereConditions).length > 0) {
+    const whereClause = buildPrismaWhereClause(whereConditions);
+    sqlQuery = Prisma.sql`${sqlQuery} WHERE ${whereClause}`;
   }
   // Execute the aggregation query
   try {

@@ -1,7 +1,5 @@
-import {
-  ROW_ID_FIELD_NAME,
-  isGroundTruthCell,
-} from '@/app/(authenticated)/data/utils/commonUtils';
+import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
+import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import {
@@ -13,7 +11,6 @@ import {
 } from 'ag-grid-community';
 import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
-import RowMetadataCellRenderer from '../components/RowMetadataCellRenderer';
 import { DateRangeFilter, LogsRow, LogsTableContext } from '../types';
 
 export function useGridOperations() {
@@ -40,11 +37,7 @@ export function useGridOperations() {
 
   const getRowId = useCallback(
     (params: GetRowIdParams<LogsRow, LogsTableContext>): string => {
-      const idValue = params.data[ROW_ID_FIELD_NAME];
-      if (isGroundTruthCell(idValue)) {
-        throw new Error('Wow! Somehow the ROW_ID is a groundTruthCell!');
-      }
-      return idValue;
+      return params.data[ROW_ID_FIELD_NAME];
     },
     [],
   );
@@ -80,7 +73,7 @@ export function useGridOperations() {
           return new Date(params.data['created_at']);
         },
         valueFormatter: (params) => {
-          return formatDate(params.value, "HH:mm ss's' dd/MM/yyyy");
+          return formatDate(params.value, "HH:mm s's' MM/dd/yyyy");
         },
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),

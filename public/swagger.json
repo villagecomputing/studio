@@ -371,6 +371,7 @@
             "enum": [
               "IDENTIFIER",
               "OUTPUT",
+              "INTERMEDIARY_OUTPUT",
               "METADATA"
             ]
           }
@@ -391,6 +392,12 @@
           },
           "index": {
             "type": "number"
+          },
+          "final_output_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "steps": {
             "type": "array",
@@ -649,6 +656,12 @@
               "$ref": "#/components/schemas/ExperimentStepPayload"
             }
           },
+          "final_output_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "accuracy": {
             "type": "number",
             "nullable": true
@@ -790,6 +803,7 @@
             "enum": [
               "IDENTIFIER",
               "OUTPUT",
+              "INTERMEDIARY_OUTPUT",
               "METADATA",
               "INPUT",
               "STEP_METADATA",

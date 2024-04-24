@@ -1,10 +1,17 @@
 import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
+import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import { createFakeId } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { hasApiAccess, response } from '../../utils';
+
 export const dynamic = 'force-dynamic';
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'ListLogs',
+});
+
 /**
  * @swagger
  * /api/logs/list:
@@ -27,7 +34,9 @@ export const dynamic = 'force-dynamic';
  *         description: 'Error processing request.'
  */
 export async function GET(request: Request) {
+  const startTime = performance.now();
   if (!(await hasApiAccess(request))) {
+    logger.warn('Unauthorized request');
     return response('Unauthorized', 401);
   }
 
@@ -63,8 +72,13 @@ export async function GET(request: Request) {
                 { accuracy: { isNotNull: true } },
               ),
             );
-          } catch (_e) {}
-          return {
+          } catch (error) {
+            logger.warn('Failed to select aggregation for accuracy count', {
+              logsEntryUuid: logsEntry.uuid,
+              error,
+            });
+          }
+          const result = {
             id: createFakeId(logsEntry.name, logsEntry.uuid),
             name: logsEntry.name,
             description: logsEntry.description || '',
@@ -79,11 +93,17 @@ export async function GET(request: Request) {
             totalCost: logsEntry.total_cost,
             totalRows: logsEntry.total_rows,
           };
+          logger.debug(`Logs data`, result);
+          return result;
         }),
       );
+    logger.info('Logs list retrieved', {
+      elapsedTimeMs: performance.now() - startTime,
+      logsCount: logsListResponse.length,
+    });
     return Response.json(logsListResponse);
   } catch (error) {
-    console.error('Error in GET logs list:', error);
+    logger.error('Error getting logs list:', error);
     return response('Error processing request', 500);
   }
 }

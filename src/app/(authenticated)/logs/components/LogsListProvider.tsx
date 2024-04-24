@@ -1,15 +1,9 @@
 'use client';
 import { logsListResponseSchema } from '@/app/api/logs/list/schema';
-import { useToast } from '@/components/ui/use-toast';
 import { ApiEndpoints } from '@/lib/routes/routes';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { PropsWithChildren, createContext, useContext } from 'react';
+import useSWR from 'swr';
 import { LogsList, LogsListContextType } from '../types';
 
 const getData = async (): Promise<LogsList> => {
@@ -31,6 +25,7 @@ const getData = async (): Promise<LogsList> => {
 // Create the context
 export const LogsListContext = createContext<LogsListContextType>({
   logs: [],
+  isLoading: true,
 });
 
 export const useLogsListContext = () => {
@@ -45,28 +40,10 @@ export const useLogsListContext = () => {
 
 // Define the provider component
 export const LogsListProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [logs, setLogs] = useState<LogsList>([]);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchLogsList = async () => {
-      try {
-        const data = await getData();
-        setLogs(data);
-      } catch (err) {
-        toast({
-          duration: 5000,
-          variant: 'destructive',
-          description: 'Error getting the logs list',
-        });
-      }
-    };
-
-    fetchLogsList();
-  }, []);
+  const { data: logs = [], isLoading } = useSWR('logsList', getData);
 
   return (
-    <LogsListContext.Provider value={{ logs }}>
+    <LogsListContext.Provider value={{ logs, isLoading }}>
       {children}
     </LogsListContext.Provider>
   );
