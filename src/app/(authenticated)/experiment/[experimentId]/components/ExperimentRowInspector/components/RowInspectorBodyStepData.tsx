@@ -1,9 +1,9 @@
-import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
 import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { useMemo } from 'react';
 import { ExperimentTableContext, StepMetadataColumn } from '../../../types';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
+import RowInspectorRichDataWrapper from './RowInspectorRichDataWrapper';
 
 const RowInspectorBodyStepData = (props: {
   stepMetadataColumn: StepMetadataColumn;
@@ -75,7 +75,7 @@ const RowInspectorBodyStepData = (props: {
             )}
           </div>
           <div className="flex flex-col gap-1 border-l border-border px-2">
-            <CollapsibleText text={stepMetadata.prompt} />
+            <RowInspectorRichDataWrapper data={stepMetadata.prompt} />
           </div>
         </div>
       )}
@@ -107,8 +107,8 @@ const RowInspectorBodyStepData = (props: {
               <span className={'text-sm text-muted-foreground'}>
                 {outputColumn.headerName}:
               </span>
-              <CollapsibleText
-                text={(currentRow[outputColumnField] as string) || '-'}
+              <RowInspectorRichDataWrapper
+                data={(currentRow[outputColumnField] as string) || '-'}
               />
             </div>
           );
