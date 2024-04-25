@@ -1,5 +1,6 @@
 import { StepMetadataColumn } from '@/app/(authenticated)/experiment/[experimentId]/types';
 import { logsStepInputs } from '@/app/api/logs/insert/schema';
+import { CurrentView } from '@/lib/services/RichDataParser/types';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { compact } from 'lodash';
@@ -29,6 +30,9 @@ export const useLogsTableContext = (
   const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
     null,
   );
+
+  const [sidePanelCurrentView, setSidePanelCurrentView] =
+    useState<CurrentView | null>(null);
 
   /**
    * Transform the input columns from
@@ -131,6 +135,8 @@ export const useLogsTableContext = (
     rows,
     columnDefs,
     displayableColumnDefs,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
     setInspectorRowIndex,
   };
 };

@@ -38,6 +38,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
+    "embla-carousel-react": "^8.0.2",
     "generate-api-key": "^1.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.330.0",
