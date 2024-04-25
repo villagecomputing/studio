@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type CollapsibleTextProps = {
   text: string;
@@ -34,7 +35,17 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
           collapsed && `line-clamp-[${maxNumberOfLines}]`,
         )}
       >
-        <ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({ ...props }) => (
+              <a
+                {...props}
+                className="mb-2 break-all text-primary hover:underline"
+              />
+            ),
+          }}
+        >
           {collapsed ? text.slice(0, minCollapsibleSize) + '...' : text}
         </ReactMarkdown>
       </p>
