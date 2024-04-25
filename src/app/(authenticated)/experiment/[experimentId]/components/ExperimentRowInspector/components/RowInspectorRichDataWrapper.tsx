@@ -14,7 +14,9 @@ const RowInspectorRichDataWrapper: React.FC<
 
   return (
     <>
-      <CollapsibleText text={data} />
+      <div className="mb-2">
+        <CollapsibleText text={data} />
+      </div>
       {components}
     </>
   );

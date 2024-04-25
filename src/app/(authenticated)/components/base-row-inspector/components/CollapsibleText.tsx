@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 type CollapsibleTextProps = {
   text: string;
@@ -33,7 +34,9 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
           collapsed && `line-clamp-[${maxNumberOfLines}]`,
         )}
       >
-        {collapsed ? text.slice(0, minCollapsibleSize) + '...' : text}
+        <ReactMarkdown>
+          {collapsed ? text.slice(0, minCollapsibleSize) + '...' : text}
+        </ReactMarkdown>
       </p>
       {collapsible && (
         <Button
