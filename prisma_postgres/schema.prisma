@@ -84,6 +84,7 @@ model Logs {
   description       String?
   created_by        String?
   pipeline_metadata String
+  dataset_uuid      String?
   created_at        DateTime      @default(now())
   updated_at        DateTime      @updatedAt
   deleted_at        DateTime?
