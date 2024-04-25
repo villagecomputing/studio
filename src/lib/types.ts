@@ -3,6 +3,8 @@ export enum ENUM_Column_type {
   GROUND_TRUTH_STATUS = 'GROUND_TRUTH_STATUS',
   IDENTIFIER = 'IDENTIFIER',
   INPUT = 'INPUT',
+  METADATA = 'METADATA',
+  TIMESTAMP = 'TIMESTAMP',
 }
 
 export enum Enum_Experiment_Column_Type {
