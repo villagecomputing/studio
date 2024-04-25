@@ -12,7 +12,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, closePanel }) => {
           href={pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="truncate text-primary"
+          className="truncate text-primary hover:underline"
         >
           {pdfUrl}
         </a>

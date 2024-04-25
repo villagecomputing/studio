@@ -36,7 +36,7 @@ const ImagesViewer: React.FC<ImagesViewerProps> = ({
             href={selectedImage}
             target="_blank"
             rel="noopener noreferrer"
-            className="truncate text-primary"
+            className="truncate text-primary hover:underline"
           >
             {selectedImage}
           </a>

@@ -1,3 +1,4 @@
+import ReactMarkdown from 'react-markdown';
 import LeftSidePanelHeader from './LeftSidePanelHeader';
 
 type MarkdownViewerProps = {
@@ -19,7 +20,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
       </LeftSidePanelHeader>
       <div className="flex-grow overflow-y-scroll px-6 py-4">
         <span className="text-base font-normal text-secondary-foreground">
-          {content}
+          <ReactMarkdown>{content}</ReactMarkdown>
         </span>
       </div>
     </div>
