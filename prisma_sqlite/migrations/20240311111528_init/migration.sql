@@ -41,8 +41,10 @@ CREATE TABLE "Dataset" (
     "uuid" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "created_by" TEXT,
+    "logs_uuid" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" DATETIME,
     "updated_at" DATETIME NOT NULL,
-    CONSTRAINT "Dataset_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "Dataset_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "Dataset_logs_id_fkey" FOREIGN KEY ("logs_uuid") REFERENCES "Logs"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
