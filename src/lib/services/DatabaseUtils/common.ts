@@ -84,6 +84,11 @@ export function buildPrismaWhereClause(whereConditions: WhereConditions) {
   const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
     if (value === null) {
       return Prisma.sql`${Prisma.raw(`"${key}" IS NULL`)}`;
+    } else if (Array.isArray(value)) {
+      const sanitizedValues = value
+        .map((val) => `'${val.replaceAll("'", "''")}'`)
+        .join(', ');
+      return Prisma.sql`${Prisma.raw(`"${key}" IN (${sanitizedValues})`)}`;
     } else if (typeof value === 'object' && value.isNotNull) {
       return Prisma.sql`${Prisma.raw(`"${key}" IS NOT NULL`)}`;
     } else {

@@ -206,12 +206,11 @@ export async function getOrderedExperimentMetadata(
   };
 
   try {
-    const result = await DatabaseUtils.select<Record<string, string>>(
-      dynamicTableName,
+    const result = await DatabaseUtils.select<Record<string, string>>({
+      tableName: dynamicTableName,
       selectFields,
-      undefined,
       orderBy,
-    );
+    });
     return result.map((row) => {
       return Number(row[metadataField]);
     });

@@ -3,13 +3,19 @@ import PrismaClient from '../prisma';
 import { buildPrismaWhereClause } from './common';
 import { ENUM_ORDER_DIRECTION, WhereConditions } from './types';
 
-export async function select<T>(
-  tableName: string,
-  selectFields?: string[],
-  whereConditions?: WhereConditions,
-  orderBy?: { field: string; direction: ENUM_ORDER_DIRECTION },
-  limit?: number,
-): Promise<T[]> {
+export async function select<T>({
+  tableName,
+  selectFields,
+  whereConditions,
+  orderBy,
+  limit,
+}: {
+  tableName: string;
+  selectFields?: string[];
+  whereConditions?: WhereConditions;
+  orderBy?: { field: string; direction: ENUM_ORDER_DIRECTION };
+  limit?: number;
+}): Promise<T[]> {
   let sqlQuery = Prisma.sql`SELECT `;
 
   if (selectFields && selectFields.length > 0) {
