@@ -15,6 +15,7 @@ model Dataset {
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt
+  logs_uuid                    String?
   User           User?            @relation(fields: [created_by], references: [uuid])
   Dataset_column Dataset_column[]
   Experiment     Experiment[]
