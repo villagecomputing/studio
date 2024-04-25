@@ -8,7 +8,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-
 model Dataset {
   uuid           String           @id
   name           String
