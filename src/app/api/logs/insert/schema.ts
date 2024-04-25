@@ -8,6 +8,13 @@ export const logsStepInputs = z.array(
   }),
 );
 
+export const dataset = z
+  .object({
+    id: z.string(),
+    row_index: z.string(),
+  })
+  .optional();
+
 export const insertLogsPayloadSchema = z.object({
   steps: z.array(experimentStepPayloadSchema),
   final_output_columns: z.array(z.string()).optional(),
@@ -17,4 +24,5 @@ export const insertLogsPayloadSchema = z.object({
   name: z.string(),
   description: z.optional(z.string()),
   parameters: z.record(z.any()),
+  dataset: dataset,
 });

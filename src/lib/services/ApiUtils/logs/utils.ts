@@ -24,7 +24,7 @@ export function buildLogsFields(
   let rowLatency = 0;
   let rowCost = 0;
   let outputCounter = 0; // Initialize a counter for outputs to ensure unique indexing
-  const experimentFields: LogsField[] = [
+  const logsFields: LogsField[] = [
     {
       name: 'id',
       field: 'id',
@@ -40,6 +40,12 @@ export function buildLogsFields(
       field: INPUTS_COLUMN,
       type: Enum_Logs_Column_Type.INPUT,
       value: JSON.stringify(payload.inputs),
+    },
+    {
+      name: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
+      field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
+      type: Enum_Logs_Column_Type.METADATA,
+      value: payload.dataset?.row_index,
     },
     ...payload.steps.flatMap((step) => {
       rowLatency += step.metadata.latency;
@@ -88,7 +94,7 @@ export function buildLogsFields(
     }),
   ];
 
-  experimentFields.push(
+  logsFields.push(
     {
       name: Enum_Dynamic_experiment_metadata_fields.LATENCY,
       field: Enum_Dynamic_experiment_metadata_fields.LATENCY,
@@ -109,7 +115,7 @@ export function buildLogsFields(
     },
   );
 
-  return experimentFields;
+  return logsFields;
 }
 
 export function buildLogsColumnDefinition(

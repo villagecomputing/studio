@@ -21,6 +21,7 @@ export async function getLogsDetails(logsId: string) {
     total_accuracy: true,
     total_rows: true,
     pipeline_metadata: true,
+    dataset_uuid: true,
     Logs_column: { select: columnSelect, where: { deleted_at: null } },
   } satisfies Prisma.LogsSelect;
 
