@@ -9,6 +9,10 @@ import PrismaClient from '../../prisma';
 type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 
+export enum Enum_Dynamic_dataset_metadata_fields {
+  LOGS_ROW_INDEX = 'logs_row_index',
+}
+
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
     where: { dataset_uuid: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
@@ -33,6 +37,12 @@ export function buildDatasetFields(
       field: 'id',
       index: -1,
       type: ENUM_Column_type.IDENTIFIER,
+    },
+    {
+      name: 'created_at',
+      field: 'created_at',
+      index: -1,
+      type: ENUM_Column_type.TIMESTAMP,
     },
   ];
   columns.map((columnName, index) => {
@@ -64,6 +74,13 @@ export function buildDatasetFields(
     });
   });
 
+  datasetFields.push({
+    name: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
+    field: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
+    type: ENUM_Column_type.METADATA,
+    index: -1,
+  });
+
   return datasetFields;
 }
 
@@ -84,6 +101,7 @@ export function buildDatasetColumnDefinition(
           };
         case ENUM_Column_type.GROUND_TRUTH:
         case ENUM_Column_type.INPUT:
+        case ENUM_Column_type.METADATA:
           return {
             type: ColumnType.TEXT,
             name: field.field,
@@ -94,6 +112,13 @@ export function buildDatasetColumnDefinition(
             name: field.field,
             typeCheckValues: Object.values(ENUM_Ground_truth_status),
             defaultValue: ENUM_Ground_truth_status.PENDING,
+          };
+        case ENUM_Column_type.TIMESTAMP:
+          return {
+            type: ColumnType.DATETIME,
+            name: field.field,
+            defaultValue: 'CURRENT_TIMESTAMP',
+            isNotNull: true,
           };
         default:
           exhaustiveCheck(type);
