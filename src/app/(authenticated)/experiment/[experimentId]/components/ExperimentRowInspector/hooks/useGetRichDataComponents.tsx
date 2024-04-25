@@ -74,12 +74,12 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
             <a
               href={url}
               target="_blank"
-              className="break-all text-primary hover:underline"
+              className="mb-2 break-all text-primary hover:underline"
             >
               {url}
             </a>
             <span
-              className="cursor-pointer text-primary"
+              className="w-fit cursor-pointer rounded-sm bg-secondary px-2 py-1 text-primary"
               onClick={() => viewPDF(url)}
             >
               View PDF
@@ -93,7 +93,13 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
     return Object.entries(components).map(([format, componentArray]) =>
       componentArray.length ? (
         <div key={format} className="mb-4 flex flex-col gap-2">
-          <span>{format === SupportedFormat.IMAGE ? 'Images' : 'PDFs'}</span>
+          <span
+            className={
+              'w-fit rounded-2xl border-[thin] border-borderActive px-2 text-borderActive'
+            }
+          >
+            {format === SupportedFormat.IMAGE ? 'image(s)' : 'pdf(s)'}
+          </span>
           <div
             className={`flex ${format === SupportedFormat.IMAGE ? 'gap-2' : ''}`}
           >
