@@ -1,7 +1,9 @@
 import { SupportedFormat } from '@/lib/services/RichDataParser/constants';
 import { CurrentView } from '@/lib/services/RichDataParser/types';
 import { exhaustiveCheck } from '@/lib/typeUtils';
+import { useEffect, useState } from 'react';
 import ImagesViewer from './ImagesViewer';
+import LeftSidePanelHeader from './LeftSidePanelHeader';
 import MarkdownViewer from './MarkdownViewer';
 import PdfViewer from './PdfViewer';
 
@@ -13,34 +15,69 @@ const LeftSidePanelContent: React.FC<LeftSidePanelContentProps> = ({
   currentView,
   closePanel,
 }) => {
+  const [title, setTitle] = useState<string | null>(null);
   const type = currentView.type;
 
-  return (() => {
+  useEffect(() => {
     switch (type) {
       case SupportedFormat.IMAGE:
-        return (
-          <ImagesViewer
-            imagesUrls={currentView.content}
-            closePanel={closePanel}
-          />
-        );
+        // TODO: fix this to use startIndex
+        if (currentView.content.length > 0) {
+          setTitle(currentView.content[0]);
+        }
+        break;
       case SupportedFormat.PDF:
-        return (
-          <PdfViewer pdfUrl={currentView.content} closePanel={closePanel} />
-        );
+        setTitle(currentView.content);
+        break;
       case SupportedFormat.MARKDOWN:
-        return (
-          <MarkdownViewer
-            content={currentView.content}
-            title={currentView.title}
-            closePanel={closePanel}
-          />
-        );
+        setTitle(currentView.title);
+        break;
       default:
         exhaustiveCheck(type);
-        return null;
     }
-  })();
+  }, []);
+
+  return (
+    <>
+      <div className="flex h-full flex-col">
+        <LeftSidePanelHeader closePanel={closePanel}>
+          {title &&
+            (currentView.type === SupportedFormat.MARKDOWN ? (
+              <span className="truncate text-base font-normal text-secondary-foreground">
+                {title}
+              </span>
+            ) : (
+              <a
+                href={title}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate text-primary hover:underline"
+              >
+                {title}
+              </a>
+            ))}
+        </LeftSidePanelHeader>
+        {(() => {
+          switch (type) {
+            case SupportedFormat.IMAGE:
+              return (
+                <ImagesViewer
+                  imagesUrls={currentView.content}
+                  setSelectedImageUrl={setTitle}
+                />
+              );
+            case SupportedFormat.PDF:
+              return <PdfViewer pdfUrl={currentView.content} />;
+            case SupportedFormat.MARKDOWN:
+              return <MarkdownViewer content={currentView.content} />;
+            default:
+              exhaustiveCheck(type);
+              return null;
+          }
+        })()}
+      </div>
+    </>
+  );
 };
 
 export default LeftSidePanelContent;

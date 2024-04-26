@@ -3,9 +3,8 @@ import { useExperimentRowInspectorContext } from '../../ExperimentRowInspector';
 import LeftSidePanelContent from './components/LeftSidePanelContent';
 
 const ExperimentLeftSidePanel = () => {
-  const context = useExperimentRowInspectorContext();
   const { inspectorRowIndex, sidePanelCurrentView, setSidePanelCurrentView } =
-    context;
+    useExperimentRowInspectorContext();
   const open = inspectorRowIndex !== null && sidePanelCurrentView !== null;
 
   if (!open) {
