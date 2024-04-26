@@ -21,7 +21,7 @@ const LeftSidePanelContent: React.FC<LeftSidePanelContentProps> = ({
   useEffect(() => {
     switch (type) {
       case SupportedFormat.IMAGE:
-        if (currentView.content.length > 0) {
+        if (currentView.startIndex < currentView.content.length) {
           setTitle(currentView.content[currentView.startIndex]);
         }
         break;
@@ -34,7 +34,7 @@ const LeftSidePanelContent: React.FC<LeftSidePanelContentProps> = ({
       default:
         exhaustiveCheck(type);
     }
-  }, []);
+  }, [currentView]);
 
   return (
     <>

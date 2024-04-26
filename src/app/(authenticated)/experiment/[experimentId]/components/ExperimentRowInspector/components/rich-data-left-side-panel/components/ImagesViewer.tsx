@@ -41,11 +41,11 @@ const ImagesViewer: React.FC<ImagesViewerProps> = ({
 
   return (
     <div className="relative flex flex-grow overflow-hidden" ref={emblaRef}>
-      <div className="flex items-center">
+      <div className="flex w-full items-center ">
         {imagesUrls.map((image, index) => (
-          <div className="w-full flex-none" key={index}>
+          <div className="h-full w-full flex-none" key={`${image}${index}`}>
             <ImageWithFallback
-              alt={image}
+              alt={`Slide ${index}`}
               src={image}
               width={1000}
               height={1000}
