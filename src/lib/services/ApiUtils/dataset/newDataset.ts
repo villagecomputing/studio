@@ -25,7 +25,11 @@ export async function newDataset(
     data: {
       uuid: datasetId,
       name: datasetName,
-      logs_uuid: logsUuid,
+      Logs: {
+        connect: {
+          uuid: logsUuid || undefined,
+        },
+      },
     },
   });
 

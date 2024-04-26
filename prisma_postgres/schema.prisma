@@ -9,18 +9,16 @@ datasource db {
 }
 
 model Dataset {
-  uuid                            String           @id
-  name                            String
-  created_by                      String?
-  created_at                      DateTime         @default(now())
-  deleted_at                      DateTime?
-  updated_at                      DateTime         @updatedAt
-  logs_uuid                       String?
-  User                            User?            @relation(fields: [created_by], references: [uuid])
-  Logs_Dataset_logs_uuidToLogs    Logs?            @relation("Dataset_logs_uuidToLogs", fields: [logs_uuid], references: [uuid], map: "Dataset_logs_id_fkey")
-  Dataset_column                  Dataset_column[]
-  Experiment                      Experiment[]
-  Logs_Logs_dataset_uuidToDataset Logs[]           @relation("Logs_dataset_uuidToDataset")
+  uuid           String           @id
+  name           String
+  created_by     String?
+  created_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  updated_at     DateTime         @updatedAt
+  User           User?            @relation(fields: [created_by], references: [uuid])
+  Dataset_column Dataset_column[]
+  Experiment     Experiment[]
+  Logs           Logs[]
 }
 
 model Dataset_column {
@@ -81,26 +79,24 @@ model Experiment {
 }
 
 model Logs {
-  uuid                               String        @id
-  name                               String
-  description                        String?
-  created_by                         String?
-  pipeline_metadata                  String
-  created_at                         DateTime      @default(now())
-  updated_at                         DateTime      @updatedAt
-  deleted_at                         DateTime?
-  total_latency                      Float         @default(0)
-  latency_p50                        Float         @default(0)
-  latency_p90                        Float         @default(0)
-  total_cost                         Float         @default(0)
-  total_accuracy                     Float         @default(0)
-  total_rows                         Float         @default(0)
-  fingerprint                        String
-  dataset_uuid                       String?
-  Dataset_Dataset_logs_uuidToLogs    Dataset[]     @relation("Dataset_logs_uuidToLogs")
-  User                               User?         @relation(fields: [created_by], references: [uuid])
-  Dataset_Logs_dataset_uuidToDataset Dataset?      @relation("Logs_dataset_uuidToDataset", fields: [dataset_uuid], references: [uuid], map: "Logs_dataset_id_fkey")
-  Logs_column                        Logs_column[]
+  uuid              String        @id
+  name              String
+  description       String?
+  created_by        String?
+  pipeline_metadata String
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  deleted_at        DateTime?
+  total_latency     Float         @default(0)
+  latency_p50       Float         @default(0)
+  latency_p90       Float         @default(0)
+  total_cost        Float         @default(0)
+  total_accuracy    Float         @default(0)
+  total_rows        Float         @default(0)
+  fingerprint       String
+  User              User?         @relation(fields: [created_by], references: [uuid])
+  Dataset           Dataset[]
+  Logs_column       Logs_column[]
 }
 
 model Logs_column {
