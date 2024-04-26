@@ -13,6 +13,7 @@ export async function getFormatForURL(
           return guardStringEnum(SupportedFormat, format);
         }
       }
+      return null;
     }
 
     // Fallback to regex if content type is not conclusive

@@ -3,9 +3,9 @@ import RichDataParser, {
 } from '@/lib/services/RichDataParser';
 import { SupportedFormat } from '@/lib/services/RichDataParser/constants';
 import { CurrentView } from '@/lib/services/RichDataParser/types';
-import Image from 'next/image';
 import React, { useMemo } from 'react';
 import useSWR from 'swr';
+import { ImageWithFallback } from './ImageWithFallback';
 
 export const useGetRichDataComponents = (
   data: string,
@@ -14,14 +14,13 @@ export const useGetRichDataComponents = (
   const { data: urls = [], isLoading } = useSWR(data, RichDataParser.parseData);
 
   const viewImage = (images: string[], clickedImageIndex: number) => {
-    console.log('🚀 ~ viewImage ~ clickedImageIndex:', clickedImageIndex);
     if (!images.length) {
       return;
     }
     const contextImages: CurrentView = {
       content: images,
       type: SupportedFormat.IMAGE,
-      // TODO add clickedImageIndex
+      startIndex: clickedImageIndex,
     };
     setCurrentViewContent(contextImages);
   };
@@ -62,16 +61,17 @@ export const useGetRichDataComponents = (
       const component =
         format === SupportedFormat.IMAGE ? (
           <div
-            className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center"
+            className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center bg-gridHeaderColor"
             key={index}
             onClick={() => viewImage(imageTypeUrls, imageTypeUrls.indexOf(url))}
           >
-            <Image
+            <ImageWithFallback
               src={url}
               alt={url}
-              width={100}
-              height={100}
-              className="h-auto max-h-full w-auto max-w-full"
+              width={1000}
+              height={1000}
+              fallbackSrc={'/image-failed-to-load.svg'}
+              className="h-auto max-h-full w-auto min-w-6 max-w-full object-contain"
             />
           </div>
         ) : (

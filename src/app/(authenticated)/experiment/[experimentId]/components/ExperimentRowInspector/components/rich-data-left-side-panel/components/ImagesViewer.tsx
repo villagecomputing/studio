@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import Image from 'next/image';
 import React, {
   Dispatch,
   SetStateAction,
@@ -10,6 +9,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { ImageWithFallback } from '../../../hooks/ImageWithFallback';
 
 type ImagesViewerProps = {
   imagesUrls: string[];
@@ -21,7 +21,6 @@ const ImagesViewer: React.FC<ImagesViewerProps> = ({
   options,
   setSelectedImageUrl,
 }) => {
-  // TODO: to use options.startIndex to start from a specific image
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
 
   const {
@@ -45,12 +44,15 @@ const ImagesViewer: React.FC<ImagesViewerProps> = ({
       <div className="flex items-center">
         {imagesUrls.map((image, index) => (
           <div className="w-full flex-none" key={index}>
-            <Image
+            <ImageWithFallback
               alt={image}
               src={image}
               width={1000}
               height={1000}
-              className="h-full w-full"
+              fallbackSrc={'/image-failed-to-load-big.svg'}
+              className={
+                'm-auto h-auto max-h-full w-auto min-w-40 max-w-full object-contain'
+              }
             />
           </div>
         ))}

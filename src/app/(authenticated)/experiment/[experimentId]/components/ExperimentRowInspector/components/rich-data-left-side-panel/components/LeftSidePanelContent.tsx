@@ -21,9 +21,8 @@ const LeftSidePanelContent: React.FC<LeftSidePanelContentProps> = ({
   useEffect(() => {
     switch (type) {
       case SupportedFormat.IMAGE:
-        // TODO: fix this to use startIndex
         if (currentView.content.length > 0) {
-          setTitle(currentView.content[0]);
+          setTitle(currentView.content[currentView.startIndex]);
         }
         break;
       case SupportedFormat.PDF:
@@ -64,6 +63,7 @@ const LeftSidePanelContent: React.FC<LeftSidePanelContentProps> = ({
                 <ImagesViewer
                   imagesUrls={currentView.content}
                   setSelectedImageUrl={setTitle}
+                  options={{ startIndex: currentView.startIndex }}
                 />
               );
             case SupportedFormat.PDF:

@@ -21,7 +21,7 @@ export type CurrentView =
       type: SupportedFormat.MARKDOWN;
     }
   | {
-      // TODO: add startIndex
+      startIndex: number;
       content: string[];
       type: SupportedFormat.IMAGE;
     };
