@@ -15,7 +15,6 @@ export const useExperimentTableContext = (
   props: FetchExperimentResult,
 ): ExperimentTableContext => {
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
-  const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
   const [stepMetadataColumns, setStepMetadataColumn] = useState<
     StepMetadataColumn[]
   >([]);
@@ -90,7 +89,7 @@ export const useExperimentTableContext = (
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,
-    rows,
+    rows: props.rowData,
     columnDefs,
     displayableColumnDefs,
     sidePanelCurrentView,
