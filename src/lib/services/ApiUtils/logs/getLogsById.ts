@@ -61,7 +61,7 @@ export async function getLogsById(
     createdAt: logsDetails.created_at,
     columns: columns,
     rows: logsContent,
-    datasetUuid: logsDetails.dataset_uuid,
+    datasetUuid: logsDetails.Dataset?.[0].uuid,
     ...logsMetadataPercentile,
   };
 }
