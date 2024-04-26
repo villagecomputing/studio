@@ -5,7 +5,7 @@ CREATE TABLE "Logs" (
   "name" TEXT NOT NULL,
   "description" TEXT,
   "created_by" TEXT,
-  "pipeline_metadata" TEXT NOT NULL,
+  "pipeline_metadata" TEXT NOT NULL, 
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,
   "deleted_at" DATETIME,
