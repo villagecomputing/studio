@@ -18,6 +18,7 @@ model Dataset {
   User           User?            @relation(fields: [created_by], references: [uuid])
   Dataset_column Dataset_column[]
   Experiment     Experiment[]
+  Logs           Logs[]
 }
 
 model Dataset_column {
@@ -94,6 +95,7 @@ model Logs {
   total_rows        Float         @default(0)
   fingerprint       String
   User              User?         @relation(fields: [created_by], references: [uuid])
+  Dataset           Dataset[]
   Logs_column       Logs_column[]
 }
 
