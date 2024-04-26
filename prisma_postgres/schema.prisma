@@ -15,7 +15,6 @@ model Dataset {
   created_at     DateTime         @default(now())
   deleted_at     DateTime?
   updated_at     DateTime         @updatedAt
-  logs_uuid                    String?
   User           User?            @relation(fields: [created_by], references: [uuid])
   Dataset_column Dataset_column[]
   Experiment     Experiment[]
@@ -85,7 +84,6 @@ model Logs {
   description       String?
   created_by        String?
   pipeline_metadata String
-  dataset_uuid      String?
   created_at        DateTime      @default(now())
   updated_at        DateTime      @updatedAt
   deleted_at        DateTime?
