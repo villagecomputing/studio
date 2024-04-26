@@ -66,7 +66,7 @@ export async function POST(
     const logDetails = await getLogsDetails(logsId);
 
     // Ensure related dataset created
-    let datasetId = logDetails.dataset_uuid;
+    let datasetId = logDetails.Dataset?.[0].uuid;
     if (!datasetId) {
       datasetId = await ApiUtils.newDataset({
         datasetName: `${logDetails.name}_Dataset`,
