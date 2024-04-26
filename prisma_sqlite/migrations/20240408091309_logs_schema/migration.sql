@@ -5,8 +5,7 @@ CREATE TABLE "Logs" (
   "name" TEXT NOT NULL,
   "description" TEXT,
   "created_by" TEXT,
-  "pipeline_metadata" TEXT NOT NULL, 
-  "dataset_uuid" TEXT,
+  "pipeline_metadata" TEXT NOT NULL,
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,
   "deleted_at" DATETIME,
@@ -17,7 +16,6 @@ CREATE TABLE "Logs" (
   "total_accuracy" REAL NOT NULL DEFAULT 0,
   "total_rows" REAL NOT NULL DEFAULT 0,
   "fingerprint" TEXT NOT NULL,
-  CONSTRAINT "Logs_dataset_id_fkey" FOREIGN KEY ("dataset_uuid") REFERENCES "Dataset" ("uuid") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "Log_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "User"("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
