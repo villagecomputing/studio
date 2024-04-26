@@ -32,6 +32,10 @@ export const useExperimentTableContext = (
     useState<CurrentView | null>(null);
 
   useEffect(() => {
+    setSidePanelCurrentView(null);
+  }, [inspectorRowIndex]);
+
+  useEffect(() => {
     const parsedColumns = props.columnDefs.filter((column) => {
       return (
         column.type === Enum_Experiment_Column_Type.OUTPUT ||

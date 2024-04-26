@@ -34,6 +34,10 @@ export const useLogsTableContext = (
   const [sidePanelCurrentView, setSidePanelCurrentView] =
     useState<CurrentView | null>(null);
 
+  useEffect(() => {
+    setSidePanelCurrentView(null);
+  }, [inspectorRowIndex]);
+
   /**
    * Transform the input columns from
    * [{name: 'FIELD_NAME', value: 'FIELD_VALUE'}...]
