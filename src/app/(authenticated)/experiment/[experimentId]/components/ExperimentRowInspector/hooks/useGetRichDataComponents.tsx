@@ -7,18 +7,23 @@ import Image from 'next/image';
 import React, { useMemo } from 'react';
 import useSWR from 'swr';
 
-export const useGetRichDataComponents = (data: string): JSX.Element[] => {
+export const useGetRichDataComponents = (
+  data: string,
+  setCurrentViewContent: (currentViewContent: CurrentView) => void,
+): JSX.Element[] => {
   const { data: urls = [], isLoading } = useSWR(data, RichDataParser.parseData);
 
-  const viewImages = (images: string[]) => {
+  const viewImage = (images: string[], clickedImageIndex: number) => {
+    console.log('🚀 ~ viewImage ~ clickedImageIndex:', clickedImageIndex);
     if (!images.length) {
       return;
     }
     const contextImages: CurrentView = {
       content: images,
       type: SupportedFormat.IMAGE,
+      // TODO add clickedImageIndex
     };
-    console.log('Set view context', contextImages);
+    setCurrentViewContent(contextImages);
   };
 
   const viewPDF = (PDF: string) => {
@@ -29,7 +34,7 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
       content: PDF,
       type: SupportedFormat.PDF,
     };
-    console.log('Set view context', contextPDF);
+    setCurrentViewContent(contextPDF);
   };
 
   const richDataComponents = useMemo(() => {
@@ -59,7 +64,7 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
           <div
             className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center"
             key={index}
-            onClick={() => viewImages(imageTypeUrls)}
+            onClick={() => viewImage(imageTypeUrls, imageTypeUrls.indexOf(url))}
           >
             <Image
               src={url}

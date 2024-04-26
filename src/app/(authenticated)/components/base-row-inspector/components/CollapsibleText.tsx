@@ -1,31 +1,31 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 type CollapsibleTextProps = {
-  text: string;
+  content: string;
   maxNumberOfLines?: number;
   maxCharsPerLine?: number;
+  collapsed: boolean;
+  toggleCollapsed: () => void;
 };
 
 export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
-  text,
+  content,
   maxNumberOfLines = 10,
   maxCharsPerLine = 50,
+  collapsed,
+  toggleCollapsed,
 }) => {
   const minCollapsibleSize = useMemo(
     () => maxNumberOfLines * maxCharsPerLine,
     [maxNumberOfLines, maxCharsPerLine],
   );
-  const collapsible = text.length > minCollapsibleSize;
-  const [collapsed, setCollapsed] = useState(collapsible);
+  const collapsible = content.length > minCollapsibleSize;
 
-  const toggleCollapsed = () => setCollapsed((prev) => !prev);
-
-  const buttonLabel = collapsed ? 'View all' : 'Collapse';
+  const buttonLabel = collapsed ? 'Open' : 'Close';
 
   return (
     <>
@@ -46,7 +46,9 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
             ),
           }}
         >
-          {collapsed ? text.slice(0, minCollapsibleSize) + '...' : text}
+          {collapsed && collapsible
+            ? content.slice(0, minCollapsibleSize) + '...'
+            : content}
         </ReactMarkdown>
       </p>
       {collapsible && (
@@ -57,11 +59,6 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
           aria-expanded={!collapsed}
         >
           {buttonLabel}
-          {collapsed ? (
-            <ChevronRightIcon size={16} />
-          ) : (
-            <ChevronUpIcon size={16} />
-          )}
         </Button>
       )}
     </>
