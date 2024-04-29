@@ -5,7 +5,7 @@ import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
-import { Enum_Dynamic_dataset_metadata_fields } from '@/lib/services/ApiUtils/dataset/utils';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
 import PrismaClient from '@/lib/services/prisma';
 import { hasApiAccess, response } from '../../../utils';
@@ -148,6 +148,16 @@ export async function POST(
         columns: Object.keys(firstRowPayload.inputs),
         groundTruths: Object.keys(firstRowPayload.outputs),
       });
+
+      // Update logs table relationship to the dataset
+      await PrismaClient.logs.update({
+        where: { uuid: logsId },
+        data: {
+          Dataset: {
+            connect: { uuid: datasetId },
+          },
+        },
+      });
     }
 
     // Copy logs rows to dataset
@@ -165,9 +175,10 @@ export async function POST(
       },
     });
 
+    // Select newly created dataset rows
     const datasetRows = await DatabaseUtils.select<Record<string, string>>({
       tableName: datasetId,
-      selectFields: [Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX, 'id'],
+      selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_INDEX, 'id'],
       whereConditions: {
         logs_row_index: logsRowIndices,
       },

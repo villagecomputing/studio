@@ -16,7 +16,7 @@ export async function update<T>({
     Object.entries(setValues).map(([key, value]) => {
       // Prisma.raw will not escape the value.
       // Because we are putting the values between single quotes we need to escape any single quotes inside it
-      return Prisma.sql`${Prisma.raw(`"${key}" = '${value.replaceAll("'", "''")}'`)}`;
+      return Prisma.sql`${Prisma.raw(`"${key}" = '${value.toString().replaceAll("'", "''")}'`)}`;
     }),
   );
 
