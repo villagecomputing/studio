@@ -2,14 +2,75 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { getLogsDetails } from '@/lib/services/ApiUtils/logs/getLogsDetails';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
+import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
+
+import { Enum_Dynamic_dataset_metadata_fields } from '@/lib/services/ApiUtils/dataset/utils';
+import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
+import PrismaClient from '@/lib/services/prisma';
 import { hasApiAccess, response } from '../../../utils';
+import { logsStepInputs } from '../../insert/schema';
 import { logsToDatasetPayloadSchema } from './schema';
 
 const logger = loggerFactory.getLogger({
   type: LOGGER_TYPE.WINSTON,
   source: 'CopyLogsToDataset',
 });
+
+async function buildDatasetRowsPayload(
+  logsId: string,
+  logsRowIndices: string[],
+) {
+  // Get dynamic logs fields to select
+  const logsFields = await PrismaClient.logs_column.findMany({
+    where: {
+      logs_uuid: logsId,
+      OR: [
+        { type: Enum_Logs_Column_Type.INPUT },
+        { type: Enum_Logs_Column_Type.OUTPUT },
+        { type: Enum_Logs_Column_Type.TIMESTAMP },
+        { type: Enum_Logs_Column_Type.IDENTIFIER },
+      ],
+    },
+    select: {
+      field: true,
+      type: true,
+    },
+  });
+
+  // Get dynamic logs rows
+  const logsRowsToCopy = await DatabaseUtils.select<Record<string, string>>({
+    tableName: logsId,
+    selectFields: logsFields.map((field) => field.field),
+    whereConditions: {
+      id: logsRowIndices,
+    },
+  });
+
+  const rowsWithParsedInputs = logsRowsToCopy.map((row) => {
+    const outputs: Record<string, string> = {};
+    logsFields
+      .filter((field) => field.type === Enum_Logs_Column_Type.OUTPUT)
+      .forEach((field) => {
+        outputs[field.field] = row[field.field];
+      });
+
+    // Process logs row inputs field and convert to Record<string, string>
+    const inputs = logsStepInputs.parse(JSON.parse(row.inputs) || []);
+    const parsedInputs: Record<string, string> = Object.fromEntries(
+      inputs.map((input) => [input.name, input.value]),
+    );
+    return {
+      id: row.id,
+      created_at: row.created_at,
+      outputs,
+      inputs: parsedInputs,
+    };
+  });
+
+  return rowsWithParsedInputs;
+}
+
 /**
  * @swagger
  * /api/logs/{logsId}/copyToDataset:
@@ -28,6 +89,12 @@ const logger = loggerFactory.getLogger({
  *         schema:
  *           type: string
  *         description: The unique identifier of the logs view to retrieve.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LogsToDatasetPayloadSchema'
  *     responses:
  *       200:
  *         description: Logs data copied successfully.
@@ -61,27 +128,36 @@ export async function POST(
 
   try {
     const requestBody = await request.json();
-    const payload = logsToDatasetPayloadSchema.parse(requestBody);
+    const { datasetName, logsRowIndices } =
+      logsToDatasetPayloadSchema.parse(requestBody);
 
     const logDetails = await getLogsDetails(logsId);
 
+    // Get logs rows to copy and build the dataset payload
+    const datasetRowsPayload = await buildDatasetRowsPayload(
+      logsId,
+      logsRowIndices,
+    );
+
     // Ensure related dataset created
-    let datasetId = logDetails.Dataset?.[0].uuid;
+    let datasetId = logDetails.Dataset[0]?.uuid;
     if (!datasetId) {
+      const firstRowPayload = datasetRowsPayload[0];
       datasetId = await ApiUtils.newDataset({
-        datasetName: `${logDetails.name}_Dataset`,
-        columns: Object.keys(payload.rows[0].inputs),
-        groundTruths: Object.keys(payload.rows[0].outputs),
+        datasetName,
+        columns: Object.keys(firstRowPayload.inputs),
+        groundTruths: Object.keys(firstRowPayload.outputs),
       });
     }
 
-    // Adding rows to dynamic dataset
+    // Copy logs rows to dataset
     await ApiUtils.addData({
       datasetId,
       payload: {
-        datasetRows: payload.rows.map((row) => {
+        datasetRows: datasetRowsPayload.map((row) => {
           return {
-            logs_row_index: row.logs_row_index,
+            logs_row_index: row.id.toString(),
+            created_at: row.created_at,
             ...row.inputs,
             ...row.outputs,
           };
@@ -89,26 +165,41 @@ export async function POST(
       },
     });
 
-    const result = await DatabaseUtils.select<Record<string, string>>({
+    const datasetRows = await DatabaseUtils.select<Record<string, string>>({
       tableName: datasetId,
-      selectFields: ['logs_row_index', 'id'],
+      selectFields: [Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX, 'id'],
       whereConditions: {
-        logs_row_index: payload.rows.map((row) => row.logs_row_index),
+        logs_row_index: logsRowIndices,
       },
     });
 
+    // Update dataset row index in the dynamic logs table
+    await Promise.all(
+      datasetRows.map((row) => {
+        return DatabaseUtils.update({
+          tableName: logsId,
+          setValues: {
+            [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX]: row.id,
+          },
+          whereConditions: {
+            id: row.logs_row_index,
+          },
+        });
+      }),
+    );
+
     logger.info('Logs data copied', {
       elapsedTimeMs: performance.now() - startTime,
-      result,
+      datasetRows,
     });
 
     return Response.json({
       datasetUuid: datasetId,
       logsUuid: logsId,
-      logRowsToDatasetRows: result,
+      logRowsToDatasetRows: datasetRows,
     });
   } catch (error) {
-    logger.error('Error getting logs data', error);
+    logger.error('Error copying logs rows to dataset', { error });
     return response('Error processing request', 500);
   }
 }

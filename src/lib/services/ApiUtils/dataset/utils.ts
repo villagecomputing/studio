@@ -115,6 +115,8 @@ export function buildDatasetColumnDefinition(
           };
         case ENUM_Column_type.TIMESTAMP:
           return {
+            // type: ColumnType.TEXT,
+            // name: field.field,
             type: ColumnType.DATETIME,
             name: field.field,
             defaultValue: 'CURRENT_TIMESTAMP',

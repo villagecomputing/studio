@@ -10,6 +10,8 @@ export const ENTER = 'Enter';
 export const DISPLAYABLE_DATASET_COLUMN_TYPES = [
   ENUM_Column_type.GROUND_TRUTH,
   ENUM_Column_type.INPUT,
+  ENUM_Column_type.METADATA,
+  ENUM_Column_type.TIMESTAMP,
 ];
 export const DISPLAYABLE_EXPERIMENT_COLUMN_TYPES = [
   Enum_Experiment_Column_Type.STEP_METADATA,
