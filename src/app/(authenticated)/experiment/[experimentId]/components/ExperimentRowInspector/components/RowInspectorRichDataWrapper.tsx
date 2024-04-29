@@ -1,4 +1,4 @@
-import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
+import { CollapsibleText } from '@/app/(authenticated)/experiment/[experimentId]/components/ExperimentRowInspector/components/CollapsibleText';
 import { SupportedFormat } from '@/lib/services/RichDataParser/constants';
 import { CurrentView } from '@/lib/services/RichDataParser/types';
 import React from 'react';

@@ -32,7 +32,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
       <p
         className={cn(
           'text-base text-slateGray950',
-          collapsed && `line-clamp-[${maxNumberOfLines}]`,
+          collapsible && `line-clamp-[${maxNumberOfLines}]`,
         )}
       >
         <ReactMarkdown
@@ -46,9 +46,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
             ),
           }}
         >
-          {collapsed && collapsible
-            ? content.slice(0, minCollapsibleSize) + '...'
-            : content}
+          {collapsible ? content.slice(0, minCollapsibleSize) + '...' : content}
         </ReactMarkdown>
       </p>
       {collapsible && (
