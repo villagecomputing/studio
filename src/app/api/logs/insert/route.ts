@@ -121,11 +121,13 @@ export async function POST(request: Request) {
       total_cost: logsEntryDetails.total_cost + rowMetadata.row_cost,
       total_accuracy: logsEntryDetails.total_accuracy + (payload.accuracy ?? 0),
       total_rows: logsEntryDetails.total_rows + 1,
-      Dataset: {
-        connect: {
-          uuid: payload.dataset?.id,
-        },
-      },
+      Dataset: payload.dataset?.id
+        ? {
+            connect: {
+              uuid: payload.dataset.id,
+            },
+          }
+        : {},
     } satisfies Prisma.LogsUpdateInput;
     await PrismaClient.logs.update({
       where: { uuid: logsId },

@@ -22,11 +22,13 @@ export const getLogsUUID = async (
     description: payload.description,
     pipeline_metadata: JSON.stringify(payload.parameters),
     fingerprint: payload.fingerprint,
-    Dataset: {
-      connect: {
-        uuid: payload.dataset?.id,
-      },
-    },
+    Dataset: payload.dataset?.id
+      ? {
+          connect: {
+            uuid: payload.dataset.id,
+          },
+        }
+      : {},
   } satisfies Prisma.LogsCreateInput;
   const logs = await PrismaClient.logs.create({
     data: logsInput,
