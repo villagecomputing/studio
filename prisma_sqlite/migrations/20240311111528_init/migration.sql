@@ -28,7 +28,9 @@ CREATE TABLE "Dataset_column" (
         'GROUND_TRUTH',
         'GROUND_TRUTH_STATUS',
         'INPUT',
-        'IDENTIFIER'
+        'IDENTIFIER',
+        'TIMESTAMP',
+        'METADATA'
     ) ),
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
