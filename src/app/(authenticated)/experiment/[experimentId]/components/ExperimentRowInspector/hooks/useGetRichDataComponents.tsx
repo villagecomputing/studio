@@ -3,22 +3,26 @@ import RichDataParser, {
 } from '@/lib/services/RichDataParser';
 import { SupportedFormat } from '@/lib/services/RichDataParser/constants';
 import { CurrentView } from '@/lib/services/RichDataParser/types';
-import Image from 'next/image';
 import React, { useMemo } from 'react';
 import useSWR from 'swr';
+import { ImageWithFallback } from './ImageWithFallback';
 
-export const useGetRichDataComponents = (data: string): JSX.Element[] => {
+export const useGetRichDataComponents = (
+  data: string,
+  setCurrentViewContent: (currentViewContent: CurrentView) => void,
+): JSX.Element[] => {
   const { data: urls = [], isLoading } = useSWR(data, RichDataParser.parseData);
 
-  const viewImages = (images: string[]) => {
+  const viewImage = (images: string[], clickedImageIndex: number) => {
     if (!images.length) {
       return;
     }
     const contextImages: CurrentView = {
       content: images,
       type: SupportedFormat.IMAGE,
+      startIndex: clickedImageIndex,
     };
-    console.log('Set view context', contextImages);
+    setCurrentViewContent(contextImages);
   };
 
   const viewPDF = (PDF: string) => {
@@ -29,7 +33,7 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
       content: PDF,
       type: SupportedFormat.PDF,
     };
-    console.log('Set view context', contextPDF);
+    setCurrentViewContent(contextPDF);
   };
 
   const richDataComponents = useMemo(() => {
@@ -57,16 +61,17 @@ export const useGetRichDataComponents = (data: string): JSX.Element[] => {
       const component =
         format === SupportedFormat.IMAGE ? (
           <div
-            className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center"
+            className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center bg-gridHeaderColor"
             key={index}
-            onClick={() => viewImages(imageTypeUrls)}
+            onClick={() => viewImage(imageTypeUrls, imageTypeUrls.indexOf(url))}
           >
-            <Image
+            <ImageWithFallback
               src={url}
               alt={url}
-              width={100}
-              height={100}
-              className="h-auto max-h-full w-auto max-w-full"
+              width={1000}
+              height={1000}
+              fallbackSrc={'/image-failed-to-load.svg'}
+              className="h-auto max-h-full w-auto min-w-6 max-w-full object-contain"
             />
           </div>
         ) : (

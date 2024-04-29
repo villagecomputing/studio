@@ -11,7 +11,13 @@ const RowInspectorBodyRawData = ({
   context: ExperimentTableContext | LogsTableContext;
   datasetId?: string;
 }) => {
-  const { rows, inspectorRowIndex, columnDefs } = context;
+  const {
+    rows,
+    inspectorRowIndex,
+    columnDefs,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
+  } = context;
 
   if (inspectorRowIndex === null) {
     return null;
@@ -47,7 +53,12 @@ const RowInspectorBodyRawData = ({
                 {colDef.headerName}:
               </span>
               <RowInspectorRichDataWrapper
-                data={(currentRow[colField] as string) || '-'}
+                title={colDef.headerName}
+                content={(currentRow[colField] as string) || '-'}
+                currentViewContent={sidePanelCurrentView}
+                setCurrentViewContent={(currentView) =>
+                  setSidePanelCurrentView(currentView)
+                }
               />
             </div>
           );

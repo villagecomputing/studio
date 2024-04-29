@@ -1,3 +1,4 @@
+import { CurrentView } from '@/lib/services/RichDataParser/types';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
@@ -72,6 +73,8 @@ export type ExperimentTableContext = {
   columnDefs: AGGridDataset['columnDefs'];
   displayableColumnDefs: AGGridDataset['columnDefs'];
   gridRef: MutableRefObject<AgGridReactType<ExperimentRow> | undefined>;
+  sidePanelCurrentView: CurrentView | null;
+  setSidePanelCurrentView: Dispatch<SetStateAction<CurrentView | null>>;
 };
 export type StepsMetadataPercentiles = {
   [stepField: string]: {

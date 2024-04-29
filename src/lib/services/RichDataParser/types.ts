@@ -13,9 +13,15 @@ export type MimeTypeToComponent = {
 export type CurrentView =
   | {
       content: string;
-      type: SupportedFormat.PDF | SupportedFormat.MARKDOWN;
+      type: SupportedFormat.PDF;
     }
   | {
+      content: string;
+      title: string;
+      type: SupportedFormat.MARKDOWN;
+    }
+  | {
+      startIndex: number;
       content: string[];
       type: SupportedFormat.IMAGE;
     };

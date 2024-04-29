@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import ExperimentRowInspectorView from './ExperimentRowInspectorView';
+import ExperimentLeftSidePanel from './components/rich-data-left-side-panel/ExperimentLeftSidePanel';
 import {
   ExperimentRowInspectorContext,
   ExperimentRowInspectorProps,
@@ -27,6 +28,7 @@ export default function ExperimentRowInspector(
         ...props.context,
       }}
     >
+      <ExperimentLeftSidePanel />
       <ExperimentRowInspectorView />
     </ExperimentRowInspectorContext.Provider>
   );
