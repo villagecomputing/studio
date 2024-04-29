@@ -9,8 +9,9 @@ import PrismaClient from '../../prisma';
 type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 
-export enum Enum_Dynamic_dataset_metadata_fields {
+export enum Enum_Dynamic_dataset_static_fields {
   LOGS_ROW_INDEX = 'logs_row_index',
+  CREATED_AT = 'created_at',
 }
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
@@ -39,8 +40,8 @@ export function buildDatasetFields(
       type: ENUM_Column_type.IDENTIFIER,
     },
     {
-      name: 'created_at',
-      field: 'created_at',
+      name: Enum_Dynamic_dataset_static_fields.CREATED_AT,
+      field: Enum_Dynamic_dataset_static_fields.CREATED_AT,
       index: -1,
       type: ENUM_Column_type.TIMESTAMP,
     },
@@ -75,8 +76,8 @@ export function buildDatasetFields(
   });
 
   datasetFields.push({
-    name: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
-    field: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
+    name: Enum_Dynamic_dataset_static_fields.LOGS_ROW_INDEX,
+    field: Enum_Dynamic_dataset_static_fields.LOGS_ROW_INDEX,
     type: ENUM_Column_type.METADATA,
     index: -1,
   });
@@ -115,8 +116,6 @@ export function buildDatasetColumnDefinition(
           };
         case ENUM_Column_type.TIMESTAMP:
           return {
-            // type: ColumnType.TEXT,
-            // name: field.field,
             type: ColumnType.DATETIME,
             name: field.field,
             defaultValue: 'CURRENT_TIMESTAMP',
