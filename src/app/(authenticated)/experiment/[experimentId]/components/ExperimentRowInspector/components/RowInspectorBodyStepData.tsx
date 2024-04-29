@@ -1,17 +1,23 @@
-import { CollapsibleText } from '@/app/(authenticated)/components/base-row-inspector/components/CollapsibleText';
 import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { useMemo } from 'react';
 import { ExperimentTableContext, StepMetadataColumn } from '../../../types';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
+import RowInspectorRichDataWrapper from './RowInspectorRichDataWrapper';
 
 const RowInspectorBodyStepData = (props: {
   stepMetadataColumn: StepMetadataColumn;
   context: ExperimentTableContext | LogsTableContext;
 }) => {
   const { stepMetadataColumn, context } = props;
-  const { rows, inspectorRowIndex, columnDefs, stepsMetadataPercentiles } =
-    context;
+  const {
+    rows,
+    inspectorRowIndex,
+    columnDefs,
+    stepsMetadataPercentiles,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
+  } = context;
 
   const currentRow =
     inspectorRowIndex !== null ? rows[inspectorRowIndex] : undefined;
@@ -75,7 +81,14 @@ const RowInspectorBodyStepData = (props: {
             )}
           </div>
           <div className="flex flex-col gap-1 border-l border-border px-2">
-            <CollapsibleText text={stepMetadata.prompt} />
+            <RowInspectorRichDataWrapper
+              title={'Input Prompt'}
+              content={stepMetadata.prompt}
+              currentViewContent={sidePanelCurrentView}
+              setCurrentViewContent={(currentView) =>
+                setSidePanelCurrentView(currentView)
+              }
+            />
           </div>
         </div>
       )}
@@ -107,8 +120,13 @@ const RowInspectorBodyStepData = (props: {
               <span className={'text-sm text-muted-foreground'}>
                 {outputColumn.headerName}:
               </span>
-              <CollapsibleText
-                text={(currentRow[outputColumnField] as string) || '-'}
+              <RowInspectorRichDataWrapper
+                title={outputColumn.headerName}
+                content={(currentRow[outputColumnField] as string) || '-'}
+                currentViewContent={sidePanelCurrentView}
+                setCurrentViewContent={(currentView) =>
+                  setSidePanelCurrentView(currentView)
+                }
               />
             </div>
           );
