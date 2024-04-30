@@ -47,7 +47,7 @@ export function buildLogsFields(
     },
     {
       name: Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID,
-      field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID,
+      field: Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID,
       type: Enum_Logs_Column_Type.METADATA,
       value: payload.dataset?.row_id,
     },
