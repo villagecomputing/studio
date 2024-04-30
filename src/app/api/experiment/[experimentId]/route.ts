@@ -1,7 +1,8 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
-import { hasApiAccess, response } from '../../utils';
+import { response } from '../../utils';
 import { experimentViewResponseSchema } from './schema';
 
 const logger = loggerFactory.getLogger({
@@ -43,49 +44,51 @@ export async function GET(
   request: Request,
   { params }: { params: { experimentId: string } },
 ) {
-  const startTime = performance.now();
-  if (!(await hasApiAccess(request))) {
-    logger.warn('Unauthorized request');
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (userId) => {
+    const startTime = performance.now();
 
-  try {
-    let experimentId = params.experimentId;
     try {
-      experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
-    } catch (error) {
-      logger.warn('Invalid experiment id', { experimentId, error });
-      return response('Invalid experiment id', 400);
-    }
-    const result = await ApiUtils.getExperiment(experimentId);
-    const experiment = {
-      ...result,
-      id: createFakeId(result.name, result.id),
-      dataset: {
-        ...result.dataset,
-        id: createFakeId(result.dataset.name, result.dataset.id),
-      },
-    };
+      let experimentId = params.experimentId;
+      try {
+        experimentId = getUuidFromFakeId(
+          experimentId,
+          UUIDPrefixEnum.EXPERIMENT,
+        );
+      } catch (error) {
+        logger.warn('Invalid experiment id', { experimentId, error });
+        return response('Invalid experiment id', 400);
+      }
+      const result = await ApiUtils.getExperiment(experimentId, userId);
+      const experiment = {
+        ...result,
+        id: createFakeId(result.name, result.id),
+        dataset: {
+          ...result.dataset,
+          id: createFakeId(result.dataset.name, result.dataset.id),
+        },
+      };
 
-    const parsedExperiment = experimentViewResponseSchema.safeParse(experiment);
-    if (!parsedExperiment.success) {
-      logger.error('Experiment view response validation failed', {
-        experimentId,
-        error: parsedExperiment.error,
+      const parsedExperiment =
+        experimentViewResponseSchema.safeParse(experiment);
+      if (!parsedExperiment.success) {
+        logger.error('Experiment view response validation failed', {
+          experimentId,
+          error: parsedExperiment.error,
+        });
+        return response('Invalid response experiment view type', 500);
+      }
+
+      const { rows, ...experimentSummary } = experiment;
+      logger.info('Experiment data retrieved', {
+        elapsedTimeMs: performance.now() - startTime,
+        ...experimentSummary,
+        rowCount: rows.length,
       });
-      return response('Invalid response experiment view type', 500);
+
+      return Response.json(experiment);
+    } catch (error) {
+      logger.error('Error in getting experiment', error);
+      return response('Error processing request', 500);
     }
-
-    const { rows, ...experimentSummary } = experiment;
-    logger.info('Experiment data retrieved', {
-      elapsedTimeMs: performance.now() - startTime,
-      ...experimentSummary,
-      rowCount: rows.length,
-    });
-
-    return Response.json(experiment);
-  } catch (error) {
-    logger.error('Error in getting experiment', error);
-    return response('Error processing request', 500);
-  }
+  });
 }

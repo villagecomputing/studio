@@ -2,11 +2,11 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
 
-export async function getUser(
+export async function getUserByUserId(
   userId: string,
 ): Promise<ResultSchemaType[ApiEndpoints.userView]> {
   if (!userId) {
-    throw new Error('DatasetId is required');
+    throw new Error('User Id is required');
   }
 
   const userSelect = {

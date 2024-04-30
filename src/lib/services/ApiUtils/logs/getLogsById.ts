@@ -9,14 +9,18 @@ import { getLogsDetails } from './getLogsDetails';
 
 export async function getLogsById(
   logsId: string,
+  userId: string | null,
 ): Promise<ResultSchemaType[ApiEndpoints.logsView]> {
   if (!logsId) {
     throw new Error('experimentId is required');
   }
 
-  const logsDetails = await getLogsDetails(logsId);
+  const logsDetails = await getLogsDetails(logsId, userId);
   if (!logsDetails) {
     throw new Error('No logs for id');
+  }
+  if (userId && !logsDetails) {
+    throw new Error('Invalid logs id');
   }
   const logsContent = await getDynamicTableContent(logsId, {
     field: 'created_at',

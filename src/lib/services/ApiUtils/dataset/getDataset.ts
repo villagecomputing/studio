@@ -13,7 +13,7 @@ import PrismaClient from '../../prisma';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getGroundTruthStatusColumnName } from './utils';
 
-async function getDatasetDetails(datasetId: string) {
+async function getDatasetDetails(datasetId: string, userId: string | null) {
   const columnSelect = {
     id: true,
     name: true,
@@ -31,7 +31,11 @@ async function getDatasetDetails(datasetId: string) {
 
   try {
     const result = await PrismaClient.dataset.findUniqueOrThrow({
-      where: { uuid: datasetId, deleted_at: null },
+      where: {
+        uuid: datasetId,
+        deleted_at: null,
+        ...(userId ? { created_by: userId } : {}),
+      },
       select: datasetSelect,
     });
 
@@ -55,16 +59,20 @@ async function getDatasetContent(datasetId: string) {
 
 export async function getDataset(
   datasetId: string,
+  userId: string | null,
 ): Promise<ResultSchemaType[ApiEndpoints.datasetView]> {
   if (!datasetId) {
     throw new Error('DatasetId is required');
   }
   // Get database details about dataset
-  const datasetDetails = await getDatasetDetails(datasetId);
+  const datasetDetails = await getDatasetDetails(datasetId, userId);
   if (!datasetDetails) {
     throw new Error('No dataset for id');
   }
 
+  if (userId && !datasetDetails) {
+    throw new Error('Invalid dataset id');
+  }
   // Get database dataset content
   const datasetContent = await getDatasetContent(datasetId);
 
