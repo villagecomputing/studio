@@ -122,6 +122,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "logsUuid": {
+                        "type": "string"
                     }
                 },
                 "required": ["datasetName", "columns", "rows"]
