@@ -7,6 +7,7 @@ import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
+import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
 import PrismaClient from '@/lib/services/prisma';
 import { hasApiAccess, response } from '../../../utils';
 import { logsStepInputs } from '../../insert/schema';
@@ -44,7 +45,7 @@ async function buildDatasetRowsPayload(
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
       id: logsRowIndices,
-      [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX]: null,
+      [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: null,
     },
   });
 
@@ -175,7 +176,7 @@ export async function POST(
       payload: {
         datasetRows: datasetRowsPayload.map((row) => {
           return {
-            logs_row_index: row.id.toString(),
+            logs_row_id: row.id.toString(),
             created_at: row.created_at,
             ...row.inputs,
             ...row.outputs,
@@ -187,9 +188,9 @@ export async function POST(
     // Select newly created dataset rows
     const datasetRows = await DatabaseUtils.select<Record<string, string>>({
       tableName: datasetId,
-      selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_INDEX, 'id'],
+      selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID, 'id'],
       whereConditions: {
-        logs_row_index: logsRowIndices,
+        logs_row_id: logsRowIndices,
       },
     });
 
@@ -199,10 +200,10 @@ export async function POST(
         return DatabaseUtils.update({
           tableName: logsId,
           setValues: {
-            [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX]: row.id,
+            [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID]: row.id,
           },
           whereConditions: {
-            id: row.logs_row_index,
+            id: row.logs_row_id,
           },
         });
       }),

@@ -88,6 +88,7 @@ const config = {
       },
       width: {
         inspectorView: 'var(--inspectorViewWidth)',
+        sidePanel: 'var(--sidePanelWidth)',
       },
       maxWidth: {
         inspectorView: 'var(--inspectorViewWidth)',
