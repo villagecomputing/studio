@@ -933,7 +933,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "logs_row_index": {
+                "logs_row_id": {
                   "type": "integer"
                 },
                 "id": {
@@ -941,7 +941,7 @@
                 }
               },
               "required": [
-                "logs_row_index",
+                "logs_row_id",
                 "id"
               ]
             }
