@@ -38,7 +38,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
 
   return (
     <>
-      <p className={cn('text-base text-slateGray950')}>
+      <div className={cn('text-base text-slateGray950')}>
         {JSONText && (
           <pre>{collapsible ? JSONText.slice(0, 100) + '...' : JSONText}</pre>
         )}
@@ -59,7 +59,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
               : content}
           </ReactMarkdown>
         )}
-      </p>
+      </div>
       {collapsible && (
         <Button
           variant={'secondary'}
