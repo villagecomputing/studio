@@ -10,12 +10,10 @@ export async function getDynamicTableContent(
   }
 
   try {
-    const result = await DatabaseUtils.select<Record<string, unknown>>(
+    const result = await DatabaseUtils.select<Record<string, unknown>>({
       tableName,
-      undefined,
-      undefined,
-      sortBy ?? { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
-    );
+      orderBy: sortBy ?? { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
+    });
     // Convert all values in each record to strings
     const stringifiedResult = result.map((record) =>
       Object.fromEntries(

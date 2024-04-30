@@ -900,6 +900,58 @@
         "required": [
           "api_key"
         ]
+      },
+      "LogsToDatasetPayloadSchema": {
+        "type": "object",
+        "properties": {
+          "datasetName": {
+            "type": "string"
+          },
+          "logsRowIndices": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "datasetName",
+          "logsRowIndices"
+        ]
+      },
+      "LogsToDatasetViewResponse": {
+        "type": "object",
+        "properties": {
+          "datasetUuid": {
+            "type": "string"
+          },
+          "logsUuid": {
+            "type": "string"
+          },
+          "logRowsToDatasetRows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "logs_row_id": {
+                  "type": "integer"
+                },
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "logs_row_id",
+                "id"
+              ]
+            }
+          }
+        },
+        "required": [
+          "datasetUuid",
+          "logsUuid",
+          "logRowsToDatasetRows"
+        ]
       }
     }
   },
@@ -915,6 +967,10 @@
     {
       "name": "User",
       "description": "Operations related to user including creating, getting user data, permissions and API keys"
+    },
+    {
+      "name": "Logs",
+      "description": "Operations related to logs including creating, getting, listing log data and copying to dataset"
     }
   ],
   "paths": {
@@ -1354,6 +1410,60 @@
           },
           "400": {
             "description": "Invalid dataset id"
+          },
+          "500": {
+            "description": "Error processing request"
+          }
+        }
+      }
+    },
+    "/api/logs/{logsId}/copyToDataset": {
+      "post": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Copies logs to a dataset.",
+        "description": "Copies the specified rows from a dynamic logs table to a dataset table. If the dataset table does not exist it creates it.",
+        "operationId": "CopyLogsToDataset",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "logsId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the logs view to retrieve."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogsToDatasetPayloadSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logs data copied successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsToDatasetViewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid logs id"
           },
           "500": {
             "description": "Error processing request"

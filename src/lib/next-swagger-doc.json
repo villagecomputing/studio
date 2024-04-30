@@ -371,43 +371,42 @@
                 },
                 "required": ["name", "metadata", "outputs"]
               },
-              "ExperimentStepMetadata": {
-                "type": "object",
-                "properties": {
-                    "latency": {
-                        "type": "number"
-                    },
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "error": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "input_tokens": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "output_tokens": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "input_cost": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "output_cost": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "prompt": {
-                        "type": "string",
-                        "nullable": true
-                    }
+            "ExperimentStepMetadata": {
+            "type": "object",
+            "properties": {
+                "latency": {
+                    "type": "number"
                 },
-                "required": ["latency", "success"]
-              },
-
+                "success": {
+                    "type": "boolean"
+                },
+                "error": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "input_tokens": {
+                    "type": "number",
+                    "nullable": true
+                },
+                "output_tokens": {
+                    "type": "number",
+                    "nullable": true
+                },
+                "input_cost": {
+                    "type": "number",
+                    "nullable": true
+                },
+                "output_cost": {
+                    "type": "number",
+                    "nullable": true
+                },
+                "prompt": {
+                    "type": "string",
+                    "nullable": true
+                }
+            },
+            "required": ["latency", "success"]
+            },
             "NewExperimentPayload": {
                 "type": "object",
                 "properties": {
@@ -772,6 +771,48 @@
                     }
                 },
                 "required": ["api_key"]
+            },
+            "LogsToDatasetPayloadSchema": {
+                "type": "object",
+                "properties": {
+                    "datasetName": {
+                        "type": "string"
+                    },
+                    "logsRowIndices": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "required": ["datasetName", "logsRowIndices"]
+            },
+            "LogsToDatasetViewResponse": {
+                "type": "object",
+                "properties": {
+                    "datasetUuid": {
+                        "type": "string"
+                    },
+                    "logsUuid": {
+                        "type": "string"
+                    },
+                    "logRowsToDatasetRows": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "logs_row_id": {
+                                    "type": "integer"
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["logs_row_id", "id"]
+                        }
+                    }
+                },
+                "required": ["datasetUuid", "logsUuid", "logRowsToDatasetRows"]
             }
         }
     },
@@ -787,6 +828,10 @@
         {
             "name":"User",
             "description": "Operations related to user including creating, getting user data, permissions and API keys"
+        },
+        {
+            "name":"Logs",
+            "description": "Operations related to logs including creating, getting, listing log data and copying to dataset"
         }
       ]
     }

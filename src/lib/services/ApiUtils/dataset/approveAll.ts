@@ -12,9 +12,12 @@ export async function approveAll(
     await getDatasetOrThrow(datasetId);
     const groundTruthColumnField = await getGTColumnField(datasetId);
 
-    await DatabaseUtils.update(datasetId, {
-      [getGroundTruthStatusColumnName(groundTruthColumnField)]:
-        ENUM_Ground_truth_status.APPROVED,
+    await DatabaseUtils.update({
+      tableName: datasetId,
+      setValues: {
+        [getGroundTruthStatusColumnName(groundTruthColumnField)]:
+          ENUM_Ground_truth_status.APPROVED,
+      },
     });
   } catch (error) {
     console.error(error);

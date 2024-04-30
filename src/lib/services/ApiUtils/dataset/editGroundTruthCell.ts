@@ -25,8 +25,12 @@ export async function editGroundTruthCell(
       updateData[groundTruthColumnField] = content;
     }
 
-    const updated = await DatabaseUtils.update(datasetId, updateData, {
-      id: rowId,
+    const updated = await DatabaseUtils.update({
+      tableName: datasetId,
+      setValues: updateData,
+      whereConditions: {
+        id: rowId,
+      },
     });
 
     return updated;

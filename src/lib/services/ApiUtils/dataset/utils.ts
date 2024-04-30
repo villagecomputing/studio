@@ -9,8 +9,9 @@ import PrismaClient from '../../prisma';
 type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 
-export enum Enum_Dynamic_dataset_metadata_fields {
+export enum Enum_Dynamic_dataset_static_fields {
   LOGS_ROW_ID = 'logs_row_id',
+  CREATED_AT = 'created_at',
 }
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
@@ -39,8 +40,8 @@ export function buildDatasetFields(
       type: ENUM_Column_type.IDENTIFIER,
     },
     {
-      name: 'created_at',
-      field: 'created_at',
+      name: Enum_Dynamic_dataset_static_fields.CREATED_AT,
+      field: Enum_Dynamic_dataset_static_fields.CREATED_AT,
       index: -1,
       type: ENUM_Column_type.TIMESTAMP,
     },
@@ -75,8 +76,8 @@ export function buildDatasetFields(
   });
 
   datasetFields.push({
-    name: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_ID,
-    field: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_ID,
+    name: Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID,
+    field: Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID,
     type: ENUM_Column_type.METADATA,
     index: -1,
   });

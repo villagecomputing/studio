@@ -4,6 +4,7 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
+import { Enum_Dynamic_dataset_static_fields } from './utils';
 
 export async function addData({
   datasetId,
@@ -42,11 +43,20 @@ export async function addData({
 
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {
-      const sanitizedRow: Record<string, string> = {};
+      const sanitizedRow: Record<string, string | Date> = {};
 
       existingColumns.forEach((existingColumn) => {
-        sanitizedRow[existingColumn.field] =
-          datasetRow[existingColumn.name] || '';
+        if (
+          existingColumn.field !== Enum_Dynamic_dataset_static_fields.CREATED_AT
+        ) {
+          sanitizedRow[existingColumn.field] =
+            datasetRow[existingColumn.name] || '';
+          return;
+        }
+
+        sanitizedRow[existingColumn.field] = new Date(
+          datasetRow[existingColumn.name] || Date.now(),
+        );
       });
 
       return sanitizedRow;
