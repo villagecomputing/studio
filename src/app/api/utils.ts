@@ -20,7 +20,7 @@ export function response(message: string, status: 200 | 400 | 401 | 500 = 200) {
     status,
   });
 }
-
+// THIS WILL BE REMOVED
 export async function hasApiAccess(request: Request) {
   try {
     if (!isAuthEnabled()) {
