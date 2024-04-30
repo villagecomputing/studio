@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -19,6 +19,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
   collapsed,
   toggleCollapsed,
 }) => {
+  const [JSONText, setJSONText] = useState<string | undefined>();
   const minCollapsibleSize = useMemo(
     () => maxNumberOfLines * maxCharsPerLine,
     [maxNumberOfLines, maxCharsPerLine],
@@ -27,27 +28,37 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
 
   const buttonLabel = collapsed ? 'Open' : 'Close';
 
+  useEffect(() => {
+    try {
+      setJSONText(JSON.stringify(JSON.parse(content), null, 2));
+    } catch (error) {
+      setJSONText(undefined);
+    }
+  }, [content]);
+
   return (
     <>
-      <p
-        className={cn(
-          'text-base text-slateGray950',
-          collapsible && `line-clamp-[${maxNumberOfLines}]`,
+      <p className={cn('text-base text-slateGray950')}>
+        {JSONText && (
+          <pre>{collapsible ? JSONText.slice(0, 100) + '...' : JSONText}</pre>
         )}
-      >
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            a: ({ ...props }) => (
-              <a
-                {...props}
-                className="mb-2 break-all text-primary hover:underline"
-              />
-            ),
-          }}
-        >
-          {collapsible ? content.slice(0, minCollapsibleSize) + '...' : content}
-        </ReactMarkdown>
+        {!JSONText && (
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ ...props }) => (
+                <a
+                  {...props}
+                  className="mb-2 break-all text-primary hover:underline"
+                />
+              ),
+            }}
+          >
+            {collapsible
+              ? content.slice(0, minCollapsibleSize) + '...'
+              : content}
+          </ReactMarkdown>
+        )}
       </p>
       {collapsible && (
         <Button
