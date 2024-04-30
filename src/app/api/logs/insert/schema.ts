@@ -11,7 +11,7 @@ export const logsStepInputs = z.array(
 export const dataset = z
   .object({
     id: z.string(),
-    row_index: z.string(),
+    row_id: z.string(),
   })
   .optional();
 

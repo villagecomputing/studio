@@ -46,10 +46,10 @@ export function buildLogsFields(
       value: JSON.stringify(payload.inputs),
     },
     {
-      name: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
-      field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX,
+      name: Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID,
+      field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID,
       type: Enum_Logs_Column_Type.METADATA,
-      value: payload.dataset?.row_index,
+      value: payload.dataset?.row_id,
     },
     ...payload.steps.flatMap((step) => {
       rowLatency += step.metadata.latency;
