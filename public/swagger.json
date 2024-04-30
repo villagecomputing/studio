@@ -769,6 +769,9 @@
           },
           "latencyP75": {
             "type": "number"
+          },
+          "datasetUuid": {
+            "type": "string"
           }
         },
         "required": [
