@@ -7,6 +7,7 @@ import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
+import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
 import PrismaClient from '@/lib/services/prisma';
 import { hasApiAccess, response } from '../../../utils';
 import { logsStepInputs } from '../../insert/schema';
@@ -44,6 +45,7 @@ async function buildDatasetRowsPayload(
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
       id: logsRowIndices,
+      [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: null,
     },
   });
 
@@ -138,6 +140,14 @@ export async function POST(
       logsId,
       logsRowIndices,
     );
+
+    if (datasetRowsPayload.length === 0) {
+      logger.debug(
+        'No valid rows to copy. Specified row indices are either already copied or do not exist in the logs table. ',
+        { logDetails, logsRowIndices },
+      );
+      return response('No valid rows to copy', 200);
+    }
 
     // Ensure related dataset created
     let datasetId = logDetails.Dataset[0]?.uuid;
