@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import LogsLeftSidePanel from './LogsLeftSidePanel';
 import LogsRowInspectorView from './LogsRowInspectorView';
 import { LogsRowInspectorContext, LogsRowInspectorProps } from './types';
 
@@ -22,6 +23,7 @@ export default function LogsRowInspector(props: LogsRowInspectorProps) {
         ...props.context,
       }}
     >
+      <LogsLeftSidePanel />
       <LogsRowInspectorView />
     </LogsRowInspectorContext.Provider>
   );

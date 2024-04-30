@@ -1,3 +1,4 @@
+import { CurrentView } from '@/lib/services/RichDataParser/types';
 import { ENUM_Column_type, Enum_Experiment_Column_Type } from '@/lib/types';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { compact } from 'lodash';
@@ -14,7 +15,6 @@ export const useExperimentTableContext = (
   props: FetchExperimentResult,
 ): ExperimentTableContext => {
   const gridRef = useRef<AgGridReactType<ExperimentRow>>();
-  const [rows] = useState<AGGridExperiment['rowData']>(props.rowData);
   const [stepMetadataColumns, setStepMetadataColumn] = useState<
     StepMetadataColumn[]
   >([]);
@@ -27,10 +27,15 @@ export const useExperimentTableContext = (
   const [inspectorRowIndex, setInspectorRowIndex] = useState<number | null>(
     null,
   );
+  const [sidePanelCurrentView, setSidePanelCurrentView] =
+    useState<CurrentView | null>(null);
+
+  useEffect(() => {
+    setSidePanelCurrentView(null);
+  }, [inspectorRowIndex]);
 
   useEffect(() => {
     const parsedColumns = props.columnDefs.filter((column) => {
-      // TODO Add the aggregated Meta column here as well
       return (
         column.type === Enum_Experiment_Column_Type.OUTPUT ||
         column.type === ENUM_Column_type.INPUT ||
@@ -88,9 +93,11 @@ export const useExperimentTableContext = (
     stepMetadataColumns,
     inspectorRowIndex,
     gridRef,
-    rows,
+    rows: props.rowData,
     columnDefs,
     displayableColumnDefs,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
     setInspectorRowIndex,
   };
 };

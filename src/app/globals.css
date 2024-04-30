@@ -30,6 +30,7 @@
     --radius: 0.5rem;
 
     --inspectorViewWidth: 600px;
+    --sidePanelWidth: 672px;
   }
 
   .dark {
@@ -73,4 +74,8 @@
 
 .small-dataset-table-view {
   max-width: calc(100% - var(--inspectorViewWidth));
+}
+
+.side-panel-shadow {
+  right: calc(var(--inspectorViewWidth) + var(--sidePanelWidth));
 }

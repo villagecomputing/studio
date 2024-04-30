@@ -2,6 +2,7 @@ import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { ENUM_Column_type } from '@/lib/types';
 import Link from 'next/link';
 import { ExperimentTableContext } from '../../../types';
+import RowInspectorRichDataWrapper from './RowInspectorRichDataWrapper';
 
 const RowInspectorBodyRawData = ({
   context,
@@ -10,7 +11,13 @@ const RowInspectorBodyRawData = ({
   context: ExperimentTableContext | LogsTableContext;
   datasetId?: string;
 }) => {
-  const { rows, inspectorRowIndex, columnDefs } = context;
+  const {
+    rows,
+    inspectorRowIndex,
+    columnDefs,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
+  } = context;
 
   if (inspectorRowIndex === null) {
     return null;
@@ -45,9 +52,14 @@ const RowInspectorBodyRawData = ({
               <span className={'text-sm text-muted-foreground'}>
                 {colDef.headerName}:
               </span>
-              <p className="text-base text-slateGray950">
-                {(currentRow[colField] as string) || '-'}
-              </p>
+              <RowInspectorRichDataWrapper
+                title={colDef.headerName}
+                content={(currentRow[colField] as string) || '-'}
+                currentViewContent={sidePanelCurrentView}
+                setCurrentViewContent={(currentView) =>
+                  setSidePanelCurrentView(currentView)
+                }
+              />
             </div>
           );
         })}
