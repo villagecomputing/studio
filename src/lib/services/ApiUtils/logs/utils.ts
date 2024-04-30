@@ -18,6 +18,10 @@ type LogsField = {
   type: Enum_Logs_Column_Type;
 };
 
+export enum Enum_Dynamic_logs_metadata_fields {
+  DATASET_ROW_ID = 'dataset_row_id',
+}
+
 export function buildLogsFields(
   payload: PayloadSchemaType[ApiEndpoints.logsInsert],
 ): LogsField[] {

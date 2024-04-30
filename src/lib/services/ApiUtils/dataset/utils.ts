@@ -10,7 +10,7 @@ type DatasetField = Pick<Dataset_column, 'name' | 'field' | 'index' | 'type'>;
 export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 
 export enum Enum_Dynamic_dataset_metadata_fields {
-  LOGS_ROW_INDEX = 'logs_row_index',
+  LOGS_ROW_ID = 'logs_row_id',
 }
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
@@ -75,8 +75,8 @@ export function buildDatasetFields(
   });
 
   datasetFields.push({
-    name: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
-    field: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_INDEX,
+    name: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_ID,
+    field: Enum_Dynamic_dataset_metadata_fields.LOGS_ROW_ID,
     type: ENUM_Column_type.METADATA,
     index: -1,
   });

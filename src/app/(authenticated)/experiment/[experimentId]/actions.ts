@@ -61,7 +61,7 @@ export const fetchExperiment = async (
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row) => {
           const datasetRowId = Number(
-            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX],
+            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID],
           );
           return {
             ...row,
