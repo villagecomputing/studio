@@ -10,7 +10,7 @@ export async function newDataset(
   payload: PayloadSchemaType[ApiEndpoints.datasetNew],
 ) {
   const params = newDatasetPayloadSchema.parse(payload);
-  const { datasetName, columns, groundTruths, logsUuid } = params;
+  const { datasetName, columns, groundTruths } = params;
   const datasetId = generateUUID(UUIDPrefixEnum.DATASET);
 
   // Build the dataset fields based on columns and groundTruths
@@ -25,13 +25,6 @@ export async function newDataset(
     data: {
       uuid: datasetId,
       name: datasetName,
-      Logs: logsUuid
-        ? {
-            connect: {
-              uuid: logsUuid,
-            },
-          }
-        : {},
     },
   });
 

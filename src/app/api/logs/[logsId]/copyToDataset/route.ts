@@ -44,6 +44,7 @@ async function buildDatasetRowsPayload(
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
       id: logsRowIndices,
+      [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_INDEX]: null,
     },
   });
 
@@ -138,6 +139,14 @@ export async function POST(
       logsId,
       logsRowIndices,
     );
+
+    if (datasetRowsPayload.length === 0) {
+      logger.debug(
+        'No valid rows to copy. Specified row indices are either already copied or do not exist in the logs table. ',
+        { logDetails, logsRowIndices },
+      );
+      return response('No valid rows to copy', 200);
+    }
 
     // Ensure related dataset created
     let datasetId = logDetails.Dataset[0]?.uuid;

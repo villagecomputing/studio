@@ -80,7 +80,10 @@ export async function assertUserExists(externalId: string) {
   });
 }
 
-export function buildPrismaWhereClause(whereConditions: WhereConditions) {
+export function buildPrismaWhereClause(
+  whereConditions: WhereConditions,
+  operator: ' AND ' | ' OR ' = ' AND ',
+) {
   const whereClauses = Object.entries(whereConditions).map(([key, value]) => {
     if (value === null) {
       return Prisma.sql`${Prisma.raw(`"${key}" IS NULL`)}`;
@@ -97,5 +100,5 @@ export function buildPrismaWhereClause(whereConditions: WhereConditions) {
         : Prisma.sql`${Prisma.raw(`"${key}" = '${value.toString().replaceAll("'", "''")}'`)}`;
     }
   });
-  return Prisma.join(whereClauses);
+  return Prisma.join(whereClauses, operator);
 }
