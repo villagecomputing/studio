@@ -156,11 +156,14 @@ export async function POST(
       let datasetId = logDetails.Dataset[0]?.uuid;
       if (!datasetId) {
         const firstRowPayload = datasetRowsPayload[0];
-        datasetId = await ApiUtils.newDataset({
-          datasetName,
-          columns: Object.keys(firstRowPayload.inputs),
-          groundTruths: Object.keys(firstRowPayload.outputs),
-        });
+        datasetId = await ApiUtils.newDataset(
+          {
+            datasetName,
+            columns: Object.keys(firstRowPayload.inputs),
+            groundTruths: Object.keys(firstRowPayload.outputs),
+          },
+          userId,
+        );
 
         // Update logs table relationship to the dataset
         await PrismaClient.logs.update({

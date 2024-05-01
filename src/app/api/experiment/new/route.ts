@@ -46,7 +46,7 @@ const logger = loggerFactory.getLogger({
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
-  return withAuthMiddleware(request, async () => {
+  return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
     const requestBody = await request.json();
@@ -84,6 +84,7 @@ export async function POST(request: Request) {
           dataset_uuid: datasetId,
           pipeline_metadata: JSON.stringify(payload.parameters),
           group_id: groupId,
+          created_by: userId,
         },
       });
       logger.info('New experiment created', {

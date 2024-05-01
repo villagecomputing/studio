@@ -40,7 +40,7 @@ const logger = loggerFactory.getLogger({
  *         description: Error processing request.
  */
 export async function POST(request: Request) {
-  return withAuthMiddleware(request, async () => {
+  return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
     try {
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       // Parse the dataset data object using the defined schema
       // This will throw if the object doesn't match the schema
       const dataset = newDatasetPayloadSchema.parse(body);
-      const id = await ApiUtils.newDataset(dataset);
+      const id = await ApiUtils.newDataset(dataset, userId);
 
       const fakeId = createFakeId(dataset.datasetName, id);
       logger.info('Created a new dataset', {

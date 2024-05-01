@@ -5,6 +5,7 @@ import PrismaClient from '../../prisma';
 
 export const getLogsUUID = async (
   payload: PayloadSchemaType[ApiEndpoints.logsInsert],
+  userId: string | null,
 ): Promise<string> => {
   const existingLogs = await PrismaClient.logs.findFirst({
     select: { uuid: true },
@@ -22,6 +23,7 @@ export const getLogsUUID = async (
     description: payload.description,
     pipeline_metadata: JSON.stringify(payload.parameters),
     fingerprint: payload.fingerprint,
+    created_by: userId,
     Dataset: payload.dataset?.id
       ? {
           connect: {
@@ -29,7 +31,7 @@ export const getLogsUUID = async (
           },
         }
       : {},
-  } satisfies Prisma.LogsCreateInput;
+  } satisfies Prisma.LogsUncheckedCreateInput;
   const logs = await PrismaClient.logs.create({
     data: logsInput,
   });

@@ -8,6 +8,7 @@ import { buildDatasetColumnDefinition, buildDatasetFields } from './utils';
 
 export async function newDataset(
   payload: PayloadSchemaType[ApiEndpoints.datasetNew],
+  userId: string | null,
 ) {
   const params = newDatasetPayloadSchema.parse(payload);
   const { datasetName, columns, groundTruths, logsUuid } = params;
@@ -25,6 +26,7 @@ export async function newDataset(
     data: {
       uuid: datasetId,
       name: datasetName,
+      created_by: userId,
       Logs: logsUuid
         ? {
             connect: {

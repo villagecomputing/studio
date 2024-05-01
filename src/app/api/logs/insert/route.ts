@@ -49,13 +49,13 @@ const logger = loggerFactory.getLogger({
  *         description: 'Error processing request'
  */
 export async function POST(request: Request) {
-  return withAuthMiddleware(request, async () => {
+  return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
     try {
       const requestBody = await request.json();
       const payload = insertLogsPayloadSchema.parse(requestBody);
-      const logsId = await getLogsUUID(payload);
+      const logsId = await getLogsUUID(payload, userId);
 
       // create dynamic table if it's first insert
       const logsEntryDetails = await getLogsEntryOrThrow(logsId);

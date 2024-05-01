@@ -42,7 +42,7 @@ const logger = loggerFactory.getLogger({
  *         description: File content is missing -or- Error processing request
  */
 export async function POST(request: Request) {
-  return withAuthMiddleware(request, async () => {
+  return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
     try {
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
       } as PayloadSchemaType[ApiEndpoints.datasetNew]);
 
       // Creates a new dataset record
-      const datasetId = await ApiUtils.newDataset(dataset);
+      const datasetId = await ApiUtils.newDataset(dataset, userId);
       logger.debug('Created a new dataset', {
         id: datasetId,
         dataset,
