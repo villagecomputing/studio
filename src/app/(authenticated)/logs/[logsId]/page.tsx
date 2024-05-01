@@ -54,6 +54,9 @@ export default function LogsViewPage(props: LogsViewPageProps) {
   }, [logs, isLoading, error]);
 
   const onClickCopyToDataset = () => {
+    if (!rowIdsToCopyToDataset.length) {
+      return;
+    }
     if (!logs?.datasetUuid) {
       setDialogOpen(true);
       return;
@@ -63,9 +66,6 @@ export default function LogsViewPage(props: LogsViewPageProps) {
   };
 
   const copyToDataset = async (datasetTitle: string) => {
-    if (!rowIdsToCopyToDataset.length) {
-      return;
-    }
     const reqResponse = await fetch(`/api/logs/${logs?.logsId}/copyToDataset`, {
       method: 'POST',
       headers: {
@@ -81,9 +81,8 @@ export default function LogsViewPage(props: LogsViewPageProps) {
         value: `Failed to copy logs to ${datasetTitle} dataset`,
         variant: 'destructive',
       });
+      return;
     }
-    await reqResponse.json();
-
     toast({
       title: 'Logs copied to dataset',
       description: `Successfully copied the logs to ${datasetTitle} dataset.`,
