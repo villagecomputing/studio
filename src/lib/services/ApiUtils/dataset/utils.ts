@@ -40,7 +40,7 @@ export function buildDatasetFields(
       type: ENUM_Column_type.IDENTIFIER,
     },
     {
-      name: Enum_Dynamic_dataset_static_fields.CREATED_AT,
+      name: 'Timestamp',
       field: Enum_Dynamic_dataset_static_fields.CREATED_AT,
       index: -1,
       type: ENUM_Column_type.TIMESTAMP,

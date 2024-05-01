@@ -6,8 +6,7 @@ import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
-import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
-import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import PrismaClient from '@/lib/services/prisma';
 import { hasApiAccess, response } from '../../../utils';
 import { logsStepInputs } from '../../insert/schema';
@@ -45,7 +44,7 @@ async function buildDatasetRowsPayload(
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
       id: logsRowIndices,
-      [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: null,
+      [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: null,
     },
   });
 
@@ -200,7 +199,7 @@ export async function POST(
         return DatabaseUtils.update({
           tableName: logsId,
           setValues: {
-            [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID]: row.id,
+            [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
           },
           whereConditions: {
             id: row.logs_row_id,

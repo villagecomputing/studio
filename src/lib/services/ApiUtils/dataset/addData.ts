@@ -1,5 +1,5 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
-import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
+import { UPDATABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
@@ -25,15 +25,25 @@ export async function addData({
       where: {
         dataset_uuid: datasetId,
         type: {
-          in: DISPLAYABLE_DATASET_COLUMN_TYPES,
+          in: UPDATABLE_DATASET_COLUMN_TYPES,
         },
       },
     });
 
     const columnNames = existingColumns.map((col) => col.name);
-    const invalidRows = datasetRows.filter((row) => {
+    const lowerCaseRowRecords = datasetRows.map((row) => {
+      const record: Record<string, string | Date> = {};
+      for (const key in row) {
+        record[key.toLowerCase()] = row[key];
+      }
+      return record;
+    });
+    const invalidRows = lowerCaseRowRecords.filter((row) => {
       const rowKeys = Object.keys(row);
-      return rowKeys.some((key) => !!key && !columnNames.includes(key));
+      return rowKeys.some(
+        (key) =>
+          !!key && !columnNames.map((name) => name.toLowerCase()).includes(key),
+      );
     });
     if (invalidRows.length > 0) {
       throw new Error(
@@ -42,7 +52,7 @@ export async function addData({
     }
 
     // replace the column names from the dataset with the field id
-    const sanitizedRows = datasetRows.map((datasetRow) => {
+    const sanitizedRows = lowerCaseRowRecords.map((datasetRow) => {
       const sanitizedRow: Record<string, string | Date> = {};
 
       existingColumns.forEach((existingColumn) => {
@@ -50,12 +60,12 @@ export async function addData({
           existingColumn.field !== Enum_Dynamic_dataset_static_fields.CREATED_AT
         ) {
           sanitizedRow[existingColumn.field] =
-            datasetRow[existingColumn.name] || '';
+            datasetRow[existingColumn.name.toLowerCase()] || '';
           return;
         }
 
         sanitizedRow[existingColumn.field] = new Date(
-          datasetRow[existingColumn.name] || Date.now(),
+          datasetRow[existingColumn.name.toLowerCase()] || Date.now(),
         );
       });
 
