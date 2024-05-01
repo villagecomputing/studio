@@ -7,12 +7,7 @@ export const ARROW_UP = 'ArrowUp';
 export const ARROW_DOWN = 'ArrowDown';
 export const ESCAPE = 'Escape';
 export const ENTER = 'Enter';
-export const UPDATABLE_DATASET_COLUMN_TYPES = [
-  ENUM_Column_type.GROUND_TRUTH,
-  ENUM_Column_type.INPUT,
-  ENUM_Column_type.TIMESTAMP,
-  ENUM_Column_type.METADATA,
-];
+
 export const DISPLAYABLE_DATASET_COLUMN_TYPES = [
   ENUM_Column_type.GROUND_TRUTH,
   ENUM_Column_type.INPUT,
