@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
 
-export async function getLogsDetails(logsId: string) {
+export async function getLogsDetails(logsId: string, userId: string | null) {
   const columnSelect = {
     id: true,
     name: true,
@@ -26,12 +26,19 @@ export async function getLogsDetails(logsId: string) {
         uuid: true,
       },
     },
-    Logs_column: { select: columnSelect, where: { deleted_at: null } },
+    Logs_column: {
+      select: columnSelect,
+      where: { deleted_at: null },
+    },
   } satisfies Prisma.LogsSelect;
 
   try {
     const result = await PrismaClient.logs.findUniqueOrThrow({
-      where: { uuid: logsId, deleted_at: null },
+      where: {
+        uuid: logsId,
+        deleted_at: null,
+        ...(userId ? { created_by: userId } : {}),
+      },
       select: logsSelect,
     });
 

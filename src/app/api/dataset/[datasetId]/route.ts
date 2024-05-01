@@ -1,7 +1,8 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, createFakeId, getUuidFromFakeId } from '@/lib/utils';
-import { hasApiAccess, response } from '../../utils';
+import { response } from '../../utils';
 import { datasetViewResponseSchema } from './schema';
 
 const logger = loggerFactory.getLogger({
@@ -44,49 +45,48 @@ export async function GET(
   request: Request,
   { params }: { params: { datasetId: string } },
 ) {
-  const startTime = performance.now();
-  if (!(await hasApiAccess(request))) {
-    logger.warn('Unauthorized request');
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (userId) => {
+    const startTime = performance.now();
 
-  try {
-    const datasetId = params.datasetId;
-    if (!datasetId) {
-      logger.warn('Invalid dataset id provided');
-      return response('Invalid dataset id', 400);
-    }
+    try {
+      const datasetId = params.datasetId;
+      if (!datasetId) {
+        logger.warn('Invalid dataset id provided');
+        return response('Invalid dataset id', 400);
+      }
 
-    const dataset = await ApiUtils.getDataset(
-      getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET),
-    );
-
-    const validationResult = datasetViewResponseSchema.safeParse(dataset);
-    if (!validationResult.success) {
-      logger.error(
-        'Error parsing response dataset view type',
-        validationResult.error,
+      const dataset = await ApiUtils.getDataset(
+        getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET),
+        userId,
       );
-      return response('Invalid response dataset view type', 500);
+
+      const validationResult = datasetViewResponseSchema.safeParse(dataset);
+      if (!validationResult.success) {
+        logger.error(
+          'Error parsing response dataset view type',
+          validationResult.error,
+        );
+        return response('Invalid response dataset view type', 500);
+      }
+
+      logger.info(`Dataset details retrieved`, {
+        elapsedTimeMs: performance.now() - startTime,
+        dataset: {
+          id: dataset.id,
+          created_at: dataset.created_at,
+          name: dataset.name,
+          columns: dataset.columns,
+          numberOfRows: dataset.rows.length,
+        },
+      });
+
+      return Response.json({
+        ...dataset,
+        id: createFakeId(dataset.name, dataset.id),
+      });
+    } catch (error) {
+      logger.error('Error getting dataset view:', error);
+      return response('Error processing request', 500);
     }
-
-    logger.info(`Dataset details retrieved`, {
-      elapsedTimeMs: performance.now() - startTime,
-      dataset: {
-        id: dataset.id,
-        created_at: dataset.created_at,
-        name: dataset.name,
-        columns: dataset.columns,
-        numberOfRows: dataset.rows.length,
-      },
-    });
-
-    return Response.json({
-      ...dataset,
-      id: createFakeId(dataset.name, dataset.id),
-    });
-  } catch (error) {
-    logger.error('Error getting dataset view:', error);
-    return response('Error processing request', 500);
-  }
+  });
 }

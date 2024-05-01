@@ -6,6 +6,7 @@ import { permanentRedirect } from 'next/navigation';
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { calculatePercentile } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
+import { auth } from '@clerk/nextjs';
 import { compact } from 'lodash';
 import {
   StepMetadataColumn,
@@ -19,7 +20,11 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
     if (!logsId) {
       permanentRedirect('/logs');
     }
-    const logs = await ApiUtils.getLogsById(logsId);
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
+    const logs = await ApiUtils.getLogsById(logsId, userId);
 
     const metadataColumn = {
       field: 'metadata',

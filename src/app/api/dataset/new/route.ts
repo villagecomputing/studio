@@ -1,7 +1,8 @@
 import ApiUtils from '@/lib/services/ApiUtils';
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { createFakeId } from '@/lib/utils';
-import { hasApiAccess, response } from '../../utils';
+import { response } from '../../utils';
 import { newDatasetPayloadSchema } from './schema';
 
 const logger = loggerFactory.getLogger({
@@ -39,37 +40,35 @@ const logger = loggerFactory.getLogger({
  *         description: Error processing request.
  */
 export async function POST(request: Request) {
-  const startTime = performance.now();
-  if (!(await hasApiAccess(request))) {
-    logger.warn('Unauthorized request');
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (userId) => {
+    const startTime = performance.now();
 
-  try {
-    if (!request.headers.get('Content-Type')?.includes('application/json')) {
-      logger.warn('Invalid request headers type');
-      return response('Invalid request headers type', 400);
+    try {
+      if (!request.headers.get('Content-Type')?.includes('application/json')) {
+        logger.warn('Invalid request headers type');
+        return response('Invalid request headers type', 400);
+      }
+      const body = await request.json();
+      if (!body) {
+        logger.warn('Missing required data');
+        return response('Missing required data', 400);
+      }
+
+      // Parse the dataset data object using the defined schema
+      // This will throw if the object doesn't match the schema
+      const dataset = newDatasetPayloadSchema.parse(body);
+      const id = await ApiUtils.newDataset(dataset, userId);
+
+      const fakeId = createFakeId(dataset.datasetName, id);
+      logger.info('Created a new dataset', {
+        id: fakeId,
+        dataset,
+        elapsedTimeMs: performance.now() - startTime,
+      });
+      return Response.json({ id: fakeId });
+    } catch (error) {
+      logger.error('Error creating a new Dataset:', error);
+      return response('Error processing request', 500);
     }
-    const body = await request.json();
-    if (!body) {
-      logger.warn('Missing required data');
-      return response('Missing required data', 400);
-    }
-
-    // Parse the dataset data object using the defined schema
-    // This will throw if the object doesn't match the schema
-    const dataset = newDatasetPayloadSchema.parse(body);
-    const id = await ApiUtils.newDataset(dataset);
-
-    const fakeId = createFakeId(dataset.datasetName, id);
-    logger.info('Created a new dataset', {
-      id: fakeId,
-      dataset,
-      elapsedTimeMs: performance.now() - startTime,
-    });
-    return Response.json({ id: fakeId });
-  } catch (error) {
-    logger.error('Error creating a new Dataset:', error);
-    return response('Error processing request', 500);
-  }
+  });
 }

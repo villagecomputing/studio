@@ -12,8 +12,11 @@ import { insertExperimentSteps } from './experiment/insertExperimentSteps';
 import { updateExperiment } from './experiment/updateExperiment';
 import { getLogsById } from './logs/getLogsById';
 import { deleteUser } from './user/deleteUser';
-import { getUser } from './user/getUser';
+import { getAuthenticatedUserId } from './user/getAuthenticatedUserId';
 import { getUserApiKey } from './user/getUserApiKey';
+import { getUserByApiKey } from './user/getUserByApiKey';
+import { getUserByExternalUserId } from './user/getUserByExternalUserId';
+import { getUserByUserId } from './user/getUserByUserId';
 import { newUser } from './user/newUser';
 import { revokeUserApiKey } from './user/revokeUserApiKey';
 
@@ -28,7 +31,10 @@ export default {
   ensureExperimentTable,
   insertExperimentSteps,
   updateExperiment,
-  getUser,
+  getUserByUserId,
+  getUserByApiKey,
+  getUserByExternalUserId,
+  getAuthenticatedUserId,
   newUser,
   deleteUser,
   getUserApiKey,
