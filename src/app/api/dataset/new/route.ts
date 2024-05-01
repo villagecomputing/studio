@@ -42,6 +42,7 @@ const logger = loggerFactory.getLogger({
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
+    logger.debug('Post newDataset ' + userId);
 
     try {
       if (!request.headers.get('Content-Type')?.includes('application/json')) {

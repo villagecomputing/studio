@@ -43,6 +43,7 @@ const logger = loggerFactory.getLogger({
  */
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
+    logger.debug('Post ' + userId);
     const startTime = performance.now();
 
     try {
