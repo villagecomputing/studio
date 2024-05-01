@@ -155,7 +155,8 @@ export function buildLogsColumnDefinition(
           };
 
         case Enum_Logs_Column_Type.ROW_METADATA:
-          // For FE use only: Type of 'Metadata' column
+        case Enum_Logs_Column_Type.CHECKBOX_SELECTION:
+          // For FE use only: Type of 'Metadata' column & type of checkboxes row selection column
           return null;
         default:
           exhaustiveCheck(type);

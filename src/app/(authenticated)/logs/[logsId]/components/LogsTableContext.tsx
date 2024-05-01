@@ -6,15 +6,11 @@ import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { compact } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
-import {
-  AGGridLogs,
-  FetchLogsResult,
-  LogsRow,
-  LogsTableContext,
-} from '../types';
+import { AGGridLogs, LogsRow, LogsTableContext } from '../types';
+import { LogsTableProps } from './LogsTable';
 
 export const useLogsTableContext = (
-  props: FetchLogsResult,
+  props: LogsTableProps,
 ): LogsTableContext => {
   const gridRef = useRef<AgGridReactType<LogsRow>>();
   const [rows, setRows] = useState<AGGridLogs['rowData']>(props.rowData);
@@ -83,7 +79,8 @@ export const useLogsTableContext = (
         column.type === Enum_Logs_Column_Type.OUTPUT ||
         column.type === Enum_Logs_Column_Type.INPUT ||
         column.type === Enum_Logs_Column_Type.ROW_METADATA ||
-        column.type === Enum_Logs_Column_Type.TIMESTAMP
+        column.type === Enum_Logs_Column_Type.TIMESTAMP ||
+        column.type === Enum_Logs_Column_Type.CHECKBOX_SELECTION
       );
     });
     const stepMetadataColumns = props.columnDefs.filter(
@@ -142,5 +139,6 @@ export const useLogsTableContext = (
     sidePanelCurrentView,
     setSidePanelCurrentView,
     setInspectorRowIndex,
+    setRowIdsToCopyToDataset: props.setRowIdsToCopyToDataset,
   };
 };

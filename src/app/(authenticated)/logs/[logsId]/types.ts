@@ -4,10 +4,7 @@ import { ColDef } from 'ag-grid-community';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { DateRange } from 'react-day-picker';
-import {
-  AGGridDataset,
-  DatasetTableColumnProps,
-} from '../../data/[datasetId]/types';
+import { AGGridDataset } from '../../data/[datasetId]/types';
 import {
   StepMetadataColumn,
   StepsMetadataPercentiles,
@@ -34,7 +31,7 @@ export type LogsTableColumnProps = {
 
 export type ConvertToAGGridDataProps = {
   logsId: string;
-  columns: (LogsTableColumnProps | DatasetTableColumnProps)[];
+  columns: LogsTableColumnProps[];
   rows: LogsRow[];
 };
 
@@ -56,6 +53,8 @@ export type FetchLogsResult = AGGridLogs & {
   latencyP25: number;
   latencyP75: number;
   stepsMetadataPercentiles: StepsMetadataPercentiles;
+  datasetUuid?: string;
+  datasetName?: string;
 };
 
 export type LogsTableContext = {
@@ -73,6 +72,7 @@ export type LogsTableContext = {
   gridRef: MutableRefObject<AgGridReactType<LogsRow> | undefined>;
   sidePanelCurrentView: CurrentView | null;
   setSidePanelCurrentView: Dispatch<SetStateAction<CurrentView | null>>;
+  setRowIdsToCopyToDataset: Dispatch<SetStateAction<string[]>>;
 };
 
 export type DateRangeFilter = {

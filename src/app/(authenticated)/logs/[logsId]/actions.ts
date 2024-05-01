@@ -32,6 +32,12 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       id: -1,
       type: Enum_Logs_Column_Type.ROW_METADATA,
     };
+    const checkboxSelectionColumn = {
+      field: 'checkboxSelection',
+      name: '',
+      id: -1,
+      type: Enum_Logs_Column_Type.CHECKBOX_SELECTION,
+    };
 
     const stepMetadataColumns = logs.columns.filter(
       (column) => column.type === Enum_Logs_Column_Type.STEP_METADATA,
@@ -65,9 +71,12 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       parameters: logs.parameters,
       accuracy: logs.accuracy,
       stepsMetadataPercentiles,
+      datasetUuid: logs.datasetUuid ?? undefined,
+      datasetName: logs.datasetName ?? undefined,
       ...LogsGrid.convertToAGGridData({
         logsId: logs.id,
         columns: [
+          checkboxSelectionColumn,
           ...timestampColumns,
           ...inputColumns,
           metadataColumn,

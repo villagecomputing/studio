@@ -24,6 +24,7 @@ export async function getLogsDetails(logsId: string, userId: string | null) {
     Dataset: {
       select: {
         uuid: true,
+        name: true,
       },
     },
     Logs_column: {

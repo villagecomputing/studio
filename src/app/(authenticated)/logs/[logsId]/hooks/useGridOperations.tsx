@@ -1,6 +1,7 @@
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
+import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import {
   CellClickedEvent,
@@ -66,6 +67,37 @@ export function useGridOperations() {
         editable: false,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
+      },
+      [Enum_Logs_Column_Type.CHECKBOX_SELECTION]: {
+        editable: true,
+        cellEditor: 'agCheckboxCellEditor',
+        onCellValueChanged: (params) => {
+          const context = params.context as LogsTableContext;
+          context.setRowIdsToCopyToDataset(
+            context.rows
+              .filter(
+                (row) =>
+                  row[Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID] ==
+                    null && row['checkboxSelection'] === true,
+              )
+              .map((row) => String(row.id)),
+          );
+        },
+        cellRendererSelector: (params) => {
+          if (
+            params.data[Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID] !=
+            null
+          ) {
+            return {
+              component: 'agCheckboxCellRenderer',
+              params: { disabled: true },
+            };
+          }
+          return {
+            component: 'agCheckboxCellRenderer',
+            params: { disabled: false },
+          };
+        },
       },
       [Enum_Logs_Column_Type.TIMESTAMP]: {
         editable: false,

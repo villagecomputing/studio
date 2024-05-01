@@ -20,6 +20,10 @@ import {
   newExperimentPayloadSchema,
   newExperimentResponseSchema,
 } from '@/app/api/experiment/new/schema';
+import {
+  logsToDatasetPayloadSchema,
+  logsToDatasetViewResponse,
+} from '@/app/api/logs/[logsId]/copyToDataset/schema';
 import { logsViewResponseSchema } from '@/app/api/logs/[logsId]/schema';
 import { insertLogsPayloadSchema } from '@/app/api/logs/insert/schema';
 import { logsListResponseSchema } from '@/app/api/logs/list/schema';
@@ -62,6 +66,7 @@ export enum ApiEndpoints {
   logsList = '/api/logs/list',
   logsInsert = 'api/logs/insert',
   logsView = '/api/logs',
+  copyToDataset = '/api/logs/copyToDataset',
 }
 
 export const ROUTES: Record<ApiEndpoints, RouteObject> = {
@@ -164,6 +169,11 @@ export const ROUTES: Record<ApiEndpoints, RouteObject> = {
     payloadSchema: emptyObjectSchema,
     resultSchema: logsViewResponseSchema,
     method: 'GET',
+  },
+  [ApiEndpoints.copyToDataset]: {
+    payloadSchema: logsToDatasetPayloadSchema,
+    resultSchema: logsToDatasetViewResponse,
+    method: 'POST',
   },
 };
 

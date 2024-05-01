@@ -17,7 +17,10 @@ export async function getDynamicTableContent(
     // Convert all values in each record to strings
     const stringifiedResult = result.map((record) =>
       Object.fromEntries(
-        Object.entries(record).map(([key, value]) => [key, String(value)]),
+        Object.entries(record).map(([key, value]) => [
+          key,
+          value !== null ? String(value) : null,
+        ]),
       ),
     ) as Record<string, string>[];
     return stringifiedResult;

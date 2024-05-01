@@ -30,6 +30,8 @@ export enum Enum_Logs_Column_Type {
   METADATA = 'METADATA',
   /** For FE use only: Type of 'Metadata' column */
   ROW_METADATA = 'ROW_METADATA',
+  /** For FE use only: Type of the column with checkboxes for rows selection */
+  CHECKBOX_SELECTION = 'CHECKBOX_SELECTION',
   TIMESTAMP = 'TIMESTAMP',
 }
 

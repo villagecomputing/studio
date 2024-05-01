@@ -66,6 +66,7 @@ export async function getLogsById(
     columns: columns,
     rows: logsContent,
     datasetUuid: logsDetails.Dataset[0]?.uuid,
+    datasetName: logsDetails.Dataset[0]?.name,
     ...logsMetadataPercentile,
   };
 }
