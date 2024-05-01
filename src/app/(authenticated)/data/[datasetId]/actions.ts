@@ -6,6 +6,7 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Ground_truth_status } from '@/lib/types';
 
+import { auth } from '@clerk/nextjs';
 import DatasetGrid from '../utils/DatasetGrid';
 import { FetchDatasetResult } from './types';
 
@@ -13,7 +14,11 @@ export const fetchDataSet = async (
   datasetId: string,
 ): Promise<FetchDatasetResult | null> => {
   try {
-    const dataset = await ApiUtils.getDataset(datasetId);
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
+    const dataset = await ApiUtils.getDataset(datasetId, userId);
 
     return {
       datasetName: dataset.name,

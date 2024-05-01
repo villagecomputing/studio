@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
       const datasetList = await PrismaClient.dataset.findMany({
         select: datasetSelect,
-        where: { deleted_at: null, ...(userId ? { createdBy: userId } : {}) },
+        where: { deleted_at: null, ...(userId ? { created_by: userId } : {}) },
       });
 
       const datasetListResponse: ResultSchemaType[ApiEndpoints.datasetList] =

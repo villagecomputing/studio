@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
 
-export async function getExperimentDetails(experimentId: string) {
+export async function getExperimentDetails(
+  experimentId: string,
+  userId: string | null,
+) {
   const columnSelect = {
     id: true,
     name: true,
@@ -28,7 +31,11 @@ export async function getExperimentDetails(experimentId: string) {
 
   try {
     const result = await PrismaClient.experiment.findUniqueOrThrow({
-      where: { uuid: experimentId, deleted_at: null },
+      where: {
+        uuid: experimentId,
+        deleted_at: null,
+        ...(userId ? { created_by: userId } : {}),
+      },
       select: experimentSelect,
     });
 

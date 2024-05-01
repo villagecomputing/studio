@@ -72,14 +72,6 @@ export async function assertApiKeyExists(key: string) {
   });
 }
 
-export async function assertUserExists(externalId: string) {
-  await PrismaClient.user.findUniqueOrThrow({
-    where: {
-      external_id: externalId,
-    },
-  });
-}
-
 export function buildPrismaWhereClause(
   whereConditions: WhereConditions,
   operator: ' AND ' | ' OR ' = ' AND ',
