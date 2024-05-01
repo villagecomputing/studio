@@ -6,7 +6,6 @@ import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
-import { Enum_Dynamic_experiment_metadata_fields } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import PrismaClient from '@/lib/services/prisma';
@@ -206,7 +205,7 @@ export async function POST(
           return DatabaseUtils.update({
             tableName: logsId,
             setValues: {
-              [Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID]: row.id,
+              [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: row.id,
             },
             whereConditions: {
               id: row.logs_row_id,
