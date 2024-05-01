@@ -20,7 +20,10 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
     if (!logsId) {
       permanentRedirect('/logs');
     }
-    const { userId } = auth();
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
     const logs = await ApiUtils.getLogsById(logsId, userId);
 
     const metadataColumn = {

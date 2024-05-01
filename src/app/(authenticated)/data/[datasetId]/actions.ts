@@ -14,7 +14,10 @@ export const fetchDataSet = async (
   datasetId: string,
 ): Promise<FetchDatasetResult | null> => {
   try {
-    const { userId } = auth();
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
     const dataset = await ApiUtils.getDataset(datasetId, userId);
 
     return {

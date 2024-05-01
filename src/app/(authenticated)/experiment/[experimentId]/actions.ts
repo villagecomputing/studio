@@ -25,7 +25,10 @@ export const fetchExperiment = async (
     if (!experimentId) {
       permanentRedirect('/experiments');
     }
-    const { userId } = auth();
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
     const experiment = await ApiUtils.getExperiment(experimentId, userId);
     const dataset = await ApiUtils.getDataset(experiment.dataset.id, userId);
     const metadataColumn = {
