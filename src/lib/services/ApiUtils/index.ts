@@ -15,6 +15,7 @@ import { deleteUser } from './user/deleteUser';
 import { getAuthenticatedUserId } from './user/getAuthenticatedUserId';
 import { getUserApiKey } from './user/getUserApiKey';
 import { getUserByApiKey } from './user/getUserByApiKey';
+import { getUserByExternalUserId } from './user/getUserByExternalUserId';
 import { getUserByUserId } from './user/getUserByUserId';
 import { newUser } from './user/newUser';
 import { revokeUserApiKey } from './user/revokeUserApiKey';
@@ -32,6 +33,7 @@ export default {
   updateExperiment,
   getUserByUserId,
   getUserByApiKey,
+  getUserByExternalUserId,
   getAuthenticatedUserId,
   newUser,
   deleteUser,

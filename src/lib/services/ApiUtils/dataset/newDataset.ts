@@ -3,13 +3,9 @@ import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 
 import { UUIDPrefixEnum, generateUUID } from '@/lib/utils';
 import DatabaseUtils from '../../DatabaseUtils';
-import Logger, { LOGGER_TYPE } from '../../Logger';
 import PrismaClient from '../../prisma';
 import { buildDatasetColumnDefinition, buildDatasetFields } from './utils';
-const logger = Logger.getLogger({
-  source: 'newDataset',
-  type: LOGGER_TYPE.DEFAULT,
-});
+
 export async function newDataset(
   payload: PayloadSchemaType[ApiEndpoints.datasetNew],
   userId: string | null,
@@ -24,7 +20,7 @@ export async function newDataset(
   const columnDefinitions = buildDatasetColumnDefinition(datasetFields);
   // Create a new dynamic dataset table with the generated uuid as name and column definitions
   await DatabaseUtils.create(datasetId, columnDefinitions);
-  logger.debug(userId || 'nothing');
+
   // Add a new entry to the dataset table with the dataset details
   const dataset = await PrismaClient.dataset.create({
     data: {
