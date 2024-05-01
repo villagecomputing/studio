@@ -9,10 +9,14 @@ import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
+import Logger, { LOGGER_TYPE } from '../../Logger';
 import PrismaClient from '../../prisma';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getGroundTruthStatusColumnName } from './utils';
-
+const logger = Logger.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'getDataset',
+});
 async function getDatasetDetails(datasetId: string, userId: string | null) {
   const columnSelect = {
     id: true,
@@ -30,6 +34,7 @@ async function getDatasetDetails(datasetId: string, userId: string | null) {
   } satisfies Prisma.DatasetSelect;
 
   try {
+    logger.debug('get dataset for ' + userId + ' and ' + datasetId);
     const result = await PrismaClient.dataset.findUniqueOrThrow({
       where: {
         uuid: datasetId,
