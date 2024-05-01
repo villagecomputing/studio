@@ -39,7 +39,7 @@ export type ConvertToAGGridDataProps = {
 };
 
 export type LogsRow = {
-  [k: string]: string;
+  [k: string]: string | boolean;
 };
 
 export type FetchLogsResult = AGGridLogs & {
