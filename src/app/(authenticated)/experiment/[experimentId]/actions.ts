@@ -9,6 +9,7 @@ import {
   calculatePercentile,
 } from '@/lib/services/ApiUtils/experiment/utils';
 import { Enum_Experiment_Column_Type } from '@/lib/types';
+import { auth } from '@clerk/nextjs';
 import { compact } from 'lodash';
 import ExperimentGrid from '../utils/ExperimentGrid';
 import {
@@ -24,8 +25,12 @@ export const fetchExperiment = async (
     if (!experimentId) {
       permanentRedirect('/experiments');
     }
-    const experiment = await ApiUtils.getExperiment(experimentId);
-    const dataset = await ApiUtils.getDataset(experiment.dataset.id);
+    const { userId: externalUserId } = auth();
+    const userId = externalUserId
+      ? (await ApiUtils.getUserByExternalUserId(externalUserId)).id
+      : null;
+    const experiment = await ApiUtils.getExperiment(experimentId, userId);
+    const dataset = await ApiUtils.getDataset(experiment.dataset.id, userId);
     const metadataColumn = {
       field: 'metadata',
       name: 'Metadata',

@@ -13,16 +13,20 @@ import {
 
 export async function getExperiment(
   experimentId: string,
+  userId: string | null,
 ): Promise<ResultSchemaType[ApiEndpoints.experimentView]> {
   if (!experimentId) {
     throw new Error('experimentId is required');
   }
 
-  const experimentDetails = await getExperimentDetails(experimentId);
+  const experimentDetails = await getExperimentDetails(experimentId, userId);
   if (!experimentDetails) {
     throw new Error('No experiment for id');
   }
 
+  if (userId && !experimentDetails) {
+    throw new Error('Invalid experiment id');
+  }
   // Get database experiment content
   const experimentContent = await getDynamicTableContent(experimentId);
 

@@ -2,11 +2,11 @@ import { ApiEndpoints, ResultSchemaType } from '@/lib/routes/routes';
 import { Prisma } from '@prisma/client';
 import PrismaClient from '../../prisma';
 
-export async function getUser(
-  userId: string,
+export async function getUserByExternalUserId(
+  externalUserId: string,
 ): Promise<ResultSchemaType[ApiEndpoints.userView]> {
-  if (!userId) {
-    throw new Error('DatasetId is required');
+  if (!externalUserId) {
+    throw new Error('External User Id is required');
   }
 
   const userSelect = {
@@ -17,7 +17,7 @@ export async function getUser(
 
   try {
     const user = await PrismaClient.user.findUniqueOrThrow({
-      where: { uuid: userId, deleted_at: null },
+      where: { external_id: externalUserId, deleted_at: null },
       select: userSelect,
     });
     return {

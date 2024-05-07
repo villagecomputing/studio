@@ -1,7 +1,13 @@
 import ApiUtils from '@/lib/services/ApiUtils';
-import { hasApiAccess, response } from '../../utils';
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
+import Logger, { LOGGER_TYPE } from '@/lib/services/Logger';
+import { response } from '../../utils';
 import { deleteUserPayloadSchema } from './schema';
 
+const logger = Logger.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'RevokeApiKey',
+});
 /**
  * @swagger
  * /api/user/new:
@@ -28,21 +34,24 @@ import { deleteUserPayloadSchema } from './schema';
  *         description: Error processing request.
  */
 export async function POST(request: Request) {
-  if (!(await hasApiAccess(request))) {
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (authenticatedUserId) => {
+    try {
+      if (!request.headers.get('Content-Type')?.includes('application/json')) {
+        return response('Invalid request headers type', 400);
+      }
+      const body = await request.json();
+      const { id: userId, userExternalId } =
+        deleteUserPayloadSchema.parse(body);
+      if (!userId || userId !== authenticatedUserId) {
+        logger.warn('Invalid user id');
+        return response('Invalid user id', 400);
+      }
+      await ApiUtils.deleteUser({ id: userId, userExternalId });
 
-  try {
-    if (!request.headers.get('Content-Type')?.includes('application/json')) {
-      return response('Invalid request headers type', 400);
+      return response('User deleted');
+    } catch (error) {
+      console.error('Error in POST:', error);
+      return response('Error processing request', 500);
     }
-    const body = await request.json();
-    const { id, userExternalId } = deleteUserPayloadSchema.parse(body);
-    await ApiUtils.deleteUser({ id, userExternalId });
-
-    return response('User deleted');
-  } catch (error) {
-    console.error('Error in POST:', error);
-    return response('Error processing request', 500);
-  }
+  });
 }

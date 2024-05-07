@@ -10,14 +10,18 @@ import { Enum_Dynamic_logs_static_fields } from './utils';
 
 export async function getLogsById(
   logsId: string,
+  userId: string | null,
 ): Promise<ResultSchemaType[ApiEndpoints.logsView]> {
   if (!logsId) {
     throw new Error('experimentId is required');
   }
 
-  const logsDetails = await getLogsDetails(logsId);
+  const logsDetails = await getLogsDetails(logsId, userId);
   if (!logsDetails) {
     throw new Error('No logs for id');
+  }
+  if (userId && !logsDetails) {
+    throw new Error('Invalid logs id');
   }
   const logsContent = await getDynamicTableContent(logsId, {
     field: Enum_Dynamic_logs_static_fields.CREATED_AT,

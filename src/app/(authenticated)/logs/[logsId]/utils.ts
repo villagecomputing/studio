@@ -14,7 +14,7 @@ export const getLogsRowMetadata = (
 
   for (const column of stepMetadataColumns) {
     const value = rowData[column.field];
-    if (!value) {
+    if (!value || typeof value === 'boolean') {
       continue;
     }
     const metadata = JSON.parse(value);
