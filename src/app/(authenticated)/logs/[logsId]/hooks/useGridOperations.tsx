@@ -95,8 +95,9 @@ export function useGridOperations() {
       return true;
     }
     if (
-      !node.data?.['created_at'] ||
-      typeof node.data?.['created_at'] === 'boolean'
+      !node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ||
+      typeof node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ===
+        'boolean'
     ) {
       return false;
     }

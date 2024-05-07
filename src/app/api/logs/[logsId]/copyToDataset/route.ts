@@ -5,10 +5,7 @@ import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
-import {
-  Enum_Dynamic_dataset_static_field_names,
-  Enum_Dynamic_dataset_static_fields,
-} from '@/lib/services/ApiUtils/dataset/utils';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
@@ -186,8 +183,7 @@ export async function POST(
             return {
               [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]:
                 row.id.toString(),
-              [Enum_Dynamic_dataset_static_field_names.CREATED_AT]:
-                row.created_at,
+              [Enum_Dynamic_dataset_static_fields.CREATED_AT]: row.created_at,
               ...row.inputs,
               ...row.outputs,
             };
