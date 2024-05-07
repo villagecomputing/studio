@@ -27,4 +27,5 @@ export const logsViewResponseSchema = z.object({
   latencyP25: z.number(),
   latencyP75: z.number(),
   datasetUuid: z.union([z.string(), z.null()]).optional(),
+  datasetName: z.union([z.string(), z.null()]).optional(),
 });

@@ -1,5 +1,5 @@
-import { DatasetTableColumnProps } from '@/app/(authenticated)/data/[datasetId]/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import {
@@ -9,20 +9,26 @@ import {
   LogsTableColumnProps,
 } from '../../[logsId]/types';
 
-function getTableColumnDefs(
-  tableColumns: (LogsTableColumnProps | DatasetTableColumnProps)[],
-): ColDef[] {
-  const columns = tableColumns.map(
-    (tableColumn): ColDef => ({
+function getTableColumnDefs(tableColumns: LogsTableColumnProps[]): ColDef[] {
+  const columns = tableColumns.map((tableColumn): ColDef => {
+    let minWidth: number | undefined;
+    let maxWidth: number | undefined;
+    if (tableColumn.type === Enum_Logs_Column_Type.ROW_METADATA) {
+      minWidth = 210;
+    }
+    if (tableColumn.type === Enum_Logs_Column_Type.CHECKBOX_SELECTION) {
+      minWidth = 55;
+      maxWidth = 55;
+    }
+    return {
       field: tableColumn.field,
       headerName: tableColumn.name,
       colId: tableColumn.id.toString(),
       type: tableColumn.type,
-      ...(tableColumn.type === Enum_Logs_Column_Type.ROW_METADATA
-        ? { minWidth: 210 }
-        : {}),
-    }),
-  );
+      minWidth,
+      maxWidth,
+    };
+  });
   return columns;
 }
 
@@ -30,6 +36,9 @@ function getTableRows(rows: LogsRow[]): LogsRow[] {
   return rows.map((row, index) => ({
     ...row,
     metadata: '',
+    checkboxSelection:
+      row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null,
+
     [ROW_ID_FIELD_NAME]: index.toString(),
   }));
 }

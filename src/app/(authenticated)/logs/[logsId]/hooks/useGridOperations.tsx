@@ -68,6 +68,36 @@ export function useGridOperations() {
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
       },
+      [Enum_Logs_Column_Type.CHECKBOX_SELECTION]: {
+        editable: true,
+        cellEditor: 'agCheckboxCellEditor',
+        onCellValueChanged: (params) => {
+          const context = params.context as LogsTableContext;
+          context.setRowIdsToCopyToDataset(
+            context.rows
+              .filter(
+                (row) =>
+                  row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] == null &&
+                  row['checkboxSelection'] === true,
+              )
+              .map((row) => String(row.id)),
+          );
+        },
+        cellRendererSelector: (params) => {
+          if (
+            params.data[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null
+          ) {
+            return {
+              component: 'agCheckboxCellRenderer',
+              params: { disabled: true },
+            };
+          }
+          return {
+            component: 'agCheckboxCellRenderer',
+            params: { disabled: false },
+          };
+        },
+      },
       [Enum_Logs_Column_Type.TIMESTAMP]: {
         editable: false,
         valueGetter: (params) => {

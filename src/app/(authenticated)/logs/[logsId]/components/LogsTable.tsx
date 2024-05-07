@@ -2,7 +2,13 @@
 import DataTable from '@/app/(authenticated)/components/data-table/DataTable';
 import { DEFAULT_GRID_OPTIONS } from '@/app/(authenticated)/components/data-table/constants';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
-import { useCallback, useEffect, useRef } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DateRangeFilter, FetchLogsResult, LogsRow } from '../types';
 
@@ -15,10 +21,14 @@ import { IRowNode } from 'ag-grid-community';
 import LogsRowInspector from './LogsRowInspector/LogsRowInspector';
 import { useLogsTableContext } from './LogsTableContext';
 
-type LogsTableProps = FetchLogsResult & DateRangeFilter;
+export type LogsTableProps = FetchLogsResult &
+  DateRangeFilter & {
+    setRowIdsToCopyToDataset: Dispatch<SetStateAction<string[]>>;
+  };
 
 const LogsTable = (props: LogsTableProps) => {
   const context = useLogsTableContext(props);
+
   const {
     columnTypes,
     getRowId,
