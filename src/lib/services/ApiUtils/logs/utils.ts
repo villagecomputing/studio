@@ -18,8 +18,9 @@ type LogsField = {
   type: Enum_Logs_Column_Type;
 };
 
-export enum Enum_Dynamic_logs_metadata_fields {
+export enum Enum_Dynamic_logs_static_fields {
   DATASET_ROW_ID = 'dataset_row_id',
+  CREATED_AT = 'created_at',
 }
 
 export function buildLogsFields(
@@ -36,7 +37,7 @@ export function buildLogsFields(
     },
     {
       name: 'Timestamp',
-      field: 'created_at',
+      field: Enum_Dynamic_logs_static_fields.CREATED_AT,
       type: Enum_Logs_Column_Type.TIMESTAMP,
     },
     {
@@ -46,8 +47,8 @@ export function buildLogsFields(
       value: JSON.stringify(payload.inputs),
     },
     {
-      name: Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID,
-      field: Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID,
+      name: Enum_Dynamic_logs_static_fields.DATASET_ROW_ID,
+      field: Enum_Dynamic_logs_static_fields.DATASET_ROW_ID,
       type: Enum_Logs_Column_Type.METADATA,
       value: payload.dataset?.row_id,
     },

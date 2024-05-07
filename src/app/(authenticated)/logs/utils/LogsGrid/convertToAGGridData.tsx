@@ -1,5 +1,5 @@
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
-import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
 import {
@@ -37,7 +37,7 @@ function getTableRows(rows: LogsRow[]): LogsRow[] {
     ...row,
     metadata: '',
     checkboxSelection:
-      row[Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID] != null,
+      row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null,
 
     [ROW_ID_FIELD_NAME]: index.toString(),
   }));

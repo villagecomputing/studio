@@ -1,6 +1,6 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
-import { DISPLAYABLE_DATASET_COLUMN_TYPES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
+import { ENUM_Column_type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
@@ -25,7 +25,10 @@ export async function addData({
       where: {
         dataset_uuid: datasetId,
         type: {
-          in: DISPLAYABLE_DATASET_COLUMN_TYPES,
+          notIn: [
+            ENUM_Column_type.IDENTIFIER,
+            ENUM_Column_type.GROUND_TRUTH_STATUS,
+          ],
         },
       },
     });

@@ -6,6 +6,7 @@ import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getExperimentMetadataPercentile } from '../experiment/getExperiment';
 import { getLogsDetails } from './getLogsDetails';
+import { Enum_Dynamic_logs_static_fields } from './utils';
 
 export async function getLogsById(
   logsId: string,
@@ -23,7 +24,7 @@ export async function getLogsById(
     throw new Error('Invalid logs id');
   }
   const logsContent = await getDynamicTableContent(logsId, {
-    field: 'created_at',
+    field: Enum_Dynamic_logs_static_fields.CREATED_AT,
     direction: ENUM_ORDER_DIRECTION.DESC,
   });
 

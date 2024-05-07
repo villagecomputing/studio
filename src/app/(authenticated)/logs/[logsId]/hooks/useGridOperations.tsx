@@ -1,7 +1,7 @@
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
-import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import {
   CellClickedEvent,
@@ -77,16 +77,15 @@ export function useGridOperations() {
             context.rows
               .filter(
                 (row) =>
-                  row[Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID] ==
-                    null && row['checkboxSelection'] === true,
+                  row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] == null &&
+                  row['checkboxSelection'] === true,
               )
               .map((row) => String(row.id)),
           );
         },
         cellRendererSelector: (params) => {
           if (
-            params.data[Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID] !=
-            null
+            params.data[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null
           ) {
             return {
               component: 'agCheckboxCellRenderer',
@@ -102,7 +101,9 @@ export function useGridOperations() {
       [Enum_Logs_Column_Type.TIMESTAMP]: {
         editable: false,
         valueGetter: (params) => {
-          return new Date(params.data['created_at']);
+          return new Date(
+            params.data[Enum_Dynamic_logs_static_fields.CREATED_AT],
+          );
         },
         valueFormatter: (params) => {
           return formatDate(params.value, "HH:mm s's' MM/dd/yyyy");
@@ -124,13 +125,16 @@ export function useGridOperations() {
       return true;
     }
     if (
-      !node.data?.['created_at'] ||
-      typeof node.data?.['created_at'] === 'boolean'
+      !node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ||
+      typeof node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ===
+        'boolean'
     ) {
       return false;
     }
 
-    const createdAt = startOfDay(new Date(node.data['created_at']));
+    const createdAt = startOfDay(
+      new Date(node.data[Enum_Dynamic_logs_static_fields.CREATED_AT]),
+    );
     if (
       isEqual(createdAt, dateRange.from) ||
       (!!dateRange.to &&

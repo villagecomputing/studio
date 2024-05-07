@@ -6,7 +6,8 @@ import { Enum_Logs_Column_Type } from '@/lib/types';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
-import { Enum_Dynamic_logs_metadata_fields } from '@/lib/services/ApiUtils/logs/utils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
+
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import PrismaClient from '@/lib/services/prisma';
 import { response } from '../../../utils';
@@ -45,7 +46,7 @@ async function buildDatasetRowsPayload(
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
       id: logsRowIndices,
-      [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: null,
+      [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: null,
     },
   });
 
@@ -174,15 +175,15 @@ export async function POST(
           },
         });
       }
-
       // Copy logs rows to dataset
       await ApiUtils.addData({
         datasetId,
         payload: {
           datasetRows: datasetRowsPayload.map((row) => {
             return {
-              logs_row_id: row.id.toString(),
-              created_at: row.created_at,
+              [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]:
+                row.id.toString(),
+              [Enum_Dynamic_dataset_static_fields.CREATED_AT]: row.created_at,
               ...row.inputs,
               ...row.outputs,
             };
@@ -205,7 +206,7 @@ export async function POST(
           return DatabaseUtils.update({
             tableName: logsId,
             setValues: {
-              [Enum_Dynamic_logs_metadata_fields.DATASET_ROW_ID]: row.id,
+              [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
             },
             whereConditions: {
               id: row.logs_row_id,

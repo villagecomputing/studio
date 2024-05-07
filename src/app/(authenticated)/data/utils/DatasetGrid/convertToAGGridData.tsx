@@ -27,7 +27,10 @@ function getEmptyRow(colHeaders: DatasetTableColumnProps[]) {
 function getTableColumnDefs(tableColumns: DatasetTableColumnProps[]): ColDef[] {
   return tableColumns.map((tableColumn) => ({
     field: tableColumn.field,
-    headerName: tableColumn.name,
+    headerName:
+      tableColumn.type !== ENUM_Column_type.TIMESTAMP
+        ? tableColumn.name
+        : 'Timestamp',
     headerComponent: CustomHeaderComponent,
     colId: tableColumn.id.toString(),
     type: tableColumn.type,
