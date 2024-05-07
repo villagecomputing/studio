@@ -175,6 +175,7 @@ export async function POST(
           },
         });
       }
+
       // Copy logs rows to dataset
       await ApiUtils.addData({
         datasetId,

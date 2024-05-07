@@ -1,4 +1,5 @@
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import {
   CellClickedEvent,
@@ -8,6 +9,7 @@ import {
   NavigateToNextCellParams,
   ValueParserParams,
 } from 'ag-grid-community';
+import { formatDate } from 'date-fns';
 import { useCallback } from 'react';
 import DatasetGrid from '../../utils/DatasetGrid';
 import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../../utils/commonUtils';
@@ -103,6 +105,23 @@ export function useGridOperations() {
           ),
         } as HeaderComponentParams,
         cellRenderer: GroundTruthCellRenderer,
+        onCellClicked: (event) =>
+          handleCellClicked(event, event.context.setInspectorRowIndex),
+      },
+      [ENUM_Column_type.TIMESTAMP]: {
+        editable: false,
+        valueGetter: (params) => {
+          const createdAtParam =
+            params.data[Enum_Dynamic_dataset_static_fields.CREATED_AT];
+          return createdAtParam && !isNaN(Date.parse(createdAtParam))
+            ? new Date(createdAtParam)
+            : createdAtParam;
+        },
+        valueFormatter: (params) => {
+          return params.value
+            ? formatDate(params.value, "HH:mm s's' MM/dd/yyyy")
+            : params.value;
+        },
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
       },
