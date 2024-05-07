@@ -1,5 +1,6 @@
-import { hasApiAccess, response } from '@/app/api/utils';
+import { response } from '@/app/api/utils';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
 import { insertExperimentPayloadSchema } from './schema';
@@ -42,67 +43,69 @@ export async function POST(
   request: Request,
   { params }: { params: { experimentId: string } },
 ) {
-  const startTime = performance.now();
-  if (!(await hasApiAccess(request))) {
-    logger.warn('Unauthorized request');
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (userId) => {
+    const startTime = performance.now();
 
-  let experimentId = params.experimentId;
-  try {
-    experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
-  } catch (error) {
-    logger.warn(`Invalid experiment id`, { experimentId, error });
-    return response('Invalid experiment id', 400);
-  }
-  const requestBody = await request.json();
-  const payload = insertExperimentPayloadSchema.parse(requestBody);
+    let experimentId = params.experimentId;
+    try {
+      experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
+    } catch (error) {
+      logger.warn(`Invalid experiment id`, { experimentId, error });
+      return response('Invalid experiment id', 400);
+    }
+    const requestBody = await request.json();
+    const payload = insertExperimentPayloadSchema.parse(requestBody);
 
-  try {
-    // Creates table if it doesn't exist
-    await ApiUtils.ensureExperimentTable({ experimentId, payload });
-    logger.debug('Ensure dynamic experiments table created', {
-      experimentId,
-    });
-  } catch (error) {
-    logger.error('Error creating experiment dynamic table', {
-      error,
-      experimentId,
-    });
-    return response('Error processing request', 500);
-  }
-  try {
-    await ApiUtils.insertExperimentSteps({ experimentId, payload });
-    logger.debug('Inserted experiments steps', {
-      experimentId,
-      payload,
-    });
-  } catch (error) {
-    logger.error('Error inserting experiment steps', { error, experimentId });
-    return response('Error processing request', 500);
-  }
+    try {
+      // Creates table if it doesn't exist
+      await ApiUtils.ensureExperimentTable({ experimentId, payload });
+      logger.debug('Ensure dynamic experiments table created', {
+        experimentId,
+      });
+    } catch (error) {
+      logger.error('Error creating experiment dynamic table', {
+        error,
+        experimentId,
+      });
+      return response('Error processing request', 500);
+    }
+    try {
+      await ApiUtils.insertExperimentSteps({ experimentId, payload });
+      logger.debug('Inserted experiments steps', {
+        experimentId,
+        payload,
+      });
+    } catch (error) {
+      logger.error('Error inserting experiment steps', { error, experimentId });
+      return response('Error processing request', 500);
+    }
 
-  try {
-    const updatedExperiment = await ApiUtils.updateExperiment(
-      experimentId,
-      payload,
-    );
-    logger.debug('Updated experiment metadata', {
-      experimentId,
-      updatedExperiment,
-    });
-  } catch (error) {
-    logger.error('Error updating experiment details', { error, experimentId });
-    return response('Error processing request', 500);
-  }
+    try {
+      const updatedExperiment = await ApiUtils.updateExperiment({
+        userId,
+        experimentId,
+        payload,
+      });
+      logger.debug('Updated experiment metadata', {
+        experimentId,
+        updatedExperiment,
+      });
+    } catch (error) {
+      logger.error('Error updating experiment details', {
+        error,
+        experimentId,
+      });
+      return response('Error processing request', 500);
+    }
 
-  logger.info(`Experiment steps inserted successfully`, {
-    elapsedTimeMs: performance.now() - startTime,
-    experimentId,
-    stepNumber: payload.steps.length,
-    accuracy: payload.accuracy,
-    index: payload.index,
+    logger.info(`Experiment steps inserted successfully`, {
+      elapsedTimeMs: performance.now() - startTime,
+      experimentId,
+      stepNumber: payload.steps.length,
+      accuracy: payload.accuracy,
+      index: payload.index,
+    });
+
+    return response('Ok');
   });
-
-  return response('Ok');
 }

@@ -16,7 +16,9 @@ const RowInspectorRichDataWrapper: React.FC<
 > = (props) => {
   const { content, title, currentViewContent, setCurrentViewContent } = props;
   const collapsed =
-    !currentViewContent || currentViewContent.type !== SupportedFormat.MARKDOWN;
+    !currentViewContent ||
+    currentViewContent.type !== SupportedFormat.MARKDOWN ||
+    currentViewContent.title !== title;
   const components = useGetRichDataComponents(content, setCurrentViewContent);
 
   const toggleCollapsed = () => {

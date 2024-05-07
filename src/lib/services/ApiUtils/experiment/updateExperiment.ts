@@ -24,12 +24,20 @@ export const buildRowMetadata = (steps: ExperimentStep[]): RowMetadata => {
   }, DEFAULT_ROW_METADATA_VALUES);
 };
 
-export async function updateExperiment(
-  experimentId: string,
-  payload: PayloadSchemaType[ApiEndpoints.experimentInsert],
-) {
+export async function updateExperiment({
+  experimentId,
+  payload,
+  userId,
+}: {
+  experimentId: string;
+  payload: PayloadSchemaType[ApiEndpoints.experimentInsert];
+  userId: string | null;
+}) {
   try {
-    const experimentDetails = await getExperimentDetails(experimentId);
+    const experimentDetails = await getExperimentDetails(experimentId, userId);
+    if (userId && !experimentDetails) {
+      throw new Error('Invalid experiment id');
+    }
     const experimentLatencies = await getOrderedExperimentMetadata(
       experimentId,
       Enum_Dynamic_experiment_metadata_fields.LATENCY,

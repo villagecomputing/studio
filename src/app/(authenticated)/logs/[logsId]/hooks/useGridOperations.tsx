@@ -38,7 +38,7 @@ export function useGridOperations() {
 
   const getRowId = useCallback(
     (params: GetRowIdParams<LogsRow, LogsTableContext>): string => {
-      return params.data[ROW_ID_FIELD_NAME];
+      return String(params.data[ROW_ID_FIELD_NAME]);
     },
     [],
   );
@@ -94,7 +94,10 @@ export function useGridOperations() {
     if (!dateRange || !dateRange.from) {
       return true;
     }
-    if (!node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT]) {
+    if (
+      !node.data?.['created_at'] ||
+      typeof node.data?.['created_at'] === 'boolean'
+    ) {
       return false;
     }
 

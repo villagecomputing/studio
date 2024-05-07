@@ -10,8 +10,10 @@ import {
   Enum_Dynamic_dataset_static_fields,
 } from '@/lib/services/ApiUtils/dataset/utils';
 import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
+
+import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import PrismaClient from '@/lib/services/prisma';
-import { hasApiAccess, response } from '../../../utils';
+import { response } from '../../../utils';
 import { logsStepInputs } from '../../insert/schema';
 import { logsToDatasetPayloadSchema } from './schema';
 
@@ -115,115 +117,121 @@ export async function POST(
   request: Request,
   { params }: { params: { logsId: string } },
 ) {
-  const startTime = performance.now();
-  if (!(await hasApiAccess(request))) {
-    logger.warn('Unauthorized request');
-    return response('Unauthorized', 401);
-  }
+  return withAuthMiddleware(request, async (userId) => {
+    const startTime = performance.now();
 
-  // Ensure logs id param is valid
-  let logsId = params.logsId;
-  try {
-    logsId = getUuidFromFakeId(logsId, UUIDPrefixEnum.LOGS);
-  } catch (error) {
-    logger.warn('Invalid logs id', { logsId, error });
-    return response('Invalid logs id', 400);
-  }
+    // Ensure logs id param is valid
+    let logsId = params.logsId;
+    try {
+      logsId = getUuidFromFakeId(logsId, UUIDPrefixEnum.LOGS);
+    } catch (error) {
+      logger.warn('Invalid logs id', { logsId, error });
+      return response('Invalid logs id', 400);
+    }
 
-  try {
-    const requestBody = await request.json();
-    const { datasetName, logsRowIndices } =
-      logsToDatasetPayloadSchema.parse(requestBody);
+    try {
+      const requestBody = await request.json();
+      const { datasetName, logsRowIndices } =
+        logsToDatasetPayloadSchema.parse(requestBody);
 
-    const logDetails = await getLogsDetails(logsId);
+      const logDetails = await getLogsDetails(logsId, userId);
 
-    // Get logs rows to copy and build the dataset payload
-    const datasetRowsPayload = await buildDatasetRowsPayload(
-      logsId,
-      logsRowIndices,
-    );
+      if (userId && !logDetails) {
+        logger.warn('Invalid logsId - userId', { logsId });
+        return response('Invalid logs id', 400);
+      }
 
-    if (datasetRowsPayload.length === 0) {
-      logger.debug(
-        'No valid rows to copy. Specified row indices are either already copied or do not exist in the logs table. ',
-        { logDetails, logsRowIndices },
+      // Get logs rows to copy and build the dataset payload
+      const datasetRowsPayload = await buildDatasetRowsPayload(
+        logsId,
+        logsRowIndices,
       );
-      return response('No valid rows to copy', 200);
-    }
 
-    // Ensure related dataset created
-    let datasetId = logDetails.Dataset[0]?.uuid;
-    if (!datasetId) {
-      const firstRowPayload = datasetRowsPayload[0];
-      datasetId = await ApiUtils.newDataset({
-        datasetName,
-        columns: Object.keys(firstRowPayload.inputs),
-        groundTruths: Object.keys(firstRowPayload.outputs),
-      });
+      if (datasetRowsPayload.length === 0) {
+        logger.debug(
+          'No valid rows to copy. Specified row indices are either already copied or do not exist in the logs table. ',
+          { logDetails, logsRowIndices },
+        );
+        return response('No valid rows to copy', 200);
+      }
 
-      // Update logs table relationship to the dataset
-      await PrismaClient.logs.update({
-        where: { uuid: logsId },
-        data: {
-          Dataset: {
-            connect: { uuid: datasetId },
+      // Ensure related dataset created
+      let datasetId = logDetails.Dataset[0]?.uuid;
+      if (!datasetId) {
+        const firstRowPayload = datasetRowsPayload[0];
+        datasetId = await ApiUtils.newDataset(
+          {
+            datasetName,
+            columns: Object.keys(firstRowPayload.inputs),
+            groundTruths: Object.keys(firstRowPayload.outputs),
           },
-        },
-      });
-    }
+          userId,
+        );
 
-    // Copy logs rows to dataset
-    await ApiUtils.addData({
-      datasetId,
-      payload: {
-        datasetRows: datasetRowsPayload.map((row) => {
-          return {
-            [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]: row.id.toString(),
-            [Enum_Dynamic_dataset_static_field_names.CREATED_AT]:
-              row.created_at,
-            ...row.inputs,
-            ...row.outputs,
-          };
-        }),
-      },
-    });
-
-    // Select newly created dataset rows
-    const datasetRows = await DatabaseUtils.select<Record<string, string>>({
-      tableName: datasetId,
-      selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID, 'id'],
-      whereConditions: {
-        logs_row_id: logsRowIndices,
-      },
-    });
-
-    // Update dataset row index in the dynamic logs table
-    await Promise.all(
-      datasetRows.map((row) => {
-        return DatabaseUtils.update({
-          tableName: logsId,
-          setValues: {
-            [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
-          },
-          whereConditions: {
-            id: row.logs_row_id,
+        // Update logs table relationship to the dataset
+        await PrismaClient.logs.update({
+          where: { uuid: logsId },
+          data: {
+            Dataset: {
+              connect: { uuid: datasetId },
+            },
           },
         });
-      }),
-    );
+      }
+      // Copy logs rows to dataset
+      await ApiUtils.addData({
+        datasetId,
+        payload: {
+          datasetRows: datasetRowsPayload.map((row) => {
+            return {
+              [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]:
+                row.id.toString(),
+              [Enum_Dynamic_dataset_static_field_names.CREATED_AT]:
+                row.created_at,
+              ...row.inputs,
+              ...row.outputs,
+            };
+          }),
+        },
+      });
 
-    logger.info('Logs data copied', {
-      elapsedTimeMs: performance.now() - startTime,
-      datasetRows,
-    });
+      // Select newly created dataset rows
+      const datasetRows = await DatabaseUtils.select<Record<string, string>>({
+        tableName: datasetId,
+        selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID, 'id'],
+        whereConditions: {
+          logs_row_id: logsRowIndices,
+        },
+      });
 
-    return Response.json({
-      datasetUuid: datasetId,
-      logsUuid: logsId,
-      logRowsToDatasetRows: datasetRows,
-    });
-  } catch (error) {
-    logger.error('Error copying logs rows to dataset', { error });
-    return response('Error processing request', 500);
-  }
+      // Update dataset row index in the dynamic logs table
+      await Promise.all(
+        datasetRows.map((row) => {
+          return DatabaseUtils.update({
+            tableName: logsId,
+            setValues: {
+              [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
+            },
+            whereConditions: {
+              id: row.logs_row_id,
+            },
+          });
+        }),
+      );
+
+      logger.info('Logs data copied', {
+        elapsedTimeMs: performance.now() - startTime,
+        datasetRows,
+      });
+
+      return Response.json({
+        datasetUuid: datasetId,
+        logsUuid: logsId,
+        logRowsToDatasetRows: datasetRows,
+      });
+    } catch (error) {
+      logger.error('Error copying logs rows to dataset', { error });
+      return response('Error processing request', 500);
+    }
+  });
 }
