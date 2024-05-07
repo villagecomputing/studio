@@ -111,12 +111,16 @@ export function useGridOperations() {
       [ENUM_Column_type.TIMESTAMP]: {
         editable: false,
         valueGetter: (params) => {
-          const dateString =
+          const createdAtParam =
             params.data[Enum_Dynamic_dataset_static_fields.CREATED_AT];
-          return dateString ? new Date(dateString) : new Date();
+          return createdAtParam && !isNaN(Date.parse(createdAtParam))
+            ? new Date(createdAtParam)
+            : createdAtParam;
         },
         valueFormatter: (params) => {
-          return formatDate(params.value, "HH:mm s's' MM/dd/yyyy");
+          return params.value
+            ? formatDate(params.value, "HH:mm s's' MM/dd/yyyy")
+            : params.value;
         },
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
