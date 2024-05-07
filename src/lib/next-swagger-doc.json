@@ -778,14 +778,14 @@
                     "datasetName": {
                         "type": "string"
                     },
-                    "logsRowIndices": {
+                    "logRowIds": {
                         "type": "array",
                         "items": {
                             "type": "integer"
                         }
                     }
                 },
-                "required": ["datasetName", "logsRowIndices"]
+                "required": ["datasetName", "logRowIds"]
             },
             "LogsToDatasetViewResponse": {
                 "type": "object",

@@ -138,7 +138,7 @@ export async function POST(request: Request) {
         logsId,
         elapsedTimeMs: performance.now() - startTime,
       });
-      return response('Ok');
+      return Response.json({ id: logsId });
     } catch (error) {
       logger.error('Error insert logs:', error);
       return response('Error processing request', 500);

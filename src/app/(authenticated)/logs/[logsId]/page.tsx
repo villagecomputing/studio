@@ -73,7 +73,7 @@ export default function LogsViewPage(props: LogsViewPageProps) {
       },
       body: JSON.stringify({
         datasetName: datasetTitle,
-        logsRowIndices: rowIdsToCopyToDataset,
+        logRowIds: rowIdsToCopyToDataset,
       }),
     });
     if (reqResponse.status !== 200) {

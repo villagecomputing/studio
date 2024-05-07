@@ -907,7 +907,7 @@
           "datasetName": {
             "type": "string"
           },
-          "logsRowIndices": {
+          "logRowIds": {
             "type": "array",
             "items": {
               "type": "integer"
@@ -916,7 +916,7 @@
         },
         "required": [
           "datasetName",
-          "logsRowIndices"
+          "logRowIds"
         ]
       },
       "LogsToDatasetViewResponse": {
