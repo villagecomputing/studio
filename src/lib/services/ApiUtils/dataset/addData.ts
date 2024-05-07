@@ -21,6 +21,7 @@ export async function addData({
       select: {
         name: true,
         field: true,
+        type: true,
       },
       where: {
         dataset_uuid: datasetId,
@@ -36,7 +37,13 @@ export async function addData({
     const columnNames = existingColumns.map((col) => col.name);
     const invalidRows = datasetRows.filter((row) => {
       const rowKeys = Object.keys(row);
-      return rowKeys.some((key) => !!key && !columnNames.includes(key));
+      return rowKeys.some(
+        (key) =>
+          !!key &&
+          !columnNames.includes(key) &&
+          key !== Enum_Dynamic_dataset_static_fields.CREATED_AT &&
+          key !== Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID,
+      );
     });
     if (invalidRows.length > 0) {
       throw new Error(

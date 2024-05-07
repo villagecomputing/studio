@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const logsToDatasetPayloadSchema = z.object({
   datasetName: z.string(),
-  logsRowIndices: z.array(z.string()),
+  logRowIds: z.array(z.string()),
 });
 
 export const logsToDatasetViewResponse = z.object({

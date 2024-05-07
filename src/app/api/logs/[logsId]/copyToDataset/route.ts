@@ -19,10 +19,7 @@ const logger = loggerFactory.getLogger({
   source: 'CopyLogsToDataset',
 });
 
-async function buildDatasetRowsPayload(
-  logsId: string,
-  logsRowIndices: string[],
-) {
+async function buildDatasetRowsPayload(logsId: string, logRowIds: string[]) {
   // Get dynamic logs fields to select
   const logsFields = await PrismaClient.logs_column.findMany({
     where: {
@@ -45,7 +42,7 @@ async function buildDatasetRowsPayload(
     tableName: logsId,
     selectFields: logsFields.map((field) => field.field),
     whereConditions: {
-      id: logsRowIndices,
+      id: logRowIds,
       [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: null,
     },
   });
@@ -128,7 +125,7 @@ export async function POST(
 
     try {
       const requestBody = await request.json();
-      const { datasetName, logsRowIndices } =
+      const { datasetName, logRowIds } =
         logsToDatasetPayloadSchema.parse(requestBody);
 
       const logDetails = await getLogsDetails(logsId, userId);
@@ -141,13 +138,13 @@ export async function POST(
       // Get logs rows to copy and build the dataset payload
       const datasetRowsPayload = await buildDatasetRowsPayload(
         logsId,
-        logsRowIndices,
+        logRowIds,
       );
 
       if (datasetRowsPayload.length === 0) {
         logger.debug(
           'No valid rows to copy. Specified row indices are either already copied or do not exist in the logs table. ',
-          { logDetails, logsRowIndices },
+          { logDetails, logRowIds },
         );
         return response('No valid rows to copy', 200);
       }
@@ -197,24 +194,31 @@ export async function POST(
         tableName: datasetId,
         selectFields: [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID, 'id'],
         whereConditions: {
-          logs_row_id: logsRowIndices,
+          logs_row_id: logRowIds,
         },
       });
 
-      // Update dataset row index in the dynamic logs table
-      await Promise.all(
-        datasetRows.map((row) => {
-          return DatabaseUtils.update({
-            tableName: logsId,
-            setValues: {
-              [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
-            },
-            whereConditions: {
-              id: row.logs_row_id,
-            },
-          });
-        }),
-      );
+      if (
+        logDetails.Logs_column.some(
+          (column) =>
+            column.field === Enum_Dynamic_logs_static_fields.DATASET_ROW_ID,
+        )
+      ) {
+        // Update dataset row index in the dynamic logs table
+        await Promise.all(
+          datasetRows.map((row) => {
+            return DatabaseUtils.update({
+              tableName: logsId,
+              setValues: {
+                [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: row.id,
+              },
+              whereConditions: {
+                id: row.logs_row_id,
+              },
+            });
+          }),
+        );
+      }
 
       logger.info('Logs data copied', {
         elapsedTimeMs: performance.now() - startTime,
