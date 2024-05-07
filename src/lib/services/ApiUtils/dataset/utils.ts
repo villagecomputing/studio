@@ -14,10 +14,6 @@ export enum Enum_Dynamic_dataset_static_fields {
   CREATED_AT = 'created_at',
 }
 
-export enum Enum_Dynamic_dataset_static_field_names {
-  CREATED_AT = 'Timestamp',
-}
-
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
     where: { dataset_uuid: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
@@ -44,7 +40,7 @@ export function buildDatasetFields(
       type: ENUM_Column_type.IDENTIFIER,
     },
     {
-      name: Enum_Dynamic_dataset_static_field_names.CREATED_AT,
+      name: Enum_Dynamic_dataset_static_fields.CREATED_AT,
       field: Enum_Dynamic_dataset_static_fields.CREATED_AT,
       index: -1,
       type: ENUM_Column_type.TIMESTAMP,
