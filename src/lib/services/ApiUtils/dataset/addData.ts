@@ -34,19 +34,9 @@ export async function addData({
     });
 
     const columnNames = existingColumns.map((col) => col.name);
-    const lowerCaseRowRecords = datasetRows.map((row) => {
-      const record: Record<string, string | Date> = {};
-      for (const key in row) {
-        record[key.toLowerCase()] = row[key];
-      }
-      return record;
-    });
-    const invalidRows = lowerCaseRowRecords.filter((row) => {
+    const invalidRows = datasetRows.filter((row) => {
       const rowKeys = Object.keys(row);
-      return rowKeys.some(
-        (key) =>
-          !!key && !columnNames.map((name) => name.toLowerCase()).includes(key),
-      );
+      return rowKeys.some((key) => !!key && !columnNames.includes(key));
     });
     if (invalidRows.length > 0) {
       throw new Error(
@@ -55,7 +45,7 @@ export async function addData({
     }
 
     // replace the column names from the dataset with the field id
-    const sanitizedRows = lowerCaseRowRecords.map((datasetRow) => {
+    const sanitizedRows = datasetRows.map((datasetRow) => {
       const sanitizedRow: Record<string, string | Date> = {};
 
       existingColumns.forEach((existingColumn) => {
@@ -63,12 +53,12 @@ export async function addData({
           existingColumn.field !== Enum_Dynamic_dataset_static_fields.CREATED_AT
         ) {
           sanitizedRow[existingColumn.field] =
-            datasetRow[existingColumn.name.toLowerCase()] || '';
+            datasetRow[existingColumn.name] || '';
           return;
         }
 
         sanitizedRow[existingColumn.field] = new Date(
-          datasetRow[existingColumn.name.toLowerCase()] || Date.now(),
+          datasetRow[existingColumn.name] || Date.now(),
         );
       });
 
