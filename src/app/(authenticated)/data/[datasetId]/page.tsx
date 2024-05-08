@@ -43,7 +43,6 @@ export default function DatasetViewPage(props: DatasetViewPageProps) {
         value: 'Failed to get dataset details',
         variant: 'destructive',
       });
-      console.error('ERROR', error);
     }
     if (!dataSet) {
       redirect('/data');
