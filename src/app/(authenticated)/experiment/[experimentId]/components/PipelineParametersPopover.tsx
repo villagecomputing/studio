@@ -1,10 +1,11 @@
+'use client';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { parsePipelineParameters } from '../../utils/utils';
 
 type PipelineParametersPopoverProps = {
@@ -18,14 +19,42 @@ const PipelineParametersPopover: React.FC<PipelineParametersPopoverProps> = ({
   align = 'start',
 }) => {
   const parameters = parsePipelineParameters(pipelineParameters);
+  const [popoverPosition, setPopoverPosition] = useState<'top' | 'bottom'>(
+    'bottom',
+  );
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (triggerRef.current && popoverRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const popoverRect = popoverRef.current.getBoundingClientRect();
+      const spaceAbove = triggerRect.top;
+      const spaceBelow = window.innerHeight - triggerRect.bottom;
+
+      if (spaceBelow < popoverRect.height && spaceAbove > spaceBelow) {
+        setPopoverPosition('top');
+      } else {
+        setPopoverPosition('bottom');
+      }
+    }
+  }, [children]);
 
   return (
     <Popover>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild ref={triggerRef}>
+        {children}
+      </PopoverTrigger>
       <PopoverContent
-        side="bottom"
+        ref={popoverRef}
+        side={popoverPosition}
         align={align}
         className="relative top-1 z-dialog w-full max-w-xl rounded-lg border border-gridBorderColor bg-white p-6 shadow"
+        style={{
+          maxHeight: `calc(100vh - ${popoverPosition === 'top' ? triggerRef.current?.getBoundingClientRect().bottom : triggerRef.current?.getBoundingClientRect().top}px - 150px)`,
+          overflowY: 'auto',
+          minHeight: 150,
+        }}
       >
         <>
           <div className="pb-4 font-medium">Parameters</div>
@@ -37,7 +66,6 @@ const PipelineParametersPopover: React.FC<PipelineParametersPopoverProps> = ({
               className={`grid grid-flow-row overflow-y-auto`}
               style={{
                 gridTemplateColumns: `repeat(2, max-content)`,
-                maxHeight: 'calc(100vh - 200px)',
               }}
             >
               {parameters.map((parameter, index) =>
