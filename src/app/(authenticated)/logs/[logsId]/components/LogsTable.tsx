@@ -10,9 +10,13 @@ import {
   useRef,
 } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
-import { DateRangeFilter, FetchLogsResult, LogsRow } from '../types';
+import { FetchLogsResult, LogsRow } from '../types';
 
-import { onFilterChanged } from '@/app/(authenticated)/common/gridUtils';
+import {
+  isExternalFilterPresent,
+  onFilterChanged,
+} from '@/app/(authenticated)/common/gridUtils';
+import { DateRangeFilter } from '@/app/(authenticated)/common/types';
 import {
   CustomNoRowsOverlay,
   CustomNoRowsOverlayParams,
@@ -29,13 +33,8 @@ export type LogsTableProps = FetchLogsResult &
 const LogsTable = (props: LogsTableProps) => {
   const context = useLogsTableContext(props);
 
-  const {
-    columnTypes,
-    getRowId,
-    navigateToNextCell,
-    isExternalFilterPresent,
-    doesExternalFilterPass,
-  } = useGridOperations();
+  const { columnTypes, getRowId, navigateToNextCell, doesExternalFilterPass } =
+    useGridOperations();
   const gridRef = useRef<AgGridReactType<LogsRow>>(null);
   useEffect(() => {
     if (!gridRef.current) {

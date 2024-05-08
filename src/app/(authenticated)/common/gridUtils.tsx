@@ -1,6 +1,7 @@
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import { FilterChangedEvent, SortDirection } from 'ag-grid-community';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
+import { DateRangeFilter } from './types';
 
 export function getTableColumnSortIcon(sort: SortDirection) {
   switch (sort) {
@@ -22,4 +23,10 @@ export const onFilterChanged = (event: FilterChangedEvent) => {
     return;
   }
   event.api.hideOverlay();
+};
+
+export const isExternalFilterPresent = (
+  dateRange: DateRangeFilter['dateRange'],
+) => {
+  return dateRange !== undefined;
 };

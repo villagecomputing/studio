@@ -1,3 +1,4 @@
+import { DateRangeFilter } from '@/app/(authenticated)/common/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
@@ -12,7 +13,7 @@ import {
 import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
 import CheckboxHeaderCellRenderer from '../components/CheckboxHeaderCellRenderer';
-import { DateRangeFilter, LogsRow, LogsTableContext } from '../types';
+import { LogsRow, LogsTableContext } from '../types';
 
 export function useGridOperations() {
   const navigateToNextCell = useCallback(
@@ -116,9 +117,6 @@ export function useGridOperations() {
     };
   }, []);
 
-  const isExternalFilterPresent = (dateRange: DateRangeFilter['dateRange']) => {
-    return dateRange !== undefined;
-  };
   const doesExternalFilterPass = (
     row: LogsRow,
     dateRange: DateRangeFilter['dateRange'],
@@ -151,7 +149,6 @@ export function useGridOperations() {
     getRowId,
     navigateToNextCell,
     columnTypes: getColumnTypes(),
-    isExternalFilterPresent,
     doesExternalFilterPass,
   };
 }

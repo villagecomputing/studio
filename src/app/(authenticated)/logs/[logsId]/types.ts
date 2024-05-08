@@ -75,8 +75,3 @@ export type LogsTableContext = {
   setSidePanelCurrentView: Dispatch<SetStateAction<CurrentView | null>>;
   setRowIdsToCopyToDataset: Dispatch<SetStateAction<string[]>>;
 };
-
-export type DateRangeFilter = {
-  dateRange: DateRange | undefined;
-  setDateRange: (date: DateRange | undefined) => void;
-};

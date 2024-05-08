@@ -1,3 +1,4 @@
+import { DateRangeFilter } from '@/app/(authenticated)/common/types';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
 import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
@@ -9,7 +10,7 @@ import {
   NavigateToNextCellParams,
   ValueParserParams,
 } from 'ag-grid-community';
-import { formatDate } from 'date-fns';
+import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
 import DatasetGrid from '../../utils/DatasetGrid';
 import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../../utils/commonUtils';
@@ -70,6 +71,34 @@ export function useGridOperations() {
     },
     [],
   );
+
+  const doesExternalFilterPass = (
+    row: DatasetRow,
+    dateRange: DateRangeFilter['dateRange'],
+  ) => {
+    if (!dateRange || !dateRange.from) {
+      return true;
+    }
+    if (
+      !row[Enum_Dynamic_dataset_static_fields.CREATED_AT] ||
+      typeof row[Enum_Dynamic_dataset_static_fields.CREATED_AT] !== 'string'
+    ) {
+      return false;
+    }
+
+    const createdAt = startOfDay(
+      new Date(row[Enum_Dynamic_dataset_static_fields.CREATED_AT]),
+    );
+    if (
+      isEqual(createdAt, dateRange.from) ||
+      (!!dateRange.to &&
+        isAfter(createdAt, dateRange.from) &&
+        (isBefore(createdAt, dateRange.to) || isEqual(createdAt, dateRange.to)))
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   const getRowId = useCallback(
     (params: GetRowIdParams<DatasetRow, DatasetTableContext>): string => {
@@ -158,5 +187,6 @@ export function useGridOperations() {
     onCellValueChanged,
     columnTypes: getColumnTypes(),
     dataTypeDefinitions: getDataTypeDefinitions(),
+    doesExternalFilterPass,
   };
 }
