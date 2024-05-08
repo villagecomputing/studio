@@ -40,7 +40,7 @@ export default function DatasetViewPage(props: DatasetViewPageProps) {
     }
     if (error) {
       toast({
-        value: 'Failed to get experiment details',
+        value: 'Failed to get dataset details',
         variant: 'destructive',
       });
       console.error('ERROR', error);
