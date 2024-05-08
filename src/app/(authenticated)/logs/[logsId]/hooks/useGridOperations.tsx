@@ -70,6 +70,7 @@ export function useGridOperations() {
       },
       [Enum_Logs_Column_Type.CHECKBOX_SELECTION]: {
         editable: true,
+        pinned: 'left',
         cellEditor: 'agCheckboxCellEditor',
         onCellValueChanged: (params) => {
           const context = params.context as LogsTableContext;
@@ -84,6 +85,10 @@ export function useGridOperations() {
               .map((row) => String(row.id)),
           );
         },
+        tooltipValueGetter: (props) =>
+          props.data[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null
+            ? `Row already added to dataset`
+            : undefined,
         headerComponent: CheckboxHeaderCellRenderer,
         cellRendererSelector: (params) => {
           if (

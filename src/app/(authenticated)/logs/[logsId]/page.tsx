@@ -1,7 +1,6 @@
 'use client';
 import Breadcrumb from '@/components/Breadcrumb';
 import Loading from '@/components/loading/Loading';
-import { Button } from '@/components/ui/button';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { useToast } from '@/components/ui/use-toast';
 import { LOGS_REFETCH_INTERVAL_MS } from '@/lib/constants';
@@ -20,7 +19,7 @@ import PageHeader from '../../components/page-header/PageHeader';
 import CopyIdToClipboardButton from '../../data/[datasetId]/components/CopyIdToClipboardButton';
 import Header from '../../experiment/[experimentId]/components/Header';
 import { fetchLogs } from './actions';
-import CopyLogsToDatasetDialog from './components/CopyLogsToDatasetDialog';
+import CopyToDatasetButton from './components/CopyToDatasetButton';
 import LogsTable from './components/LogsTable';
 import { LogsViewPageProps } from './types';
 
@@ -38,7 +37,6 @@ export default function LogsViewPage(props: LogsViewPageProps) {
   const [rowIdsToCopyToDataset, setRowIdsToCopyToDataset] = useState<string[]>(
     [],
   );
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
@@ -52,43 +50,6 @@ export default function LogsViewPage(props: LogsViewPageProps) {
       redirect('/logs');
     }
   }, [logs, isLoading, error]);
-
-  const onClickCopyToDataset = () => {
-    if (!rowIdsToCopyToDataset.length) {
-      return;
-    }
-    if (!logs?.datasetUuid) {
-      setDialogOpen(true);
-      return;
-    }
-
-    copyToDataset(logs.datasetName ?? '');
-  };
-
-  const copyToDataset = async (datasetTitle: string) => {
-    const reqResponse = await fetch(`/api/logs/${logs?.logsId}/copyToDataset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        datasetName: datasetTitle,
-        logRowIds: rowIdsToCopyToDataset,
-      }),
-    });
-    if (reqResponse.status !== 200) {
-      toast({
-        value: `Failed to copy logs to ${datasetTitle} dataset`,
-        variant: 'destructive',
-      });
-      return;
-    }
-    toast({
-      title: 'Logs copied to dataset',
-      description: `Successfully copied the logs to ${datasetTitle} dataset.`,
-      variant: 'default',
-    });
-  };
 
   if (!logs) {
     return <Loading />;
@@ -113,13 +74,13 @@ export default function LogsViewPage(props: LogsViewPageProps) {
               setDateRange={setDateRange}
             />
           </Header>
-          <Button
-            className="mx-4 mb-4 mt-2"
-            variant={'outline'}
-            onClick={onClickCopyToDataset}
-          >
-            Copy to Dataset
-          </Button>
+          <CopyToDatasetButton
+            rowIdsToCopyToDataset={rowIdsToCopyToDataset}
+            setRowIdsToCopyToDataset={setRowIdsToCopyToDataset}
+            datasetName={logs.datasetName}
+            datasetUuid={logs.datasetUuid}
+            logsId={logs.logsId}
+          />
         </div>
 
         {!logs.rowData.length ? (
@@ -140,13 +101,6 @@ export default function LogsViewPage(props: LogsViewPageProps) {
           </div>
         )}
       </div>
-      <CopyLogsToDatasetDialog
-        open={dialogOpen}
-        onCancel={() => {
-          setDialogOpen(false);
-        }}
-        onAction={copyToDataset}
-      />
     </>
   );
 }
