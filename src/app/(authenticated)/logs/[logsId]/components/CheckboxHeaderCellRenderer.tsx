@@ -22,7 +22,7 @@ const CheckboxHeaderCellRenderer = (
 
   return (
     <Checkbox
-      className=" rounded-[2px] border data-[state=unchecked]:border-2 data-[state=unchecked]:border-checkboxBorder data-[state=unchecked]:bg-white "
+      className="rounded-[2px] border data-[state=unchecked]:border-2 data-[state=unchecked]:border-checkboxBorder data-[state=unchecked]:bg-white "
       checked={allSelected}
       disabled={!selectableRows.length}
       onCheckedChange={(checked: CheckedState) => {

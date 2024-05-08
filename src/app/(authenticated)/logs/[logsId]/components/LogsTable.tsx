@@ -60,6 +60,8 @@ const LogsTable = (props: LogsTableProps) => {
           rowData: context.rows,
           columnDefs: context.displayableColumnDefs,
           columnTypes,
+          tooltipShowDelay: 100,
+          tooltipHideDelay: 2000,
           navigateToNextCell,
           isExternalFilterPresent: useCallback(
             () => isExternalFilterPresent(props.dateRange),
