@@ -36,7 +36,7 @@ function getTableRows(rows: LogsRow[]): LogsRow[] {
   return rows.map((row, index) => ({
     ...row,
     metadata: '',
-    checkboxSelection:
+    [Enum_Dynamic_logs_static_fields.CHECKBOX_SELECTION]:
       row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null,
 
     [ROW_ID_FIELD_NAME]: index.toString(),

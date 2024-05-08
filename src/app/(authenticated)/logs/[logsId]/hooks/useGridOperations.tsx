@@ -7,11 +7,11 @@ import {
   CellClickedEvent,
   GetRowIdParams,
   GridOptions,
-  IRowNode,
   NavigateToNextCellParams,
 } from 'ag-grid-community';
 import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { useCallback } from 'react';
+import CheckboxHeaderCellRenderer from '../components/CheckboxHeaderCellRenderer';
 import { DateRangeFilter, LogsRow, LogsTableContext } from '../types';
 
 export function useGridOperations() {
@@ -78,11 +78,13 @@ export function useGridOperations() {
               .filter(
                 (row) =>
                   row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] == null &&
-                  row['checkboxSelection'] === true,
+                  row[Enum_Dynamic_logs_static_fields.CHECKBOX_SELECTION] ===
+                    true,
               )
               .map((row) => String(row.id)),
           );
         },
+        headerComponent: CheckboxHeaderCellRenderer,
         cellRendererSelector: (params) => {
           if (
             params.data[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] != null
@@ -118,22 +120,21 @@ export function useGridOperations() {
     return dateRange !== undefined;
   };
   const doesExternalFilterPass = (
-    node: IRowNode<LogsRow>,
+    row: LogsRow,
     dateRange: DateRangeFilter['dateRange'],
   ) => {
     if (!dateRange || !dateRange.from) {
       return true;
     }
     if (
-      !node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ||
-      typeof node.data?.[Enum_Dynamic_logs_static_fields.CREATED_AT] ===
-        'boolean'
+      !row[Enum_Dynamic_logs_static_fields.CREATED_AT] ||
+      typeof row[Enum_Dynamic_logs_static_fields.CREATED_AT] === 'boolean'
     ) {
       return false;
     }
 
     const createdAt = startOfDay(
-      new Date(node.data[Enum_Dynamic_logs_static_fields.CREATED_AT]),
+      new Date(row[Enum_Dynamic_logs_static_fields.CREATED_AT]),
     );
     if (
       isEqual(createdAt, dateRange.from) ||

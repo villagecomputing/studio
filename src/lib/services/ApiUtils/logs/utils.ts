@@ -21,6 +21,7 @@ type LogsField = {
 export enum Enum_Dynamic_logs_static_fields {
   DATASET_ROW_ID = 'dataset_row_id',
   CREATED_AT = 'created_at',
+  CHECKBOX_SELECTION = 'checkboxSelection',
 }
 
 export function buildLogsFields(

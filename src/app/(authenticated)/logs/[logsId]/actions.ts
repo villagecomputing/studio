@@ -5,6 +5,7 @@ import { permanentRedirect } from 'next/navigation';
 
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
 import { calculatePercentile } from '@/lib/services/ApiUtils/experiment/utils';
+import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
 import { auth } from '@clerk/nextjs';
 import { compact } from 'lodash';
@@ -33,7 +34,7 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
       type: Enum_Logs_Column_Type.ROW_METADATA,
     };
     const checkboxSelectionColumn = {
-      field: 'checkboxSelection',
+      field: Enum_Dynamic_logs_static_fields.CHECKBOX_SELECTION,
       name: '',
       id: -1,
       type: Enum_Logs_Column_Type.CHECKBOX_SELECTION,
