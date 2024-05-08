@@ -38,7 +38,7 @@ const PipelineParametersPopover: React.FC<PipelineParametersPopoverProps> = ({
         setPopoverPosition('bottom');
       }
     }
-  }, [children, triggerRef.current, popoverRef.current]); // Re-run this effect when the children change
+  }, [children]);
 
   return (
     <Popover>
