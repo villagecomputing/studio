@@ -66,8 +66,12 @@ const LogsTable = (props: LogsTableProps) => {
             [props.dateRange, isExternalFilterPresent],
           ),
           doesExternalFilterPass: useCallback(
-            (node: IRowNode<LogsRow>) =>
-              doesExternalFilterPass(node, props.dateRange),
+            (node: IRowNode<LogsRow>) => {
+              if (!node.data) {
+                return true;
+              }
+              return doesExternalFilterPass(node.data, props.dateRange);
+            },
             [props.dateRange, doesExternalFilterPass],
           ),
           onFilterChanged: onFilterChanged,

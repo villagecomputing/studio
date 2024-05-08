@@ -44,6 +44,7 @@ const config = {
       agGridHeaderHoverGrey: '#D2DDE580',
       red080: '#FFE5E5',
       red500: '#EF4444',
+      checkboxBorder: '#a0a4a8',
     },
     extend: {
       colors: {
