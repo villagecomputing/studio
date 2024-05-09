@@ -56,6 +56,7 @@ export async function GET(request: Request) {
       const logsList = await PrismaClient.logs.findMany({
         select: logsSelect,
         where: { deleted_at: null, ...(userId ? { created_by: userId } : {}) },
+        orderBy: { created_at: 'asc' },
       });
 
       const logsListResponse: ResultSchemaType[ApiEndpoints.logsList] =
