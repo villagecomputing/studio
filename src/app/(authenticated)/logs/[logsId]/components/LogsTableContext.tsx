@@ -138,6 +138,7 @@ export const useLogsTableContext = (
     displayableColumnDefs,
     sidePanelCurrentView,
     dateRange: props.dateRange,
+    description: props.description,
     setSidePanelCurrentView,
     setInspectorRowIndex,
     setRowIdsToCopyToDataset: props.setRowIdsToCopyToDataset,
