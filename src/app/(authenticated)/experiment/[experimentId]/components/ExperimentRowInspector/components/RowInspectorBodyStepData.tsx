@@ -1,5 +1,7 @@
 import { LogsTableContext } from '@/app/(authenticated)/logs/[logsId]/types';
 import { experimentStepOutputMapping } from '@/app/api/experiment/[experimentId]/insert/schema';
+import { Enum_Experiment_Column_Type } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { ExperimentTableContext, StepMetadataColumn } from '../../../types';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
@@ -112,9 +114,22 @@ const RowInspectorBodyStepData = (props: {
           if (!outputColumn) {
             return <></>;
           }
+          const accuracy = Number(currentRow['accuracy']);
+          let accuracyClass = '';
+          if (
+            !isNaN(accuracy) &&
+            outputColumn.type === Enum_Experiment_Column_Type.OUTPUT
+          ) {
+            accuracyClass += ' rounded-lg border-[1px] ';
+            accuracyClass +=
+              accuracy === 1 ? 'bg-agGroundMatch' : 'bg-agWrongLabelColor';
+          }
           return (
             <div
-              className="flex flex-col gap-1 border-l border-border px-2"
+              className={cn([
+                'flex flex-col gap-1 border-l border-border p-2',
+                accuracyClass,
+              ])}
               key={outputColumnField}
             >
               <span className={'text-sm text-muted-foreground'}>
