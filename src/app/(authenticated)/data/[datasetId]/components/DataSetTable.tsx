@@ -7,11 +7,19 @@ import { cn } from '@/lib/utils';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact';
 
 import DatasetParser from '@/lib/services/DatasetParser';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
-import { onFilterChanged } from '@/app/(authenticated)/common/gridUtils';
+import {
+  doesExternalFilterPass,
+  isExternalFilterPresent,
+  onFilterChanged,
+} from '@/app/(authenticated)/common/gridUtils';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
+import { IRowNode } from 'ag-grid-community';
+import { DateRange } from 'react-day-picker';
 import {
   CustomNoRowsOverlay,
   CustomNoRowsOverlayParams,
@@ -20,9 +28,12 @@ import { mapFieldNameToHeaderName } from '../../utils/commonUtils';
 import DatasetRowInspector from './DatasetRowInspector/DatasetRowInspector';
 import { useDatasetTableContext } from './DatasetTableContext';
 
-export default function DataSetTable(props: FetchDatasetResult) {
+export type DataSetTableProps = FetchDatasetResult;
+
+export default function DataSetTable(props: DataSetTableProps) {
   const gridRef = useRef<AgGridReactType<DatasetRow>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>('');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const context = useDatasetTableContext(props);
   const {
     getRowId,
@@ -57,7 +68,13 @@ export default function DataSetTable(props: FetchDatasetResult) {
   return (
     <>
       <div className={cn(['flex items-center justify-between p-6'])}>
-        <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
+        <div className={cn(['flex w-full flex-row gap-4'])}>
+          <DatePickerWithRange
+            selectedDateRange={dateRange}
+            setDateRange={setDateRange}
+          />
+          <SearchInput onChange={setQuickFilterText} value={quickFilterText} />
+        </div>
         <Button variant={'outline'} onClick={downloadCSV}>
           Download
         </Button>
@@ -86,9 +103,30 @@ export default function DataSetTable(props: FetchDatasetResult) {
           noRowsOverlayComponentParams: {
             resetFilter: () => {
               setQuickFilterText('');
+              setDateRange(undefined);
             },
-            isFilterPresent: quickFilterText !== '',
+            isFilterPresent:
+              quickFilterText !== '' || isExternalFilterPresent(dateRange),
+            text: 'No records found. Adjust your filters or reset them to view more results.',
           } as CustomNoRowsOverlayParams,
+          isExternalFilterPresent: useCallback(
+            () => isExternalFilterPresent(dateRange),
+            [dateRange, isExternalFilterPresent],
+          ),
+          doesExternalFilterPass: useCallback(
+            (node: IRowNode<DatasetRow>) => {
+              if (!node.data) {
+                return true;
+              }
+              return doesExternalFilterPass(
+                node.data[
+                  Enum_Dynamic_dataset_static_fields.CREATED_AT
+                ].toString(),
+                dateRange,
+              );
+            },
+            [dateRange, doesExternalFilterPass],
+          ),
         }}
       />
     </>
