@@ -58,8 +58,11 @@ const ExperimentsPage = () => {
         )}
         {!isLoading && !!experiments.length && (
           <div
-            className="overflow-y-auto"
-            style={{ height: 'calc(100vh - 150px)' }}
+            className="ag-theme-experiment-list"
+            style={{
+              height: `calc(var(--ag-row-height) * ${rowData.length} + 70px)`,
+              maxHeight: 'calc(100vh - 150px)',
+            }}
           >
             <DataTable<ExperimentListRowType>
               theme="ag-theme-experiment-list"
@@ -68,7 +71,6 @@ const ExperimentsPage = () => {
                 context: experimentsMetadataColumnsPercentiles,
                 rowData,
                 columnDefs,
-                domLayout: 'autoHeight',
                 quickFilterText,
                 onFilterChanged: onFilterChanged,
                 noRowsOverlayComponent: CustomNoRowsOverlay,
