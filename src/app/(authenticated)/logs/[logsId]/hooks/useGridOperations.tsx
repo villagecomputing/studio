@@ -62,6 +62,13 @@ export function useGridOperations() {
         editable: false,
         onCellClicked: (event) =>
           handleCellClicked(event, event.context.setInspectorRowIndex),
+        cellClass: (params) => {
+          const accuracy = Number(params.data.accuracy);
+          if (isNaN(accuracy)) {
+            return '';
+          }
+          return accuracy === 1 ? 'bg-agGroundMatch' : 'bg-agWrongLabelColor';
+        },
       },
       [Enum_Logs_Column_Type.INPUT]: {
         editable: false,
