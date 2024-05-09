@@ -12,10 +12,12 @@ import { useGridOperations } from '../hooks/useGridOperations';
 import { DatasetRow, FetchDatasetResult } from '../types';
 
 import {
+  doesExternalFilterPass,
   isExternalFilterPresent,
   onFilterChanged,
 } from '@/app/(authenticated)/common/gridUtils';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { IRowNode } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import {
@@ -39,7 +41,6 @@ export default function DataSetTable(props: DataSetTableProps) {
     onCellValueChanged,
     columnTypes,
     dataTypeDefinitions,
-    doesExternalFilterPass,
   } = useGridOperations();
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function DataSetTable(props: DataSetTableProps) {
   return (
     <>
       <div className={cn(['flex items-center justify-between p-6'])}>
-        <div className={cn(['flex flex-row gap-4'])}>
+        <div className={cn(['flex w-full flex-row gap-4'])}>
           <DatePickerWithRange
             selectedDateRange={dateRange}
             setDateRange={setDateRange}
@@ -117,7 +118,12 @@ export default function DataSetTable(props: DataSetTableProps) {
               if (!node.data) {
                 return true;
               }
-              return doesExternalFilterPass(node.data, dateRange);
+              return doesExternalFilterPass(
+                node.data[
+                  Enum_Dynamic_dataset_static_fields.CREATED_AT
+                ].toString(),
+                dateRange,
+              );
             },
             [dateRange, doesExternalFilterPass],
           ),

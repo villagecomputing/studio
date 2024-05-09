@@ -1,5 +1,6 @@
 import { exhaustiveCheck } from '@/lib/typeUtils';
 import { FilterChangedEvent, SortDirection } from 'ag-grid-community';
+import { isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { DateRangeFilter } from './types';
 
@@ -29,4 +30,32 @@ export const isExternalFilterPresent = (
   dateRange: DateRangeFilter['dateRange'],
 ) => {
   return dateRange !== undefined;
+};
+
+export const doesExternalFilterPass = (
+  createdAt: string,
+  dateRange: DateRangeFilter['dateRange'],
+) => {
+  if (!dateRange || !dateRange.from) {
+    return true;
+  }
+  if (
+    !createdAt ||
+    typeof createdAt !== 'string' ||
+    isNaN(Date.parse(createdAt))
+  ) {
+    return false;
+  }
+
+  const startOfCreatedAt = startOfDay(createdAt);
+  if (
+    isEqual(startOfCreatedAt, dateRange.from) ||
+    (!!dateRange.to &&
+      isAfter(startOfCreatedAt, dateRange.from) &&
+      (isBefore(startOfCreatedAt, dateRange.to) ||
+        isEqual(startOfCreatedAt, dateRange.to)))
+  ) {
+    return true;
+  }
+  return false;
 };

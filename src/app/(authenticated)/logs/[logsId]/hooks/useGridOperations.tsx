@@ -1,4 +1,3 @@
-import { DateRangeFilter } from '@/app/(authenticated)/common/types';
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
@@ -10,7 +9,7 @@ import {
   GridOptions,
   NavigateToNextCellParams,
 } from 'ag-grid-community';
-import { formatDate, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
+import { formatDate } from 'date-fns';
 import { useCallback } from 'react';
 import CheckboxHeaderCellRenderer from '../components/CheckboxHeaderCellRenderer';
 import { LogsRow, LogsTableContext } from '../types';
@@ -117,38 +116,9 @@ export function useGridOperations() {
     };
   }, []);
 
-  const doesExternalFilterPass = (
-    row: LogsRow,
-    dateRange: DateRangeFilter['dateRange'],
-  ) => {
-    if (!dateRange || !dateRange.from) {
-      return true;
-    }
-    if (
-      !row[Enum_Dynamic_logs_static_fields.CREATED_AT] ||
-      typeof row[Enum_Dynamic_logs_static_fields.CREATED_AT] === 'boolean'
-    ) {
-      return false;
-    }
-
-    const createdAt = startOfDay(
-      new Date(row[Enum_Dynamic_logs_static_fields.CREATED_AT]),
-    );
-    if (
-      isEqual(createdAt, dateRange.from) ||
-      (!!dateRange.to &&
-        isAfter(createdAt, dateRange.from) &&
-        (isBefore(createdAt, dateRange.to) || isEqual(createdAt, dateRange.to)))
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   return {
     getRowId,
     navigateToNextCell,
     columnTypes: getColumnTypes(),
-    doesExternalFilterPass,
   };
 }
