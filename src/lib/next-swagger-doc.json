@@ -143,6 +143,37 @@
                 },
                 "required": ["id"]
             },
+            "UploadDatasetPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetData": {
+                        "type": "object",
+                        "properties": {
+                            "datasetTitle": {
+                                "type": "string",
+                                "description": "The title of the dataset"
+                            },
+                            "groundTruthColumnIndex": {
+                                "type": "integer",
+                                "description": "Index of the ground truth column"
+                            },
+                            "blankColumnTitle": {
+                                "type": "string",
+                                "description": "Title for an optional blank column",
+                                "nullable": true
+                            }
+                        },
+                        "required": ["datasetTitle", "groundTruthColumnIndex"],
+                        "description": "Object containing the dataset title, ground truth column index, and an optional blank column title"
+                    },
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The binary content of the dataset file"
+                    }
+                },
+                "required": ["datasetData", "file"]
+            },
             "DatasetListResponse": {
                 "type": "array",
                 "items": {
@@ -166,6 +197,53 @@
                     },
                     "required": ["id", "name", "created_at", "total_rows"]
                 }
+            },
+            "ApproveAllGroundTruthsPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    }
+                },
+                "required": ["datasetId"]
+            },
+            "EditCellPayload": {
+                "type": "object",
+                "properties": {
+                    "datasetId": {
+                        "type": "string"
+                    },
+                    "rowId": {
+                        "type": "integer"
+                    },
+                    "content": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["PENDING", "APPROVED"],
+                        "nullable": true
+                    }
+                },
+                "required": ["datasetId", "rowId"],
+                "oneOf": [
+                    {
+                        "required": ["content"]
+                    },
+                    {
+                        "required": ["status"]
+                    }
+                ]
+            },
+            "EditGroundTruthCellResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["id"]
             },
             "ExperimentViewResponse": {
                 "type": "object",
