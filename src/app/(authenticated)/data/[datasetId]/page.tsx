@@ -1,4 +1,8 @@
+'use client';
 import Breadcrumb from '@/components/Breadcrumb';
+import Loading from '@/components/loading/Loading';
+import { useToast } from '@/components/ui/use-toast';
+import { DATASET_REFETCH_INTERVAL_MS } from '@/lib/constants';
 import { ENUM_Column_type } from '@/lib/types';
 import {
   UUIDPrefixEnum,
@@ -6,20 +10,49 @@ import {
   createFakeId,
   getUuidFromFakeId,
 } from '@/lib/utils';
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
+import useSWR from 'swr';
 import PageHeader from '../../components/page-header/PageHeader';
 import { fetchDataSet } from './actions';
 import CopyIdToClipboardButton from './components/CopyIdToClipboardButton';
 import DataSetTable from './components/DataSetTable';
 import { DatasetViewPageProps } from './types';
 
-export default async function DatasetViewPage(props: DatasetViewPageProps) {
+export default function DatasetViewPage(props: DatasetViewPageProps) {
   const datasetId = getUuidFromFakeId(
     props.params.datasetId,
     UUIDPrefixEnum.DATASET,
   );
-  const dataSet = await fetchDataSet(datasetId);
+  const {
+    data: dataSet,
+    error,
+    isLoading,
+  } = useSWR(datasetId, fetchDataSet, {
+    refreshInterval: DATASET_REFETCH_INTERVAL_MS,
+  });
 
-  // Filter out the 'ground truth' columnDef
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    if (error) {
+      toast({
+        value: 'Failed to get dataset details',
+        variant: 'destructive',
+      });
+    }
+    if (!dataSet) {
+      redirect('/data');
+    }
+  }, [dataSet, isLoading, error]);
+
+  if (!dataSet) {
+    return <Loading />;
+  }
+
   const colDefReordered =
     dataSet?.columnDefs.filter(
       (def) => def.type !== ENUM_Column_type.GROUND_TRUTH,

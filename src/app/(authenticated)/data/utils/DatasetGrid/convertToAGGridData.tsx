@@ -1,6 +1,5 @@
 import { ENUM_Column_type } from '@/lib/types';
 import { ColDef } from 'ag-grid-community';
-import CustomHeaderComponent from '../../[datasetId]/components/CustomHeaderComponent';
 import {
   AGGridDataset,
   ConvertToAGGridDataProps,
@@ -31,7 +30,6 @@ function getTableColumnDefs(tableColumns: DatasetTableColumnProps[]): ColDef[] {
       tableColumn.type !== ENUM_Column_type.TIMESTAMP
         ? tableColumn.name
         : 'Timestamp',
-    headerComponent: CustomHeaderComponent,
     colId: tableColumn.id.toString(),
     type: tableColumn.type,
     width: tableColumn.type === ENUM_Column_type.GROUND_TRUTH ? 230 : 200,

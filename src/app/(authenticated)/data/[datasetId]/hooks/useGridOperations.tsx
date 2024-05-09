@@ -13,7 +13,9 @@ import { formatDate } from 'date-fns';
 import { useCallback } from 'react';
 import DatasetGrid from '../../utils/DatasetGrid';
 import { ROW_ID_FIELD_NAME, isGroundTruthCell } from '../../utils/commonUtils';
-import { HeaderComponentParams } from '../components/CustomHeaderComponent';
+import CustomHeaderComponent, {
+  HeaderComponentParams,
+} from '../components/CustomHeaderComponent';
 import GroundTruthCellRenderer from '../components/GroundTruthCellRenderer';
 import { DatasetRow, DatasetTableContext, GroundTruthCell } from '../types';
 
@@ -99,6 +101,7 @@ export function useGridOperations() {
       [ENUM_Column_type.GROUND_TRUTH]: {
         editable: DatasetGrid.isEditableGroundTruth,
         pinned: 'right',
+        headerComponent: CustomHeaderComponent,
         headerComponentParams: {
           leftSideIcon: DatasetGrid.getTableColumnIcon(
             ENUM_Column_type.GROUND_TRUTH,
