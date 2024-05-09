@@ -175,7 +175,9 @@
           "type": "object",
           "properties": {
             "id": {
-              "type": "string"
+              "type": "string",
+              "description": "The dataset Id",
+              "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
             },
             "name": {
               "type": "string"
@@ -184,7 +186,8 @@
               "type": "string"
             },
             "total_rows": {
-              "type": "integer"
+              "type": "integer",
+              "description": "The number of rows a dataset has."
             }
           },
           "required": [
@@ -925,7 +928,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "The unique identifier of the dataset."
+            "description": "The unique identifier of the dataset.",
+            "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
           }
         ],
         "responses": {
