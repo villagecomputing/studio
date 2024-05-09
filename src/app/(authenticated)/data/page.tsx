@@ -122,8 +122,11 @@ const DataPage = () => {
           {!isLoading && !datasetList.length && <ZeroState />}
           {!isLoading && !!datasetList.length && (
             <div
-              className="overflow-y-auto"
-              style={{ height: 'calc(100vh - 150px)' }}
+              className="ag-theme-dataset-list"
+              style={{
+                height: `calc(var(--ag-row-height) * ${rowData.length} + 70px)`,
+                maxHeight: 'calc(100vh - 150px)',
+              }}
             >
               <DataTable<RowType>
                 theme="ag-theme-dataset-list"
@@ -131,7 +134,7 @@ const DataPage = () => {
                   ...DEFAULT_GRID_OPTIONS,
                   rowData,
                   columnDefs: colDef,
-                  domLayout: 'autoHeight',
+                  domLayout: rowData.length < 5 ? 'autoHeight' : 'normal',
                   quickFilterText,
                   rowSelection: undefined,
                   tooltipShowDelay: 100,

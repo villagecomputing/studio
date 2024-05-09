@@ -60,8 +60,11 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
           </div>
 
           <div
-            className="overflow-y-auto"
-            style={{ height: 'calc(100vh - 150px)' }}
+            className="ag-theme-experiment-group-list"
+            style={{
+              height: `calc(var(--ag-row-height) * ${rowData.length} + 51px)`,
+              maxHeight: 'calc(100vh - 150px)',
+            }}
           >
             <DataTable<ExperimentGroupRowType>
               theme="ag-theme-experiment-group-list"
@@ -76,7 +79,6 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
                 context: experimentsMetadataColumnsPercentiles,
                 rowData,
                 columnDefs,
-                domLayout: 'autoHeight',
               }}
             />
           </div>

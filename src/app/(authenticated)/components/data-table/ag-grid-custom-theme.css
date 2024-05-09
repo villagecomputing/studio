@@ -9,6 +9,7 @@
   --ag-header-foreground-color: theme(colors.gridHeaderTextColor);
   --ag-odd-row-background-color: theme(colors.white);
   --ag-row-border-width: 0px;
+  --ag-row-height: 42px;
   --ag-border-radius: 12px;
 }
 
