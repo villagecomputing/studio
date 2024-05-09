@@ -9,36 +9,6 @@ const logger = loggerFactory.getLogger({
   source: 'GetUserData',
 });
 
-/**
- * @swagger
- * /api/user/{userId}:
- *   get:
- *     tags:
- *      - User
- *     summary: Retrieve the details of a specific user by their Id.
- *     description: Retrieve the details of a specific user by their Id.
- *     operationId: GetUserData
- *     security:
- *       - ApiKeyAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The unique identifier of the user.
- *     responses:
- *       200:
- *         description: Successfully retrieved the user details.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/UserViewResponse'
- *       400:
- *         description: Invalid user Id provided.
- *       500:
- *         description: Internal server error occurred while processing the request.
- */
 export async function GET(
   request: Request,
   { params }: { params: { userId: string } },

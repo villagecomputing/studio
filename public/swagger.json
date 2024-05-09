@@ -163,43 +163,6 @@
           "id"
         ]
       },
-      "UploadDatasetPayload": {
-        "type": "object",
-        "properties": {
-          "datasetData": {
-            "type": "object",
-            "properties": {
-              "datasetTitle": {
-                "type": "string",
-                "description": "The title of the dataset"
-              },
-              "groundTruthColumnIndex": {
-                "type": "integer",
-                "description": "Index of the ground truth column"
-              },
-              "blankColumnTitle": {
-                "type": "string",
-                "description": "Title for an optional blank column",
-                "nullable": true
-              }
-            },
-            "required": [
-              "datasetTitle",
-              "groundTruthColumnIndex"
-            ],
-            "description": "Object containing the dataset title, ground truth column index, and an optional blank column title"
-          },
-          "file": {
-            "type": "string",
-            "format": "binary",
-            "description": "The binary content of the dataset file"
-          }
-        },
-        "required": [
-          "datasetData",
-          "file"
-        ]
-      },
       "DatasetListResponse": {
         "type": "array",
         "items": {
@@ -225,67 +188,6 @@
             "total_rows"
           ]
         }
-      },
-      "ApproveAllGroundTruthsPayload": {
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "datasetId"
-        ]
-      },
-      "EditCellPayload": {
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string"
-          },
-          "rowId": {
-            "type": "integer"
-          },
-          "content": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "APPROVED"
-            ],
-            "nullable": true
-          }
-        },
-        "required": [
-          "datasetId",
-          "rowId"
-        ],
-        "oneOf": [
-          {
-            "required": [
-              "content"
-            ]
-          },
-          {
-            "required": [
-              "status"
-            ]
-          }
-        ]
-      },
-      "EditGroundTruthCellResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id"
-        ]
       },
       "ExperimentViewResponse": {
         "type": "object",
@@ -824,36 +726,6 @@
           "type"
         ]
       },
-      "UserViewResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "external_id": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "external_id",
-          "created_at"
-        ]
-      },
-      "NewUserPayload": {
-        "type": "object",
-        "properties": {
-          "userExternalId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "userExternalId"
-        ]
-      },
       "DeleteUserPayload": {
         "type": "object",
         "properties": {
@@ -879,17 +751,6 @@
           }
         ]
       },
-      "NewUserResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
       "UserRevokeApiKeyPayload": {
         "type": "object",
         "properties": {
@@ -905,13 +766,20 @@
         "type": "object",
         "properties": {
           "datasetName": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset name the logs will be copied to."
           },
           "logRowIds": {
             "type": "array",
             "items": {
-              "type": "integer"
-            }
+              "type": "string"
+            },
+            "description": "The logs row ids to be copied.",
+            "example": [
+              "1",
+              "2",
+              "3"
+            ]
           }
         },
         "required": [
@@ -923,10 +791,14 @@
         "type": "object",
         "properties": {
           "datasetUuid": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset uuid where the logs were copied.",
+            "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
           },
           "logsUuid": {
-            "type": "string"
+            "type": "string",
+            "description": "The logs uuid where the rows were copied from.",
+            "example": "l-48a3beac-33c1-4c1e-87af-b598029fd42e"
           },
           "logRowsToDatasetRows": {
             "type": "array",
@@ -934,10 +806,12 @@
               "type": "object",
               "properties": {
                 "logs_row_id": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "The logs row id that was copied."
                 },
                 "id": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "The dataset row id where the logs row was copied."
                 }
               },
               "required": [
@@ -966,7 +840,7 @@
     },
     {
       "name": "User",
-      "description": "Operations related to user including creating, getting user data, permissions and API keys"
+      "description": "Operations related to user including creating, getting user data, permissions and API keys operations"
     },
     {
       "name": "Logs",
@@ -1438,7 +1312,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "The unique identifier of the logs view to retrieve."
+            "description": "The unique identifier of the logs to copy to the dataset.",
+            "example": "l-48a3beac-33c1-4c1e-87af-b598029fd42e"
           }
         ],
         "requestBody": {
@@ -1578,50 +1453,6 @@
         }
       }
     },
-    "/api/user/{userId}/getApiKey": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Retrieves user's API Key.",
-        "description": "Retrieves and existing active API key or generates a new one.",
-        "operationId": "GetUserApiKey",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The unique identifier of the user."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the user's API key.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserApiKeyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid user Id provided."
-          },
-          "500": {
-            "description": "Internal server error occurred while processing the request."
-          }
-        }
-      }
-    },
     "/api/user/{userId}/revokeApiKey": {
       "post": {
         "tags": [
@@ -1670,58 +1501,14 @@
         }
       }
     },
-    "/api/user/{userId}": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Retrieve the details of a specific user by their Id.",
-        "description": "Retrieve the details of a specific user by their Id.",
-        "operationId": "GetUserData",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The unique identifier of the user."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the user details.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserViewResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid user Id provided."
-          },
-          "500": {
-            "description": "Internal server error occurred while processing the request."
-          }
-        }
-      }
-    },
     "/api/user/new": {
       "post": {
         "tags": [
           "User"
         ],
-        "summary": "Creates a new user.",
-        "description": "Creates a new user.",
-        "operationId": "CreateUser",
+        "summary": "Delete user.",
+        "description": "Delete user by id or external id.",
+        "operationId": "DeleteUser",
         "security": [
           {
             "ApiKeyAuth": []
@@ -1732,52 +1519,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewUserPayload"
+                "$ref": "#/components/schemas/DeleteUserPayload"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully created a new user.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NewUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request headers type or Missing required data."
-          },
-          "500": {
-            "description": "Error processing request."
-          }
-        }
-      }
-    },
-    "/api/webhook/clerk/user": {
-      "post": {
-        "tags": [
-          "Webhook"
-        ],
-        "summary": "Creates, deletes or updates a clerk user .",
-        "description": "This endpoint is called by clerk when new users are created, deleted, or updated.",
-        "operationId": "WebhookClerkUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClerkUserWebhookPayload"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ok"
+            "description": "User deleted"
           },
           "400": {
             "description": "Invalid request headers type or Missing required data."

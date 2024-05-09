@@ -88,7 +88,8 @@ async function buildDatasetRowsPayload(logsId: string, logRowIds: string[]) {
  *         required: true
  *         schema:
  *           type: string
- *         description: The unique identifier of the logs view to retrieve.
+ *         description: The unique identifier of the logs to copy to the dataset.
+ *         example: l-48a3beac-33c1-4c1e-87af-b598029fd42e
  *     requestBody:
  *       required: true
  *       content:
