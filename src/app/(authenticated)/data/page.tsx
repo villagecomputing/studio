@@ -134,7 +134,6 @@ const DataPage = () => {
                   ...DEFAULT_GRID_OPTIONS,
                   rowData,
                   columnDefs: colDef,
-                  domLayout: rowData.length < 5 ? 'autoHeight' : 'normal',
                   quickFilterText,
                   rowSelection: undefined,
                   tooltipShowDelay: 100,
