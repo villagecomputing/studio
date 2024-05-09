@@ -29,11 +29,6 @@ const CopyToDatasetButton: React.FC<CopyToDatasetButtonProps> = ({
 
   const onClickCopyToDataset = () => {
     if (!rowIdsToCopyToDataset.length) {
-      toast({
-        title: 'No rows selected',
-        variant: 'default',
-        duration: 1500,
-      });
       return;
     }
     if (!datasetUuid) {
@@ -74,20 +69,26 @@ const CopyToDatasetButton: React.FC<CopyToDatasetButtonProps> = ({
       <TooltipProvider delayDuration={100}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              className="mx-4 mb-4 mt-2"
-              variant={'outline'}
-              onClick={onClickCopyToDataset}
-            >
-              {datasetUuid ? 'Update Dataset' : 'Copy to Dataset'}
-            </Button>
+            <div className="mx-4 mb-4 mt-2">
+              <Button
+                disabled={!rowIdsToCopyToDataset.length}
+                variant={'outline'}
+                onClick={onClickCopyToDataset}
+              >
+                {datasetUuid ? 'Update Dataset' : 'Copy to Dataset'}
+              </Button>
+            </div>
           </TooltipTrigger>
-          {datasetName && (
+          {(datasetName || !rowIdsToCopyToDataset.length) && (
             <TooltipContent
               side="bottom"
               className="border border-border bg-paleBlueGrey text-xs text-secondary-foreground"
             >
-              <p>Copying to {datasetName}</p>
+              <p>
+                {!rowIdsToCopyToDataset.length
+                  ? 'No rows selected'
+                  : `Copying to ${datasetName}`}
+              </p>
             </TooltipContent>
           )}
         </Tooltip>

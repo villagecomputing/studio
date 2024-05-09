@@ -72,6 +72,7 @@ export type LogsTableContext = {
   gridRef: MutableRefObject<AgGridReactType<LogsRow> | undefined>;
   sidePanelCurrentView: CurrentView | null;
   dateRange: DateRange | undefined;
+  description?: string;
   setSidePanelCurrentView: Dispatch<SetStateAction<CurrentView | null>>;
   setRowIdsToCopyToDataset: Dispatch<SetStateAction<string[]>>;
 };

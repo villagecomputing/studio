@@ -4,8 +4,12 @@ import { useLogsRowInspectorContext } from './LogsRowInspector';
 
 const LogsLeftSidePanel = () => {
   const context = useLogsRowInspectorContext();
-  const { inspectorRowIndex, sidePanelCurrentView, setSidePanelCurrentView } =
-    context;
+  const {
+    inspectorRowIndex,
+    sidePanelCurrentView,
+    setSidePanelCurrentView,
+    description,
+  } = context;
   const open = inspectorRowIndex !== null && sidePanelCurrentView !== null;
 
   if (!open) {
@@ -19,7 +23,8 @@ const LogsLeftSidePanel = () => {
   return (
     <div
       className={cn([
-        'absolute bottom-0 right-[var(--inspectorViewWidth)] top-[144px] z-inspectorView w-sidePanel border border-gridBorderColor bg-gridHeaderColor',
+        'absolute bottom-0 right-[var(--inspectorViewWidth)]  z-inspectorView w-sidePanel border border-gridBorderColor bg-gridHeaderColor',
+        description ? 'top-[144px]' : 'top-[108px]',
       ])}
     >
       <div
