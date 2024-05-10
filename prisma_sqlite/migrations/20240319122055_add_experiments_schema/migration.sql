@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Experiment_group" (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "id" TEXT NOT NULL PRIMARY KEY,
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE "Experiment" (
   "description" TEXT,
   "dataset_uuid" TEXT NOT NULL,
   "created_by" TEXT,
-  "group_id" INTEGER NOT NULL,
+  "group_id" TEXT NOT NULL,
   "pipeline_metadata" TEXT NOT NULL, 
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" DATETIME NOT NULL,

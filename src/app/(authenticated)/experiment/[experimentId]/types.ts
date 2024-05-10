@@ -54,7 +54,7 @@ export type FetchExperimentResult = AGGridExperiment & {
   costP75: number;
   latencyP25: number;
   latencyP75: number;
-  groupId: number;
+  groupId: string;
   stepsMetadataPercentiles: StepsMetadataPercentiles;
 };
 export type StepMetadataColumn = { name: string; field: string };

@@ -541,7 +541,7 @@
               "type": "string"
             },
             "groupId": {
-              "type": "integer"
+              "type": "string"
             },
             "pipelineMetadata": {
               "type": "string"
