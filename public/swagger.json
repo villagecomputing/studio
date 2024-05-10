@@ -163,7 +163,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+            "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
           }
         },
         "required": [
@@ -212,10 +214,15 @@
         "items": {
           "type": "object",
           "properties": {
+            "uuid": {
+              "type": "string",
+              "description": "The dataset uuid",
+              "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+            },
             "id": {
               "type": "string",
-              "description": "The dataset Id",
-              "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+              "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+              "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
             },
             "name": {
               "type": "string"
@@ -241,8 +248,8 @@
         "properties": {
           "datasetId": {
             "type": "string",
-            "description": "The dataset Id",
-            "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+            "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+            "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
           }
         },
         "required": [
@@ -260,8 +267,8 @@
             "properties": {
               "datasetId": {
                 "type": "string",
-                "description": "The dataset Id",
-                "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+                "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
               },
               "rowId": {
                 "type": "integer",
@@ -278,8 +285,8 @@
             "properties": {
               "datasetId": {
                 "type": "string",
-                "description": "The dataset Id",
-                "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+                "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
               },
               "rowId": {
                 "type": "integer",
