@@ -68,9 +68,9 @@ export default function ExperimentViewPage(props: ExperimentViewPageProps) {
                 <span className="flex items-center gap-1.5 text-lg">
                   <Link
                     className="text-slateGray700"
-                    href={`/group/${experiment.groupId.toString()}`}
+                    href={`/group/${experiment.groupId}`}
                   >
-                    {experiment.groupId.toString()}
+                    {experiment.groupId}
                   </Link>
                   <ChevronRightIcon color={colors.slateGray500} size={18} />
                   <span className="text-slateGray950">

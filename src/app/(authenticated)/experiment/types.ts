@@ -4,7 +4,7 @@ export type ExperimentList = ResultSchemaType[ApiEndpoints.experimentList];
 
 export type ExperimentListRowType = {
   description: string;
-  groupId: number;
+  groupId: string;
   dataset: { id: string; name: string };
   runtime: number;
   date: string;

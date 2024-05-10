@@ -595,7 +595,7 @@
               "type": "string"
             },
             "groupId": {
-              "type": "integer",
+              "type": "string",
               "description": "The group id of an experiment"
             },
             "pipelineMetadata": {

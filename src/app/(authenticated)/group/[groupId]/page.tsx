@@ -22,9 +22,7 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
   } = props;
 
   const groupSpecificExperiments = useMemo(() => {
-    return experiments.filter(
-      (experiment) => experiment.groupId === Number(groupId),
-    );
+    return experiments.filter((experiment) => experiment.groupId === groupId);
   }, [experiments, groupId]);
 
   const { columnDefs, rowData } =

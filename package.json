@@ -13,6 +13,7 @@
     "generate:sqlite": "prisma generate --schema=./prisma_sqlite/schema.prisma",
     "create-migration:postgres": "node create-postgres-migration.js",
     "create-migration:sqlite": "node create-sqlite-migration.js",
+    "drop-sqlite": "prisma migrate reset --schema=./prisma_sqlite/schema.prisma",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
