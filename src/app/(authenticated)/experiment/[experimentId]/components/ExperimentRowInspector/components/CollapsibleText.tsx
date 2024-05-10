@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { preprocessContent } from './rich-data-left-side-panel/components/MarkdownViewer';
 
 type CollapsibleTextProps = {
   content: string;
@@ -36,6 +37,8 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
     }
   }, [content]);
 
+  const processedContent = preprocessContent(content);
+
   return (
     <>
       <div className={cn('text-base text-slateGray950')}>
@@ -55,8 +58,8 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
             }}
           >
             {collapsible
-              ? content.slice(0, minCollapsibleSize) + '...'
-              : content}
+              ? processedContent.slice(0, minCollapsibleSize) + '...'
+              : processedContent}
           </ReactMarkdown>
         )}
       </div>
