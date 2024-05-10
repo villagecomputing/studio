@@ -49,7 +49,7 @@ model Experiment_column {
 }
 
 model Experiment_group {
-  id         Int          @id @default(autoincrement())
+  id         String          @id @unique
   created_at DateTime     @default(now())
   Experiment Experiment[]
 }
@@ -60,7 +60,7 @@ model Experiment {
   description       String?
   dataset_uuid      String
   created_by        String?
-  group_id          Int
+  group_id          String
   pipeline_metadata String
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt

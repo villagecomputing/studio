@@ -8,6 +8,7 @@ import {
   generateUUID,
   getUuidFromFakeId,
 } from '@/lib/utils';
+import { ZodError } from 'zod';
 import { response } from '../../utils';
 import { newExperimentPayloadSchema } from './schema';
 
@@ -50,7 +51,22 @@ export async function POST(request: Request) {
     const startTime = performance.now();
 
     const requestBody = await request.json();
-    const payload = newExperimentPayloadSchema.parse(requestBody);
+
+    let payload;
+    try {
+      payload = newExperimentPayloadSchema.parse(requestBody);
+    } catch (error) {
+      logger.warn('Validation failed', error);
+      if (error instanceof ZodError) {
+        return response(
+          `Validation failed: ${error.issues.map((issue) => issue.message).join(', ')}`,
+          400,
+        );
+      } else {
+        logger.error('Unexpected error during validation', error);
+        return response('An unexpected error occurred', 500);
+      }
+    }
     const datasetId = getUuidFromFakeId(
       payload.datasetId,
       UUIDPrefixEnum.DATASET,
@@ -64,15 +80,16 @@ export async function POST(request: Request) {
     }
     try {
       const id = generateUUID(UUIDPrefixEnum.EXPERIMENT);
-      const existingExperimentGroup = await PrismaClient.experiment.findFirst({
-        where: { dataset_uuid: datasetId, deleted_at: null },
-        select: { group_id: true },
-      });
-      const groupId = existingExperimentGroup?.group_id
-        ? existingExperimentGroup.group_id
+      const existingExperimentGroup =
+        await PrismaClient.experiment_group.findFirst({
+          where: { id: payload.groupId },
+          select: { id: true },
+        });
+      const groupId = existingExperimentGroup?.id
+        ? existingExperimentGroup.id
         : (
             await PrismaClient.experiment_group.create({
-              data: {},
+              data: { id: payload.groupId },
               select: { id: true },
             })
           ).id;
