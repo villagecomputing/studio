@@ -2,35 +2,6 @@ import ApiUtils from '@/lib/services/ApiUtils';
 import { response } from '../../utils';
 import { newUserPayloadSchema } from './schema';
 
-/**
- * @swagger
- * /api/user/new:
- *   post:
- *     tags:
- *      - User
- *     summary: Creates a new user.
- *     description: Creates a new user.
- *     operationId: CreateUser
- *     security:
- *       - ApiKeyAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/NewUserPayload'
- *     responses:
- *       200:
- *         description: Successfully created a new user.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/NewUserResponse'
- *       400:
- *         description: Invalid request headers type or Missing required data.
- *       500:
- *         description: Error processing request.
- */
 export async function POST(request: Request) {
   try {
     if (!request.headers.get('Content-Type')?.includes('application/json')) {

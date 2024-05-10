@@ -19,29 +19,6 @@ const logger = loggerFactory.getLogger({
   source: 'WebhookClerkUser',
 });
 
-/**
- * @swagger
- * /api/webhook/clerk/user:
- *   post:
- *     tags:
- *      - Webhook
- *     summary: Creates, deletes or updates a clerk user .
- *     description: This endpoint is called by clerk when new users are created, deleted, or updated.
- *     operationId: WebhookClerkUser
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/ClerkUserWebhookPayload'
- *     responses:
- *       200:
- *         description: Ok
- *       400:
- *         description: Invalid request headers type or Missing required data.
- *       500:
- *         description: Error processing request.
- */
 export async function POST(request: Request) {
   const startTime = performance.now();
   try {
