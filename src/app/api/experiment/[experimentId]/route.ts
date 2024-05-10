@@ -28,6 +28,7 @@ const logger = loggerFactory.getLogger({
  *         schema:
  *           type: string
  *         description: The unique identifier of the experiment to retrieve.
+ *         example: Experiment_Name-e-3964f3dd-23e0-4bfe-9f1e-b72774e4b1ea
  *     responses:
  *       200:
  *         description: Experiment data retrieved successfully.

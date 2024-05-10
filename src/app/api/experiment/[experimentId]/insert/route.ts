@@ -25,6 +25,8 @@ const logger = loggerFactory.getLogger({
  *       - in: path
  *         name: experimentId
  *         required: true
+ *         example: Experiment_Name-e-3964f3dd-23e0-4bfe-9f1e-b72774e4b1ea
+ *         description: The unique identifier of the experiment to insert to.
  *         schema:
  *           type: string
  *     requestBody:
