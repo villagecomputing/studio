@@ -26,9 +26,13 @@
                                 "type": "string"
                             }
                         },
+                        "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
                         "example": [{
-                            "Column1": "Value1",
-                            "Column2": "Value2"
+                                "Column1": "Value1",
+                                "Column2": "Value2"
+                            }, {
+                                "Column1": "Value3",
+                                "Column2": "Value4"
                         }]
                     }
                 }
@@ -64,17 +68,19 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                    "type": "string"
+                        "type": "string",
+                        "description": "The dataset column name (display name)."
                     },
                     "id": {
-                    "type": "number"
+                        "type": "number"
                     },
                     "field": {
-                    "type": "string"
+                        "type": "string",
+                        "description": "The column name of the dynamically generated dataset table."
                     },
                     "type": {
-                    "type": "string",
-                    "enum":  ["IDENTIFIER", "GROUND_TRUTH", "GROUND_TRUTH_STATUS", "INPUT" ]
+                        "type": "string",
+                        "enum":  ["IDENTIFIER", "GROUND_TRUTH", "GROUND_TRUTH_STATUS", "INPUT" ]
                     }
                 },
                 "required": ["name", "id", "field", "type"]
@@ -109,22 +115,22 @@
                 "type": "object",
                 "properties": {
                     "datasetName": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name of the dataset to be created."
                     },
                     "columns": {
                         "type": "array",
                         "items": {
                             "type": "string"
-                        }
+                        },
+                        "description": "The name of input columns of the dataset to be created."
                     },
                     "groundTruths": {
                         "type": "array",
                         "items": {
                             "type": "string"
-                        }
-                    },
-                    "logsUuid": {
-                        "type": "string"
+                        },
+                        "description": "The name of ground truth columns of the dataset to be created."
                     }
                 },
                 "required": ["datasetName", "columns", "rows"]
@@ -133,7 +139,9 @@
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                        "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
                     }
                 },
                 "required": ["id"]
@@ -174,8 +182,15 @@
                 "items": {
                     "type": "object",
                     "properties": {
+                        "uuid": {
+                            "type": "string",
+                            "description": "The dataset uuid",
+                            "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+                        },
                         "id": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                            "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
                         },
                         "name": {
                             "type": "string"
@@ -184,7 +199,8 @@
                             "type": "string"
                         },
                         "total_rows": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "The number of rows a dataset has."
                         }
                     },
                     "required": ["id", "name", "created_at", "total_rows"]
@@ -194,37 +210,53 @@
                 "type": "object",
                 "properties": {
                     "datasetId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                        "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
                     }
                 },
                 "required": ["datasetId"]
             },
             "EditCellPayload": {
                 "type": "object",
-                "properties": {
-                    "datasetId": {
-                        "type": "string"
-                    },
-                    "rowId": {
-                        "type": "integer"
-                    },
-                    "content": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": ["PENDING", "APPROVED"],
-                        "nullable": true
-                    }
-                },
                 "required": ["datasetId", "rowId"],
                 "oneOf": [
                     {
-                        "required": ["content"]
+                        "properties": {
+                            "datasetId": {
+                                "type": "string",
+                                "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                                "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
+                            },
+                            "rowId": {
+                                "type": "integer",
+                                "description": "The row Id for which the ground truth cell will be changed."
+                            },
+                            "content": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "If provided, must contain the new value of the ground truth cell. Status will automatically be set to approved "
+                            }
+                        }
                     },
                     {
-                        "required": ["status"]
+                        "properties": {
+                            "datasetId": {
+                                "type": "string",
+                                "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                                "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
+                            },
+                            "rowId": {
+                                "type": "integer",
+                                "description": "The row Id for which the ground truth cell will be changed."
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": ["PENDING", "APPROVED"],
+                                "nullable": true,
+                                "description": "If provided, must contain the new state of the ground truth cell. Default value is APPROVED."
+                            }
+                        }
                     }
                 ]
             },
@@ -711,22 +743,22 @@
             },
             "DeleteUserPayload": {
                 "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "userExternalId": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
                 "oneOf": [
                     {
-                        "required": ["id"]
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        }
                     },
                     {
-                        "required": ["userExternalId"]
+                        "properties": {
+                            "userExternalId": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        }
                     }
                 ]
             },
@@ -734,7 +766,8 @@
                 "type": "object",
                 "properties": {
                     "api_key": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The API Key to revoke access to."
                     }
                 },
                 "required": ["api_key"]

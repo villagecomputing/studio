@@ -28,6 +28,7 @@ const logger = loggerFactory.getLogger({
  *         schema:
  *           type: string
  *         description: The unique identifier of the dataset.
+ *         example: d-4d71fa65-6e01-475b-a924-b078195f8498
  *     responses:
  *       200:
  *         description: Successfully retrieved the dataset details.
