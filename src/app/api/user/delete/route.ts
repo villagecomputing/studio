@@ -10,7 +10,7 @@ const logger = Logger.getLogger({
 });
 /**
  * @swagger
- * /api/user/new:
+ * /api/user/delete:
  *   post:
  *     tags:
  *      - User

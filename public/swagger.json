@@ -75,13 +75,15 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset column name (display name)."
           },
           "id": {
             "type": "number"
           },
           "field": {
-            "type": "string"
+            "type": "string",
+            "description": "The column name of the dynamically generated dataset table."
           },
           "type": {
             "type": "string",
@@ -162,8 +164,7 @@
         "properties": {
           "id": {
             "type": "string"
-          },
-          "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+          }
         },
         "required": [
           "id"
@@ -239,7 +240,9 @@
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset Id",
+            "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
           }
         },
         "required": [
@@ -248,40 +251,50 @@
       },
       "EditCellPayload": {
         "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string"
-          },
-          "rowId": {
-            "type": "integer"
-          },
-          "content": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "APPROVED"
-            ],
-            "nullable": true
-          }
-        },
         "required": [
           "datasetId",
           "rowId"
         ],
         "oneOf": [
           {
-            "required": [
-              "content"
-            ]
+            "properties": {
+              "datasetId": {
+                "type": "string",
+                "description": "The dataset Id",
+                "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+              },
+              "rowId": {
+                "type": "integer",
+                "description": "The row Id for which the ground truth cell will be changed."
+              },
+              "content": {
+                "type": "string",
+                "nullable": true,
+                "description": "If provided, must contain the new value of the ground truth cell. Status will automatically be set to approved "
+              }
+            }
           },
           {
-            "required": [
-              "status"
-            ]
+            "properties": {
+              "datasetId": {
+                "type": "string",
+                "description": "The dataset Id",
+                "example": "d-4d71fa65-6e01-475b-a924-b078195f8498"
+              },
+              "rowId": {
+                "type": "integer",
+                "description": "The row Id for which the ground truth cell will be changed."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "APPROVED"
+                ],
+                "nullable": true,
+                "description": "If provided, must contain the new state of the ground truth cell. Default value is APPROVED."
+              }
+            }
           }
         ]
       },
@@ -835,26 +848,22 @@
       },
       "DeleteUserPayload": {
         "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "userExternalId": {
-            "type": "string",
-            "nullable": true
-          }
-        },
         "oneOf": [
           {
-            "required": [
-              "id"
-            ]
+            "properties": {
+              "id": {
+                "type": "string",
+                "nullable": true
+              }
+            }
           },
           {
-            "required": [
-              "userExternalId"
-            ]
+            "properties": {
+              "userExternalId": {
+                "type": "string",
+                "nullable": true
+              }
+            }
           }
         ]
       },
@@ -1611,7 +1620,7 @@
         }
       }
     },
-    "/api/user/new": {
+    "/api/user/delete": {
       "post": {
         "tags": [
           "User"
