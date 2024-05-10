@@ -273,7 +273,9 @@
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The experiment Id. The combination of experiment name and experiment uuid.",
+                        "example": "Experiment_Name-e-3964f3dd-23e0-4bfe-9f1e-b72774e4b1ea"
                     },
                     "name": {
                         "type": "string"
@@ -309,25 +311,32 @@
                             "id": {
                                 "type": "string"
                             }
-                        }
+                        },
+                        "description": "The dataset used as input for this experiment"
                     },
                     "latencyP50": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The median percentile latency."
                     },
                     "latencyP90": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The 90th percentile latency."
                     },
                     "runtime": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The total experiment runtime in seconds."
                     },
                     "cost": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The total experiment cost."
                     },
                     "accuracy": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The experiment accuracy as a percentage."
                     },
                     "parameters": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The pipeline metadata JSON as a string."
                     }
                 },
                 "required": ["id", "name", "created_at", "columns", "rows", "dataset"]
@@ -336,13 +345,15 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name of final output, intermediary output, or metadata type columns of the experiment."
                     },
                     "id": {
                         "type": "number"
                     },
                     "field": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The column name of the dynamically generated experiment table."
                     },
                     "type": {
                         "type": "string",
@@ -356,16 +367,19 @@
                 "properties": {                    
                     "accuracy": {
                         "type": "number",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The experiment output accuracy as a percentage."
                     },
                     "index": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The dataset row id associated with the experiment output."
                     },
                     "final_output_columns": {
                         "type": "array",
                         "items": {
                             "type": "string"
-                        }
+                        },
+                        "description": "The final output columns of the experiment"
                     },
                     "steps": {
                         "type": "array",
@@ -380,13 +394,16 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The step name"
                   },
                   "metadata": {
-                    "$ref": "#/components/schemas/ExperimentStepMetadata"
+                    "$ref": "#/components/schemas/ExperimentStepMetadata",
+                    "description": "The step metadata in JSON format."
                   },
                   "outputs": {
                     "type": "array",
+                    "description": "An array of step output names and values.",
                     "items": {
                       "type": "object",
                       "properties": {
@@ -407,7 +424,8 @@
                 "type": "object",
                 "properties": {
                     "latency": {
-                        "type": "number"
+                        "type": "number",
+                        "description": "The latency of the step."
                     },
                     "success": {
                         "type": "boolean"
@@ -443,18 +461,23 @@
                 "type": "object",
                 "properties": {
                     "datasetId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The dataset Id. The combination of dataset name and dataset uuid.",
+                        "example": "Dataset_Name-d-4d71fa65-6e01-475b-a924-b078195f8498"
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name of the experiment to be created."
                     },
                     "description": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The description of the experiment to be created."
                     },
                     "parameters": {
                         "type": "object",
-                        "additionalProperties": true
+                        "additionalProperties": true,
+                        "description": "The pipeline metadata in JSON format."
                     }
                 },
                 "required": ["name", "datasetId", "parameters"]
@@ -463,11 +486,13 @@
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The experiment Id. The combination of experiment name and experiment uuid.",
+                        "example": "Experiment_Name-e-3964f3dd-23e0-4bfe-9f1e-b72774e4b1ea"
                     }
                 },
                 "required": ["id"]
-            },           
+            },
             "ListExperimentResponse": {
                 "type": "array",
                 "items": {
@@ -487,28 +512,36 @@
                             "type": "string"
                         },
                         "groupId": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "The group id of an experiment"
                         },
                         "pipelineMetadata": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "The pipeline metadata of an experiment as JSON."
                         },
                         "latencyP50": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The median percentile latency of an experiment in seconds."
                         },
                         "latencyP90": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The 90th percentile latency of an experiment in seconds."
                         },
                         "runtime": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The total runtime/latency of an experiment in seconds."
                         },
                         "totalCost": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The total cost of an experiment."
                         },
                         "avgAccuracy": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The average accuracy of an experiment."
                         },
                         "totalRows": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "The total number of rows of an experiment."
                         },
                         "Dataset": {
                             "type": "object",
@@ -520,6 +553,7 @@
                                     "type": "string"
                                 }
                             },
+                            "description": "The datasets used as input for an experiment.",
                             "required": ["id", "name"]
                         }
                     },
