@@ -45,7 +45,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "example": "Tue May 07 2024"
           },
           "name": {
             "type": "string"
@@ -228,7 +229,8 @@
               "type": "string"
             },
             "created_at": {
-              "type": "string"
+              "type": "string",
+              "example": "Tue May 07 2024"
             },
             "total_rows": {
               "type": "integer",
@@ -328,7 +330,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "example": "Tue May 07 2024"
           },
           "description": {
             "type": "string",
@@ -363,11 +366,11 @@
           },
           "latencyP50": {
             "type": "number",
-            "description": "The median percentile latency."
+            "description": "The median percentile latency in seconds."
           },
           "latencyP90": {
             "type": "number",
-            "description": "The 90th percentile latency."
+            "description": "The 90th percentile latency in seconds."
           },
           "runtime": {
             "type": "number",
@@ -582,7 +585,9 @@
           "type": "object",
           "properties": {
             "id": {
-              "type": "string"
+              "type": "string",
+              "description": "The experiment Id. The combination of experiment name and experiment uuid.",
+              "example": "Experiment_Name-e-3964f3dd-23e0-4bfe-9f1e-b72774e4b1ea"
             },
             "name": {
               "type": "string"
@@ -592,10 +597,11 @@
               "nullable": true
             },
             "created_at": {
-              "type": "string"
+              "type": "string",
+              "example": "Tue May 07 2024"
             },
             "groupId": {
-              "type": "string",
+              "type": "integer",
               "description": "The group id of an experiment"
             },
             "pipelineMetadata": {
@@ -604,11 +610,11 @@
             },
             "latencyP50": {
               "type": "number",
-              "description": "The median percentile latency of an experiment in seconds."
+              "description": "The median percentile latency in seconds."
             },
             "latencyP90": {
               "type": "number",
-              "description": "The 90th percentile latency of an experiment in seconds."
+              "description": "The 90th percentile latency in seconds."
             },
             "runtime": {
               "type": "number",
@@ -665,7 +671,9 @@
           "type": "object",
           "properties": {
             "id": {
-              "type": "string"
+              "type": "string",
+              "description": "The logs Id. The combination of logs name and logs uuid.",
+              "example": "Logs_Name-l-48a3beac-33c1-4c1e-87af-b598029fd42e"
             },
             "name": {
               "type": "string"
@@ -675,28 +683,36 @@
               "nullable": true
             },
             "createdAt": {
-              "type": "string"
+              "type": "string",
+              "example": "Tue May 07 2024"
             },
             "pipelineMetadata": {
-              "type": "string"
+              "type": "string",
+              "description": "The pipeline metadata a dynamic logs table as JSON."
             },
             "latencyP50": {
-              "type": "number"
+              "type": "number",
+              "description": "The median percentile latency a dynamic logs table in seconds."
             },
             "latencyP90": {
-              "type": "number"
+              "type": "number",
+              "description": "The 90th percentile latency a dynamic logs table in seconds. "
             },
             "runtime": {
-              "type": "number"
+              "type": "number",
+              "description": "The total runtime/latency in seconds of a dynamic logs table."
             },
             "totalCost": {
-              "type": "number"
+              "type": "number",
+              "description": "The total cost from dynamic logs table."
             },
             "avgAccuracy": {
-              "type": "number"
+              "type": "number",
+              "description": "The average accuracy of a dynamic logs table."
             },
             "totalRows": {
-              "type": "number"
+              "type": "number",
+              "description": "The total number of rows from a dynamic logs table."
             }
           },
           "required": [
@@ -726,14 +742,17 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "The final output columns of the logs."
           },
           "accuracy": {
             "type": "number",
-            "nullable": true
+            "nullable": true,
+            "description": "The accuracy of the logs."
           },
           "inputs": {
             "type": "array",
+            "description": "An array of logs input names and values.",
             "items": {
               "type": "object",
               "properties": {
@@ -758,10 +777,12 @@
             "nullable": true
           },
           "parameters": {
-            "type": "object"
+            "type": "object",
+            "description": "The pipeline metadata in JSON format."
           },
           "fingerprint": {
-            "type": "string"
+            "type": "string",
+            "description": "An unique identifier used to decide if a new dynamic logs table should be created or if an existing one should be used to insert into. Can have any value."
           }
         },
         "required": [
@@ -776,10 +797,13 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The logs Id. The combination of logs name and logs uuid.",
+            "example": "Logs_Name-l-48a3beac-33c1-4c1e-87af-b598029fd42e"
           },
           "createdAt": {
-            "type": "string"
+            "type": "string",
+            "example": "Tue May 07 2024"
           },
           "name": {
             "type": "string"
@@ -801,40 +825,52 @@
               "additionalProperties": {
                 "type": "string"
               }
-            }
+            },
+            "description": "The logs data."
           },
           "latencyP50": {
-            "type": "number"
+            "type": "number",
+            "description": "The median percentile latency of the logs in seconds."
           },
           "latencyP90": {
-            "type": "number"
+            "type": "number",
+            "description": "The 90th percentile latency of the logs in seconds."
           },
           "runtime": {
-            "type": "number"
+            "type": "number",
+            "description": "The total runtime/latency of the logs in seconds."
           },
           "cost": {
-            "type": "number"
+            "type": "number",
+            "description": "The total cost of the logs."
           },
           "accuracy": {
-            "type": "number"
+            "type": "number",
+            "description": "The accuracy of the logs."
           },
           "parameters": {
-            "type": "string"
+            "type": "string",
+            "description": "The pipeline metadata JSON as a string."
           },
           "costP25": {
-            "type": "number"
+            "type": "number",
+            "description": "The 25th percentile cost."
           },
           "costP75": {
-            "type": "number"
+            "type": "number",
+            "description": "The 75th percentile cost."
           },
           "latencyP25": {
-            "type": "number"
+            "type": "number",
+            "description": "The 25th percentile latency of the logs in seconds."
           },
           "latencyP75": {
-            "type": "number"
+            "type": "number",
+            "description": "The 75th percentile latency of the logs in seconds."
           },
           "datasetUuid": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset uuid where the logs are copied to."
           }
         },
         "required": [
@@ -859,13 +895,15 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The logs column name (display name)."
           },
           "id": {
             "type": "number"
           },
           "field": {
-            "type": "string"
+            "type": "string",
+            "description": "The column name of the dynamically generated dataset table."
           },
           "type": {
             "type": "string",
