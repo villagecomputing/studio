@@ -65,10 +65,7 @@ export async function getLogsById(
     parameters: logsDetails.pipeline_metadata,
     createdAt: logsDetails.created_at,
     columns: columns,
-    rows: logsContent.map((record) => ({
-      ...record,
-      dataset_row_id: record.dataset_row_id ? record.dataset_row_id : '',
-    })),
+    rows: logsContent,
     datasetUuid: logsDetails.Dataset[0]?.uuid,
     datasetName: logsDetails.Dataset[0]?.name,
     ...logsMetadataPercentile,

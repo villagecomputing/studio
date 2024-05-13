@@ -48,7 +48,11 @@ export const useLogsTableContext = (
     const transformedRows = props.rowData.map((row) => {
       const transformedRow = { ...row };
       for (const [key, value] of Object.entries(row)) {
-        if (!inputColumnsFields.includes(key) || typeof value === 'boolean') {
+        if (
+          !inputColumnsFields.includes(key) ||
+          typeof value === 'boolean' ||
+          value === null
+        ) {
           continue;
         }
         const parsedValue = logsStepInputs.safeParse(JSON.parse(value));

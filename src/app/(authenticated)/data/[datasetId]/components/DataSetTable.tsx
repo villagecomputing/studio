@@ -115,7 +115,10 @@ export default function DataSetTable(props: DataSetTableProps) {
           ),
           doesExternalFilterPass: useCallback(
             (node: IRowNode<DatasetRow>) => {
-              if (!node.data) {
+              if (
+                !node.data ||
+                !node.data[Enum_Dynamic_dataset_static_fields.CREATED_AT]
+              ) {
                 return true;
               }
               return doesExternalFilterPass(

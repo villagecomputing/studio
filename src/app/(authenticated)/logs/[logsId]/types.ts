@@ -32,11 +32,11 @@ export type LogsTableColumnProps = {
 export type ConvertToAGGridDataProps = {
   logsId: string;
   columns: LogsTableColumnProps[];
-  rows: LogsRow[];
+  rows: Record<string, string | null>[];
 };
 
 export type LogsRow = {
-  [k: string]: string | boolean;
+  [k: string]: string | boolean | null;
 };
 
 export type FetchLogsResult = AGGridLogs & {
