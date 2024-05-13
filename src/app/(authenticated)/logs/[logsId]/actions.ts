@@ -97,13 +97,16 @@ export const fetchLogs = async (logsId: string): Promise<FetchLogsResult> => {
 
 const getStepsMetadataPercentiles = (
   stepMetadataColumns: StepMetadataColumn[],
-  rows: Record<string, string>[],
+  rows: Record<string, string | null>[],
 ) => {
   const stepsMetadataPercentiles: StepsMetadataPercentiles = {};
   stepMetadataColumns.forEach((column) => {
     const stepMetadata = compact(
       rows.map((row) => {
-        const metadata = JSON.parse(row[column.field]);
+        if (!row[column.field]) {
+          return null;
+        }
+        const metadata = JSON.parse(row[column.field] as string);
         const { latency, input_cost, output_cost, success } =
           experimentStepMetadata.parse(metadata);
         return success

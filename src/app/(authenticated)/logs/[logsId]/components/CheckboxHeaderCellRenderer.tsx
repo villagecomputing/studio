@@ -12,10 +12,12 @@ const CheckboxHeaderCellRenderer = (
   const selectableRows = props.context.rows.filter(
     (row) =>
       row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] == null &&
-      doesExternalFilterPass(
-        row[Enum_Dynamic_logs_static_fields.CREATED_AT].toString(),
-        props.context.dateRange,
-      ),
+      (row[Enum_Dynamic_logs_static_fields.CREATED_AT] == null ||
+        (row[Enum_Dynamic_logs_static_fields.CREATED_AT] != null &&
+          doesExternalFilterPass(
+            row[Enum_Dynamic_logs_static_fields.CREATED_AT].toString(),
+            props.context.dateRange,
+          ))),
   );
   const allSelected = !selectableRows.some(
     (row) => row[Enum_Dynamic_logs_static_fields.CHECKBOX_SELECTION] === false,
