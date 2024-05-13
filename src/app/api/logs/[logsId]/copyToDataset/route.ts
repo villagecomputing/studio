@@ -36,15 +36,23 @@ async function buildDatasetRowsPayload(logsId: string, logRowIds: string[]) {
       type: true,
     },
   });
+  const hasDatasetRowIdColumn = !!(await PrismaClient.logs_column.findFirst({
+    where: {
+      logs_uuid: logsId,
+      field: Enum_Dynamic_logs_static_fields.DATASET_ROW_ID,
+    },
+  }));
 
   // Get dynamic logs rows
   const logsRowsToCopy = await DatabaseUtils.select<Record<string, string>>({
     tableName: logsId,
     selectFields: logsFields.map((field) => field.field),
-    whereConditions: {
-      id: logRowIds,
-      [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: null,
-    },
+    whereConditions: hasDatasetRowIdColumn
+      ? {
+          id: logRowIds,
+          [Enum_Dynamic_logs_static_fields.DATASET_ROW_ID]: null,
+        }
+      : { id: logRowIds },
   });
 
   const rowsWithParsedInputs = logsRowsToCopy.map((row) => {
