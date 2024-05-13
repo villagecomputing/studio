@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { assertTableExists } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 
 export async function getExperimentDetails(
@@ -30,6 +31,7 @@ export async function getExperimentDetails(
   } satisfies Prisma.ExperimentSelect;
 
   try {
+    await assertTableExists(experimentId);
     const result = await PrismaClient.experiment.findUniqueOrThrow({
       where: {
         uuid: experimentId,
