@@ -86,12 +86,13 @@ export async function GET(request: Request) {
 
       logger.info(`Datasets retrieved.`, {
         elapsedTimeMs: performance.now() - startTime,
+        userId,
         count: datasetListResponse.length,
       });
 
       return Response.json(datasetListResponse);
     } catch (error) {
-      logger.error('Error getting dataset list:', error);
+      logger.error('Error getting dataset list:', error, { userId });
       return response('Error processing request', 500);
     }
   });

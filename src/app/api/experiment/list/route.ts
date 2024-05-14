@@ -130,7 +130,7 @@ export async function GET(request: Request) {
 
       return Response.json(experimentListResponse);
     } catch (error) {
-      logger.error('Error getting experiment list', error);
+      logger.error('Error getting experiment list', error, { userId });
       return response('Error processing request', 500);
     }
   });

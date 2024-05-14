@@ -51,9 +51,9 @@ const logger = loggerFactory.getLogger({
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
-
+    let requestBody: string | undefined;
     try {
-      const requestBody = await request.json();
+      requestBody = await request.json();
       const payload = insertLogsPayloadSchema.parse(requestBody);
       const logsId = await getLogsUUID(payload, userId);
 
@@ -102,7 +102,10 @@ export async function POST(request: Request) {
         await DatabaseUtils.insert(logsId, [valuesByField]);
         logger.debug('Inserted logs values', { logsId, values: valuesByField });
       } catch (error) {
-        logger.error('Error inserting log in dynamic table:', error);
+        logger.error('Error inserting log in dynamic table:', error, {
+          logsId,
+          requestBody,
+        });
         return response('Error processing request', 500);
       }
 
@@ -132,7 +135,7 @@ export async function POST(request: Request) {
         where: { uuid: logsId },
         data: updatedData,
       });
-      logger.debug('Logs metadata updated', { data: updatedData });
+      logger.debug('Logs metadata updated', { logsId, data: updatedData });
 
       logger.info('Logs inserted', {
         logsId,
@@ -140,7 +143,7 @@ export async function POST(request: Request) {
       });
       return Response.json({ id: logsId });
     } catch (error) {
-      logger.error('Error insert logs:', error);
+      logger.error('Error insert logs:', error, { requestBody });
       return response('Error processing request', 500);
     }
   });
