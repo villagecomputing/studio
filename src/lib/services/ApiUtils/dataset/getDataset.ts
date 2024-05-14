@@ -8,7 +8,10 @@ import { guardStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type, ENUM_Ground_truth_status } from '@/lib/types';
 import { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash';
-import { getDatasetOrThrow } from '../../DatabaseUtils/common';
+import {
+  assertTableExists,
+  getDatasetOrThrow,
+} from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
 import { getGroundTruthStatusColumnName } from './utils';
@@ -30,6 +33,7 @@ async function getDatasetDetails(datasetId: string, userId: string | null) {
   } satisfies Prisma.DatasetSelect;
 
   try {
+    await assertTableExists(datasetId);
     const result = await PrismaClient.dataset.findUniqueOrThrow({
       where: {
         uuid: datasetId,
