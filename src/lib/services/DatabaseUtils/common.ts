@@ -54,8 +54,7 @@ export async function getLogsEntryOrThrow(logsEntryId: string) {
   });
 }
 
-export async function assertExperimentExists(experimentId: string) {
-  await assertTableExists(experimentId);
+export async function assertExperimentDeclared(experimentId: string) {
   await PrismaClient.experiment.findUniqueOrThrow({
     where: {
       uuid: experimentId,

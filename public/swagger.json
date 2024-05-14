@@ -549,6 +549,10 @@
             "type": "string",
             "description": "The name of the experiment to be created."
           },
+          "groupId": {
+            "type": "string",
+            "description": "The group id of an experiment."
+          },
           "description": {
             "type": "string",
             "nullable": true,
@@ -563,7 +567,8 @@
         "required": [
           "name",
           "datasetId",
-          "parameters"
+          "parameters",
+          "groupId"
         ]
       },
       "NewExperimentResponse": {
