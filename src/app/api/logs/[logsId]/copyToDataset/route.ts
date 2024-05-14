@@ -124,8 +124,9 @@ export async function POST(
       return response('Invalid logs id', 400);
     }
 
+    let requestBody: string | undefined;
     try {
-      const requestBody = await request.json();
+      requestBody = await request.json();
       const { datasetName, logRowIds } =
         logsToDatasetPayloadSchema.parse(requestBody);
 
@@ -232,7 +233,10 @@ export async function POST(
         logRowsToDatasetRows: datasetRows,
       });
     } catch (error) {
-      logger.error('Error copying logs rows to dataset', { error });
+      logger.error('Error copying logs rows to dataset', error, {
+        logsId,
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });

@@ -52,33 +52,60 @@ export async function POST(
     try {
       experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
     } catch (error) {
-      logger.warn(`Invalid experiment id`, { experimentId, error });
+      logger.warn(`Invalid experiment id`, { error });
       return response('Invalid experiment id', 400);
     }
-    const requestBody = await request.json();
-    const payload = insertExperimentPayloadSchema.parse(requestBody);
+
+    let requestBody: string | undefined;
+    try {
+      requestBody = await request.json();
+    } catch (error) {
+      logger.warn(`Invalid request body`, { experimentId, error });
+      return response('Invalid request body id', 400);
+    }
+
+    const payload = insertExperimentPayloadSchema.safeParse(requestBody);
+    if (!payload.success) {
+      logger.error('Error parsing insert experiment payload', payload.error, {
+        experimentId,
+        requestBody,
+      });
+      return response('Invalid experiment paylod', 500);
+    }
 
     try {
       // Creates table if it doesn't exist
-      await ApiUtils.ensureExperimentTable({ experimentId, payload });
+      await ApiUtils.ensureExperimentTable({
+        experimentId,
+        payload: payload.data,
+      });
       logger.debug('Ensure dynamic experiments table created', {
         experimentId,
       });
     } catch (error) {
-      logger.error('Error creating experiment dynamic table', {
-        error,
+      logger.error('Error creating experiment dynamic table', error, {
         experimentId,
+        requestBody,
+        userId,
       });
       return response('Error processing request', 500);
     }
+
     try {
-      await ApiUtils.insertExperimentSteps({ experimentId, payload });
+      await ApiUtils.insertExperimentSteps({
+        experimentId,
+        payload: payload.data,
+      });
       logger.debug('Inserted experiments steps', {
         experimentId,
         payload,
       });
     } catch (error) {
-      logger.error('Error inserting experiment steps', { error, experimentId });
+      logger.error('Error inserting experiment steps', error, {
+        requestBody,
+        experimentId,
+        userId,
+      });
       return response('Error processing request', 500);
     }
 
@@ -86,16 +113,16 @@ export async function POST(
       const updatedExperiment = await ApiUtils.updateExperiment({
         userId,
         experimentId,
-        payload,
+        payload: payload.data,
       });
       logger.debug('Updated experiment metadata', {
         experimentId,
         updatedExperiment,
       });
     } catch (error) {
-      logger.error('Error updating experiment details', {
-        error,
+      logger.error('Error updating experiment details', error, {
         experimentId,
+        requestBody,
       });
       return response('Error processing request', 500);
     }
@@ -103,9 +130,9 @@ export async function POST(
     logger.info(`Experiment steps inserted successfully`, {
       elapsedTimeMs: performance.now() - startTime,
       experimentId,
-      stepNumber: payload.steps.length,
-      accuracy: payload.accuracy,
-      index: payload.index,
+      stepNumber: payload.data.steps.length,
+      accuracy: payload.data.accuracy,
+      index: payload.data.index,
     });
 
     return response('Ok');

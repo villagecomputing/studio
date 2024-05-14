@@ -47,18 +47,15 @@ export async function GET(
 ) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
+    let experimentId = params.experimentId;
+    try {
+      experimentId = getUuidFromFakeId(experimentId, UUIDPrefixEnum.EXPERIMENT);
+    } catch (error) {
+      logger.warn('Invalid experiment id', { experimentId, error });
+      return response('Invalid experiment id', 400);
+    }
 
     try {
-      let experimentId = params.experimentId;
-      try {
-        experimentId = getUuidFromFakeId(
-          experimentId,
-          UUIDPrefixEnum.EXPERIMENT,
-        );
-      } catch (error) {
-        logger.warn('Invalid experiment id', { experimentId, error });
-        return response('Invalid experiment id', 400);
-      }
       const result = await ApiUtils.getExperiment(experimentId, userId);
       const experiment = {
         ...result,
@@ -82,13 +79,16 @@ export async function GET(
       const { rows, ...experimentSummary } = experiment;
       logger.info('Experiment data retrieved', {
         elapsedTimeMs: performance.now() - startTime,
+        experimentId,
         ...experimentSummary,
         rowCount: rows.length,
       });
 
       return Response.json(experiment);
     } catch (error) {
-      logger.error('Error in getting experiment', error);
+      logger.error('Error in getting experiment', error, {
+        experimentId,
+      });
       return response('Error processing request', 500);
     }
   });

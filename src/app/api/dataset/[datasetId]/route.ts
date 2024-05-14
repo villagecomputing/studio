@@ -48,14 +48,13 @@ export async function GET(
 ) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
+    const datasetId = params.datasetId;
+    if (!datasetId) {
+      logger.warn('Invalid dataset id provided');
+      return response('Invalid dataset id', 400);
+    }
 
     try {
-      const datasetId = params.datasetId;
-      if (!datasetId) {
-        logger.warn('Invalid dataset id provided');
-        return response('Invalid dataset id', 400);
-      }
-
       const dataset = await ApiUtils.getDataset(
         getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET),
         userId,
@@ -66,6 +65,7 @@ export async function GET(
         logger.error(
           'Error parsing response dataset view type',
           validationResult.error,
+          { datasetId, dataset },
         );
         return response('Invalid response dataset view type', 500);
       }
@@ -86,7 +86,9 @@ export async function GET(
         id: createFakeId(dataset.name, dataset.id),
       });
     } catch (error) {
-      logger.error('Error getting dataset view:', error);
+      logger.error('Error getting dataset view', error, {
+        datasetId,
+      });
       return response('Error processing request', 500);
     }
   });

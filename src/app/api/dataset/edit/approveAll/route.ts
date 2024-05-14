@@ -38,8 +38,9 @@ export async function POST(request: Request) {
   return withAuthMiddleware(request, async () => {
     const startTime = performance.now();
 
+    let requestBody: string | undefined;
     try {
-      const requestBody = await request.json();
+      requestBody = await request.json();
       const { datasetId } = approveAllSchema.parse(requestBody);
       if (!datasetId) {
         logger.warn('Dataset id is missing');
@@ -54,7 +55,9 @@ export async function POST(request: Request) {
       });
       return response('OK');
     } catch (error) {
-      logger.error('Error approving all ground truths', error);
+      logger.error('Error approving all ground truths', error, {
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });

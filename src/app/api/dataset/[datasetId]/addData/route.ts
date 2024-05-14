@@ -50,27 +50,27 @@ export async function POST(
 ) {
   return withAuthMiddleware(request, async () => {
     const startTime = performance.now();
+    const datasetId = params.datasetId;
+    if (!datasetId) {
+      logger.warn('Invalid dataset id provided');
+      return response('Invalid dataset id', 400);
+    }
 
+    if (!request.headers.get('Content-Type')?.includes('application/json')) {
+      logger.warn('Invalid request headers type');
+      return response('Invalid request headers type', 400);
+    }
+    let requestBody: string | undefined;
     try {
-      const datasetId = params.datasetId;
-      if (!datasetId) {
-        logger.warn('Invalid dataset id provided');
-        return response('Invalid dataset id', 400);
-      }
-
-      if (!request.headers.get('Content-Type')?.includes('application/json')) {
-        logger.warn('Invalid request headers type');
-        return response('Invalid request headers type', 400);
-      }
-      const body = await request.json();
-      if (!body) {
+      requestBody = await request.json();
+      if (!requestBody) {
         logger.warn('Missing required data');
         return response('Missing required data', 400);
       }
 
       // Parse the dataset data object using the defined schema
       // This will throw if the object doesn't match the schema
-      const dataset = addDataPayloadSchema.parse(body);
+      const dataset = addDataPayloadSchema.parse(requestBody);
       const datasetUuid = getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET);
       await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
 
@@ -81,7 +81,10 @@ export async function POST(
       });
       return response('OK');
     } catch (error) {
-      logger.error('Error adding dataset data', error);
+      logger.error('Error adding dataset data', error, {
+        datasetId,
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });

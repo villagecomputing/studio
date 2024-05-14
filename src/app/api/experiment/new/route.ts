@@ -50,10 +50,9 @@ export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
-    const requestBody = await request.json();
-
     let payload;
     try {
+      const requestBody = await request.json();
       payload = newExperimentPayloadSchema.parse(requestBody);
     } catch (error) {
       logger.warn('Validation failed', error);
@@ -75,7 +74,7 @@ export async function POST(request: Request) {
     try {
       await getDatasetOrThrow(datasetId);
     } catch (error) {
-      logger.warn('Invalid dataset id', error);
+      logger.warn('Invalid dataset id', error, { datasetId });
       return response('Invalid dataset id', 400);
     }
     try {
@@ -111,7 +110,10 @@ export async function POST(request: Request) {
       });
       return Response.json({ id: createFakeId(payload.name, id) });
     } catch (error) {
-      logger.error('Error declaring new experiment', error);
+      logger.error('Error declaring new experiment', error, {
+        requestBody: payload,
+        datasetId,
+      });
       return response('Error processing request', 500);
     }
   });

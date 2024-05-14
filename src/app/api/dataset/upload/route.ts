@@ -45,14 +45,12 @@ export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
 
-    try {
-      if (
-        !request.headers.get('Content-Type')?.includes('multipart/form-data')
-      ) {
-        logger.warn('Invalid request headers');
-        return response('Invalid request headers type', 400);
-      }
+    if (!request.headers.get('Content-Type')?.includes('multipart/form-data')) {
+      logger.warn('Invalid request headers');
+      return response('Invalid request headers type', 400);
+    }
 
+    try {
       const formData = await request.formData();
       const file = formData.get('file');
       const requestDatasetData = formData.get('datasetData');

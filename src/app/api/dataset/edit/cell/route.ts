@@ -40,11 +40,10 @@ const logger = loggerFactory.getLogger({
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async () => {
     const startTime = performance.now();
-
+    let requestBody: string | undefined;
     try {
-      const requestBody = await request.json();
+      requestBody = await request.json();
       const payload = editGroundTruthCellSchema.parse(requestBody);
-
       const updatedCellId = await ApiUtils.editGroundTruthCell({
         ...payload,
         datasetId: getUuidFromFakeId(payload.datasetId, UUIDPrefixEnum.DATASET),
@@ -57,7 +56,9 @@ export async function POST(request: Request) {
       });
       return Response.json({ id: updatedCellId });
     } catch (error) {
-      logger.error('Error editing Dataset cell', error);
+      logger.error('Error editing Dataset cell', error, {
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });
