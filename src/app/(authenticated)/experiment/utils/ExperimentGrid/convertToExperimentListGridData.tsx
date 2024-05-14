@@ -15,7 +15,7 @@ function getExperimentListTableColumnDefs(
       headerName: 'Name',
       field: 'name',
       minWidth: 150,
-      flex: 3,
+      flex: 2,
       onCellClicked,
     },
     {
