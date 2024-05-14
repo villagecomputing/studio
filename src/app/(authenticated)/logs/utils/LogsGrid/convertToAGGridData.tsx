@@ -32,7 +32,7 @@ function getTableColumnDefs(tableColumns: LogsTableColumnProps[]): ColDef[] {
   return columns;
 }
 
-function getTableRows(rows: LogsRow[]): LogsRow[] {
+function getTableRows(rows: Record<string, string | null>[]): LogsRow[] {
   return rows.map((row, index) => ({
     ...row,
     metadata: '',

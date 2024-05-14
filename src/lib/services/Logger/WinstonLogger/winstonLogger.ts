@@ -68,5 +68,4 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
       logger.log(level, message, ...[{ source }, ...meta]),
   };
 };
-
 export default getWinstonILoggerImplementation;
