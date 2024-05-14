@@ -117,6 +117,7 @@ const RowInspectorBodyStepData = (props: {
           const accuracy = Number(currentRow['accuracy']);
           let accuracyClass = '';
           if (
+            currentRow['accuracy'] !== null &&
             !isNaN(accuracy) &&
             outputColumn.type === Enum_Experiment_Column_Type.OUTPUT
           ) {

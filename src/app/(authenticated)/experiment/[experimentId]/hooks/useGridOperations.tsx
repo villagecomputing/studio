@@ -70,7 +70,7 @@ export function useGridOperations() {
           handleCellClicked(event, event.context.setInspectorRowIndex),
         cellClass: (params) => {
           const accuracy = Number(params.data.accuracy);
-          if (isNaN(accuracy)) {
+          if (params.data.accuracy === null || isNaN(accuracy)) {
             return '';
           }
           return accuracy === 1 ? 'bg-agGroundMatch' : 'bg-agWrongLabelColor';
