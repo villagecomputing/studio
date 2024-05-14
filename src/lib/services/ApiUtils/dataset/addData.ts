@@ -53,7 +53,7 @@ export async function addData({
 
     // replace the column names from the dataset with the field id
     const sanitizedRows = datasetRows.map((datasetRow) => {
-      const sanitizedRow: Record<string, string | Date> = {};
+      const sanitizedRow: Record<string, string | Date | null | number> = {};
 
       existingColumns.forEach((existingColumn) => {
         if (
