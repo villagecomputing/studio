@@ -113,10 +113,13 @@ export async function GET(request: Request) {
       const parsedExperimentListResponseSchema =
         experimentListResponseSchema.safeParse(experimentListResponse);
       if (!parsedExperimentListResponseSchema.success) {
-        logger.error('Invalid response datasetList type', {
-          experimentListResponse,
-          error: parsedExperimentListResponseSchema.error,
-        });
+        logger.error(
+          'Invalid response datasetList type',
+          parsedExperimentListResponseSchema.error,
+          {
+            experimentListResponse,
+          },
+        );
         return response('Invalid response datasetList type', 500);
       }
 

@@ -65,8 +65,7 @@ export async function POST(
         experimentId,
       });
     } catch (error) {
-      logger.error('Error creating experiment dynamic table', {
-        error,
+      logger.error('Error creating experiment dynamic table', error, {
         experimentId,
       });
       return response('Error processing request', 500);
@@ -78,7 +77,7 @@ export async function POST(
         payload,
       });
     } catch (error) {
-      logger.error('Error inserting experiment steps', { error, experimentId });
+      logger.error('Error inserting experiment steps', error, { experimentId });
       return response('Error processing request', 500);
     }
 
@@ -93,8 +92,7 @@ export async function POST(
         updatedExperiment,
       });
     } catch (error) {
-      logger.error('Error updating experiment details', {
-        error,
+      logger.error('Error updating experiment details', error, {
         experimentId,
       });
       return response('Error processing request', 500);

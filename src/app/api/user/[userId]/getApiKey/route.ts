@@ -31,7 +31,8 @@ export async function GET(
         userGetApiKeyResponseSchema.safeParse(apiKeyResult);
       if (!parsedApiKeyResult.success) {
         logger.error(
-          `Error while parsing user result: ${parsedApiKeyResult.error}`,
+          `Error while parsing user result`,
+          parsedApiKeyResult.error,
         );
         return response('Invalid response user view type', 500);
       }
@@ -42,8 +43,7 @@ export async function GET(
       });
       return Response.json(apiKeyResult);
     } catch (error) {
-      logger.error('Error getting user API key:', {
-        error,
+      logger.error('Error getting user API key:', error, {
         userId: params.userId,
       });
       return response('Error processing request', 500);
