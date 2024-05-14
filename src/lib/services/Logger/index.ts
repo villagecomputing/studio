@@ -14,7 +14,7 @@ export enum LOG_LEVEL {
 }
 export interface ILogger {
   info: (message: string, ...meta: unknown[]) => void;
-  error: (message: string, ...meta: unknown[]) => void;
+  error: (message: string, error?: unknown, ...meta: unknown[]) => void;
   debug: (message: string, ...meta: unknown[]) => void;
   warn: (message: string, ...meta: unknown[]) => void;
   log: (level: string, message: string, ...meta: unknown[]) => void;
