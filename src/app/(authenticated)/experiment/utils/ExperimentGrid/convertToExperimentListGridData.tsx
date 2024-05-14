@@ -12,6 +12,13 @@ function getExperimentListTableColumnDefs(
 ): GridOptions<ExperimentListRowType>['columnDefs'] {
   return [
     {
+      headerName: 'Name',
+      field: 'name',
+      minWidth: 150,
+      flex: 2,
+      onCellClicked,
+    },
+    {
       headerName: 'Description',
       field: 'description',
       minWidth: 150,
@@ -101,6 +108,7 @@ function getExperimentListRowData(
 ): ExperimentListRowType[] {
   return data.map((data) => ({
     id: data.id,
+    name: data.name ?? '',
     description: data.description || '-',
     groupId: data.groupId,
     date: formatDate(data.created_at),
