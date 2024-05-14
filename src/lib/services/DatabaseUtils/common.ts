@@ -3,7 +3,32 @@ import { Prisma } from '@prisma/client';
 import PrismaClient from '../prisma';
 import { WhereConditions } from './types';
 
+const buildSQLiteTableExistsSqlQuery = (tableName: string): Prisma.Sql => {
+  return Prisma.sql`SELECT * FROM sqlite_master WHERE type='table' AND tbl_name = ${tableName}`;
+};
+
+const buildPostgresTableExistsSqlQuery = (tableName: string): Prisma.Sql => {
+  return Prisma.sql`SELECT * FROM pg_tables WHERE schemaname = 'public' AND tablename = ${tableName}`;
+};
+
+const buildTableExistsQueryString = (tableName: string): Prisma.Sql => {
+  if (process.env.NEXT_PUBLIC_APP_DATABASE_PROVIDER === 'sqlite') {
+    return buildSQLiteTableExistsSqlQuery(tableName);
+  } else {
+    return buildPostgresTableExistsSqlQuery(tableName);
+  }
+};
+
+export async function assertTableExists(tableName: string) {
+  const checkTableExistsQuery = buildTableExistsQueryString(tableName);
+  const result = await PrismaClient.$queryRaw<unknown[]>(checkTableExistsQuery);
+  if (result.length !== 1) {
+    throw new Error(`Table ${tableName} does not exist`);
+  }
+}
+
 export async function getExperimentOrThrow(experimentId: string) {
+  await assertTableExists(experimentId);
   return await PrismaClient.experiment.findUniqueOrThrow({
     where: {
       uuid: experimentId,
@@ -12,6 +37,7 @@ export async function getExperimentOrThrow(experimentId: string) {
 }
 
 export async function getDatasetOrThrow(datasetId: string) {
+  await assertTableExists(datasetId);
   return await PrismaClient.dataset.findUniqueOrThrow({
     where: {
       uuid: datasetId,
@@ -20,6 +46,7 @@ export async function getDatasetOrThrow(datasetId: string) {
 }
 
 export async function getLogsEntryOrThrow(logsEntryId: string) {
+  await assertTableExists(logsEntryId);
   return await PrismaClient.logs.findUniqueOrThrow({
     where: {
       uuid: logsEntryId,
@@ -28,6 +55,7 @@ export async function getLogsEntryOrThrow(logsEntryId: string) {
 }
 
 export async function assertExperimentExists(experimentId: string) {
+  await assertTableExists(experimentId);
   await PrismaClient.experiment.findUniqueOrThrow({
     where: {
       uuid: experimentId,

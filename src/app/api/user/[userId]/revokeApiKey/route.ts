@@ -48,15 +48,16 @@ export async function POST(
 ) {
   return withAuthMiddleware(request, async (authenticatedUserId) => {
     const startTime = performance.now();
+    const userId = params.userId;
+    if (!userId || userId !== authenticatedUserId) {
+      logger.warn('Invalid user id');
+      return response('Invalid user id', 400);
+    }
 
+    let requestBody: string | undefined;
     try {
-      const userId = params.userId;
-      if (!userId || userId !== authenticatedUserId) {
-        logger.warn('Invalid user id');
-        return response('Invalid user id', 400);
-      }
-      const body = await request.json();
-      const payload = userRevokeApiKeyPayloadSchema.parse(body);
+      requestBody = await request.json();
+      const payload = userRevokeApiKeyPayloadSchema.parse(requestBody);
       await ApiUtils.revokeUserApiKey({
         userId: userId,
         payload: payload,
@@ -68,7 +69,7 @@ export async function POST(
       });
       return response('OK');
     } catch (error) {
-      logger.error('Error revoking api key', error);
+      logger.error('Error revoking api key', error, { userId, requestBody });
       return response('Error processing request', 500);
     }
   });

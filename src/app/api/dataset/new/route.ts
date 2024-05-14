@@ -42,21 +42,22 @@ const logger = loggerFactory.getLogger({
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async (userId) => {
     const startTime = performance.now();
+    if (!request.headers.get('Content-Type')?.includes('application/json')) {
+      logger.warn('Invalid request headers type');
+      return response('Invalid request headers type', 400);
+    }
 
+    let requestBody: string | undefined;
     try {
-      if (!request.headers.get('Content-Type')?.includes('application/json')) {
-        logger.warn('Invalid request headers type');
-        return response('Invalid request headers type', 400);
-      }
-      const body = await request.json();
-      if (!body) {
+      requestBody = await request.json();
+      if (!requestBody) {
         logger.warn('Missing required data');
         return response('Missing required data', 400);
       }
 
       // Parse the dataset data object using the defined schema
       // This will throw if the object doesn't match the schema
-      const dataset = newDatasetPayloadSchema.parse(body);
+      const dataset = newDatasetPayloadSchema.parse(requestBody);
       if (dataset.groundTruths.length === 0) {
         dataset.groundTruths.push('GT Column');
       }
@@ -70,7 +71,9 @@ export async function POST(request: Request) {
       });
       return Response.json({ id: fakeId });
     } catch (error) {
-      logger.error('Error creating a new Dataset:', error);
+      logger.error('Error creating a new Dataset:', error, {
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });

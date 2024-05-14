@@ -102,7 +102,7 @@ export async function GET(request: Request) {
       });
       return Response.json(logsListResponse);
     } catch (error) {
-      logger.error('Error getting logs list:', error);
+      logger.error('Error getting logs list:', error, { userId });
       return response('Error processing request', 500);
     }
   });

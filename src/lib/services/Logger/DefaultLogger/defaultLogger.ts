@@ -8,8 +8,12 @@ const getDefaultILoggerImplementation = (source: string | undefined) => {
     process.env.LOG_LEVEL || LOG_LEVEL.ERROR,
   );
   return {
-    error: (message: string, ...meta: unknown[]) => {
-      console.error(`${prefix} ${message}`, ...meta);
+    error: (message: string, error?: unknown, ...meta: unknown[]) => {
+      console.error(
+        `${prefix} ${message}`,
+        error ? `Error: ${error}` : '',
+        ...meta,
+      );
     },
     warn: (message: string, ...meta: unknown[]) => {
       if (logLevel === LOG_LEVEL.ERROR) {

@@ -21,17 +21,18 @@ const logger = loggerFactory.getLogger({
 
 export async function POST(request: Request) {
   const startTime = performance.now();
+
+  // TODO: at some point we might consider verifying the request signature
+  // Doc: https://clerk.com/docs/integrations/webhooks/sync-data
+  if (!request.headers.get('Content-Type')?.includes('application/json')) {
+    logger.warn('Invalid request headers type');
+    return response('Invalid request headers type', 400);
+  }
+
+  let requestBody: string | undefined;
   try {
-    // TODO: at some point we might consider verifying the request signature
-    // Doc: https://clerk.com/docs/integrations/webhooks/sync-data
-
-    if (!request.headers.get('Content-Type')?.includes('application/json')) {
-      logger.warn('Invalid request headers type');
-      return response('Invalid request headers type', 400);
-    }
-
-    const body = await request.json();
-    const { data, type, object } = clerkUserPayloadSchema.parse(body);
+    requestBody = await request.json();
+    const { data, type, object } = clerkUserPayloadSchema.parse(requestBody);
 
     if (
       object !== CLERK_REQUEST_OBJECT.EVENT ||
@@ -54,11 +55,12 @@ export async function POST(request: Request) {
 
     logger.info('Clerk user webhook processed', {
       type,
+      userExternalId: data.id,
       elapsedTimeMs: performance.now() - startTime,
     });
     return response('Ok');
   } catch (error) {
-    logger.error('Error processing user webhook:', error);
+    logger.error('Error processing user webhook:', error, { requestBody });
     return response('Error processing request', 500);
   }
 }

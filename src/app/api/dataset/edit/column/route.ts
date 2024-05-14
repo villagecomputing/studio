@@ -13,9 +13,9 @@ const logger = loggerFactory.getLogger({
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async () => {
     const startTime = performance.now();
-
+    let requestBody: string | undefined;
     try {
-      const requestBody = await request.json();
+      requestBody = await request.json();
       const { columnId, type, name } =
         editDatasetColumnSchema.parse(requestBody);
 
@@ -34,7 +34,9 @@ export async function POST(request: Request) {
 
       return Response.json({ id: updatedColumnId });
     } catch (error) {
-      logger.error('Error edditing dataset column:', error);
+      logger.error('Error edditing dataset column:', error, {
+        requestBody,
+      });
       return response('Error processing request', 500);
     }
   });

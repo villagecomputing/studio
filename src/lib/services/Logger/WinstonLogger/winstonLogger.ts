@@ -19,17 +19,20 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
         format.printf(({ level, message, metadata }) => {
           const { timestamp, source, stack, error, ...customMetadata } =
             metadata;
+
           const stackLog = stack
             ? `\nStack trace: ${stack.replace('at', '\nat')}`
             : '';
 
-          const errorLog = error ? `\nError: ${error}` : '';
+          const errorLog = error
+            ? `\nError: ${JSON.stringify(error, null, 2)}`
+            : '';
           const customMetadataLog =
             Object.keys(customMetadata).length > 0
-              ? `\n Custom metadata: ${JSON.stringify(customMetadata, null, 2)}`
+              ? `\n\n Custom metadata: ${JSON.stringify(customMetadata, null, 2)}`
               : '';
 
-          return `[${timestamp}][${source}][${level}]: ${message} ${customMetadataLog} ${errorLog} ${stackLog}`;
+          return `[${timestamp}][${source}][${level}]: ${message} ${errorLog} ${stackLog} ${customMetadataLog}`;
         }),
       ),
 
@@ -39,8 +42,8 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
     winstonLoggerWrapper = {
       info: (message: string, ...meta: unknown[]) =>
         winstonLogger.info(message, ...meta),
-      error: (message: string, ...meta: unknown[]) =>
-        winstonLogger.error(message, ...meta),
+      error: (message: string, error?: unknown, ...meta: unknown[]) =>
+        winstonLogger.error(message, error, ...meta),
       debug: (message: string, ...meta: unknown[]) =>
         winstonLogger.debug(message, ...meta),
       warn: (message: string, ...meta: unknown[]) =>
@@ -55,15 +58,14 @@ const getWinstonILoggerImplementation = (source: string | undefined) => {
   return {
     info: (message: string, ...meta: unknown[]) =>
       logger.info(message, ...[{ source }, ...meta]),
-    error: (message: string, ...meta: unknown[]) =>
-      logger.error(message, ...[{ source }, ...meta]),
+    error: (message: string, error?: unknown, ...meta: unknown[]) =>
+      logger.error(message, ...[{ source, error }, ...meta]),
     debug: (message: string, ...meta: unknown[]) =>
       logger.debug(message, ...[{ source }, ...meta]),
     warn: (message: string, ...meta: unknown[]) =>
-      logger.warn(message, { source, ...[{ source }, ...meta] }),
+      logger.warn(message, ...[{ source }, ...meta]),
     log: (level: string, message: string, ...meta: unknown[]) =>
       logger.log(level, message, ...[{ source }, ...meta]),
   };
 };
-
 export default getWinstonILoggerImplementation;

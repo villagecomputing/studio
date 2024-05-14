@@ -35,13 +35,16 @@ const logger = Logger.getLogger({
  */
 export async function POST(request: Request) {
   return withAuthMiddleware(request, async (authenticatedUserId) => {
+    if (!request.headers.get('Content-Type')?.includes('application/json')) {
+      return response('Invalid request headers type', 400);
+    }
+
+    let requestBody: string | undefined;
+
     try {
-      if (!request.headers.get('Content-Type')?.includes('application/json')) {
-        return response('Invalid request headers type', 400);
-      }
-      const body = await request.json();
+      requestBody = await request.json();
       const { id: userId, userExternalId } =
-        deleteUserPayloadSchema.parse(body);
+        deleteUserPayloadSchema.parse(requestBody);
       if (!userId || userId !== authenticatedUserId) {
         logger.warn('Invalid user id');
         return response('Invalid user id', 400);
@@ -50,7 +53,7 @@ export async function POST(request: Request) {
 
       return response('User deleted');
     } catch (error) {
-      console.error('Error in POST:', error);
+      console.error('Error in POST:', error, { requestBody });
       return response('Error processing request', 500);
     }
   });
