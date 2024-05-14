@@ -240,7 +240,7 @@ export async function POST(
         logRowsToDatasetRows: datasetRows,
       });
     } catch (error) {
-      logger.error('Error copying logs rows to dataset', { error });
+      logger.error('Error copying logs rows to dataset', error);
       return response('Error processing request', 500);
     }
   });

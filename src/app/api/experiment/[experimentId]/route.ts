@@ -72,10 +72,13 @@ export async function GET(
       const parsedExperiment =
         experimentViewResponseSchema.safeParse(experiment);
       if (!parsedExperiment.success) {
-        logger.error('Experiment view response validation failed', {
-          experimentId,
-          error: parsedExperiment.error,
-        });
+        logger.error(
+          'Experiment view response validation failed',
+          parsedExperiment.error,
+          {
+            experimentId,
+          },
+        );
         return response('Invalid response experiment view type', 500);
       }
 
