@@ -472,6 +472,10 @@
                         "type": "string",
                         "description": "The name of the experiment to be created."
                     },
+                    "groupId": {
+                        "type": "string",
+                        "description": "The group id of an experiment."
+                    },
                     "description": {
                         "type": "string",
                         "nullable": true,
@@ -483,7 +487,7 @@
                         "description": "The pipeline metadata in JSON format."
                     }
                 },
-                "required": ["name", "datasetId", "parameters"]
+                "required": ["name", "datasetId", "parameters", "groupId"]
             },
             "NewExperimentResponse": {
                 "type": "object",

@@ -1,7 +1,7 @@
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import DatabaseUtils from '../../DatabaseUtils';
 import {
-  assertExperimentExists,
+  assertExperimentDeclared,
   isExperimentTableCreated,
 } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
@@ -18,7 +18,7 @@ export async function ensureExperimentTable({
   payload: PayloadSchemaType[ApiEndpoints.experimentInsert];
 }) {
   // Don't create dynamic table if doesn't exist in the Experiments list table
-  await assertExperimentExists(experimentId);
+  await assertExperimentDeclared(experimentId);
   const experimentFields = buildExperimentFields(payload);
   const fields = experimentFields.map(
     (experimentField) => experimentField.field,
