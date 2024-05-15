@@ -11,7 +11,7 @@ const CheckboxHeaderCellRenderer = (
 ) => {
   const selectableRows = props.context.rows.filter(
     (row) =>
-      row[Enum_Dynamic_logs_static_fields.DATASET_ROW_ID] == null &&
+      row[Enum_Dynamic_logs_static_fields.DATASET_ROW_FINGERPRINT] == null &&
       (row[Enum_Dynamic_logs_static_fields.CREATED_AT] == null ||
         (row[Enum_Dynamic_logs_static_fields.CREATED_AT] != null &&
           doesExternalFilterPass(

@@ -66,7 +66,9 @@ export const fetchExperiment = async (
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row) => {
           const datasetRowFingerprint =
-            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID];
+            row[
+              Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_FINGERPRINT
+            ];
 
           return {
             ...row,
