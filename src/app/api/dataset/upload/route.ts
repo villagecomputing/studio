@@ -1,6 +1,7 @@
 import { MAX_SQL_VARIABLES } from '@/lib/constants';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import DatasetParser from '@/lib/services/DatasetParser';
 import FileHandler from '@/lib/services/FileHandler';
@@ -121,7 +122,17 @@ export async function POST(request: Request) {
 
       for (let i = 0; i < parsedFile.rows.length; i += batchSize) {
         const batch = parsedFile.rows.slice(i, i + batchSize);
-        await ApiUtils.addData({ datasetId, payload: { datasetRows: batch } });
+        await ApiUtils.addData({
+          datasetId,
+          payload: {
+            datasetRows: batch.map((row, index) => ({
+              ...row,
+              [Enum_Dynamic_dataset_static_fields.FINGERPRINT]: (
+                i + index
+              ).toString(),
+            })),
+          },
+        });
       }
       logger.debug('Populated dataset', {
         id: datasetId,

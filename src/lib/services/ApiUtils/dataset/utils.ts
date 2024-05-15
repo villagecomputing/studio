@@ -12,6 +12,7 @@ export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 export enum Enum_Dynamic_dataset_static_fields {
   LOGS_ROW_ID = 'logs_row_id',
   CREATED_AT = 'created_at',
+  FINGERPRINT = 'fingerprint',
 }
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
@@ -80,6 +81,12 @@ export function buildDatasetFields(
     field: Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID,
     type: ENUM_Column_type.METADATA,
     index: -1,
+  });
+  datasetFields.push({
+    name: Enum_Dynamic_dataset_static_fields.FINGERPRINT,
+    field: Enum_Dynamic_dataset_static_fields.FINGERPRINT,
+    index: -1,
+    type: ENUM_Column_type.METADATA,
   });
 
   return datasetFields;

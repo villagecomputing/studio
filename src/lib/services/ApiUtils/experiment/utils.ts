@@ -126,7 +126,7 @@ export function buildExperimentFields(
       name: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID,
       field: Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID,
       type: Enum_Experiment_Column_Type.METADATA,
-      value: payload.index.toString(),
+      value: payload.dataset_row_fingerprint,
     },
   );
 

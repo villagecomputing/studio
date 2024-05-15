@@ -24,7 +24,15 @@
                 "type": "string"
               }
             },
-            "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
+            "properties": {
+              "fingerprint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "fingerprint"
+            ],
+            "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys and must always include the 'fingerprint' key. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
             "example": [
               {
                 "Column1": "Value1",
@@ -437,9 +445,9 @@
             "nullable": true,
             "description": "The experiment output accuracy as a percentage."
           },
-          "index": {
-            "type": "number",
-            "description": "The dataset row id associated with the experiment output."
+          "dataset_row_fingerprint": {
+            "type": "string",
+            "description": "The dataset row fingerprint associated with the experiment output."
           },
           "final_output_columns": {
             "type": "array",
@@ -457,7 +465,7 @@
         },
         "required": [
           "steps",
-          "index"
+          "dataset_row_fingerprint"
         ]
       },
       "ExperimentStepPayload": {

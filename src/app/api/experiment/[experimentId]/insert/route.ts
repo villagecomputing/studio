@@ -132,7 +132,7 @@ export async function POST(
       experimentId,
       stepNumber: payload.data.steps.length,
       accuracy: payload.data.accuracy,
-      index: payload.data.index,
+      dataset_row_fingerprint: payload.data.dataset_row_fingerprint,
     });
 
     return response('Ok');

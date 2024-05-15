@@ -65,12 +65,12 @@ export const fetchExperiment = async (
         experimentId: experiment.id,
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row) => {
-          const datasetRowId = Number(
-            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID],
-          );
+          const datasetRowFingerprint =
+            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID];
+
           return {
             ...row,
-            ...rowsMap.get(datasetRowId.toString()),
+            ...rowsMap.get(datasetRowFingerprint),
           };
         }),
       }),

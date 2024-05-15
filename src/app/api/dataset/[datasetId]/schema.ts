@@ -24,5 +24,6 @@ export const datasetViewResponseSchema = z.object({
   created_at: z.date(),
   name: z.string(),
   columns: z.array(TableColumnPropsSchema),
+  metadataColumns: z.array(TableColumnPropsSchema),
   rows: z.array(DatasetRowSchema),
 });

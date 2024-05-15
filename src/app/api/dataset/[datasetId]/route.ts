@@ -77,6 +77,7 @@ export async function GET(
           created_at: dataset.created_at,
           name: dataset.name,
           columns: dataset.columns,
+          metadataColumns: dataset.metadataColumns,
           numberOfRows: dataset.rows.length,
         },
       });

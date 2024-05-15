@@ -96,6 +96,19 @@ export async function getDataset(
       };
     });
 
+  const metadataColumns = datasetDetails.Dataset_column.filter(
+    (column) =>
+      guardStringEnum(ENUM_Column_type, column.type) ===
+      ENUM_Column_type.METADATA,
+  ).map((column): DatasetTableColumnProps => {
+    return {
+      name: column.name,
+      id: column.id,
+      field: column.field,
+      type: guardStringEnum(ENUM_Column_type, column.type),
+    };
+  });
+
   const groundTruthFields = datasetDetails.Dataset_column.filter(
     (column) => column.type === ENUM_Column_type.GROUND_TRUTH,
   ).map((column) => column.field);
@@ -125,6 +138,7 @@ export async function getDataset(
     name: datasetDetails.name,
     created_at: datasetDetails.created_at,
     columns,
+    metadataColumns,
     rows,
   };
 }
