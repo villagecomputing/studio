@@ -4,6 +4,7 @@ import { ParserError } from '@/lib/services/DatasetParser';
 import { permanentRedirect } from 'next/navigation';
 
 import { experimentStepMetadata } from '@/app/api/experiment/[experimentId]/insert/schema';
+import { Enum_Dynamic_dataset_static_fields } from '@/lib/services/ApiUtils/dataset/utils';
 import {
   Enum_Dynamic_experiment_metadata_fields,
   calculatePercentile,
@@ -45,7 +46,12 @@ export const fetchExperiment = async (
       stepMetadataColumns,
       experiment.rows,
     );
-    const rowsMap = new Map(dataset.rows.map((row) => [row['id'], row]));
+    const rowsMap = new Map(
+      dataset.rows.map((row) => [
+        row[Enum_Dynamic_dataset_static_fields.FINGERPRINT],
+        row,
+      ]),
+    );
     return {
       experimentName: experiment.name,
       dataset: experiment.dataset,
