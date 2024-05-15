@@ -13,7 +13,10 @@ import {
 } from '@/lib/services/ApiUtils/logs/utils';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import DatabaseUtils from '@/lib/services/DatabaseUtils';
-import { getLogsEntryOrThrow } from '@/lib/services/DatabaseUtils/common';
+import {
+  assertTableExists,
+  getLogsEntryOrThrow,
+} from '@/lib/services/DatabaseUtils/common';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import PrismaClient from '@/lib/services/prisma';
 import { Enum_Logs_Column_Type } from '@/lib/types';
@@ -83,6 +86,8 @@ export async function POST(request: Request) {
             },
           });
         }
+      } else {
+        await assertTableExists(logsId);
       }
 
       // insert data in dynamic table
