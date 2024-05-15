@@ -13,6 +13,7 @@ import {
 import { useCallback } from 'react';
 import RowMetadataCellRenderer from '../components/RowMetadataCellRenderer';
 import { ExperimentRow, ExperimentTableContext } from '../types';
+import { getOutputColumnBackgroundClass } from '../utils';
 
 export function useGridOperations() {
   const navigateToNextCell = useCallback(
@@ -73,15 +74,7 @@ export function useGridOperations() {
           if (params.data.accuracy === null || isNaN(accuracy)) {
             return '';
           }
-          if (accuracy >= 0 && accuracy < 0.3) {
-            return 'bg-agWrongLabelColor';
-          }
-          if (accuracy >= 0.3 && accuracy < 0.7) {
-            return 'bg-mid';
-          }
-          if (accuracy >= 0.7 && accuracy <= 1) {
-            return 'bg-agGroundMatch';
-          }
+          return getOutputColumnBackgroundClass(accuracy);
         },
       },
       [ENUM_Column_type.INPUT]: {

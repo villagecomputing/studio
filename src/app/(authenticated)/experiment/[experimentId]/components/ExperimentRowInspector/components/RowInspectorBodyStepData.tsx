@@ -4,6 +4,7 @@ import { Enum_Experiment_Column_Type } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { ExperimentTableContext, StepMetadataColumn } from '../../../types';
+import { getOutputColumnBackgroundClass } from '../../../utils';
 import MetadataElement, { Enum_Metadata_Type } from '../../MetadataElement';
 import RowInspectorRichDataWrapper from './RowInspectorRichDataWrapper';
 
@@ -122,16 +123,7 @@ const RowInspectorBodyStepData = (props: {
             outputColumn.type === Enum_Experiment_Column_Type.OUTPUT
           ) {
             accuracyClass += ' rounded-lg border-[1px] ';
-
-            if (accuracy >= 0 && accuracy < 0.3) {
-              accuracyClass += 'bg-agWrongLabelColor';
-            }
-            if (accuracy >= 0.3 && accuracy < 0.7) {
-              accuracyClass += 'bg-mid';
-            }
-            if (accuracy >= 0.7 && accuracy <= 1) {
-              accuracyClass += 'bg-agGroundMatch';
-            }
+            accuracyClass += getOutputColumnBackgroundClass(accuracy);
           }
           return (
             <div

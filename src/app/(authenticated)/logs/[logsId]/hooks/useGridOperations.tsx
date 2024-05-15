@@ -1,5 +1,6 @@
 import { ROW_ID_FIELD_NAME } from '@/app/(authenticated)/data/utils/commonUtils';
 import RowMetadataCellRenderer from '@/app/(authenticated)/experiment/[experimentId]/components/RowMetadataCellRenderer';
+import { getOutputColumnBackgroundClass } from '@/app/(authenticated)/experiment/[experimentId]/utils';
 import { ARROW_DOWN, ARROW_UP } from '@/lib/constants';
 import { Enum_Dynamic_logs_static_fields } from '@/lib/services/ApiUtils/logs/utils';
 import { Enum_Logs_Column_Type } from '@/lib/types';
@@ -67,15 +68,7 @@ export function useGridOperations() {
           if (params.data.accuracy === null || isNaN(accuracy)) {
             return '';
           }
-          if (accuracy >= 0 && accuracy < 0.3) {
-            return 'bg-agWrongLabelColor';
-          }
-          if (accuracy >= 0.3 && accuracy < 0.7) {
-            return 'bg-mid';
-          }
-          if (accuracy >= 0.7 && accuracy <= 1) {
-            return 'bg-agGroundMatch';
-          }
+          return getOutputColumnBackgroundClass(accuracy);
         },
       },
       [Enum_Logs_Column_Type.INPUT]: {
