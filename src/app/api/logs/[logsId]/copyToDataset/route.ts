@@ -187,12 +187,12 @@ export async function POST(
       await ApiUtils.addData({
         datasetId,
         payload: {
-          datasetRows: datasetRowsPayload.map((row, datasetRowId) => {
+          datasetRows: datasetRowsPayload.map((row) => {
             return {
               [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]:
                 row.id.toString(),
               [Enum_Dynamic_dataset_static_fields.FINGERPRINT]:
-                datasetRowId.toString(),
+                row.id.toString(),
               [Enum_Dynamic_dataset_static_fields.CREATED_AT]: row.created_at,
               ...row.inputs,
               ...row.outputs,
