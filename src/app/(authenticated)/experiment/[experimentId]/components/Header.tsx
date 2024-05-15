@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
           <MetadataElement
             type={Enum_Metadata_Type.ACCURACY}
             icon
-            value={accuracy}
+            value={accuracy * 100}
           />
           <MetadataElement
             type={Enum_Metadata_Type.RUNTIME}

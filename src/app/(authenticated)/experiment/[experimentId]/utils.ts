@@ -45,3 +45,15 @@ export const getExperimentRowMetadata = (
     stepError,
   };
 };
+export const getOutputColumnBackgroundClass = (accuracy: number): string => {
+  if (accuracy >= 0 && accuracy < 0.3) {
+    return 'bg-agWrongLabelColor';
+  }
+  if (accuracy >= 0.3 && accuracy < 0.7) {
+    return 'bg-mid';
+  }
+  if (accuracy >= 0.7 && accuracy <= 1) {
+    return 'bg-agGroundMatch';
+  }
+  return '';
+};
