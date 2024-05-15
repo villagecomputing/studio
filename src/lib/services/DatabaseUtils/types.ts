@@ -25,6 +25,7 @@ export type ColumnDefinition = {
   isNotNull?: boolean;
   isPrimaryKey?: boolean;
   isAutoincrement?: boolean;
+  isUnique?: boolean;
   typeCheckValues?: string[];
   defaultValue?: string;
 };

@@ -15,6 +15,10 @@ export enum Enum_Dynamic_dataset_static_fields {
   FINGERPRINT = 'fingerprint',
 }
 
+const UNIQUE_FIELDS: string[] = [
+  Enum_Dynamic_dataset_static_fields.FINGERPRINT,
+];
+
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
     where: { dataset_uuid: datasetId, type: ENUM_Column_type.GROUND_TRUTH },
@@ -113,6 +117,7 @@ export function buildDatasetColumnDefinition(
           return {
             type: ColumnType.TEXT,
             name: field.field,
+            isUnique: UNIQUE_FIELDS.includes(field.field),
           };
         case ENUM_Column_type.GROUND_TRUTH_STATUS:
           return {
