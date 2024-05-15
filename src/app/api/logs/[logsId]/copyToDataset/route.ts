@@ -191,6 +191,8 @@ export async function POST(
             return {
               [Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID]:
                 row.id.toString(),
+              [Enum_Dynamic_dataset_static_fields.FINGERPRINT]:
+                row.id.toString(),
               [Enum_Dynamic_dataset_static_fields.CREATED_AT]: row.created_at,
               ...row.inputs,
               ...row.outputs,

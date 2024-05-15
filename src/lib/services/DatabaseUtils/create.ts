@@ -23,6 +23,9 @@ const buildSQLiteDefinitionString = (
   if (columnDefinition.isNotNull) {
     columnString += ' NOT NULL';
   }
+  if (columnDefinition.isUnique) {
+    columnString += ' UNIQUE';
+  }
   if (
     columnDefinition.typeCheckValues &&
     columnDefinition.typeCheckValues.length > 0
@@ -53,6 +56,9 @@ const buildPostgresDefinitionString = (
   }
   if (columnDefinition.isNotNull) {
     columnString += ' NOT NULL';
+  }
+  if (columnDefinition.isUnique) {
+    columnString += ' UNIQUE';
   }
   if (
     columnDefinition.typeCheckValues &&
