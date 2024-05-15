@@ -39,6 +39,7 @@ const config = {
       green550: '#1CB454',
       lightGreen: '#BBF7D0',
       peach: '#FEDEB7',
+      mid: '#fff4dc',
       lightRed: '#FECACA',
       agDataColor: '#49515f',
       agGridHeaderHoverGrey: '#D2DDE580',

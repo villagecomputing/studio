@@ -122,8 +122,16 @@ const RowInspectorBodyStepData = (props: {
             outputColumn.type === Enum_Experiment_Column_Type.OUTPUT
           ) {
             accuracyClass += ' rounded-lg border-[1px] ';
-            accuracyClass +=
-              accuracy === 1 ? 'bg-agGroundMatch' : 'bg-agWrongLabelColor';
+
+            if (accuracy >= 0 && accuracy < 0.3) {
+              accuracyClass += 'bg-agWrongLabelColor';
+            }
+            if (accuracy >= 0.3 && accuracy < 0.7) {
+              accuracyClass += 'bg-mid';
+            }
+            if (accuracy >= 0.7 && accuracy <= 1) {
+              accuracyClass += 'bg-agGroundMatch';
+            }
           }
           return (
             <div

@@ -67,7 +67,15 @@ export function useGridOperations() {
           if (params.data.accuracy === null || isNaN(accuracy)) {
             return '';
           }
-          return accuracy === 1 ? 'bg-agGroundMatch' : 'bg-agWrongLabelColor';
+          if (accuracy >= 0 && accuracy < 0.3) {
+            return 'bg-agWrongLabelColor';
+          }
+          if (accuracy >= 0.3 && accuracy < 0.7) {
+            return 'bg-mid';
+          }
+          if (accuracy >= 0.7 && accuracy <= 1) {
+            return 'bg-agGroundMatch';
+          }
         },
       },
       [Enum_Logs_Column_Type.INPUT]: {
