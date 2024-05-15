@@ -46,7 +46,6 @@ export async function getDatasetOrThrow(datasetId: string) {
 }
 
 export async function getLogsEntryOrThrow(logsEntryId: string) {
-  await assertTableExists(logsEntryId);
   return await PrismaClient.logs.findUniqueOrThrow({
     where: {
       uuid: logsEntryId,
