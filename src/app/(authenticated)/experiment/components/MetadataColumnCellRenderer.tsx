@@ -21,7 +21,7 @@ const MetadataColumnCellRenderer = (
             type={metadataType}
             p25={props.context.avgAccuracyColumnP25}
             p75={props.context.avgAccuracyColumnP75}
-            value={props.value ?? 0}
+            value={(props.value ?? 0) * 100}
           />
         );
       case Enum_Metadata_Type.COST:
