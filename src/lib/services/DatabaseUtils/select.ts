@@ -1,7 +1,13 @@
 import { Prisma } from '@prisma/client';
+import loggerFactory, { LOGGER_TYPE } from '../Logger';
 import PrismaClient from '../prisma';
 import { buildPrismaWhereClause } from './common';
 import { ENUM_ORDER_DIRECTION, WhereConditions } from './types';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'select',
+});
 
 export async function select<T>({
   tableName,
@@ -44,7 +50,7 @@ export async function select<T>({
     const result = await PrismaClient.$queryRaw<T[]>(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL select:', error);
+    logger.error('Error executing raw SQL select:', error, { sqlQuery });
     throw error;
   }
 }

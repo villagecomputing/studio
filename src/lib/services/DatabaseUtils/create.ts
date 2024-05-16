@@ -1,6 +1,12 @@
 import { Prisma } from '@prisma/client';
+import loggerFactory, { LOGGER_TYPE } from '../Logger';
 import PrismaClient from '../prisma';
 import { ColumnDefinition, ColumnType } from './types';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'create',
+});
 
 const buildSQLiteDefinitionString = (
   columnDefinition: ColumnDefinition,
@@ -93,7 +99,7 @@ export async function create(
     const result = await PrismaClient.$executeRaw(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL create:', error);
+    logger.error('Error executing raw SQL create:', error, { sqlQuery });
     throw error;
   }
 }

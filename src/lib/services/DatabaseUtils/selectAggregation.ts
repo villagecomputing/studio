@@ -1,7 +1,13 @@
 import { Prisma } from '@prisma/client';
+import loggerFactory, { LOGGER_TYPE } from '../Logger';
 import PrismaClient from '../prisma';
 import { buildPrismaWhereClause } from './common';
 import { WhereConditions } from './types';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'selectAggregation',
+});
 
 export async function selectAggregation(
   tableName: string,
@@ -26,7 +32,7 @@ export async function selectAggregation(
     // Convert BigInt to string
     return result[0]?.result.toString() ?? '0';
   } catch (error) {
-    console.error('Error executing raw SQL aggregation:', error);
+    logger.error('Error executing raw SQL aggregation:', error, { sqlQuery });
     throw error;
   }
 }

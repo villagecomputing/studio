@@ -1,6 +1,12 @@
 import { arraysEqual } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
+import loggerFactory, { LOGGER_TYPE } from '../Logger';
 import PrismaClient from '../prisma';
+
+const logger = loggerFactory.getLogger({
+  type: LOGGER_TYPE.WINSTON,
+  source: 'insert',
+});
 
 export async function insert(
   tableName: string,
@@ -31,7 +37,7 @@ export async function insert(
     const result = await PrismaClient.$executeRaw(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL insert:', error);
+    logger.error('Error executing raw SQL insert:', error, { sqlQuery });
     throw error;
   }
 }

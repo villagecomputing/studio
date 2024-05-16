@@ -57,7 +57,7 @@ async function getDatasetContent(datasetId: string) {
   // Ensure the dataset exists and throw an error if not
   await getDatasetOrThrow(datasetId);
   // Retrieve the dataset table content from the database as a record with string values
-  const result = await getDynamicTableContent(datasetId);
+  const result = await getDynamicTableContent({ tableName: datasetId });
   return result;
 }
 

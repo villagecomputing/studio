@@ -1,5 +1,7 @@
 import { response } from '@/app/api/utils';
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getDynamicTableContent } from '@/lib/services/ApiUtils/common/getDynamicTableContent';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
@@ -9,6 +11,32 @@ const logger = loggerFactory.getLogger({
   type: LOGGER_TYPE.WINSTON,
   source: 'AddDatasetData',
 });
+
+const filterOutExistingFingerprints = async (
+  datasetId: string,
+  datasetRows: PayloadSchemaType[ApiEndpoints.datasetAddData]['datasetRows'],
+) => {
+  const datasetFingerprints = await getDynamicTableContent({
+    tableName: datasetId,
+  });
+
+  const existingFingerprints = new Set(
+    datasetFingerprints.map((row) => row.fingerprint),
+  );
+  const rowsToAdd = datasetRows.filter(
+    (row) => !existingFingerprints.has(row.fingerprint),
+  );
+
+  if (rowsToAdd.length < datasetRows.length) {
+    logger.warn(
+      `Ignore existing fingerprints: ${datasetRows
+        .filter((row) => existingFingerprints.has(row.fingerprint))
+        .map((row) => row.fingerprint)}.`,
+    );
+  }
+
+  return rowsToAdd;
+};
 
 /**
  * @swagger
@@ -72,7 +100,15 @@ export async function POST(
       // This will throw if the object doesn't match the schema
       const dataset = addDataPayloadSchema.parse(requestBody);
       const datasetUuid = getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET);
-      await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
+      const rowsToAdd = await filterOutExistingFingerprints(
+        datasetUuid,
+        dataset.datasetRows,
+      );
+
+      await ApiUtils.addData({
+        datasetId: datasetUuid,
+        payload: { datasetRows: rowsToAdd },
+      });
 
       logger.info('Data added to dataset successfully', {
         elapsedTimeMs: performance.now() - startTime,

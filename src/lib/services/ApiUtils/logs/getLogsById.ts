@@ -23,9 +23,12 @@ export async function getLogsById(
   if (userId && !logsDetails) {
     throw new Error('Invalid logs id');
   }
-  const logsContent = await getDynamicTableContent(logsId, {
-    field: Enum_Dynamic_logs_static_fields.CREATED_AT,
-    direction: ENUM_ORDER_DIRECTION.DESC,
+  const logsContent = await getDynamicTableContent({
+    tableName: logsId,
+    sortBy: {
+      field: Enum_Dynamic_logs_static_fields.CREATED_AT,
+      direction: ENUM_ORDER_DIRECTION.DESC,
+    },
   });
 
   // Map the columns
