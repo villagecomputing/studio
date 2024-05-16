@@ -46,6 +46,14 @@
           }
         }
       },
+      "AddDataResponse": {
+        "type": "object",
+        "properties": {
+          "rowsAdded": {
+            "type": "number"
+          }
+        }
+      },
       "DatasetViewResponse": {
         "type": "object",
         "properties": {
@@ -1095,7 +1103,14 @@
         },
         "responses": {
           "200": {
-            "description": "Ok"
+            "description": "Successfully retrieved the dataset details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddDataResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing required data -or- Invalid request headers type"

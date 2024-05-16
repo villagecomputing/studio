@@ -1,5 +1,7 @@
 import { response } from '@/app/api/utils';
+import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
+import { getDynamicTableContent } from '@/lib/services/ApiUtils/common/getDynamicTableContent';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
@@ -9,6 +11,32 @@ const logger = loggerFactory.getLogger({
   type: LOGGER_TYPE.WINSTON,
   source: 'AddDatasetData',
 });
+
+const filterOutExistingFingerprints = async (
+  datasetId: string,
+  datasetRows: PayloadSchemaType[ApiEndpoints.datasetAddData]['datasetRows'],
+) => {
+  const datasetFingerprints = await getDynamicTableContent({
+    tableName: datasetId,
+  });
+
+  const existingFingerprints = new Set(
+    datasetFingerprints.map((row) => row.fingerprint),
+  );
+  const rowsToAdd = datasetRows.filter(
+    (row) => !existingFingerprints.has(row.fingerprint),
+  );
+
+  if (rowsToAdd.length < datasetRows.length) {
+    logger.warn(
+      `Ignore existing fingerprints: ${datasetRows
+        .filter((row) => existingFingerprints.has(row.fingerprint))
+        .map((row) => row.fingerprint)}.`,
+    );
+  }
+
+  return rowsToAdd;
+};
 
 /**
  * @swagger
@@ -38,7 +66,11 @@ const logger = loggerFactory.getLogger({
  *             $ref: '#/components/schemas/AddDataPayload'
  *     responses:
  *       200:
- *         description: Ok
+ *         description: Successfully added the dataset rows.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AddDataResponse'
  *       400:
  *         description: Missing required data -or- Invalid request headers type
  *       500:
@@ -72,14 +104,22 @@ export async function POST(
       // This will throw if the object doesn't match the schema
       const dataset = addDataPayloadSchema.parse(requestBody);
       const datasetUuid = getUuidFromFakeId(datasetId, UUIDPrefixEnum.DATASET);
-      await ApiUtils.addData({ datasetId: datasetUuid, payload: dataset });
+      const rowsToAdd = await filterOutExistingFingerprints(
+        datasetUuid,
+        dataset.datasetRows,
+      );
+
+      const res = await ApiUtils.addData({
+        datasetId: datasetUuid,
+        payload: { datasetRows: rowsToAdd },
+      });
 
       logger.info('Data added to dataset successfully', {
         elapsedTimeMs: performance.now() - startTime,
         datasetId,
         rowsAdded: dataset.datasetRows.length,
       });
-      return response('OK');
+      return Response.json({ rowsAdded: res });
     } catch (error) {
       logger.error('Error adding dataset data', error, {
         datasetId,

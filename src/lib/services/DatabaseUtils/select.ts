@@ -44,7 +44,7 @@ export async function select<T>({
     const result = await PrismaClient.$queryRaw<T[]>(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL select:', error);
+    console.error('Error executing raw SQL select:', error, { sqlQuery });
     throw error;
   }
 }

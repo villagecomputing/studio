@@ -1,10 +1,15 @@
 import DatabaseUtils from '../../DatabaseUtils';
 import { ENUM_ORDER_DIRECTION } from '../../DatabaseUtils/types';
 
-export async function getDynamicTableContent(
-  tableName: string,
-  sortBy?: { field: string; direction: ENUM_ORDER_DIRECTION },
-): Promise<Record<string, string>[]> {
+export async function getDynamicTableContent({
+  tableName,
+  sortBy,
+  selectFields,
+}: {
+  tableName: string;
+  sortBy?: { field: string; direction: ENUM_ORDER_DIRECTION };
+  selectFields?: string[];
+}): Promise<Record<string, string>[]> {
   if (!tableName) {
     throw new Error('experimentTableName is required');
   }
@@ -12,8 +17,10 @@ export async function getDynamicTableContent(
   try {
     const result = await DatabaseUtils.select<Record<string, unknown>>({
       tableName,
+      selectFields,
       orderBy: sortBy ?? { field: 'id', direction: ENUM_ORDER_DIRECTION.ASC },
     });
+
     // Convert all values in each record to strings
     const stringifiedResult = result.map((record) =>
       Object.fromEntries(

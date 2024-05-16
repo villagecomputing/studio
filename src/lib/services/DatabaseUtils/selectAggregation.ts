@@ -26,7 +26,7 @@ export async function selectAggregation(
     // Convert BigInt to string
     return result[0]?.result.toString() ?? '0';
   } catch (error) {
-    console.error('Error executing raw SQL aggregation:', error);
+    console.error('Error executing raw SQL aggregation:', error, { sqlQuery });
     throw error;
   }
 }

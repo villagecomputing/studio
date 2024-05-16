@@ -93,7 +93,7 @@ export async function create(
     const result = await PrismaClient.$executeRaw(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL create:', error);
+    console.error('Error executing raw SQL create:', error, { sqlQuery });
     throw error;
   }
 }

@@ -31,7 +31,7 @@ export async function update<T>({
     const result = await PrismaClient.$executeRaw<T>(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL update:', error);
+    console.error('Error executing raw SQL update:', error, { sqlQuery });
     throw error;
   }
 }

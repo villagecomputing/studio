@@ -31,7 +31,7 @@ export async function insert(
     const result = await PrismaClient.$executeRaw(sqlQuery);
     return result;
   } catch (error) {
-    console.error('Error executing raw SQL insert:', error);
+    console.error('Error executing raw SQL insert:', error, { sqlQuery });
     throw error;
   }
 }
