@@ -88,7 +88,7 @@ export async function POST(request: Request) {
         ? existingExperimentGroup.id
         : (
             await PrismaClient.experiment_group.create({
-              data: { id: payload.groupId },
+              data: { id: payload.groupId, name: payload.groupName },
               select: { id: true },
             })
           ).id;

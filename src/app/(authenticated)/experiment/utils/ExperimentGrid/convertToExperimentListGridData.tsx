@@ -26,10 +26,10 @@ function getExperimentListTableColumnDefs(
       onCellClicked,
     },
     {
-      headerName: 'Grouping ID',
-      field: 'groupId',
-      minWidth: 120,
-      flex: 2,
+      headerName: 'Group',
+      valueGetter: (params) => params.data?.groupName || params.data?.groupId,
+      minWidth: 150,
+      flex: 3,
       cellRenderer: GroupIdCellRenderer,
     },
     {
@@ -111,6 +111,7 @@ function getExperimentListRowData(
     name: data.name ?? '',
     description: data.description || '-',
     groupId: data.groupId,
+    groupName: data.groupName,
     date: formatDate(data.created_at),
     dataset: { id: data.Dataset.id, name: data.Dataset.name },
     avgAccuracy: data.avgAccuracy,

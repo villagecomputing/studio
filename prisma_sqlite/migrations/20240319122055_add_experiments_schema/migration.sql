@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Experiment_group" (
   "id" TEXT NOT NULL PRIMARY KEY,
+  "name" TEXT,
   "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

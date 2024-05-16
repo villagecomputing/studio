@@ -7,6 +7,7 @@ export const experimentListResponseSchema = z.array(
     description: z.string(),
     created_at: z.string(),
     groupId: z.string(),
+    groupName: z.nullable(z.string()),
     pipelineMetadata: z.string(),
     latencyP50: z.number(),
     latencyP90: z.number(),

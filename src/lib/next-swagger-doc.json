@@ -490,6 +490,11 @@
                         "type": "string",
                         "description": "The group id of an experiment."
                     },
+                    "groupName": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "The name of the group."
+                    },
                     "description": {
                         "type": "string",
                         "nullable": true,

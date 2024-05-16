@@ -51,6 +51,7 @@ model Experiment_column {
 
 model Experiment_group {
   id         String          @id @unique
+  name       String?
   created_at DateTime     @default(now())
   Experiment Experiment[]
 }
