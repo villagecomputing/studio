@@ -42,7 +42,15 @@
                         }]
                     }
                 }
-            },                         
+            },      
+            "AddDataResponse": {
+                "type": "object",
+                "properties": {
+                    "rowsAdded": {
+                        "type": "number"
+                    }
+                }
+            },                   
             "DatasetViewResponse": {
                 "type": "object",
                 "properties": {

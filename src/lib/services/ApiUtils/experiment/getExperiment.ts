@@ -28,7 +28,9 @@ export async function getExperiment(
     throw new Error('Invalid experiment id');
   }
   // Get database experiment content
-  const experimentContent = await getDynamicTableContent(experimentId);
+  const experimentContent = await getDynamicTableContent({
+    tableName: experimentId,
+  });
 
   // Map the columns
   const columns = experimentDetails.Experiment_column.map(

@@ -66,7 +66,11 @@ const filterOutExistingFingerprints = async (
  *             $ref: '#/components/schemas/AddDataPayload'
  *     responses:
  *       200:
- *         description: Ok
+ *         description: Successfully added the dataset rows.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AddDataResponse'
  *       400:
  *         description: Missing required data -or- Invalid request headers type
  *       500:
@@ -105,7 +109,7 @@ export async function POST(
         dataset.datasetRows,
       );
 
-      await ApiUtils.addData({
+      const res = await ApiUtils.addData({
         datasetId: datasetUuid,
         payload: { datasetRows: rowsToAdd },
       });
@@ -115,7 +119,7 @@ export async function POST(
         datasetId,
         rowsAdded: dataset.datasetRows.length,
       });
-      return response('OK');
+      return Response.json({ rowsAdded: res });
     } catch (error) {
       logger.error('Error adding dataset data', error, {
         datasetId,
