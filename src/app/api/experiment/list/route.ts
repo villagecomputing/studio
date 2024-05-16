@@ -47,7 +47,6 @@ export async function GET(request: Request) {
         name: true,
         description: true,
         created_at: true,
-        group_id: true,
         pipeline_metadata: true,
         latency_p50: true,
         latency_p90: true,
@@ -58,6 +57,12 @@ export async function GET(request: Request) {
         Dataset: {
           select: {
             uuid: true,
+            name: true,
+          },
+        },
+        Experiment_group: {
+          select: {
+            id: true,
             name: true,
           },
         },
@@ -86,7 +91,8 @@ export async function GET(request: Request) {
               id: createFakeId(experiment.name, experiment.uuid),
               name: experiment.name,
               description: experiment.description || '',
-              groupId: experiment.group_id,
+              groupId: experiment.Experiment_group.id,
+              groupName: experiment.Experiment_group.name,
               pipelineMetadata: experiment.pipeline_metadata,
               created_at: experiment.created_at.toDateString(),
               latencyP50: experiment.latency_p50,

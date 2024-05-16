@@ -10,6 +10,7 @@ export const newExperimentPayloadSchema = z.object({
   datasetId: z.string(),
   name: z.string(),
   groupId: alphanumericNoSpaces,
+  groupName: z.optional(z.string()),
   description: z.optional(z.string()),
   parameters: z.record(z.any()),
 });

@@ -6,6 +6,7 @@ export type ExperimentListRowType = {
   name: string;
   description: string;
   groupId: string;
+  groupName: string | null;
   dataset: { id: string; name: string };
   runtime: number;
   date: string;
