@@ -1,6 +1,7 @@
 import { Enum_Metadata_Type } from '@/app/(authenticated)/experiment/[experimentId]/components/MetadataElement';
 import MetadataColumnCellRenderer from '@/app/(authenticated)/experiment/components/MetadataColumnCellRenderer';
 import ParametersCellRenderer from '@/app/(authenticated)/experiment/components/ParametersCellRenderer';
+import ParametersTooltipComponent from '@/app/(authenticated)/experiment/components/ParametersTooltipComponent';
 import { formatDate } from '@/lib/utils';
 import { CellClickedEvent, GridOptions } from 'ag-grid-community';
 import { LogsList, LogsListRowType } from '../../types';
@@ -73,7 +74,10 @@ function getLogsListTableColumnDefs(
       field: 'params',
       flex: 4,
       minWidth: 300,
+      onCellClicked,
       cellRenderer: ParametersCellRenderer,
+      tooltipValueGetter: (props) => props.value,
+      tooltipComponent: ParametersTooltipComponent,
     },
   ];
 }
