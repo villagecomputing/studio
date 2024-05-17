@@ -67,6 +67,7 @@ const RowInspectorBodyStepData = (props: {
               value={stepMetadata.input_cost + stepMetadata.output_cost}
               p25={stepMetadataPercentiles?.costP25}
               p75={stepMetadataPercentiles?.costP75}
+              numberOfDecimals={10}
             />
           )}
         </div>

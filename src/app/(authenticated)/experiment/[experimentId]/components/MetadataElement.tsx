@@ -19,6 +19,7 @@ type MetadataElementProps = {
   value?: number;
   p25?: number;
   p75?: number;
+  numberOfDecimals?: number;
 };
 
 const MetadataElement: React.FC<MetadataElementProps> = ({
@@ -28,6 +29,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
   type,
   p25,
   p75,
+  numberOfDecimals = 3,
 }) => {
   const disabled = !value;
 
@@ -44,7 +46,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           />
         );
         if (value) {
-          formattedValue = `$${parseFloat(value.toFixed(3))}`;
+          formattedValue = `$${parseFloat(value.toFixed(numberOfDecimals))}`;
           if (p25 === undefined || p75 === undefined) {
             break;
           }
@@ -67,7 +69,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           />
         );
         if (value) {
-          formattedValue = `${parseFloat(value.toFixed(3))}s`;
+          formattedValue = `${parseFloat(value.toFixed(numberOfDecimals))}s`;
           if (p25 === undefined || p75 === undefined) {
             break;
           }
@@ -89,7 +91,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           />
         );
         if (value) {
-          formattedValue = `${parseFloat(value.toFixed(3))}%`;
+          formattedValue = `${parseFloat(value.toFixed(numberOfDecimals))}%`;
           if (p25 === undefined || p75 === undefined) {
             break;
           }
@@ -108,7 +110,7 @@ const MetadataElement: React.FC<MetadataElementProps> = ({
           const minutes = Math.floor(value / 60);
           const seconds = minutes
             ? parseInt((value % 60).toFixed(0))
-            : parseFloat((value % 60).toFixed(3));
+            : parseFloat((value % 60).toFixed(numberOfDecimals));
           const formattedMinutes = minutes ? `${minutes}m ` : '';
           formattedValue = `${formattedMinutes}${seconds}s`;
         }
