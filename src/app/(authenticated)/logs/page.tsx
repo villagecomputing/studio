@@ -68,6 +68,8 @@ const LogsPage = () => {
                 rowData,
                 columnDefs,
                 quickFilterText,
+                tooltipShowDelay: 200,
+                tooltipInteraction: true,
                 onFilterChanged: onFilterChanged,
                 noRowsOverlayComponent: CustomNoRowsOverlay,
                 noRowsOverlayComponentParams: {

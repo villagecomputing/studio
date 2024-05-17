@@ -5,6 +5,7 @@ import DatasetNameCellRenderer from '../../components/DatasetNameCellRenderer';
 import GroupIdCellRenderer from '../../components/GroupIdCellRenderer';
 import MetadataColumnCellRenderer from '../../components/MetadataColumnCellRenderer';
 import ParametersCellRenderer from '../../components/ParametersCellRenderer';
+import ParametersTooltipComponent from '../../components/ParametersTooltipComponent';
 import { ExperimentList, ExperimentListRowType } from '../../types';
 
 function getExperimentListTableColumnDefs(
@@ -100,7 +101,10 @@ function getExperimentListTableColumnDefs(
       field: 'params',
       flex: 4,
       minWidth: 300,
+      onCellClicked,
       cellRenderer: ParametersCellRenderer,
+      tooltipValueGetter: (props) => props.value,
+      tooltipComponent: ParametersTooltipComponent,
     },
   ];
 }
