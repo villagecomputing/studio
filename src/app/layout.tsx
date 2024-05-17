@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html className={cn(['h-full w-full'])} lang="en">
+      <html className={cn(['h-full w-full overflow-hidden'])} lang="en">
         <body className={cn(['h-full w-full', inter.className])}>
           <Toaster />
           {children}

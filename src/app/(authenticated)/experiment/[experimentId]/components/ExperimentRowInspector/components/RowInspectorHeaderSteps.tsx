@@ -15,6 +15,8 @@ export const RowInspectorHeaderSteps: React.FC<
     <div className="mt-4 flex space-x-2">
       <Button
         variant={'ghost'}
+        className="bg-accent"
+        data-step-field={RAW_DATA_SECTION}
         onClick={() => onStepSelected(RAW_DATA_SECTION)}
       >
         Raw Data
@@ -28,6 +30,7 @@ export const RowInspectorHeaderSteps: React.FC<
           <Button
             variant={'ghost'}
             key={colDef.field}
+            data-step-field={colDef.field}
             onClick={() => onStepSelected(colDef.field!)}
           >
             {stepName}
