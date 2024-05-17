@@ -3,13 +3,13 @@ import { BaseRowInspector } from '@/app/(authenticated)/components/base-row-insp
 import { BaseRowInspectorBody } from '@/app/(authenticated)/components/base-row-inspector/components/BaseRowInspectorBody';
 import { BaseRowInspectorHeader } from '@/app/(authenticated)/components/base-row-inspector/components/BaseRowInspectorHeader';
 import { RowInspectorType } from '@/app/(authenticated)/components/base-row-inspector/type';
-import { useRef } from 'react';
 import { useExperimentRowInspectorContext } from './ExperimentRowInspector';
 import RowInspectorBodyMetaData from './components/RowInpsectorBodyMetaData';
 import RowInspectorBodyRawData from './components/RowInspectorBodyRawData';
 import RowInspectorBodyStepData from './components/RowInspectorBodyStepData';
 import { RowInspectorHeaderSteps } from './components/RowInspectorHeaderSteps';
 import useExperimentRowInspectorActions from './hooks/useExperimentRowInspectorActions';
+import { useInspectorStepScroll } from './hooks/useInspectorStepScroll';
 
 export const RAW_DATA_SECTION = 'RAW_DATA_SECTION';
 
@@ -23,14 +23,8 @@ export default function ExperimentRowInspectorView() {
     datasetId,
   } = context;
   const { navigateTo } = useExperimentRowInspectorActions();
-  const bodyRef = useRef<HTMLDivElement>(null);
-  const handleStepSelected = (stepColumnField: string) => {
-    const section = document.getElementById(stepColumnField);
-    if (section && bodyRef.current) {
-      section.scrollIntoView();
-    }
-  };
-
+  const { bodyRef, headerRef, handleStepSelected } =
+    useInspectorStepScroll(stepMetadataColumns);
   return (
     <>
       <BaseRowInspector
@@ -40,15 +34,17 @@ export default function ExperimentRowInspectorView() {
         onEnter={() => undefined}
         onNavigate={navigateTo}
       >
-        <BaseRowInspectorHeader
-          title={`Row ${inspectorRowIndex}`}
-          onClose={() => setInspectorRowIndex(null)}
-        >
-          <RowInspectorHeaderSteps
-            onStepSelected={handleStepSelected}
-            columnDefs={columnDefs}
-          />
-        </BaseRowInspectorHeader>
+        <div ref={headerRef}>
+          <BaseRowInspectorHeader
+            title={`Row ${inspectorRowIndex}`}
+            onClose={() => setInspectorRowIndex(null)}
+          >
+            <RowInspectorHeaderSteps
+              onStepSelected={handleStepSelected}
+              columnDefs={columnDefs}
+            />
+          </BaseRowInspectorHeader>
+        </div>
         <BaseRowInspectorBody>
           <div
             ref={bodyRef}
