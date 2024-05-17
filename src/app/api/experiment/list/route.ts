@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       const experimentList = await PrismaClient.experiment.findMany({
         select: experimentSelect,
         where: { deleted_at: null, ...(userId ? { created_by: userId } : {}) },
-        orderBy: { created_at: 'asc' },
+        orderBy: { created_at: 'desc' },
       });
 
       const experimentListResponse: ResultSchemaType[ApiEndpoints.experimentList] =
