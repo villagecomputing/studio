@@ -569,6 +569,11 @@
             "type": "string",
             "description": "The group id of an experiment."
           },
+          "groupName": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of the group."
+          },
           "description": {
             "type": "string",
             "nullable": true,
@@ -1103,7 +1108,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully retrieved the dataset details.",
+            "description": "Successfully added the dataset rows.",
             "content": {
               "application/json": {
                 "schema": {

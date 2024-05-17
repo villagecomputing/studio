@@ -28,6 +28,8 @@ function getExperimentListTableColumnDefs(
     {
       headerName: 'Group',
       valueGetter: (params) => params.data?.groupName || params.data?.groupId,
+      valueFormatter: (params) =>
+        params.data?.groupName || `${params.data?.groupId.slice(0, 5)}...`,
       minWidth: 150,
       flex: 3,
       cellRenderer: GroupIdCellRenderer,

@@ -34,7 +34,9 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             customSegments[segment]
           ) : (
             <Link href={`/${pathNames.slice(0, index + 1).join('/')}` as Route}>
-              {segment.charAt(0).toUpperCase() + segment.slice(1)}
+              {decodeURIComponent(
+                segment.charAt(0).toUpperCase() + segment.slice(1),
+              )}
             </Link>
           );
         return (

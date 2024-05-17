@@ -30,7 +30,7 @@ const GroupIdCellRenderer = (
         className="shrink-0 text-muted-foreground"
         size={20}
       ></FolderIcon>
-      <span className="truncate">{`${props.value}`}</span>
+      <span className="truncate">{`${props.valueFormatted}`}</span>
     </Button>
   );
 };
