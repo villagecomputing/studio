@@ -48,15 +48,44 @@ function getDynamicTableColumnDefs(data: ExperimentList): ColDef[] {
   if (data.length === 0) {
     return [];
   }
+  console.log('🚀 ~ getDynamicTableColumnDefs ~ data:', data);
 
-  const firstExperimentMetadata = JSON.parse(data[0].pipelineMetadata);
+  // Determine which step_key combinations have different values across experiments
+  const uniqueStepKeys = new Set<string>();
+  const stepKeyValues = new Map<string, Set<string>>();
 
-  return Object.entries(firstExperimentMetadata).flatMap(([step, details]) => {
-    return Object.keys(details as object).map((key) => ({
-      headerName: `${step}_${key}`,
-      field: `${step}_${key}`,
-    }));
+  for (const experimentData of data) {
+    const metadata = JSON.parse(experimentData.pipelineMetadata);
+    for (const [step, details] of Object.entries(metadata)) {
+      if (!details) {
+        continue;
+      }
+      for (const [key, value] of Object.entries(
+        details as Record<string, string>,
+      )) {
+        console.log('🚀 ~ getDynamicTableColumnDefs ~ key:', key);
+        console.log('🚀 ~ getDynamicTableColumnDefs ~ value:', value);
+        const stepKey = `${step}_${key}`;
+        if (!stepKeyValues.has(stepKey)) {
+          stepKeyValues.set(stepKey, new Set<string>());
+        }
+        stepKeyValues.get(stepKey)!.add(value);
+      }
+    }
+  }
+
+  // Only keep step_keys that have more than one unique value
+  stepKeyValues.forEach((values, stepKey) => {
+    if (values.size > 1) {
+      uniqueStepKeys.add(stepKey);
+    }
   });
+
+  // Create column definitions only for those unique step_keys
+  return Array.from(uniqueStepKeys).map((stepKey) => ({
+    headerName: stepKey,
+    field: stepKey,
+  }));
 }
 
 function getExperimentGroupRowData(data: ExperimentList) {
@@ -65,6 +94,9 @@ function getExperimentGroupRowData(data: ExperimentList) {
     const dynamicData: Record<string, string> = {};
 
     for (const [step, details] of Object.entries(metadata)) {
+      if (!details) {
+        continue;
+      }
       for (const [key, value] of Object.entries(
         details as Record<string, string>,
       )) {
