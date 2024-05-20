@@ -34,9 +34,11 @@
                         "required": ["fingerprint"],
                         "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys and must always include the 'fingerprint' key. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
                         "example": [{
+                                "fingerprint": "row_fingerprint_id_1",
                                 "Column1": "Value1",
                                 "Column2": "Value2"
                             }, {
+                                "fingerprint": "row_fingerprint_id_2",
                                 "Column1": "Value3",
                                 "Column2": "Value4"
                         }]
