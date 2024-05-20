@@ -77,7 +77,7 @@ function getDynamicTableColumnDefs(data: ExperimentList): ColDef[] {
 
   // Create column definitions only for those unique step_keys
   return Array.from(uniqueStepKeys).map((stepKey) => ({
-    headerName: stepKey.replace(/_/g, ' '),
+    headerName: stepKey,
     field: stepKey,
   }));
 }
