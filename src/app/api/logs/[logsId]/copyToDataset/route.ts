@@ -97,7 +97,7 @@ async function buildDatasetRowsPayload(logsId: string, logRowIds: string[]) {
  *         schema:
  *           type: string
  *         description: The unique identifier of the logs to copy to the dataset.
- *         example: l-48a3beac-33c1-4c1e-87af-b598029fd42e
+ *         example: Logs_Name-l-48a3beac-33c1-4c1e-87af-b598029fd42e
  *     requestBody:
  *       required: true
  *       content:
@@ -150,6 +150,10 @@ export async function POST(
         logsId,
         logRowIds,
       );
+      console.debug(
+        'datasetRowsPayload',
+        JSON.stringify(datasetRowsPayload, null, 2),
+      );
 
       if (datasetRowsPayload.length === 0) {
         logger.debug(
@@ -163,6 +167,10 @@ export async function POST(
       let datasetId = logDetails.Dataset[0]?.uuid;
       if (!datasetId) {
         const firstRowPayload = datasetRowsPayload[0];
+        console.debug(
+          'firstRowPayload',
+          JSON.stringify(firstRowPayload, null, 2),
+        );
         datasetId = await ApiUtils.newDataset(
           {
             datasetName,

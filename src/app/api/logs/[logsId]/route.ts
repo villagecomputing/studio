@@ -27,6 +27,7 @@ const logger = loggerFactory.getLogger({
  *         schema:
  *           type: string
  *         description: The unique identifier of the logs view to retrieve.
+ *         example: Logs_Name-l-48a3beac-33c1-4c1e-87af-b598029fd42e
  *     responses:
  *       200:
  *         description: Logs data retrieved successfully.
