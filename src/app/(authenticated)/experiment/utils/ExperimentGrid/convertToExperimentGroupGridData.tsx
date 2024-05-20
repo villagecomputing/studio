@@ -48,6 +48,7 @@ function getDynamicTableColumnDefs(data: ExperimentList): ColDef[] {
   if (data.length === 0) {
     return [];
   }
+  console.log('🚀 ~ getDynamicTableColumnDefs ~ data:', data);
 
   // Determine which step_key combinations have different values across experiments
   const uniqueStepKeys = new Set<string>();
@@ -56,9 +57,14 @@ function getDynamicTableColumnDefs(data: ExperimentList): ColDef[] {
   for (const experimentData of data) {
     const metadata = JSON.parse(experimentData.pipelineMetadata);
     for (const [step, details] of Object.entries(metadata)) {
+      if (!details) {
+        continue;
+      }
       for (const [key, value] of Object.entries(
         details as Record<string, string>,
       )) {
+        console.log('🚀 ~ getDynamicTableColumnDefs ~ key:', key);
+        console.log('🚀 ~ getDynamicTableColumnDefs ~ value:', value);
         const stepKey = `${step}_${key}`;
         if (!stepKeyValues.has(stepKey)) {
           stepKeyValues.set(stepKey, new Set<string>());
@@ -88,6 +94,9 @@ function getExperimentGroupRowData(data: ExperimentList) {
     const dynamicData: Record<string, string> = {};
 
     for (const [step, details] of Object.entries(metadata)) {
+      if (!details) {
+        continue;
+      }
       for (const [key, value] of Object.entries(
         details as Record<string, string>,
       )) {
