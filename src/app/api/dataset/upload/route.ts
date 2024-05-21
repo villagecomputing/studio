@@ -127,7 +127,7 @@ export async function POST(request: Request) {
           payload: {
             datasetRows: batch.map((row, index) => ({
               ...row,
-              [Enum_Dynamic_dataset_static_fields.FINGERPRINT]: (
+              [Enum_Dynamic_dataset_static_fields.ROW_ID]: (
                 i + index
               ).toString(),
             })),

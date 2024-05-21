@@ -12,12 +12,19 @@ export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 export enum Enum_Dynamic_dataset_static_fields {
   LOGS_ROW_ID = 'logs_row_id',
   CREATED_AT = 'created_at',
-  FINGERPRINT = 'fingerprint',
+  ROW_ID = 'row_id',
 }
 
-const UNIQUE_FIELDS: string[] = [
-  Enum_Dynamic_dataset_static_fields.FINGERPRINT,
-];
+// Added for backwards compatibility for dynamic datasets that
+// were already created before switching from fingerprint to row_id in the API
+export const API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING: Record<
+  string,
+  string
+> = {
+  [Enum_Dynamic_dataset_static_fields.ROW_ID]: 'fingerprint',
+};
+
+const UNIQUE_FIELDS: string[] = [Enum_Dynamic_dataset_static_fields.ROW_ID];
 
 export const getGTColumnField = async (datasetId: string): Promise<string> => {
   const groundTruthColumn = await PrismaClient.dataset_column.findFirstOrThrow({
@@ -87,8 +94,13 @@ export function buildDatasetFields(
     index: -1,
   });
   datasetFields.push({
-    name: Enum_Dynamic_dataset_static_fields.FINGERPRINT,
-    field: Enum_Dynamic_dataset_static_fields.FINGERPRINT,
+    name: API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING[
+      Enum_Dynamic_dataset_static_fields.ROW_ID
+    ],
+    field:
+      API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING[
+        Enum_Dynamic_dataset_static_fields.ROW_ID
+      ],
     index: -1,
     type: ENUM_Column_type.METADATA,
   });

@@ -48,7 +48,7 @@ export const fetchExperiment = async (
     );
     const rowsMap = new Map(
       dataset.rows.map((row) => [
-        row[Enum_Dynamic_dataset_static_fields.FINGERPRINT],
+        row[Enum_Dynamic_dataset_static_fields.ROW_ID],
         row,
       ]),
     );
@@ -71,14 +71,12 @@ export const fetchExperiment = async (
         experimentId: experiment.id,
         columns: [...dataset.columns, metadataColumn, ...experiment.columns],
         rows: experiment.rows.map((row) => {
-          const datasetRowFingerprint =
-            row[
-              Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_FINGERPRINT
-            ];
+          const datasetRowId =
+            row[Enum_Dynamic_experiment_metadata_fields.DATASET_ROW_ID];
 
           return {
             ...row,
-            ...rowsMap.get(datasetRowFingerprint),
+            ...rowsMap.get(datasetRowId),
           };
         }),
       }),

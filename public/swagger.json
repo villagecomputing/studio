@@ -25,22 +25,22 @@
               }
             },
             "properties": {
-              "fingerprint": {
+              "row_id": {
                 "type": "string"
               }
             },
             "required": [
-              "fingerprint"
+              "row_id"
             ],
-            "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys and must always include the 'fingerprint' key. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
+            "description": "The rows to be added to the dataset. The dictionary objects inside the array must have the same keys and must always include the 'row_id' key. Each dictionary represents a row, whose keys represent the dataset columns, and contain the values to be added",
             "example": [
               {
-                "fingerprint": "row_fingerprint_id_1",
+                "row_id": "row_id_1",
                 "Column1": "Value1",
                 "Column2": "Value2"
               },
               {
-                "fingerprint": "row_fingerprint_id_2",
+                "row_id": "row_id_2",
                 "Column1": "Value3",
                 "Column2": "Value4"
               }
@@ -455,9 +455,9 @@
             "nullable": true,
             "description": "The experiment output accuracy as a percentage."
           },
-          "dataset_row_fingerprint": {
+          "dataset_row_id": {
             "type": "string",
-            "description": "The dataset row fingerprint associated with the experiment output."
+            "description": "The value of the dataset row_id column that should be associated with the experiment output."
           },
           "final_output_columns": {
             "type": "array",
@@ -475,7 +475,7 @@
         },
         "required": [
           "steps",
-          "dataset_row_fingerprint"
+          "dataset_row_id"
         ]
       },
       "ExperimentStepPayload": {

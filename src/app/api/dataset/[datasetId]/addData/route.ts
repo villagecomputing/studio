@@ -2,6 +2,10 @@ import { response } from '@/app/api/utils';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
 import ApiUtils from '@/lib/services/ApiUtils';
 import { getDynamicTableContent } from '@/lib/services/ApiUtils/common/getDynamicTableContent';
+import {
+  API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING,
+  Enum_Dynamic_dataset_static_fields,
+} from '@/lib/services/ApiUtils/dataset/utils';
 import { withAuthMiddleware } from '@/lib/services/ApiUtils/user/withAuthMiddleware';
 import loggerFactory, { LOGGER_TYPE } from '@/lib/services/Logger';
 import { UUIDPrefixEnum, getUuidFromFakeId } from '@/lib/utils';
@@ -16,22 +20,27 @@ const filterOutExistingFingerprints = async (
   datasetId: string,
   datasetRows: PayloadSchemaType[ApiEndpoints.datasetAddData]['datasetRows'],
 ) => {
+  const fingerprintField =
+    API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING[
+      Enum_Dynamic_dataset_static_fields.ROW_ID
+    ];
   const datasetFingerprints = await getDynamicTableContent({
     tableName: datasetId,
+    selectFields: [fingerprintField],
   });
 
   const existingFingerprints = new Set(
-    datasetFingerprints.map((row) => row.fingerprint),
+    datasetFingerprints.map((row) => row[fingerprintField]),
   );
   const rowsToAdd = datasetRows.filter(
-    (row) => !existingFingerprints.has(row.fingerprint),
+    (row) => !existingFingerprints.has(row.row_id),
   );
 
   if (rowsToAdd.length < datasetRows.length) {
     logger.warn(
-      `Ignore existing fingerprints: ${datasetRows
-        .filter((row) => existingFingerprints.has(row.fingerprint))
-        .map((row) => row.fingerprint)}.`,
+      `Ignore existing row ids: ${datasetRows
+        .filter((row) => existingFingerprints.has(row.row_id))
+        .map((row) => row.row_id)}.`,
     );
   }
 

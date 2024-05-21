@@ -1,10 +1,14 @@
 import { addDataPayloadSchema } from '@/app/api/dataset/[datasetId]/addData/schema';
 import { ApiEndpoints, PayloadSchemaType } from '@/lib/routes/routes';
+import { isSomeStringEnum } from '@/lib/typeUtils';
 import { ENUM_Column_type } from '@/lib/types';
 import DatabaseUtils from '../../DatabaseUtils';
 import { getDatasetOrThrow } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
-import { Enum_Dynamic_dataset_static_fields } from './utils';
+import {
+  API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING,
+  Enum_Dynamic_dataset_static_fields,
+} from './utils';
 
 export async function addData({
   datasetId,
@@ -35,16 +39,19 @@ export async function addData({
     });
 
     const columnNames = existingColumns.map((col) => col.name);
+    // Log the column names in a pretty format
     const invalidRows = datasetRows.filter((row) => {
       const rowKeys = Object.keys(row);
-      return rowKeys.some(
-        (key) =>
-          !!key &&
-          !columnNames.includes(key) &&
-          key !== Enum_Dynamic_dataset_static_fields.CREATED_AT &&
-          key !== Enum_Dynamic_dataset_static_fields.LOGS_ROW_ID,
-      );
+
+      return rowKeys.some((key) => {
+        if (isSomeStringEnum(Enum_Dynamic_dataset_static_fields, key)) {
+          return false;
+        }
+
+        return !!key && !columnNames.includes(key);
+      });
     });
+
     if (invalidRows.length > 0) {
       throw new Error(
         'Some rows contain keys that do not exist in the existing columns',
@@ -57,16 +64,26 @@ export async function addData({
 
       existingColumns.forEach((existingColumn) => {
         if (
-          existingColumn.field !== Enum_Dynamic_dataset_static_fields.CREATED_AT
+          existingColumn.field === Enum_Dynamic_dataset_static_fields.CREATED_AT
         ) {
-          sanitizedRow[existingColumn.field] =
-            datasetRow[existingColumn.name] || '';
+          sanitizedRow[existingColumn.field] = new Date(
+            datasetRow[existingColumn.name] || Date.now(),
+          );
           return;
         }
 
-        sanitizedRow[existingColumn.field] = new Date(
-          datasetRow[existingColumn.name] || Date.now(),
-        );
+        if (
+          existingColumn.field ===
+          API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING[
+            Enum_Dynamic_dataset_static_fields.ROW_ID
+          ]
+        ) {
+          sanitizedRow[existingColumn.field] = datasetRow.row_id;
+          return;
+        }
+
+        sanitizedRow[existingColumn.field] =
+          datasetRow[existingColumn.name] || '';
       });
 
       return sanitizedRow;

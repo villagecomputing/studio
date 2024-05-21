@@ -14,7 +14,11 @@ import {
 } from '../../DatabaseUtils/common';
 import PrismaClient from '../../prisma';
 import { getDynamicTableContent } from '../common/getDynamicTableContent';
-import { getGroundTruthStatusColumnName } from './utils';
+import {
+  API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING,
+  Enum_Dynamic_dataset_static_fields,
+  getGroundTruthStatusColumnName,
+} from './utils';
 
 async function getDatasetDetails(datasetId: string, userId: string | null) {
   const columnSelect = {
@@ -58,7 +62,20 @@ async function getDatasetContent(datasetId: string) {
   await getDatasetOrThrow(datasetId);
   // Retrieve the dataset table content from the database as a record with string values
   const result = await getDynamicTableContent({ tableName: datasetId });
-  return result;
+  // The results should take the value of the fingerpring column and set it to the row_id param
+  const sanitizedResult: Record<string, string>[] = result.map((record) => {
+    const {
+      [API_SCHEMA_PROP_TO_DB_STATIC_FIELD_MAPPING[
+        Enum_Dynamic_dataset_static_fields.ROW_ID
+      ]]: fingerprint,
+      ...rest
+    } = record;
+    return {
+      [Enum_Dynamic_dataset_static_fields.ROW_ID]: fingerprint,
+      ...rest,
+    };
+  });
+  return sanitizedResult;
 }
 
 export async function getDataset(
