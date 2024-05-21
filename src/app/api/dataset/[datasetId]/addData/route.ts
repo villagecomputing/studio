@@ -21,17 +21,17 @@ const filterOutExistingFingerprints = async (
   });
 
   const existingFingerprints = new Set(
-    datasetFingerprints.map((row) => row.fingerprint),
+    datasetFingerprints.map((row) => row.row_id),
   );
   const rowsToAdd = datasetRows.filter(
-    (row) => !existingFingerprints.has(row.fingerprint),
+    (row) => !existingFingerprints.has(row.row_id),
   );
 
   if (rowsToAdd.length < datasetRows.length) {
     logger.warn(
-      `Ignore existing fingerprints: ${datasetRows
-        .filter((row) => existingFingerprints.has(row.fingerprint))
-        .map((row) => row.fingerprint)}.`,
+      `Ignore existing row_ids: ${datasetRows
+        .filter((row) => existingFingerprints.has(row.row_id))
+        .map((row) => row.row_id)}.`,
     );
   }
 
