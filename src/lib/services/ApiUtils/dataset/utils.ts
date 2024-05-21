@@ -12,7 +12,7 @@ export const DEFAULT_COLUMN_NAME_PREFIX = 'Column_';
 export enum Enum_Dynamic_dataset_static_fields {
   LOGS_ROW_ID = 'logs_row_id',
   CREATED_AT = 'created_at',
-  FINGERPRINT = 'fingerprint',
+  FINGERPRINT = 'row_id',
 }
 
 const UNIQUE_FIELDS: string[] = [

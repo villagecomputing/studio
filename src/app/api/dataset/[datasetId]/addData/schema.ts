@@ -4,7 +4,7 @@ export const addDataPayloadSchema = z.object({
   datasetRows: z.array(
     z
       .object({
-        fingerprint: z.string(),
+        row_id: z.string(),
       })
       .catchall(z.union([z.string(), z.null(), z.number(), z.date()])),
   ),
