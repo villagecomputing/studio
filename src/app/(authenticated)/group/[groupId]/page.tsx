@@ -77,6 +77,11 @@ const ExperimentsGroupPage = (props: ExperimentGroupPageProps) => {
                 context: experimentsMetadataColumnsPercentiles,
                 rowData,
                 columnDefs,
+                suppressDragLeaveHidesColumns: true,
+                defaultColDef: {
+                  lockPinned: true,
+                  suppressMovable: false,
+                },
               }}
             />
           </div>
