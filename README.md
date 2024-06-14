@@ -1,26 +1,123 @@
+# Superpipe Studio - experimentation and optimization for LLM pipelines
+
+_Build, evaluate and optimize your LLM pipelines to increase accuracy and reduce cost. Use with [Superpipe](https://github.com/villagecomputing/superpipe) or with your favorite LLM framework. Easily deploy it on your own infra._
+
+---
+
+Insert youtube video here
+
 ## Getting Started
 
-- Install `Node v18.19.0`
+Superpipe Studio is built with Next JS and can be run locally or deployed on Vercel. It requires a database and can optionally provide authentication via Clerk. It works with both SQLite and Postgres. When running locally we recommend using SQLite for simplicity, and in production via recommend using Postgres.
 
-- `npm install`
+## Running Studio locally
 
-### SQLite:
+First, setup your environment checking out the repo, installing Node JS v18 or later, and running `npm install`.
+
+Create a `.env.local` file in the project root directory by copying and renaming the `.env` file.
+
+### Running with SQLite:
 - `npm run migrate-deploy:sqlite`
 - `npm run dev`
 
-### Postgres:
-- Create a `.env.local` file in root and add `NEXT_PUBLIC_APP_DATABASE_PROVIDER=postgres`
+### Running with Postgres:
+- In `.env.local` set `NEXT_PUBLIC_APP_DATABASE_PROVIDER=postgres`
 - Create a `.env` file inside `prisma-postgres` folder
 - Add `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` with the URL of your postgres database
 - `npm run migrate-deploy:postgres`
 - `npm run dev:postgres`
 
-## Updating DB schema migration steps
+## Authentication
+
+Studio can be used without any authentication (for local testing) or with Clerk authentication.
+
+Authentication is disabled by default by setting `NEXT_PUBLIC_AUTHENTICATION=disabled` in the `.env`/`.env.local` file.
+
+### Enable Authentication with Clerk
+
+1. Create a Clerk organization and navigate to the API Keys page
+2. Create a `.env.local` file in the project root by copying `.env` and set `NEXT_PUBLIC_AUTHENTICATION=enabled`
+3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the .env.local file
+4. `npm run dev` or `npm run dev:postgres`
+5. Download and install ngrok
+6. Open command line, run `ngrok http 3000` and copy URL
+7. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
+8. Access http://localhost:3000/ and log in
+
+These steps assume you're trying to enable authentication locally. If you're looking to enable auth in a Vercel deployment, see below.
+
+### Authenticating Superpipe SDK requests
+
+## Basic Usage
+
+Studio integrates with Superpipe SDK, allowing you to log pipelines, create datasets and run experiments on them with minimal effort if you're already using Superpipe SDK to build your pipelines.
+
+For details on how to use Studio with Superpipe SDK and advanced usage details, see the [Superpipe Studio docs](https://docs.superpipe.ai/studio/).
+
+### Usage Examples
+
+**Logging**
+
+```python
+input = {
+  ...
+}
+pipeline.run(data=input, enable_logging=True)
+```
+
+**Datasets**
+
+```python
+from studio import Dataset
+import pandas as pd
+
+df = pd.DataFrame(...)
+dataset = Dataset(data=df, name="furniture", ground_truths=["brand_name"])
+```
+
+**Experiments**
+
+```python
+import pandas as pd
+
+df = pd.DataFrame(...)
+pipeline.run_experiment(data=df)
+```
+
+## Deploying Studio with Vercel
+
+Studio is a Next JS app and can be easily deployed on Vercel or other hosting solutions compatible with Next JS. Hosting Studio on Vercel requires a Vercel account, a postgres database URL and optionally, a Clerk account for authentication.
+
+**A. Setup your Postgres database**
+
+**B. Sign up for Clerk (or create a new Clerk project)**
+
+1. Configure a webhook at **[your_studio_url]/api/webhook/clerk/user**
+
+**C. Deploy superpipe-studio to Vercel**
+
+1. Create a new Vercel project
+2. Set env vars:
+   1. `POSTGRES_PRISMA_URL` = your full DB url
+   2. `POSTGRES_URL_NON_POOLING` = your full DB url
+   3. `CLERK_SECRET_KEY` (from your Clerk project)
+   4. `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (from your Clerk project)
+   5. `NEXT_PUBLIC_AUTHENTICATION` = `enabled`
+   6. `NEXT_PUBLIC_APP_DATABASE_PROVIDER` = `postgres`
+3. Checkout or fork the repo & go through the standard Vercel deployment flow
+4. Configure Vercel build command
+5. Once deployed, login and grab your API key
+
+## Development - making DB schema changes
+
 The app is using Prisma with two different providers: **SQLite** and **Postgres**. 
 
-There are two different folders for each `prisma_postgres` and `prisma_sqlite`. Whenever you run an individual prisma command to have to specify which schema to use with `--schema=./prisma_postgres/schema.prisma` or `--schema=./prisma_sqlite/schema.prisma`
+There are two different folders for each `prisma_postgres` and `prisma_sqlite`. Whenever you run an individual prisma command you have to specify which schema to use with `--schema=./prisma_postgres/schema.prisma` or `--schema=./prisma_sqlite/schema.prisma`
 
 ### Steps for Schema Changes
+
+Superpipe studio uses dynamically generated tables to store pipeline logs, datasets and experiments. When you make schema changes, Prisma will try to drop the dynamic tables. It is very important that you manually remove these drop statements from the generated migrations.
+
 1. Make the schema change in both folders.
 2. `npm run create-migration:postgres` and `npm run create-migration:sqlite`
 3. Modify the generated migrations
@@ -34,25 +131,6 @@ If the Migration deploy fails, a failed migration record will be generated in th
 2. Run the following command which will mark the broken record as rolled-back and allow us to insert a new record with the same name. Don't forget to replace the name of the migration folder and the database provider accordingly
 `npx prisma migrate resolve --rolled-back ${MIGRATION_FOLDER_NAME} --schema=./prisma_${postgres or sqlite}/schema.prisma`
 
-### Disable Authentication
-1. The `.env` file should be set for running the project locally with authentication disabled. This means:
-    - **NEXT_PUBLIC_AUTHENTICATION**=disabled
-    - **NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY**=pk_test_cHJvcGVyLWR1Y2stOTQuY2xlcmsuYWNjb3VudHMuZGV2JA
-    - **CLERK_SECRET_KEY**=CLERK_SECRET_KEY
+## Logging 
 
-### Enable Authentication with Clerk
-
-Make sure NEXT_PUBLIC_AUTHENTICATION is 'enabled'
-
-1. Create a Clerk organization and navigate to the API Keys page
-2. Create a `.env.local` file in root and add `NEXT_PUBLIC_AUTHENTICATION=enabled`
-3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the .env.local file
-4. `npm run dev` or `npm run dev:postgres`
-5. [Download/Install ngrok]
-6. Open command line, run `ngrok http 3000` and copy URL
-7. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
-8. Access http://localhost:3000/ and log in
-
-### Logging 
-
-To change log level set the LOG_LEVEL value inside the env file to one of: error, warn, info, debug (default is error)
+To change log level set the `LOG_LEVEL` environment variable to one of: `error`, `warn`, `info`, `debug` (default is error)
