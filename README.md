@@ -4,7 +4,7 @@ _Build, evaluate and optimize your LLM pipelines to increase accuracy and reduce
 
 ---
 
-Insert youtube video here
+[![Superpipe Studio explainer](https://img.youtube.com/vi/fKKmUm12LDY/0.jpg)](https://www.youtube.com/watch?v=fKKmUm12LDY)
 
 ## Getting Started
 
