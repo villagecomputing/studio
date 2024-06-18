@@ -3,8 +3,11 @@
 _Build, evaluate and optimize your LLM pipelines to increase accuracy and reduce cost. Use with [Superpipe](https://github.com/villagecomputing/superpipe) or with your favorite LLM framework. Easily deploy it on your own infra._
 
 ---
+<div align="center">
 
-Insert youtube video here
+[![Superpipe](http://img.youtube.com/vi/fKKmUm12LDY/0.jpg)](http://www.youtube.com/watch?v=fKKmUm12LDY "Superpipe")
+
+</div>
 
 ## Getting Started
 
@@ -35,18 +38,30 @@ Authentication is disabled by default by setting `NEXT_PUBLIC_AUTHENTICATION=dis
 
 ### Enable Authentication with Clerk
 
-1. Create a Clerk organization and navigate to the API Keys page
+To enable Clerk authentication while running locally:
+
+1. Create a Clerk organization and from the Clerk dashboard, grab your publishable key and secret key.
 2. Create a `.env.local` file in the project root by copying `.env` and set `NEXT_PUBLIC_AUTHENTICATION=enabled`
-3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the .env.local file
+3. Add the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` variables with their respective Clerk values, to the `.env.local` file
 4. `npm run dev` or `npm run dev:postgres`
 5. Download and install ngrok
 6. Open command line, run `ngrok http 3000` and copy URL
-7. Navigate to Clerk Webhooks page, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
-8. Access http://localhost:3000/ and log in
+7. Navigate to Webhooks page in the Clerk dashboard, add the `<ngrok_url>/api/webhook/clerk/user`, with user filter
+8. Navigate to Studio (default [http://localhost:3000/](http://localhost:3000/)) and log in
 
-These steps assume you're trying to enable authentication locally. If you're looking to enable auth in a Vercel deployment, see below.
+If you're looking to enable auth in a Vercel deployment, follow the Vercel deployment instructions below.
 
-### Authenticating Superpipe SDK requests
+### Authenticating Superpipe Studio requests
+
+Once you've enabled authentication in Studio, any programmatic requests to the Studio API need to be authenticated with an API key. This includes requests made automatically by the Superpipe SDK.
+
+To get your Studio API key:
+
+1. Login to your Studio instance
+2. In the account menu (top right corner), click "Manage Account"
+3. Grab your API key from the "API Management" section
+
+If you're using Studio with the Superpipe SDK, set the `SUPERPIPE_API_KEY` environment variable to your API key. If you're using Studio via REST API, set the `x-api-key` header to your API key.
 
 ## Basic Usage
 
@@ -90,9 +105,12 @@ Studio is a Next JS app and can be easily deployed on Vercel or other hosting so
 
 **A. Setup your Postgres database**
 
-**B. Sign up for Clerk (or create a new Clerk project)**
+You can use any Postgres provider as long as it provides you an authenticated database URL that is accessible from Vercel.
 
-1. Configure a webhook at **[your_studio_url]/api/webhook/clerk/user**
+**B. (Optional) Setup Clerk authentication**
+
+1. Create a Clerk organization and from the Clerk dashboard, grab your publishable key and secret key.
+2. Navigate to Webhooks page in the Clerk dashboard, add the `<your_studio_url>/api/webhook/clerk/user`, with user filter
 
 **C. Deploy superpipe-studio to Vercel**
 
@@ -105,8 +123,7 @@ Studio is a Next JS app and can be easily deployed on Vercel or other hosting so
    5. `NEXT_PUBLIC_AUTHENTICATION` = `enabled`
    6. `NEXT_PUBLIC_APP_DATABASE_PROVIDER` = `postgres`
 3. Checkout or fork the repo & go through the standard Vercel deployment flow
-4. Configure Vercel build command
-5. Once deployed, login and grab your API key
+4. Once deployed, navigate to your Studio URL, login and grab your API key
 
 ## Development - making DB schema changes
 
